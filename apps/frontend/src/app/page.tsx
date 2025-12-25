@@ -19,9 +19,7 @@ import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
     Hero,
-    TracksPreview,
     Features,
-    CurriculumPreview,
     CTASection,
     Footer,
     Navbar,
@@ -71,14 +69,8 @@ export default function LandingPage() {
                             {/* Hero Section */}
                             <Hero />
 
-                            {/* Learning Tracks */}
-                            <TracksPreview />
-
                             {/* Platform Features */}
                             <Features />
-
-                            {/* Full Curriculum */}
-                            <CurriculumPreview />
 
                             {/* Final CTA */}
                             <CTASection />
