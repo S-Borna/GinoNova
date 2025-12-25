@@ -2,14 +2,16 @@
 
 /**
  * ============================================================================
- * APP LAYOUT — Protected Application Shell
+ * APP LAYOUT — Public Application Shell (MILESTONE 2.0)
  * ============================================================================
  *
- * Authenticated layout wrapping all app pages.
+ * PUBLIC layout wrapping all app pages - NO AUTH REQUIRED!
  * Includes Sidebar, TopBar, MobileNav from D.3 design sprint.
- * Protected by auth - redirects to login if not authenticated.
+ * 
+ * MILESTONE 2.0: Zero friction access - users can browse everything
+ * without logging in. Auth is optional for saving progress.
  *
- * @phase A.3 - App Shell & Routing
+ * @phase MILESTONE-2.0 - Zero Friction Access
  */
 
 import * as React from "react"
@@ -101,22 +103,18 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     // const showRightSidebar = isDesktop && pathname?.includes("/modules/")
     const showRightSidebar = false
 
-    // Redirect to login if not authenticated
-    React.useEffect(() => {
-        if (!loading && !user) {
-            router.push("/login")
-        }
-    }, [user, loading, router])
-
-    // Show loading while checking auth
+    // MILESTONE 2.0: NO AUTH REDIRECT - App is now PUBLIC!
+    // Users can browse all content without logging in.
+    // Auth is optional - only needed for saving progress, AI quiz, etc.
+    
+    // Show brief loading only while auth state initializes (for optional user display)
     if (loading) {
         return <LoadingScreen />
     }
 
-    // Don't render if no user (will redirect)
-    if (!user) {
-        return <LoadingScreen />
-    }
+    // REMOVED: Auth wall - no more redirect to login!
+    // Previously: if (!user) { router.push("/login") }
+    // Now: Everyone can access content!
 
     // Auto-collapse on tablet
     const effectiveCollapsed = isTablet && !isDesktop ? true : collapsed

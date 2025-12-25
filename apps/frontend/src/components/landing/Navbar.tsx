@@ -134,13 +134,13 @@ export function Navbar() {
                             })}
                         </div>
 
-                        {/* Desktop CTAs */}
+                        {/* Desktop CTAs - MILESTONE 2.0: Start Learning as primary CTA */}
                         <div className="hidden md:flex items-center gap-3">
                             <Link
                                 href="/login"
                                 className={cn(
                                     "px-4 py-2 rounded-lg text-sm font-medium",
-                                    "text-neutral-300 hover:text-white",
+                                    "text-neutral-400 hover:text-white",
                                     "transition-colors duration-200"
                                 )}
                             >
@@ -150,18 +150,28 @@ export function Navbar() {
                                 </span>
                             </Link>
                             <Link
-                                href="/register"
+                                href="/skillsmaps"
                                 className={cn(
-                                    "inline-flex items-center gap-2",
-                                    "px-4 py-2 rounded-lg text-sm font-semibold",
-                                    "bg-gradient-to-r from-primary-500 to-purple-600",
-                                    "text-white shadow-lg shadow-primary-500/20",
-                                    "hover:shadow-xl hover:shadow-primary-500/30 hover:scale-[1.02]",
-                                    "transition-all duration-200"
+                                    "group relative inline-flex items-center gap-2",
+                                    "px-5 py-2.5 rounded-xl text-sm font-semibold",
+                                    "bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600",
+                                    "text-white",
+                                    "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
+                                    "hover:shadow-[0_0_30px_rgba(139,92,246,0.6)] hover:scale-[1.03]",
+                                    "transition-all duration-300",
+                                    "overflow-hidden"
                                 )}
                             >
+                                {/* Shimmer effect */}
+                                <span
+                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                    style={{
+                                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                                        animation: "shimmer 1.5s infinite",
+                                    }}
+                                />
                                 <Sparkles className="w-4 h-4" />
-                                Get Started
+                                <span>Start Learning</span>
                             </Link>
                         </div>
 
@@ -275,23 +285,10 @@ export function Navbar() {
                                     })}
                                 </div>
 
-                                {/* CTAs */}
+                                {/* CTAs - MILESTONE 2.0 */}
                                 <div className="pt-6 space-y-3 border-t border-white/10">
                                     <Link
-                                        href="/login"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className={cn(
-                                            "flex items-center justify-center gap-2 w-full",
-                                            "px-4 py-3 rounded-xl text-base font-medium",
-                                            "text-neutral-300 bg-white/5 hover:bg-white/10",
-                                            "transition-colors duration-200"
-                                        )}
-                                    >
-                                        <LogIn className="w-5 h-5" />
-                                        Sign In
-                                    </Link>
-                                    <Link
-                                        href="/register"
+                                        href="/skillsmaps"
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className={cn(
                                             "flex items-center justify-center gap-2 w-full",
@@ -302,7 +299,20 @@ export function Navbar() {
                                         )}
                                     >
                                         <Sparkles className="w-5 h-5" />
-                                        Get Started Free
+                                        Start Learning
+                                    </Link>
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            "flex items-center justify-center gap-2 w-full",
+                                            "px-4 py-3 rounded-xl text-base font-medium",
+                                            "text-neutral-400 hover:text-white",
+                                            "transition-colors duration-200"
+                                        )}
+                                    >
+                                        <LogIn className="w-5 h-5" />
+                                        Sign In (optional)
                                     </Link>
                                 </div>
                             </div>

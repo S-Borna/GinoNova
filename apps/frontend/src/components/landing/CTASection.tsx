@@ -112,7 +112,7 @@ export function CTASection() {
                     designed to take you from beginner to production-ready in months, not years.
                 </motion.p>
 
-                {/* CTA Buttons */}
+                {/* CTA Buttons - MILESTONE 2.0: Direct to learning */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -121,7 +121,7 @@ export function CTASection() {
                     className="flex flex-col sm:flex-row items-center justify-center gap-4"
                 >
                     {/* Primary CTA */}
-                    <Link href="/register" className="w-full sm:w-auto">
+                    <Link href="/skillsmaps" className="w-full sm:w-auto">
                         <button
                             className={cn(
                                 "w-full sm:w-auto inline-flex items-center justify-center gap-2",
@@ -133,7 +133,7 @@ export function CTASection() {
                             )}
                         >
                             <Sparkles className="w-5 h-5" />
-                            Get Started Free
+                            Start Learning Now
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </Link>

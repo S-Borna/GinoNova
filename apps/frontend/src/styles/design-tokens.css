@@ -1,28 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 /**
- * DevOpsHub Design Tokens
- * Premium Polish Update - "Learn like a pro, feel like home"
+ * ============================================================================
+ * GINONOVA DESIGN SYSTEM v2.0 — MILESTONE 2.0
+ * ============================================================================
+ *
+ * 🎬 Disney Magic + Netflix Fräckhet + Google Smart
  *
  * Philosophy:
- * - Rich, deep backgrounds for premium feel
- * - Purple/Violet signature color
- * - Gamification that feels rewarding
+ * - Every pixel should spark joy
+ * - Premium feel that makes people go "WOW"
+ * - Zero friction, maximum delight
+ * - "Tjejer kommer älska detta och killar kommer älska att tjejer älskar detta!"
+ *
+ * Design DNA:
+ * - Rich, deep cosmic backgrounds
+ * - Energetic Purple/Violet signature color
+ * - Electric Cyan accents
+ * - Magical micro-interactions
+ * - Netflix-smooth animations
+ * - Apple-level polish
  */
 
 :root {
     /* ============================================================================
-     PREMIUM BACKGROUNDS — Rich, deep darks
+     🌌 COSMIC BACKGROUNDS — Deep Space Premium
      ============================================================================ */
-    --bg-deep: #0a0a0f;
-    --bg-primary: #0f0f17;
-    --bg-secondary: #12121c;
-    --bg-tertiary: #141420;
-    --bg-elevated: #1a1a28;
-    --bg-card: #12121c;
+    --bg-deep: #05050a;
+    --bg-primary: #0a0a12;
+    --bg-secondary: #0e0e18;
+    --bg-tertiary: #12121e;
+    --bg-elevated: #181824;
+    --bg-card: #0e0e18;
+    --bg-card-hover: #141420;
+    --bg-surface: #1a1a28;
+    --bg-spotlight: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.15), transparent);
 
     /* ============================================================================
-     PRIMARY COLORS — Purple/Violet Signature
+     💜 PRIMARY COLORS — Energetic Purple/Violet Signature
      ============================================================================ */
     --primary-50: #faf5ff;
     --primary-100: #f3e8ff;
@@ -31,54 +46,76 @@
     --primary-400: #c084fc;
     --primary-500: #a855f7;
     --primary-600: #9333ea;
-    --primary-700: #7e22ce;
-    --primary-800: #6b21a8;
-    --primary-900: #581c87;
+    --primary-700: #7c3aed;
+    --primary-800: #6d28d9;
+    --primary-900: #5b21b6;
     --primary-950: #3b0764;
 
-    /* Primary Gradient - Purple */
+    /* 🌈 Primary Gradients - Netflix/Disney Magic */
     --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #c084fc 100%);
     --primary-gradient-hover: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);
     --primary-gradient-subtle: linear-gradient(135deg, rgba(124, 58, 237, 0.8) 0%, rgba(168, 85, 247, 0.6) 100%);
+    --primary-gradient-vivid: linear-gradient(135deg, #8b5cf6 0%, #a855f7 35%, #c084fc 70%, #d946ef 100%);
+    --primary-gradient-glow: linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #06b6d4 100%);
 
-    /* Card gradient */
-    --card-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
+    /* ✨ Magic Gradient - The Disney Sparkle */
+    --magic-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 25%, #06b6d4 50%, #22c55e 75%, #a855f7 100%);
+    --magic-shimmer: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+
+    /* Card gradients */
+    --card-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(124, 58, 237, 0.04) 100%);
+    --card-gradient-hover: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(6, 182, 212, 0.08) 100%);
+    --card-border-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.5) 0%, rgba(6, 182, 212, 0.3) 100%);
 
     /* ============================================================================
-     ACCENT COLORS — Vibrant, Purposeful
+     🎨 ACCENT COLORS — Electric & Vibrant
      ============================================================================ */
-    /* Success - Completions, achievements */
+    /* 🌊 Cyan/Teal - Electric Accent (Netflix feel) */
+    --accent-cyan: #06b6d4;
+    --accent-cyan-light: #22d3ee;
+    --accent-cyan-dark: #0891b2;
+    --accent-cyan-bg: rgba(6, 182, 212, 0.15);
+    --accent-cyan-glow: rgba(6, 182, 212, 0.4);
+
+    /* ✅ Success - Completions, achievements */
     --accent-success: #22c55e;
     --accent-success-light: #4ade80;
     --accent-success-dark: #16a34a;
     --accent-success-bg: rgba(34, 197, 94, 0.15);
-    --accent-success-glow: rgba(34, 197, 94, 0.25);
+    --accent-success-glow: rgba(34, 197, 94, 0.4);
 
-    /* Warning/Streak - Streaks, energy, fire */
+    /* 🔥 Warning/Streak - Energy, fire */
     --accent-warning: #f97316;
     --accent-warning-light: #fb923c;
     --accent-warning-dark: #ea580c;
     --accent-warning-bg: rgba(249, 115, 22, 0.15);
-    --accent-warning-glow: rgba(249, 115, 22, 0.25);
+    --accent-warning-glow: rgba(249, 115, 22, 0.4);
 
-    /* XP/Gold - Rewards, gains */
+    /* ⚡ XP/Gold - Rewards, gains */
     --accent-xp: #fbbf24;
     --accent-xp-light: #fcd34d;
     --accent-xp-dark: #f59e0b;
     --accent-xp-bg: rgba(251, 191, 36, 0.15);
-    --accent-xp-glow: rgba(251, 191, 36, 0.25);
+    --accent-xp-glow: rgba(251, 191, 36, 0.4);
 
-    /* Info - Focus mode, studyflow */
+    /* 💡 Info - Focus mode, studyflow */
     --accent-info: #06b6d4;
     --accent-info-light: #22d3ee;
     --accent-info-dark: #0891b2;
     --accent-info-bg: rgba(6, 182, 212, 0.15);
 
-    /* Error/Danger */
+    /* 🚫 Error/Danger */
     --accent-error: #ef4444;
     --accent-error-light: #f87171;
     --accent-error-dark: #dc2626;
     --accent-error-bg: rgba(239, 68, 68, 0.15);
+
+    /* 🌸 Pink/Rose - Delight moments */
+    --accent-pink: #ec4899;
+    --accent-pink-light: #f472b6;
+    --accent-pink-dark: #db2777;
+    --accent-pink-bg: rgba(236, 72, 153, 0.15);
+    --accent-pink-glow: rgba(236, 72, 153, 0.4);
 
     /* ============================================================================
      NEUTRALS — Zinc Scale for Premium
@@ -115,32 +152,41 @@
     --border-purple-strong: rgba(168, 85, 247, 0.5);
 
     /* ============================================================================
-     SHADOWS — Premium Glows
+     🌟 SHADOWS — Premium Glows & Depth
      ============================================================================ */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
-    --shadow-2xl: 0 25px 50px rgba(0, 0, 0, 0.7);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.7);
+    --shadow-2xl: 0 32px 64px rgba(0, 0, 0, 0.8);
 
-    /* Card Shadows */
-    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
-    --shadow-card-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
+    /* Card Shadows - Netflix-style depth */
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --shadow-card-hover: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(168, 85, 247, 0.2);
+    --shadow-card-active: 0 8px 32px rgba(0, 0, 0, 0.45);
 
-    /* Glow Shadows */
-    --shadow-glow-purple: 0 0 20px rgba(168, 85, 247, 0.2);
-    --shadow-glow-purple-strong: 0 0 30px rgba(168, 85, 247, 0.35);
-    --shadow-glow-purple-intense: 0 0 40px rgba(168, 85, 247, 0.5);
-    --shadow-glow-gold: 0 0 15px rgba(251, 191, 36, 0.25);
-    --shadow-glow-fire: 0 0 15px rgba(249, 115, 22, 0.25);
-    --shadow-glow-success: 0 0 20px rgba(34, 197, 94, 0.25);
-    --shadow-glow-info: 0 0 20px rgba(6, 182, 212, 0.25);
-    --shadow-glow-error: 0 0 20px rgba(239, 68, 68, 0.25);
+    /* ✨ Glow Shadows - Disney Magic */
+    --shadow-glow-purple: 0 0 24px rgba(168, 85, 247, 0.25);
+    --shadow-glow-purple-strong: 0 0 40px rgba(168, 85, 247, 0.4);
+    --shadow-glow-purple-intense: 0 0 60px rgba(168, 85, 247, 0.6), 0 0 100px rgba(168, 85, 247, 0.3);
+    --shadow-glow-cyan: 0 0 24px rgba(6, 182, 212, 0.3);
+    --shadow-glow-cyan-strong: 0 0 40px rgba(6, 182, 212, 0.5);
+    --shadow-glow-gold: 0 0 20px rgba(251, 191, 36, 0.35);
+    --shadow-glow-fire: 0 0 20px rgba(249, 115, 22, 0.35);
+    --shadow-glow-success: 0 0 24px rgba(34, 197, 94, 0.35);
+    --shadow-glow-info: 0 0 24px rgba(6, 182, 212, 0.35);
+    --shadow-glow-error: 0 0 24px rgba(239, 68, 68, 0.35);
+    --shadow-glow-pink: 0 0 24px rgba(236, 72, 153, 0.35);
+
+    /* 🎬 Netflix Card Lift Effect */
+    --shadow-lift: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --shadow-lift-glow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(168, 85, 247, 0.2);
 
     /* Inset Shadows */
     --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-inner-lg: inset 0 4px 8px rgba(0, 0, 0, 0.4);
+    --shadow-inner-glow: inset 0 0 20px rgba(168, 85, 247, 0.1);
 
     /* ============================================================================
      RADIUS — Generous, Modern
@@ -243,7 +289,7 @@
     --tracking-widest: 0.1em;
 
     /* ============================================================================
-     TRANSITIONS
+     🎭 TRANSITIONS — Netflix-Smooth Animations
      ============================================================================ */
     --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
@@ -251,19 +297,33 @@
     --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
     --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --ease-netflix: cubic-bezier(0.165, 0.84, 0.44, 1);
+    --ease-apple: cubic-bezier(0.42, 0, 0.58, 1);
+    --ease-magic: cubic-bezier(0.22, 0.61, 0.36, 1);
 
-    --duration-fastest: 50ms;
-    --duration-faster: 100ms;
-    --duration-fast: 150ms;
-    --duration-normal: 200ms;
-    --duration-slow: 300ms;
-    --duration-slower: 400ms;
-    --duration-slowest: 500ms;
+    --duration-instant: 50ms;
+    --duration-fastest: 100ms;
+    --duration-faster: 150ms;
+    --duration-fast: 200ms;
+    --duration-normal: 300ms;
+    --duration-slow: 400ms;
+    --duration-slower: 500ms;
+    --duration-slowest: 700ms;
+    --duration-dramatic: 1000ms;
 
-    --transition-fast: 150ms var(--ease-default);
-    --transition-base: 200ms var(--ease-default);
-    --transition-slow: 300ms var(--ease-default);
+    --transition-instant: 100ms var(--ease-smooth);
+    --transition-fast: 200ms var(--ease-netflix);
+    --transition-base: 300ms var(--ease-netflix);
+    --transition-slow: 400ms var(--ease-netflix);
     --transition-bounce: 500ms var(--ease-bounce);
+    --transition-magic: 600ms var(--ease-magic);
+
+    /* 🎬 Animation Presets */
+    --hover-lift: translateY(-4px);
+    --hover-scale: scale(1.02);
+    --hover-glow: brightness(1.1);
+    --active-press: translateY(1px) scale(0.98);
 
     /* ============================================================================
      Z-INDEX SCALE
@@ -281,30 +341,112 @@
     --z-max: 9999;
 
     /* ============================================================================
-     GLASS EFFECTS
+     🪟 GLASS EFFECTS — Premium Glassmorphism
      ============================================================================ */
     --glass-bg: rgba(255, 255, 255, 0.8);
-    --glass-bg-dark: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-bg-dark: rgba(14, 14, 24, 0.8);
+    --glass-bg-subtle: rgba(255, 255, 255, 0.03);
+    --glass-bg-elevated: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-strong: rgba(255, 255, 255, 0.15);
+    --glass-border-glow: rgba(168, 85, 247, 0.3);
     --glass-blur: 12px;
-    --glass-blur-lg: 20px;
+    --glass-blur-lg: 24px;
+    --glass-blur-xl: 40px;
+
+    /* ✨ Shimmer Effect */
+    --shimmer-gradient: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 20%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 80%,
+        transparent 100%
+    );
+
+    /* 🌈 Rainbow Border (for special moments) */
+    --rainbow-gradient: linear-gradient(
+        90deg,
+        #a855f7 0%,
+        #ec4899 20%,
+        #f97316 40%,
+        #fbbf24 60%,
+        #22c55e 80%,
+        #06b6d4 100%
+    );
 }
 
 /* ============================================================================
-   DARK MODE - Premium Polish (Default)
+   ✨ MAGICAL ANIMATIONS — Disney-Level Polish
+   ============================================================================ */
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes border-glow {
+    0%, 100% { border-color: rgba(168, 85, 247, 0.3); }
+    50% { border-color: rgba(168, 85, 247, 0.6); }
+}
+
+@keyframes rainbow-border {
+    0% { border-color: #a855f7; }
+    20% { border-color: #ec4899; }
+    40% { border-color: #f97316; }
+    60% { border-color: #fbbf24; }
+    80% { border-color: #22c55e; }
+    100% { border-color: #06b6d4; }
+}
+
+@keyframes success-burst {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+}
+
+/* ============================================================================
+   🌙 DARK MODE — Premium Polish (Default)
    ============================================================================ */
 
 /* Always use dark premium backgrounds */
 .dark,
 :root {
-    /* Premium Deep Backgrounds */
-    --bg-deep: #0a0a0f;
-    --bg-primary: #0f0f17;
-    --bg-secondary: #12121c;
-    --bg-tertiary: #141420;
-    --bg-elevated: #1a1a28;
-    --bg-card: #12121c;
-    --bg-sunken: #08080c;
+    /* 🌌 Cosmic Deep Backgrounds */
+    --bg-deep: #05050a;
+    --bg-primary: #0a0a12;
+    --bg-secondary: #0e0e18;
+    --bg-tertiary: #12121e;
+    --bg-elevated: #181824;
+    --bg-card: #0e0e18;
+    --bg-card-hover: #141420;
+    --bg-sunken: #030308;
 
     /* Text Hierarchy */
     --text-primary: #f8fafc;
@@ -312,29 +454,127 @@
     --text-tertiary: #71717a;
     --text-muted: #52525b;
     --text-inverted: #0a0a0f;
+    --text-gradient: linear-gradient(135deg, #f8fafc 0%, #a1a1aa 100%);
 
     /* Premium Borders */
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-default: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.15);
+    --border-subtle: rgba(255, 255, 255, 0.04);
+    --border-default: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.12);
     --border-purple: rgba(168, 85, 247, 0.3);
-
-    /* Premium Shadows */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
+    --border-purple-glow: rgba(168, 85, 247, 0.5);
+    --border-cyan: rgba(6, 182, 212, 0.3);
 
     /* Purple Glows */
-    --shadow-glow-primary: 0 0 20px rgba(168, 85, 247, 0.2);
-    --shadow-glow-primary-intense: 0 0 40px rgba(168, 85, 247, 0.4);
+    --shadow-glow-primary: 0 0 24px rgba(168, 85, 247, 0.25);
+    --shadow-glow-primary-intense: 0 0 50px rgba(168, 85, 247, 0.45);
 
     /* Glass Effect */
-    --glass-bg: rgba(15, 15, 23, 0.8);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(14, 14, 24, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.06);
 
     /* Primary Purple */
     --primary-500: #a855f7;
     --primary-600: #9333ea;
+    --primary-700: #7c3aed;
+}
+
+/* ============================================================================
+   🎨 UTILITY CLASSES — Magic Helpers
+   ============================================================================ */
+
+/* Shimmer effect for loading states & highlights */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+.shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--shimmer-gradient);
+    animation: shimmer 2s infinite;
+}
+
+/* Glow on hover */
+.hover-glow:hover {
+    box-shadow: var(--shadow-glow-purple);
+}
+.hover-glow-strong:hover {
+    box-shadow: var(--shadow-glow-purple-strong);
+}
+
+/* Lift on hover - Netflix style */
+.hover-lift {
+    transition: transform 300ms var(--ease-netflix), box-shadow 300ms var(--ease-netflix);
+}
+.hover-lift:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: var(--shadow-lift-glow);
+}
+
+/* Gradient text */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient-magic {
+    background: var(--magic-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s ease infinite;
+}
+
+/* Gradient border */
+.gradient-border {
+    position: relative;
+}
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: var(--card-border-gradient);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Pulse glow animation */
+.pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Float animation */
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Glass morphism card */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur-lg));
+    border: 1px solid var(--glass-border);
+}
+
+/* Premium spotlight background */
+.bg-spotlight {
+    background: var(--bg-spotlight);
+}
+
+/* Netflix-style card */
+.card-netflix {
+    transition: all 300ms var(--ease-netflix);
+}
+.card-netflix:hover {
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: var(--shadow-lift);
 }

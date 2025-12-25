@@ -192,6 +192,14 @@
         @apply bg-background text-foreground antialiased;
         font-feature-settings: "rlig" 1, "calt" 1;
         min-height: 100vh;
+        /* MILESTONE 2.0: Cosmic deep background */
+        background-color: var(--bg-deep, #05050a);
+    }
+
+    /* Dark mode cosmic background */
+    .dark body {
+        background-color: var(--bg-deep, #05050a);
+        background-image: var(--bg-spotlight);
     }
 
     /* Better focus states */
