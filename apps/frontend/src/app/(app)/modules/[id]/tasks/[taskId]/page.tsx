@@ -32,6 +32,7 @@ import {
 } from "@saas/ui"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
+import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import { getTask, getTasksForModule, TaskPublic } from "@/lib/tasks"
 import { getModule, ModulePublic } from "@/lib/modules"
 import { useAuth } from "@/components/auth"
@@ -414,7 +415,11 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
     const taskTypeConfig = typeConfig[taskType] || typeConfig.standard
 
     return (
-        <PageLayout maxWidth="standard" background="cosmic">
+        <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
+
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Back button */}
             <Link
                 href={`/modules/${moduleId}`}
@@ -683,6 +688,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                     />
                 </motion.div>
             ) : null}
-        </PageLayout>
+            </div>
+        </div>
     )
 }
