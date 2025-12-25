@@ -459,6 +459,9 @@ function SessionTimerDisplay() {
    ============================================================================ */
 
 export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBarProps) {
+    const { user } = useAuth()
+    const isAuthenticated = !!user
+
     return (
         <header className={cn(
             "sticky top-0 z-30 h-16",
@@ -491,14 +494,14 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3">
-                    {/* Session Timer */}
-                    <SessionTimerDisplay />
+                    {/* Session Timer - Only show when authenticated */}
+                    {isAuthenticated && <SessionTimerDisplay />}
 
                     {/* Dallas AI Orb - NO wrapper, direct component */}
                     <DallasOrb />
 
-                    {/* User dropdown */}
-                    <UserDropdown />
+                    {/* User dropdown - Only show when authenticated */}
+                    {isAuthenticated && <UserDropdown />}
                 </div>
             </div>
         </header>

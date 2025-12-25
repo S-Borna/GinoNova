@@ -23,6 +23,7 @@ import { TopBar } from "@/components/layout/TopBar"
 import { MobileNav } from "@/components/layout/MobileNav"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { RightSidebar } from "@/components/modules/RightSidebar"
+import { CosmicLockedOverlay } from "@/components/ui/cosmic-locked-overlay"
 
 /* ============================================================================
    HOOKS
@@ -116,6 +117,14 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     // Previously: if (!user) { router.push("/login") }
     // Now: Everyone can access content!
 
+    // COSMIC LOCKED OVERLAY - Show for non-authenticated users on protected pages
+    // Camp DevOps (/modules) is the ONLY publicly accessible content
+    const isPublicPage = pathname?.startsWith("/modules") || 
+                         pathname === "/" || 
+                         pathname === "/login" || 
+                         pathname === "/register"
+    const showLockedOverlay = !user && !isPublicPage
+
     // Auto-collapse on tablet
     const effectiveCollapsed = isTablet && !isDesktop ? true : collapsed
 
@@ -166,6 +175,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Mobile navigation - shown only on mobile */}
             {isMobile && <MobileNav />}
+
+            {/* Cosmic Locked Overlay - Shows on protected pages for non-authenticated users */}
+            {showLockedOverlay && <CosmicLockedOverlay />}
         </div>
     )
 }

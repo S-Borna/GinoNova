@@ -56,6 +56,7 @@ interface NavItem {
     href: string
     icon: LucideIcon
     adminOnly?: boolean
+    authRequired?: boolean  // New: Hide from non-authenticated users
 }
 
 interface SidebarProps {
@@ -77,7 +78,7 @@ const mainNavItems: NavItem[] = [
     { label: "Studyroom", href: "/study", icon: Clock },
     { label: "AI Quiz", href: "/quiz", icon: Brain },
     { label: "Pulsmätning", href: "/pulse", icon: Heart },
-    { label: "Profile", href: "/profile", icon: User },
+    { label: "Profile", href: "/profile", icon: User, authRequired: true },
     { label: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ]
 
@@ -189,6 +190,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
 
     // Check if user is admin
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
+    const isAuthenticated = !!user
 
     const isActive = (href: string) => {
         if (!pathname) return false
@@ -198,8 +200,14 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
         return pathname.startsWith(href)
     }
 
-    // Filter nav items based on admin status
-    const visibleNavItems = mainNavItems.filter(item => !item.adminOnly || isAdmin)
+    // Filter nav items based on admin status and auth status
+    const visibleNavItems = mainNavItems.filter(item => {
+        // Hide admin-only items from non-admins
+        if (item.adminOnly && !isAdmin) return false
+        // Hide auth-required items from non-authenticated users
+        if (item.authRequired && !isAuthenticated) return false
+        return true
+    })
 
     return (
         <aside className={cn(
