@@ -1,15 +1,14 @@
 /**
  * ============================================================================
- * AUTH LAYOUT — Split Screen Authentication Layout
+ * AUTH LAYOUT — Centered Premium Authentication Layout
  * ============================================================================
  *
- * Premium authentication layout with branding panel on left
- * and auth form on right. Fully responsive.
+ * Clean, centered authentication layout with cosmic background.
+ * No split screen - just beautiful focused auth forms.
  *
- * @phase A.2 - Authentication UI
+ * @phase MILESTONE-2.0 - Premium Auth UI
  */
 
-import { AuthBranding } from "@/components/auth/AuthBranding"
 import { AuthProvider } from "@/components/auth"
 
 export default function AuthLayout({
@@ -19,15 +18,48 @@ export default function AuthLayout({
 }) {
     return (
         <AuthProvider>
-            <div className="min-h-screen flex">
-                {/* Left: Branding panel (hidden on mobile) */}
-                <AuthBranding className="w-1/2 min-h-screen" />
+            <div className="min-h-screen flex items-center justify-center bg-[#030308] relative overflow-hidden">
+                {/* Cosmic background effects */}
+                <div className="absolute inset-0">
+                    {/* Central cosmic glow */}
+                    <div 
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
+                        style={{
+                            background: "radial-gradient(circle, rgba(139,92,246,0.25) 0%, rgba(168,85,247,0.1) 40%, transparent 70%)",
+                            filter: "blur(80px)",
+                        }}
+                    />
+                    {/* Secondary glow */}
+                    <div 
+                        className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full"
+                        style={{
+                            background: "radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 60%)",
+                            filter: "blur(100px)",
+                        }}
+                    />
+                    <div 
+                        className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full"
+                        style={{
+                            background: "radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 60%)",
+                            filter: "blur(90px)",
+                        }}
+                    />
+                    {/* Grid overlay */}
+                    <div
+                        className="absolute inset-0 opacity-[0.015]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px),
+                                linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)
+                            `,
+                            backgroundSize: '60px 60px'
+                        }}
+                    />
+                </div>
 
-                {/* Right: Auth form */}
-                <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-12 bg-white dark:bg-neutral-950">
-                    <div className="w-full max-w-md">
-                        {children}
-                    </div>
+                {/* Auth form container */}
+                <div className="relative z-10 w-full max-w-md mx-4 p-8">
+                    {children}
                 </div>
             </div>
         </AuthProvider>
