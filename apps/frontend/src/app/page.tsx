@@ -30,17 +30,7 @@ export default function LandingPage() {
     const [showIntro, setShowIntro] = React.useState(true)
     const [contentReady, setContentReady] = React.useState(false)
 
-    // Check if user has seen intro in this session
-    React.useEffect(() => {
-        const hasSeenIntro = sessionStorage.getItem("cosmic-intro-seen")
-        if (hasSeenIntro) {
-            setShowIntro(false)
-            setContentReady(true)
-        }
-    }, [])
-
     const handleIntroComplete = React.useCallback(() => {
-        sessionStorage.setItem("cosmic-intro-seen", "true")
         setShowIntro(false)
         setContentReady(true)
     }, [])
