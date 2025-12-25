@@ -505,14 +505,14 @@ export function Hero() {
                     </motion.div>
                 </motion.div>
 
-                {/* CTA Buttons with enhanced glow */}
+                {/* CTA Buttons with enhanced glow - MILESTONE 2.0: Direct to learning */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.6 }}
                     className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
                 >
-                    <Link href="/register">
+                    <Link href="/skillsmaps">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.98 }}
@@ -526,7 +526,7 @@ export function Hero() {
                                 className="relative gap-2 min-w-[220px] text-lg font-semibold"
                                 rightIcon={<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
                             >
-                                Start Learning Free
+                                Start Learning Now
                             </Button>
                         </motion.div>
                     </Link>
