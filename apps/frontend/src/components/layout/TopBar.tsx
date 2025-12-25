@@ -32,6 +32,7 @@ import {
     Clock
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
+import { TentaCountdown } from "@/components/ui/tenta-countdown"
 
 /* ============================================================================
    TYPES
@@ -494,6 +495,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3">
+                    {/* DOE25 Tenta Countdown */}
+                    <TentaCountdown variant="compact" />
+
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}
 
