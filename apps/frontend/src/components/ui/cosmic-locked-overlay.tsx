@@ -11,14 +11,16 @@
  * - Animated stars and nebula
  * - Glass morphism card with CTA
  * - Smooth fade animations
+ * - Dismissible with ESC or click outside
  *
  * @phase MILESTONE-2.0-ACCESS-CONTROL
  */
 
-import { motion } from "framer-motion"
+import * as React from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { Lock, Sparkles, Rocket, LogIn, UserPlus } from "lucide-react"
+import { Lock, Sparkles, Rocket, LogIn, UserPlus, X } from "lucide-react"
 
 interface CosmicLockedOverlayProps {
     /** Title for the locked page */
@@ -34,17 +36,42 @@ export function CosmicLockedOverlay({
     description = "Logga in för att få tillgång till denna funktion",
     className,
 }: CosmicLockedOverlayProps) {
+    const [isDismissed, setIsDismissed] = React.useState(false)
+
+    // Handle ESC key to dismiss
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsDismissed(true)
+            }
+        }
+        window.addEventListener("keydown", handleKeyDown)
+        return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [])
+
+    // Handle click outside card to dismiss
+    const handleBackdropClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget) {
+            setIsDismissed(true)
+        }
+    }
+
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={cn(
-                "absolute inset-0 z-50",
-                "flex items-center justify-center",
-                "overflow-hidden",
-                className
-            )}
-        >
+        <AnimatePresence>
+            {!isDismissed && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    onClick={handleBackdropClick}
+                    className={cn(
+                        "absolute inset-0 z-50",
+                        "flex items-center justify-center",
+                        "overflow-hidden cursor-pointer",
+                        className
+                    )}
+                >
             {/* Deep Space Background */}
             <div className="absolute inset-0 bg-[#030308]">
                 {/* Nebula gradients */}
@@ -133,9 +160,11 @@ export function CosmicLockedOverlay({
             <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
                 transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card
                 className={cn(
-                    "relative z-10 max-w-md mx-4",
+                    "relative z-10 max-w-md mx-4 cursor-default",
                     "p-8 rounded-3xl",
                     "bg-gradient-to-br from-white/10 via-white/5 to-transparent",
                     "backdrop-blur-2xl",
@@ -143,6 +172,24 @@ export function CosmicLockedOverlay({
                     "shadow-[0_0_80px_rgba(139,92,246,0.2),0_20px_60px_rgba(0,0,0,0.5)]"
                 )}
             >
+                {/* Close button */}
+                <motion.button
+                    onClick={() => setIsDismissed(true)}
+                    className={cn(
+                        "absolute top-4 right-4",
+                        "w-8 h-8 rounded-full",
+                        "flex items-center justify-center",
+                        "bg-white/5 hover:bg-white/10",
+                        "border border-white/10 hover:border-white/20",
+                        "text-zinc-400 hover:text-white",
+                        "transition-all duration-200"
+                    )}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
+                    <X className="w-4 h-4" />
+                </motion.button>
+
                 {/* Glow effect behind card */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/10 to-cyan-500/5 blur-xl -z-10" />
 
@@ -272,7 +319,9 @@ export function CosmicLockedOverlay({
                     </div>
                 </motion.div>
             </motion.div>
-        </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     )
 }
 
