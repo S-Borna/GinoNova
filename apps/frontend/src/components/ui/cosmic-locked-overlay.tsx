@@ -10,15 +10,16 @@
  * - Deep space cosmic blur effect
  * - Animated stars and nebula
  * - Glass morphism card with CTA
- * - Smooth fade animations
- * - Dismissible with ESC or click outside
+ * - ESC or click redirects to Camp DevOps (only free page)
+ * - No scrolling - static premium content card
  *
  * @phase MILESTONE-2.0-ACCESS-CONTROL
  */
 
 import * as React from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Lock, Sparkles, Rocket, LogIn, UserPlus, X } from "lucide-react"
 
@@ -36,42 +37,52 @@ export function CosmicLockedOverlay({
     description = "Logga in för att få tillgång till denna funktion",
     className,
 }: CosmicLockedOverlayProps) {
-    const [isDismissed, setIsDismissed] = React.useState(false)
+    const router = useRouter()
 
-    // Handle ESC key to dismiss
+    // Redirect to Camp DevOps (the only free page)
+    const redirectToFreeContent = React.useCallback(() => {
+        router.push("/modules")
+    }, [router])
+
+    // Handle ESC key - redirect to Camp DevOps
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") {
-                setIsDismissed(true)
+                redirectToFreeContent()
             }
         }
         window.addEventListener("keydown", handleKeyDown)
         return () => window.removeEventListener("keydown", handleKeyDown)
+    }, [redirectToFreeContent])
+
+    // Prevent scrolling on the page
+    React.useEffect(() => {
+        document.body.style.overflow = "hidden"
+        return () => {
+            document.body.style.overflow = ""
+        }
     }, [])
 
-    // Handle click outside card to dismiss
+    // Handle click outside card - redirect to Camp DevOps
     const handleBackdropClick = (e: React.MouseEvent) => {
         if (e.target === e.currentTarget) {
-            setIsDismissed(true)
+            redirectToFreeContent()
         }
     }
 
     return (
-        <AnimatePresence>
-            {!isDismissed && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={handleBackdropClick}
-                    className={cn(
-                        "absolute inset-0 z-50",
-                        "flex items-center justify-center",
-                        "overflow-hidden cursor-pointer",
-                        className
-                    )}
-                >
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleBackdropClick}
+            className={cn(
+                "fixed inset-0 z-50",
+                "flex items-center justify-center",
+                "overflow-hidden cursor-pointer",
+                className
+            )}
+        >
             {/* Deep Space Background */}
             <div className="absolute inset-0 bg-[#030308]">
                 {/* Nebula gradients */}
@@ -160,9 +171,8 @@ export function CosmicLockedOverlay({
             <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
                 transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card
+                onClick={(e) => e.stopPropagation()} // Prevent redirect when clicking card
                 className={cn(
                     "relative z-10 max-w-md mx-4 cursor-default",
                     "p-8 rounded-3xl",
@@ -172,9 +182,9 @@ export function CosmicLockedOverlay({
                     "shadow-[0_0_80px_rgba(139,92,246,0.2),0_20px_60px_rgba(0,0,0,0.5)]"
                 )}
             >
-                {/* Close button */}
+                {/* Close button - redirects to Camp DevOps */}
                 <motion.button
-                    onClick={() => setIsDismissed(true)}
+                    onClick={redirectToFreeContent}
                     className={cn(
                         "absolute top-4 right-4",
                         "w-8 h-8 rounded-full",
@@ -319,9 +329,7 @@ export function CosmicLockedOverlay({
                     </div>
                 </motion.div>
             </motion.div>
-                </motion.div>
-            )}
-        </AnimatePresence>
+        </motion.div>
     )
 }
 
