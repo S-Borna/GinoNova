@@ -2,21 +2,19 @@
 
 /**
  * ============================================================================
- * SKILLPATH BOARD - Personal Analytics Dashboard
+ * SKILLPATH BOARD - Personal Analytics Dashboard — COSMIC EDITION 🌌
  * ============================================================================
  *
  * A clean, insightful view of your DevOps learning journey.
  * Now connected to LIVE user progress data via useProgress hook.
  *
- * Features:
- * - XP Progress over time (live data)
- * - Activity heatmap (GitHub-style)
- * - Module completion breakdown (live data)
- * - Current streak & milestones
- * - Time invested stats (live from sessionTimer)
- * - Completed exercises count
+ * COSMIC DESIGN UPGRADE:
+ * - Deep space background (#05050a)
+ * - Multi-layered aurora orbs
+ * - Pulsating glow effects
+ * - Netflix-smooth animations
  *
- * @phase ENTERPRISE-LEVEL-5
+ * @phase MILESTONE-2.0-COSMIC
  */
 
 import { useMemo, useState, useEffect } from "react"
@@ -43,6 +41,70 @@ import {
     CheckCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+
+/* ============================================================================
+   COSMIC AURORA BACKGROUND
+   ============================================================================ */
+
+function CosmicAurora() {
+    return (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            {/* Deep cosmic base */}
+            <div className="absolute inset-0 bg-[#05050a]" />
+
+            {/* Subtle grid pattern */}
+            <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '60px 60px'
+                }}
+            />
+
+            {/* Aurora orb 1 - Purple */}
+            <motion.div
+                className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.04) 40%, transparent 70%)',
+                }}
+                animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.5, 0.7, 0.5],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+
+            {/* Aurora orb 2 - Cyan */}
+            <motion.div
+                className="absolute -bottom-60 -left-60 w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, rgba(34, 211, 238, 0.03) 40%, transparent 70%)',
+                }}
+                animate={{
+                    scale: [1, 1.15, 1],
+                    opacity: [0.4, 0.6, 0.4],
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+
+            {/* Aurora orb 3 - Pink */}
+            <motion.div
+                className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 60%)',
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+            />
+        </div>
+    )
+}
 
 /* ============================================================================
    TYPES
@@ -203,7 +265,7 @@ function generateActivityFromProgress(
 }
 
 /* ============================================================================
-   STAT CARD COMPONENT
+   COSMIC STAT CARD COMPONENT
    ============================================================================ */
 
 function StatCard({
@@ -217,27 +279,66 @@ function StatCard({
     label: string
     value: string | number
     subtext?: string
-    color?: "blue" | "green" | "orange" | "purple" | "red"
+    color?: "blue" | "green" | "orange" | "purple" | "red" | "cyan"
 }) {
     const colorClasses = {
-        blue: "from-blue-500/20 to-blue-600/10 text-blue-400",
-        green: "from-green-500/20 to-green-600/10 text-green-400",
-        orange: "from-orange-500/20 to-orange-600/10 text-orange-400",
-        purple: "from-purple-500/20 to-purple-600/10 text-purple-400",
-        red: "from-red-500/20 to-red-600/10 text-red-400",
+        blue: {
+            bg: "from-blue-500/25 to-blue-600/10",
+            text: "text-blue-400",
+            glow: 'rgba(59, 130, 246, 0.5)',
+            border: "border-blue-500/40"
+        },
+        green: {
+            bg: "from-emerald-500/25 to-emerald-600/10",
+            text: "text-emerald-400",
+            glow: 'rgba(16, 185, 129, 0.5)',
+            border: "border-emerald-500/40"
+        },
+        orange: {
+            bg: "from-orange-500/25 to-orange-600/10",
+            text: "text-orange-400",
+            glow: 'rgba(249, 115, 22, 0.5)',
+            border: "border-orange-500/40"
+        },
+        purple: {
+            bg: "from-purple-500/25 to-purple-600/10",
+            text: "text-purple-400",
+            glow: 'rgba(139, 92, 246, 0.5)',
+            border: "border-purple-500/40"
+        },
+        red: {
+            bg: "from-red-500/25 to-red-600/10",
+            text: "text-red-400",
+            glow: 'rgba(239, 68, 68, 0.5)',
+            border: "border-red-500/40"
+        },
+        cyan: {
+            bg: "from-cyan-500/25 to-cyan-600/10",
+            text: "text-cyan-400",
+            glow: 'rgba(34, 211, 238, 0.5)',
+            border: "border-cyan-500/40"
+        },
     }
+
+    const styles = colorClasses[color]
 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.03, y: -3 }}
+            transition={{ ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "relative overflow-hidden rounded-2xl",
                 "bg-gradient-to-br",
-                colorClasses[color],
-                "border border-neutral-800",
-                "p-5"
+                styles.bg,
+                "border",
+                styles.border,
+                "p-5 backdrop-blur-sm"
             )}
+            style={{
+                boxShadow: `0 0 30px ${styles.glow.replace('0.5', '0.15')}`
+            }}
         >
             <div className="flex items-start justify-between">
                 <div>
@@ -247,19 +348,29 @@ function StatCard({
                         <p className="text-xs text-neutral-500 mt-1">{subtext}</p>
                     )}
                 </div>
-                <div className={cn(
-                    "p-3 rounded-xl",
-                    "bg-neutral-800/50"
-                )}>
-                    <Icon className="w-6 h-6" />
-                </div>
+                <motion.div
+                    className={cn(
+                        "p-3 rounded-xl",
+                        "bg-neutral-800/50"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            `0 0 10px ${styles.glow}`,
+                            `0 0 25px ${styles.glow}`,
+                            `0 0 10px ${styles.glow}`,
+                        ]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <Icon className={cn("w-6 h-6", styles.text)} />
+                </motion.div>
             </div>
         </motion.div>
     )
 }
 
 /* ============================================================================
-   ACTIVITY HEATMAP (GitHub-style)
+   COSMIC ACTIVITY HEATMAP (GitHub-style)
    ============================================================================ */
 
 function ActivityHeatmap({ data }: { data: DayActivity[] }) {
@@ -273,11 +384,11 @@ function ActivityHeatmap({ data }: { data: DayActivity[] }) {
     }, [data])
 
     const getIntensity = (xp: number): string => {
-        if (xp === 0) return "bg-neutral-800"
-        if (xp < 50) return "bg-green-900/60"
-        if (xp < 100) return "bg-green-700/70"
-        if (xp < 150) return "bg-green-500/80"
-        return "bg-green-400"
+        if (xp === 0) return "bg-neutral-800/50"
+        if (xp < 50) return "bg-cyan-900/60"
+        if (xp < 100) return "bg-cyan-700/70"
+        if (xp < 150) return "bg-cyan-500/80"
+        return "bg-cyan-400"
     }
 
     const dayLabels = ["", "Mon", "", "Wed", "", "Fri", ""]
@@ -286,16 +397,28 @@ function ActivityHeatmap({ data }: { data: DayActivity[] }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "rounded-2xl",
-                "bg-neutral-900/50 border border-neutral-800",
-                "p-6"
+                "bg-gradient-to-br from-cyan-500/10 to-cyan-600/5",
+                "border border-cyan-500/30",
+                "p-6 backdrop-blur-sm"
             )}
+            style={{
+                boxShadow: '0 0 40px rgba(34, 211, 238, 0.1)'
+            }}
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-green-400" />
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.7, 1, 0.7]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <Calendar className="w-5 h-5 text-cyan-400" />
+                    </motion.div>
                     <h3 className="text-lg font-semibold text-white">Activity</h3>
                 </div>
                 <span className="text-sm text-neutral-400">Last 12 weeks</span>
@@ -334,11 +457,11 @@ function ActivityHeatmap({ data }: { data: DayActivity[] }) {
             <div className="flex items-center justify-end gap-2 mt-4 text-xs text-neutral-500">
                 <span>Less</span>
                 <div className="flex gap-0.5">
-                    <div className="w-3 h-3 rounded-sm bg-neutral-800" />
-                    <div className="w-3 h-3 rounded-sm bg-green-900/60" />
-                    <div className="w-3 h-3 rounded-sm bg-green-700/70" />
-                    <div className="w-3 h-3 rounded-sm bg-green-500/80" />
-                    <div className="w-3 h-3 rounded-sm bg-green-400" />
+                    <div className="w-3 h-3 rounded-sm bg-neutral-800/50" />
+                    <div className="w-3 h-3 rounded-sm bg-cyan-900/60" />
+                    <div className="w-3 h-3 rounded-sm bg-cyan-700/70" />
+                    <div className="w-3 h-3 rounded-sm bg-cyan-500/80" />
+                    <div className="w-3 h-3 rounded-sm bg-cyan-400" />
                 </div>
                 <span>More</span>
             </div>
@@ -347,7 +470,7 @@ function ActivityHeatmap({ data }: { data: DayActivity[] }) {
 }
 
 /* ============================================================================
-   MODULE PROGRESS LIST
+   COSMIC MODULE PROGRESS LIST
    ============================================================================ */
 
 function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
@@ -355,15 +478,27 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "rounded-2xl",
-                "bg-neutral-900/50 border border-neutral-800",
-                "p-6"
+                "bg-gradient-to-br from-purple-500/10 to-purple-600/5",
+                "border border-purple-500/30",
+                "p-6 backdrop-blur-sm"
             )}
+            style={{
+                boxShadow: '0 0 40px rgba(139, 92, 246, 0.1)'
+            }}
         >
             <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="w-5 h-5 text-blue-400" />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <BookOpen className="w-5 h-5 text-purple-400" />
+                </motion.div>
                 <h3 className="text-lg font-semibold text-white">Module Progress</h3>
             </div>
 
@@ -373,14 +508,22 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
                         key={module.slug}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 * idx }}
+                        transition={{ delay: 0.1 * idx, ease: [0.16, 1, 0.3, 1] }}
                         className="group"
                     >
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                                <div
+                                <motion.div
                                     className="w-2 h-2 rounded-full"
                                     style={{ backgroundColor: module.color }}
+                                    animate={{
+                                        boxShadow: [
+                                            `0 0 5px ${module.color}`,
+                                            `0 0 15px ${module.color}`,
+                                            `0 0 5px ${module.color}`,
+                                        ]
+                                    }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                                 />
                                 <span className="text-sm font-medium text-neutral-200">
                                     {module.name}
@@ -396,15 +539,22 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
                             </div>
                         </div>
 
-                        {/* Progress bar */}
-                        <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                        {/* Shimmer Progress bar */}
+                        <div className="h-2 bg-neutral-800/50 rounded-full overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${module.progress}%` }}
-                                transition={{ duration: 1, delay: 0.2 + idx * 0.1 }}
-                                className="h-full rounded-full"
+                                transition={{ duration: 1, delay: 0.2 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                className="h-full rounded-full relative overflow-hidden"
                                 style={{ backgroundColor: module.color }}
-                            />
+                            >
+                                {/* Shimmer effect */}
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                    animate={{ x: ['-100%', '100%'] }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: idx * 0.2 }}
+                                />
+                            </motion.div>
                         </div>
                     </motion.div>
                 ))}
@@ -421,7 +571,7 @@ function ModuleProgressList({ modules }: { modules: ModuleProgress[] }) {
 }
 
 /* ============================================================================
-   XP LEVEL PROGRESS
+   COSMIC XP LEVEL PROGRESS
    ============================================================================ */
 
 function XPLevelProgress({
@@ -441,34 +591,55 @@ function XPLevelProgress({
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
+            transition={{ delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "rounded-2xl",
-                "bg-gradient-to-br from-indigo-500/20 to-purple-600/10",
-                "border border-neutral-800",
-                "p-6"
+                "bg-gradient-to-br from-amber-500/15 to-orange-600/10",
+                "border border-amber-500/40",
+                "p-6 backdrop-blur-sm"
             )}
+            style={{
+                boxShadow: '0 0 50px rgba(245, 158, 11, 0.12)'
+            }}
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <Trophy className="w-5 h-5 text-yellow-400" />
+                    <motion.div
+                        animate={{
+                            scale: [1, 1.2, 1],
+                            rotate: [0, 5, -5, 0],
+                            opacity: [0.8, 1, 0.8]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <Trophy className="w-5 h-5 text-amber-400" />
+                    </motion.div>
                     <h3 className="text-lg font-semibold text-white">Level Progress</h3>
                 </div>
             </div>
 
             <div className="flex items-center gap-6">
-                {/* Level badge */}
-                <div className={cn(
-                    "w-20 h-20 rounded-2xl",
-                    "bg-gradient-to-br from-yellow-500 to-orange-600",
-                    "flex items-center justify-center",
-                    "shadow-lg shadow-yellow-500/20"
-                )}>
+                {/* Level badge with cosmic glow */}
+                <motion.div
+                    className={cn(
+                        "w-20 h-20 rounded-2xl",
+                        "bg-gradient-to-br from-amber-500 to-orange-600",
+                        "flex items-center justify-center"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            '0 0 20px rgba(245, 158, 11, 0.4)',
+                            '0 0 40px rgba(245, 158, 11, 0.7)',
+                            '0 0 20px rgba(245, 158, 11, 0.4)',
+                        ]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
                     <div className="text-center">
-                        <p className="text-xs text-yellow-100 font-medium">LEVEL</p>
+                        <p className="text-xs text-amber-100 font-medium">LEVEL</p>
                         <p className="text-3xl font-black text-white">{level}</p>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Progress info */}
                 <div className="flex-1">
@@ -481,18 +652,25 @@ function XPLevelProgress({
                         </span>
                     </div>
 
-                    {/* XP progress bar */}
-                    <div className="h-3 bg-neutral-800 rounded-full overflow-hidden">
+                    {/* XP progress bar with shimmer */}
+                    <div className="h-3 bg-neutral-800/50 rounded-full overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${progressPercent}%` }}
-                            transition={{ duration: 1.2, ease: "easeOut" }}
-                            className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full"
-                        />
+                            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                            className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full relative overflow-hidden"
+                        >
+                            {/* Shimmer effect */}
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                                animate={{ x: ['-100%', '100%'] }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                        </motion.div>
                     </div>
 
                     <p className="text-xs text-neutral-500 mt-2">
-                        {Math.round(progressPercent)}% till nästa nivå
+                        <span className="text-amber-400 font-semibold">{Math.round(progressPercent)}%</span> till nästa nivå
                     </p>
                 </div>
             </div>
@@ -608,13 +786,25 @@ function Milestones({
 
 function LoadingState() {
     return (
-        <div className="min-h-screen bg-gray-950 p-6 lg:p-8 flex items-center justify-center">
+        <div className="min-h-screen bg-[#05050a] p-6 lg:p-8 flex items-center justify-center">
+            <CosmicAurora />
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center"
+                className="text-center relative z-10"
             >
-                <Loader2 className="w-12 h-12 text-purple-500 animate-spin mx-auto mb-4" />
+                <motion.div
+                    animate={{
+                        rotate: 360,
+                        scale: [1, 1.1, 1]
+                    }}
+                    transition={{
+                        rotate: { duration: 1, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                >
+                    <Loader2 className="w-12 h-12 text-purple-500 mx-auto mb-4" />
+                </motion.div>
                 <p className="text-neutral-400">Laddar din progress...</p>
             </motion.div>
         </div>
@@ -627,16 +817,25 @@ function LoadingState() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
     return (
-        <div className="min-h-screen bg-gray-950 p-6 lg:p-8 flex items-center justify-center">
+        <div className="min-h-screen bg-[#05050a] p-6 lg:p-8 flex items-center justify-center">
+            <CosmicAurora />
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center max-w-md"
+                className="text-center max-w-md relative z-10"
             >
-                <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                </motion.div>
                 <h2 className="text-xl font-semibold text-white mb-2">Kunde inte ladda data</h2>
                 <p className="text-neutral-400 mb-6">{message}</p>
-                <Button onClick={onRetry} variant="outline" className="gap-2">
+                <Button onClick={onRetry} variant="outline" className="gap-2 border-red-500/40 hover:border-red-500/60">
                     <RefreshCw className="w-4 h-4" />
                     Försök igen
                 </Button>
@@ -786,101 +985,130 @@ export function SkillpathBoard() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-950 p-6 lg:p-8">
-            {/* YOUR JOURNEY Header Card */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                    "relative overflow-hidden rounded-2xl mb-8",
-                    "bg-gradient-to-r from-zinc-900 via-zinc-900/95 to-purple-950/30",
-                    "border border-zinc-800/60"
-                )}
-            >
-                {/* Background glow effects */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-                <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px]" />
+        <div className="min-h-screen bg-[#05050a] p-6 lg:p-8 relative">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
 
-                <div className="relative p-8">
-                    {/* Badge */}
-                    <div className="flex items-center gap-2 mb-4">
-                        <Rocket className="w-5 h-5 text-purple-400" />
-                        <span className="text-sm font-semibold text-purple-400 tracking-wide uppercase">
-                            Your Journey
-                        </span>
+            <div className="relative z-10">
+                {/* YOUR JOURNEY Header Card - COSMIC */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                        "relative overflow-hidden rounded-2xl mb-8",
+                        "bg-gradient-to-r from-[#0a0a0f] via-[#0a0a0f]/95 to-purple-950/20",
+                        "border border-purple-500/30"
+                    )}
+                    style={{
+                        boxShadow: '0 0 60px rgba(139, 92, 246, 0.15)'
+                    }}
+                >
+                    {/* Background glow effects */}
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-cyan-500/8 rounded-full blur-[80px]" />
+                    <div className="absolute top-1/2 left-1/2 w-48 h-48 bg-pink-500/5 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2" />
+
+                    <div className="relative p-8">
+                        {/* Badge with pulsating glow */}
+                        <div className="flex items-center gap-2 mb-4">
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.7, 1, 0.7]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Rocket className="w-5 h-5 text-purple-400" />
+                            </motion.div>
+                            <span className="text-sm font-semibold text-purple-400 tracking-wide uppercase">
+                                Your Journey
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h1 className="text-3xl lg:text-4xl font-bold mb-3 flex items-center gap-3">
+                            <span className="bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+                                Keep Going, {firstName}!
+                            </span>
+                            <motion.span
+                                className="text-3xl"
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    rotate: [0, 10, -10, 0]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                🔥
+                            </motion.span>
+                        </h1>
+
+                        {/* Subtitle */}
+                        <p className="text-zinc-400 text-lg max-w-xl">
+                            Track your DevOps learning journey and celebrate every win
+                        </p>
+
+                        {/* Refresh button - positioned top right */}
+                        <Button
+                            onClick={() => refetch()}
+                            variant="ghost"
+                            size="sm"
+                            className="absolute top-6 right-6 text-zinc-500 hover:text-white hover:bg-purple-500/20"
+                        >
+                            <RefreshCw className="w-4 h-4" />
+                        </Button>
+                    </div>
+                </motion.div>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <StatCard
+                        icon={Zap}
+                        label="Total XP"
+                        value={data.totalXP.toLocaleString()}
+                        subtext={data.totalXP > 0 ? "Fortsätt kämpa!" : "Börja lära dig!"}
+                        color="purple"
+                    />
+                    <StatCard
+                        icon={CheckCircle}
+                        label="Avklarade Flash/Quiz"
+                        value={completedExercises}
+                        subtext={completedExercises > 0 ? "Flashcards & Quiz" : "Starta din första!"}
+                        color="orange"
+                    />
+                    <StatCard
+                        icon={Target}
+                        label="Tasks klara"
+                        value={data.tasksCompleted}
+                        subtext={data.tasksCompleted > 0 ? "Bra jobbat!" : "Börja med första tasken"}
+                        color="cyan"
+                    />
+                    <StatCard
+                        icon={Clock}
+                        label="Tid investerad"
+                        value={formatTime(weeklyTime)}
+                        subtext="Uppskattad tid denna vecka"
+                        color="blue"
+                    />
+                </div>
+
+                {/* Main Content Grid */}
+                <div className="grid lg:grid-cols-2 gap-6">
+                    {/* Left Column */}
+                    <div className="space-y-6">
+                        <XPLevelProgress
+                            level={data.currentLevel}
+                            totalXP={data.totalXP}
+                            xpToNext={data.xpToNextLevel}
+                        />
+                        <ActivityHeatmap data={data.activityHistory} />
                     </div>
 
-                    {/* Title */}
-                    <h1 className="text-3xl lg:text-4xl font-bold text-white mb-3 flex items-center gap-3">
-                        Keep Going, {firstName}!
-                        <span className="text-3xl">🔥</span>
-                    </h1>
-
-                    {/* Subtitle */}
-                    <p className="text-zinc-400 text-lg max-w-xl">
-                        Track your DevOps learning journey and celebrate every win
-                    </p>
-
-                    {/* Refresh button - positioned top right */}
-                    <Button
-                        onClick={() => refetch()}
-                        variant="ghost"
-                        size="sm"
-                        className="absolute top-6 right-6 text-zinc-500 hover:text-white"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                    </Button>
-                </div>
-            </motion.div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <StatCard
-                    icon={Zap}
-                    label="Total XP"
-                    value={data.totalXP.toLocaleString()}
-                    subtext={data.totalXP > 0 ? "Fortsätt kämpa!" : "Börja lära dig!"}
-                    color="purple"
-                />
-                <StatCard
-                    icon={CheckCircle}
-                    label="Avklarade Flash/Quiz"
-                    value={completedExercises}
-                    subtext={completedExercises > 0 ? "Flashcards & Quiz" : "Starta din första!"}
-                    color="orange"
-                />
-                <StatCard
-                    icon={Target}
-                    label="Tasks klara"
-                    value={data.tasksCompleted}
-                    subtext={data.tasksCompleted > 0 ? "Bra jobbat!" : "Börja med första tasken"}
-                    color="green"
-                />
-                <StatCard
-                    icon={Clock}
-                    label="Tid investerad"
-                    value={formatTime(weeklyTime)}
-                    subtext="Uppskattad tid denna vecka"
-                    color="blue"
-                />
-            </div>
-
-            {/* Main Content Grid */}
-            <div className="grid lg:grid-cols-2 gap-6">
-                {/* Left Column */}
-                <div className="space-y-6">
-                    <XPLevelProgress
-                        level={data.currentLevel}
-                        totalXP={data.totalXP}
-                        xpToNext={data.xpToNextLevel}
-                    />
-                    <ActivityHeatmap data={data.activityHistory} />
-                </div>
-
-                {/* Right Column */}
-                <div className="space-y-6">
-                    <ModuleProgressList modules={data.moduleProgress} />
-                    <Milestones tasksCompleted={data.tasksCompleted} streak={data.currentStreak} level={data.currentLevel} modulesCompleted={data.modulesCompleted} />
+                    {/* Right Column */}
+                    <div className="space-y-6">
+                        <ModuleProgressList modules={data.moduleProgress} />
+                        <Milestones tasksCompleted={data.tasksCompleted} streak={data.currentStreak} level={data.currentLevel} modulesCompleted={data.modulesCompleted} />
+                    </div>
                 </div>
             </div>
         </div>

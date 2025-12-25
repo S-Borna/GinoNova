@@ -1,11 +1,11 @@
 /**
  * ============================================================================
- * LANDING PAGE INDEX — Export All Landing Components
+ * 🌌 LANDING PAGE INDEX — COSMIC RELAUNCH EDITION 🌌
  * ============================================================================
  *
  * Centralized exports for cleaner imports.
  *
- * @phase A.1 - Landing Page
+ * @phase MILESTONE-2.0-COSMIC-RELAUNCH
  */
 
 export { Hero } from "./Hero"
@@ -15,3 +15,4 @@ export { CurriculumPreview } from "./CurriculumPreview"
 export { CTASection } from "./CTASection"
 export { Footer } from "./Footer"
 export { Navbar } from "./Navbar"
+export { CosmicIntro } from "./CosmicIntro"

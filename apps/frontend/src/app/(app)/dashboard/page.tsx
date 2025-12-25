@@ -2,20 +2,19 @@
 
 /**
  * ============================================================================
- * DASHBOARD PAGE — PREMIUM DELUXE EDITION ✨
+ * DASHBOARD PAGE — COSMIC EDITION 🌌
  * ============================================================================
  *
  * The MOTHERSHIP - Command Center for DevOps Learning
  *
- * Design Philosophy:
- * - Premium glow effects matching Progress/Studyflow
- * - Chill Mint (#22D3AC) for success/progress
- * - Focus Purple (#8B5CF6) for primary accent
- * - XP Gold (#F59E0B) for achievements
- * - Fire Orange (#F97316) for streaks
- * - Glassmorphism cards with hover effects
+ * Design Philosophy (COSMIC GLOW UP):
+ * - Deep space background (#05050a)
+ * - Multi-layered aurora orbs (purple/cyan/pink)
+ * - Pulsating icon glows
+ * - Netflix-smooth animations [0.16, 1, 0.3, 1]
+ * - Premium glassmorphism with cosmic glow
  *
- * @phase PREMIUM-DELUXE-POLISH
+ * @phase MILESTONE-2.0-COSMIC
  */
 
 import { useEffect, useState, useCallback } from "react"
@@ -32,6 +31,84 @@ const SecureLink = ({ href, children, className }: { href: string; children: Rea
 
 // @saas/ui Design System
 import { PageLayout, Section } from "@saas/ui"
+
+/* ============================================================================
+   COSMIC AURORA BACKGROUND
+   ============================================================================ */
+
+function CosmicAurora() {
+    return (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            {/* Deep cosmic base */}
+            <div className="absolute inset-0 bg-[#05050a]" />
+
+            {/* Subtle grid pattern */}
+            <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '60px 60px'
+                }}
+            />
+
+            {/* Aurora orb 1 - Purple (top right) */}
+            <motion.div
+                className="absolute -top-40 -right-40 w-[800px] h-[800px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.05) 40%, transparent 70%)',
+                }}
+                animate={{
+                    scale: [1, 1.1, 1],
+                    opacity: [0.6, 0.8, 0.6],
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            />
+
+            {/* Aurora orb 2 - Cyan (bottom left) */}
+            <motion.div
+                className="absolute -bottom-60 -left-60 w-[700px] h-[700px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(34, 211, 238, 0.12) 0%, rgba(34, 211, 238, 0.04) 40%, transparent 70%)',
+                }}
+                animate={{
+                    scale: [1, 1.15, 1],
+                    opacity: [0.5, 0.7, 0.5],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 2
+                }}
+            />
+
+            {/* Aurora orb 3 - Pink (center) */}
+            <motion.div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, rgba(236, 72, 153, 0.02) 40%, transparent 70%)',
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.4, 0.6, 0.4],
+                }}
+                transition={{
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 4
+                }}
+            />
+        </div>
+    )
+}
 
 // UI Components
 import { Button } from "@/components/ui/button"
@@ -75,7 +152,7 @@ function calculateLevel(xp: number): { level: number; currentXP: number; xpToNex
 }
 
 /* ============================================================================
-   PREMIUM HERO - Command Center Header
+   COSMIC HERO - Command Center Header
    ============================================================================ */
 
 function PremiumHero({ userName, level, streak }: { userName: string; level: number; streak: number }) {
@@ -83,37 +160,59 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "relative overflow-hidden rounded-3xl",
-                "bg-gradient-to-br from-zinc-900 via-purple-950/40 to-zinc-900",
+                "bg-gradient-to-br from-[#0a0a0f] via-purple-950/20 to-[#0a0a0f]",
                 "border border-purple-500/20",
-                "p-8 md:p-10"
+                "p-8 md:p-10",
+                "shadow-[0_0_80px_rgba(139,92,246,0.15)]"
             )}
         >
-            {/* Ambient glow effects */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
-            <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
+            {/* Cosmic glow effects */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/8 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+            <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
 
-            {/* Animated sparkles */}
+            {/* Subtle grid overlay */}
+            <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139, 92, 246, 0.5) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139, 92, 246, 0.5) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '40px 40px'
+                }}
+            />
+
+            {/* Animated cosmic particles */}
             <motion.div
                 className="absolute top-8 right-20 text-purple-400/60"
-                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                transition={{ duration: 4, repeat: Infinity }}
+                animate={{
+                    rotate: 360,
+                    scale: [1, 1.3, 1],
+                    opacity: [0.4, 0.8, 0.4]
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
                 <Sparkles className="w-6 h-6" />
             </motion.div>
             <motion.div
-                className="absolute bottom-12 right-40 text-emerald-400/40"
-                animate={{ rotate: -360, scale: [1, 1.3, 1] }}
-                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+                className="absolute bottom-12 right-40 text-cyan-400/40"
+                animate={{
+                    rotate: -360,
+                    scale: [1, 1.4, 1],
+                    opacity: [0.3, 0.7, 0.3]
+                }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1, ease: "easeInOut" }}
             >
                 <Star className="w-5 h-5" />
             </motion.div>
             <motion.div
-                className="absolute top-1/2 right-16 text-amber-400/30"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute top-1/2 right-16 text-pink-400/30"
+                animate={{ y: [0, -15, 0], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
                 <Zap className="w-4 h-4" />
             </motion.div>
@@ -123,16 +222,27 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
+                        transition={{ delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         className="flex items-center gap-3 mb-3"
                     >
-                        <div className={cn(
-                            "p-2 rounded-xl",
-                            "bg-gradient-to-br from-purple-500/20 to-purple-600/10",
-                            "border border-purple-500/30"
-                        )}>
+                        {/* Pulsating icon container */}
+                        <motion.div
+                            className={cn(
+                                "relative p-2.5 rounded-xl",
+                                "bg-gradient-to-br from-purple-500/30 to-purple-600/20",
+                                "border border-purple-500/40"
+                            )}
+                            animate={{
+                                boxShadow: [
+                                    '0 0 20px rgba(139, 92, 246, 0.3)',
+                                    '0 0 40px rgba(139, 92, 246, 0.5)',
+                                    '0 0 20px rgba(139, 92, 246, 0.3)',
+                                ]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
                             <Rocket className="w-5 h-5 text-purple-400" />
-                        </div>
+                        </motion.div>
                         <span className="text-purple-400 font-semibold text-sm uppercase tracking-wider">
                             Command Center
                         </span>
@@ -141,10 +251,10 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     <motion.h1
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
+                        transition={{ delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className={cn(
                             "text-3xl md:text-4xl lg:text-5xl font-black mb-3",
-                            "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
+                            "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
                         )}
                     >
                         Welcome back, {userName}! 🚀
@@ -153,61 +263,101 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.4 }}
+                        transition={{ delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                         className="text-zinc-400 text-lg max-w-xl"
                     >
                         Your DevOps journey awaits. Let&apos;s crush some goals today!
                     </motion.p>
                 </div>
 
-                {/* Stats badges */}
+                {/* Stats badges with cosmic glow */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
+                    transition={{ delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="flex gap-4"
                 >
                     {/* Level Badge */}
-                    <div className={cn(
-                        "flex items-center gap-3 px-5 py-4 rounded-2xl",
-                        "bg-gradient-to-br from-purple-600/20 to-purple-500/10",
-                        "border border-purple-500/30",
-                        "shadow-[0_0_40px_rgba(139,92,246,0.25)]"
-                    )}>
-                        <div className={cn(
-                            "w-12 h-12 rounded-xl",
-                            "bg-gradient-to-br from-purple-500 to-purple-700",
-                            "flex items-center justify-center",
-                            "shadow-[0_0_25px_rgba(139,92,246,0.6)]"
-                        )}>
+                    <motion.div
+                        className={cn(
+                            "flex items-center gap-3 px-5 py-4 rounded-2xl",
+                            "bg-gradient-to-br from-purple-600/25 to-purple-500/10",
+                            "border border-purple-500/40",
+                            "backdrop-blur-sm"
+                        )}
+                        whileHover={{ scale: 1.02 }}
+                        animate={{
+                            boxShadow: [
+                                '0 0 30px rgba(139, 92, 246, 0.2)',
+                                '0 0 50px rgba(139, 92, 246, 0.35)',
+                                '0 0 30px rgba(139, 92, 246, 0.2)',
+                            ]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <motion.div
+                            className={cn(
+                                "w-12 h-12 rounded-xl",
+                                "bg-gradient-to-br from-purple-500 to-purple-700",
+                                "flex items-center justify-center"
+                            )}
+                            animate={{
+                                boxShadow: [
+                                    '0 0 15px rgba(139, 92, 246, 0.5)',
+                                    '0 0 30px rgba(139, 92, 246, 0.8)',
+                                    '0 0 15px rgba(139, 92, 246, 0.5)',
+                                ]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
                             <Zap className="w-6 h-6 text-white" />
-                        </div>
+                        </motion.div>
                         <div>
                             <p className="text-zinc-500 text-xs uppercase tracking-wider">Level</p>
                             <p className="text-2xl font-bold text-purple-400">{level}</p>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Streak Badge */}
-                    <div className={cn(
-                        "flex items-center gap-3 px-5 py-4 rounded-2xl",
-                        "bg-gradient-to-br from-orange-600/20 to-orange-500/10",
-                        "border border-orange-500/30",
-                        "shadow-[0_0_40px_rgba(249,115,22,0.2)]"
-                    )}>
-                        <div className={cn(
-                            "w-12 h-12 rounded-xl",
-                            "bg-gradient-to-br from-orange-500 to-red-600",
-                            "flex items-center justify-center",
-                            "shadow-[0_0_25px_rgba(249,115,22,0.5)]"
-                        )}>
+                    <motion.div
+                        className={cn(
+                            "flex items-center gap-3 px-5 py-4 rounded-2xl",
+                            "bg-gradient-to-br from-orange-600/25 to-orange-500/10",
+                            "border border-orange-500/40",
+                            "backdrop-blur-sm"
+                        )}
+                        whileHover={{ scale: 1.02 }}
+                        animate={{
+                            boxShadow: [
+                                '0 0 30px rgba(249, 115, 22, 0.15)',
+                                '0 0 50px rgba(249, 115, 22, 0.3)',
+                                '0 0 30px rgba(249, 115, 22, 0.15)',
+                            ]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                    >
+                        <motion.div
+                            className={cn(
+                                "w-12 h-12 rounded-xl",
+                                "bg-gradient-to-br from-orange-500 to-red-600",
+                                "flex items-center justify-center"
+                            )}
+                            animate={{
+                                boxShadow: [
+                                    '0 0 15px rgba(249, 115, 22, 0.4)',
+                                    '0 0 30px rgba(249, 115, 22, 0.7)',
+                                    '0 0 15px rgba(249, 115, 22, 0.4)',
+                                ]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
                             <Flame className="w-6 h-6 text-white" />
-                        </div>
+                        </motion.div>
                         <div>
                             <p className="text-zinc-500 text-xs uppercase tracking-wider">Streak</p>
                             <p className="text-2xl font-bold text-orange-400">{streak} days</p>
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.div>
             </div>
         </motion.div>
@@ -215,7 +365,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
 }
 
 /* ============================================================================
-   PREMIUM STAT CARD
+   COSMIC STAT CARD
    ============================================================================ */
 
 interface StatCardProps {
@@ -223,46 +373,83 @@ interface StatCardProps {
     label: string
     value: string | number
     subtext?: string
-    color: "purple" | "emerald" | "amber" | "orange" | "blue"
+    color: "purple" | "emerald" | "amber" | "orange" | "blue" | "cyan"
     delay?: number
 }
 
 function PremiumStatCard({ icon, label, value, subtext, color, delay = 0 }: StatCardProps) {
     const colorMap = {
         purple: {
-            bg: "from-purple-600/20 to-purple-500/5",
-            border: "border-purple-500/30",
-            glow: "shadow-[0_0_30px_rgba(139,92,246,0.15)]",
+            bg: "from-purple-600/25 to-purple-500/5",
+            border: "border-purple-500/40",
+            glow: [
+                '0 0 25px rgba(139, 92, 246, 0.15)',
+                '0 0 40px rgba(139, 92, 246, 0.25)',
+                '0 0 25px rgba(139, 92, 246, 0.15)',
+            ],
             text: "text-purple-400",
             iconBg: "from-purple-500 to-purple-700",
+            iconGlow: 'rgba(139, 92, 246, 0.5)',
         },
         emerald: {
-            bg: "from-emerald-600/20 to-emerald-500/5",
-            border: "border-emerald-500/30",
-            glow: "shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+            bg: "from-emerald-600/25 to-emerald-500/5",
+            border: "border-emerald-500/40",
+            glow: [
+                '0 0 25px rgba(16, 185, 129, 0.15)',
+                '0 0 40px rgba(16, 185, 129, 0.25)',
+                '0 0 25px rgba(16, 185, 129, 0.15)',
+            ],
             text: "text-emerald-400",
             iconBg: "from-emerald-500 to-teal-600",
+            iconGlow: 'rgba(16, 185, 129, 0.5)',
+        },
+        cyan: {
+            bg: "from-cyan-600/25 to-cyan-500/5",
+            border: "border-cyan-500/40",
+            glow: [
+                '0 0 25px rgba(34, 211, 238, 0.15)',
+                '0 0 40px rgba(34, 211, 238, 0.25)',
+                '0 0 25px rgba(34, 211, 238, 0.15)',
+            ],
+            text: "text-cyan-400",
+            iconBg: "from-cyan-500 to-cyan-600",
+            iconGlow: 'rgba(34, 211, 238, 0.5)',
         },
         amber: {
-            bg: "from-amber-600/20 to-amber-500/5",
-            border: "border-amber-500/30",
-            glow: "shadow-[0_0_30px_rgba(245,158,11,0.15)]",
+            bg: "from-amber-600/25 to-amber-500/5",
+            border: "border-amber-500/40",
+            glow: [
+                '0 0 25px rgba(245, 158, 11, 0.15)',
+                '0 0 40px rgba(245, 158, 11, 0.25)',
+                '0 0 25px rgba(245, 158, 11, 0.15)',
+            ],
             text: "text-amber-400",
             iconBg: "from-amber-500 to-orange-600",
+            iconGlow: 'rgba(245, 158, 11, 0.5)',
         },
         orange: {
-            bg: "from-orange-600/20 to-orange-500/5",
-            border: "border-orange-500/30",
-            glow: "shadow-[0_0_30px_rgba(249,115,22,0.15)]",
+            bg: "from-orange-600/25 to-orange-500/5",
+            border: "border-orange-500/40",
+            glow: [
+                '0 0 25px rgba(249, 115, 22, 0.15)',
+                '0 0 40px rgba(249, 115, 22, 0.25)',
+                '0 0 25px rgba(249, 115, 22, 0.15)',
+            ],
             text: "text-orange-400",
             iconBg: "from-orange-500 to-red-600",
+            iconGlow: 'rgba(249, 115, 22, 0.5)',
         },
         blue: {
-            bg: "from-blue-600/20 to-blue-500/5",
-            border: "border-blue-500/30",
-            glow: "shadow-[0_0_30px_rgba(59,130,246,0.15)]",
+            bg: "from-blue-600/25 to-blue-500/5",
+            border: "border-blue-500/40",
+            glow: [
+                '0 0 25px rgba(59, 130, 246, 0.15)',
+                '0 0 40px rgba(59, 130, 246, 0.25)',
+                '0 0 25px rgba(59, 130, 246, 0.15)',
+            ],
             text: "text-blue-400",
             iconBg: "from-blue-500 to-indigo-600",
+            iconGlow: 'rgba(59, 130, 246, 0.5)',
         },
     }
 
@@ -272,17 +459,20 @@ function PremiumStatCard({ icon, label, value, subtext, color, delay = 0 }: Stat
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay }}
-            whileHover={{ scale: 1.02, y: -4 }}
+            transition={{ delay, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ scale: 1.03, y: -5 }}
             className={cn(
                 "relative p-5 rounded-2xl",
                 "bg-gradient-to-br",
                 styles.bg,
                 "border",
                 styles.border,
-                styles.glow,
+                "backdrop-blur-sm",
                 "transition-all duration-300"
             )}
+            style={{
+                boxShadow: styles.glow[0]
+            }}
         >
             <div className="flex items-start justify-between">
                 <div>
@@ -290,22 +480,31 @@ function PremiumStatCard({ icon, label, value, subtext, color, delay = 0 }: Stat
                     <p className={cn("text-3xl font-bold", styles.text)}>{value}</p>
                     {subtext && <p className="text-zinc-600 text-xs mt-1">{subtext}</p>}
                 </div>
-                <div className={cn(
-                    "w-11 h-11 rounded-xl",
-                    "bg-gradient-to-br",
-                    styles.iconBg,
-                    "flex items-center justify-center",
-                    "shadow-lg"
-                )}>
+                <motion.div
+                    className={cn(
+                        "w-11 h-11 rounded-xl",
+                        "bg-gradient-to-br",
+                        styles.iconBg,
+                        "flex items-center justify-center"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            `0 0 10px ${styles.iconGlow}`,
+                            `0 0 25px ${styles.iconGlow}`,
+                            `0 0 10px ${styles.iconGlow}`,
+                        ]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
                     {icon}
-                </div>
+                </motion.div>
             </div>
         </motion.div>
     )
 }
 
 /* ============================================================================
-   QUICK ACTION CARD
+   COSMIC QUICK ACTION CARD
    ============================================================================ */
 
 interface QuickActionProps {
@@ -313,29 +512,43 @@ interface QuickActionProps {
     title: string
     description: string
     href: string
-    color: "purple" | "emerald" | "amber"
+    color: "purple" | "emerald" | "amber" | "cyan"
     delay?: number
 }
 
 function QuickActionCard({ icon, title, description, href, color, delay = 0 }: QuickActionProps) {
     const colorMap = {
         purple: {
-            bg: "hover:from-purple-600/20 hover:to-purple-500/10",
-            border: "hover:border-purple-500/40",
-            glow: "hover:shadow-[0_0_40px_rgba(139,92,246,0.2)]",
+            bg: "hover:from-purple-600/25 hover:to-purple-500/10",
+            border: "hover:border-purple-500/50",
+            hoverGlow: "hover:shadow-[0_0_50px_rgba(139,92,246,0.25)]",
             iconBg: "from-purple-500 to-purple-700",
+            iconGlow: 'rgba(139, 92, 246, 0.6)',
+            textHover: "group-hover:text-purple-300",
         },
         emerald: {
-            bg: "hover:from-emerald-600/20 hover:to-emerald-500/10",
-            border: "hover:border-emerald-500/40",
-            glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.2)]",
+            bg: "hover:from-emerald-600/25 hover:to-emerald-500/10",
+            border: "hover:border-emerald-500/50",
+            hoverGlow: "hover:shadow-[0_0_50px_rgba(16,185,129,0.25)]",
             iconBg: "from-emerald-500 to-teal-600",
+            iconGlow: 'rgba(16, 185, 129, 0.6)',
+            textHover: "group-hover:text-emerald-300",
         },
         amber: {
-            bg: "hover:from-amber-600/20 hover:to-amber-500/10",
-            border: "hover:border-amber-500/40",
-            glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.2)]",
+            bg: "hover:from-amber-600/25 hover:to-amber-500/10",
+            border: "hover:border-amber-500/50",
+            hoverGlow: "hover:shadow-[0_0_50px_rgba(245,158,11,0.25)]",
             iconBg: "from-amber-500 to-orange-600",
+            iconGlow: 'rgba(245, 158, 11, 0.6)',
+            textHover: "group-hover:text-amber-300",
+        },
+        cyan: {
+            bg: "hover:from-cyan-600/25 hover:to-cyan-500/10",
+            border: "hover:border-cyan-500/50",
+            hoverGlow: "hover:shadow-[0_0_50px_rgba(34,211,238,0.25)]",
+            iconBg: "from-cyan-500 to-cyan-600",
+            iconGlow: 'rgba(34, 211, 238, 0.6)',
+            textHover: "group-hover:text-cyan-300",
         },
     }
 
@@ -345,44 +558,55 @@ function QuickActionCard({ icon, title, description, href, color, delay = 0 }: Q
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay }}
+            transition={{ delay, ease: [0.16, 1, 0.3, 1] }}
         >
             <Link href={href} prefetch={false}>
-                <div className={cn(
-                    "group relative p-6 rounded-2xl",
-                    "bg-gradient-to-br from-zinc-900/80 to-zinc-800/50",
-                    "border border-zinc-800",
-                    styles.bg,
-                    styles.border,
-                    styles.glow,
-                    "transition-all duration-300 cursor-pointer"
-                )}>
+                <motion.div
+                    className={cn(
+                        "group relative p-6 rounded-2xl",
+                        "bg-gradient-to-br from-[#0a0a0f] to-[#0d0d14]",
+                        "border border-zinc-800/80",
+                        styles.bg,
+                        styles.border,
+                        styles.hoverGlow,
+                        "transition-all duration-300 cursor-pointer"
+                    )}
+                    whileHover={{ scale: 1.02, y: -3 }}
+                >
                     <div className="flex items-start gap-4">
-                        <div className={cn(
-                            "w-12 h-12 rounded-xl shrink-0",
-                            "bg-gradient-to-br",
-                            styles.iconBg,
-                            "flex items-center justify-center",
-                            "shadow-lg group-hover:scale-110 transition-transform duration-300"
-                        )}>
+                        <motion.div
+                            className={cn(
+                                "w-12 h-12 rounded-xl shrink-0",
+                                "bg-gradient-to-br",
+                                styles.iconBg,
+                                "flex items-center justify-center",
+                                "group-hover:scale-110 transition-transform duration-300"
+                            )}
+                            whileHover={{
+                                boxShadow: `0 0 30px ${styles.iconGlow}`
+                            }}
+                        >
                             {icon}
-                        </div>
+                        </motion.div>
                         <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-purple-300 transition-colors">
+                            <h3 className={cn(
+                                "text-lg font-semibold text-white mb-1 transition-colors",
+                                styles.textHover
+                            )}>
                                 {title}
                             </h3>
                             <p className="text-zinc-500 text-sm">{description}</p>
                         </div>
                         <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
                     </div>
-                </div>
+                </motion.div>
             </Link>
         </motion.div>
     )
 }
 
 /* ============================================================================
-   XP PROGRESS RING
+   COSMIC XP PROGRESS RING
    ============================================================================ */
 
 function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number; xpToNextLevel: number; level: number }) {
@@ -393,16 +617,27 @@ function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number
         <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
                 "relative p-6 rounded-2xl",
-                "bg-gradient-to-br from-amber-600/15 to-amber-500/5",
-                "border border-amber-500/30",
-                "shadow-[0_0_40px_rgba(245,158,11,0.15)]"
+                "bg-gradient-to-br from-amber-600/20 to-amber-500/5",
+                "border border-amber-500/40",
+                "backdrop-blur-sm"
             )}
+            style={{
+                boxShadow: '0 0 50px rgba(245, 158, 11, 0.15)'
+            }}
         >
             <h3 className="text-zinc-400 font-medium mb-4 flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-amber-400" />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.7, 1, 0.7]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                    <Trophy className="w-4 h-4 text-amber-400" />
+                </motion.div>
                 XP Progress
             </h3>
 
@@ -417,10 +652,10 @@ function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number
                             stroke="currentColor"
                             strokeWidth="8"
                             fill="none"
-                            className="text-zinc-800"
+                            className="text-zinc-800/50"
                         />
-                        {/* Progress circle */}
-                        <circle
+                        {/* Progress circle with glow */}
+                        <motion.circle
                             cx="60"
                             cy="60"
                             r="45"
@@ -430,11 +665,24 @@ function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number
                             strokeLinecap="round"
                             strokeDasharray={circumference}
                             strokeDashoffset={circumference - (progress / 100) * circumference}
-                            className="transition-all duration-1000"
+                            initial={{ strokeDashoffset: circumference }}
+                            animate={{
+                                strokeDashoffset: circumference - (progress / 100) * circumference,
+                                filter: [
+                                    'drop-shadow(0 0 4px rgba(245, 158, 11, 0.5))',
+                                    'drop-shadow(0 0 12px rgba(245, 158, 11, 0.8))',
+                                    'drop-shadow(0 0 4px rgba(245, 158, 11, 0.5))',
+                                ]
+                            }}
+                            transition={{
+                                strokeDashoffset: { duration: 1.5, ease: [0.16, 1, 0.3, 1] },
+                                filter: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                            }}
                         />
                         <defs>
                             <linearGradient id="xpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="#F59E0B" />
+                                <stop offset="50%" stopColor="#FB923C" />
                                 <stop offset="100%" stopColor="#EF4444" />
                             </linearGradient>
                         </defs>
@@ -442,14 +690,26 @@ function XPProgressRing({ currentXP, xpToNextLevel, level }: { currentXP: number
 
                     {/* Center content */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-2xl font-bold text-amber-400">{currentXP}</span>
+                        <motion.span
+                            className="text-2xl font-bold text-amber-400"
+                            animate={{
+                                textShadow: [
+                                    '0 0 10px rgba(245, 158, 11, 0.3)',
+                                    '0 0 20px rgba(245, 158, 11, 0.6)',
+                                    '0 0 10px rgba(245, 158, 11, 0.3)',
+                                ]
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            {currentXP}
+                        </motion.span>
                         <span className="text-xs text-zinc-500">/ {xpToNextLevel} XP</span>
                     </div>
                 </div>
             </div>
 
             <p className="text-center text-zinc-500 text-sm mt-4">
-                {xpToNextLevel - currentXP} XP to Level {level + 1}
+                <span className="text-amber-400 font-semibold">{xpToNextLevel - currentXP}</span> XP to Level {level + 1}
             </p>
         </motion.div>
     )
@@ -547,13 +807,16 @@ export default function DashboardPage() {
     const userName = user?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "DevOps Pro"
 
     return (
-        <PageLayout maxWidth="wide" background="gray">
+        <PageLayout maxWidth="wide" background="cosmic">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
+
             {loading ? (
                 <DashboardSkeleton />
             ) : error && !dashboard ? (
                 <DashboardError error={error} onRetry={handleRefresh} />
             ) : (
-                <div className="space-y-8">
+                <div className="relative z-10 space-y-8">
                     {/* Premium Hero */}
                     <PremiumHero
                         userName={userName}
@@ -576,7 +839,7 @@ export default function DashboardPage() {
                             label="Tasks Done"
                             value={completedTasks}
                             subtext={`of ${totalTasks} tasks`}
-                            color="emerald"
+                            color="cyan"
                             delay={0.2}
                         />
                         <PremiumStatCard
@@ -602,7 +865,15 @@ export default function DashboardPage() {
                         {/* Quick Actions */}
                         <div className="lg:col-span-2 space-y-4">
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <Play className="w-5 h-5 text-purple-400" />
+                                <motion.div
+                                    animate={{
+                                        scale: [1, 1.15, 1],
+                                        opacity: [0.8, 1, 0.8]
+                                    }}
+                                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                    <Play className="w-5 h-5 text-purple-400" />
+                                </motion.div>
                                 Quick Actions
                             </h2>
                             <div className="grid md:grid-cols-2 gap-4">
@@ -619,7 +890,7 @@ export default function DashboardPage() {
                                     title="Study Session"
                                     description="Start a focused learning session"
                                     href="/studyflow"
-                                    color="emerald"
+                                    color="cyan"
                                     delay={0.6}
                                 />
                                 <QuickActionCard
@@ -635,7 +906,7 @@ export default function DashboardPage() {
                                     title="Skillpath Board"
                                     description="Plan your DevOps career path"
                                     href="/skillpath-board"
-                                    color="purple"
+                                    color="emerald"
                                     delay={0.8}
                                 />
                             </div>

@@ -2,22 +2,26 @@
 
 /**
  * ============================================================================
- * SKILLSMAP NODE DETAIL PAGE — PREMIUM VIBRANT DESIGN
+ * SKILLSMAP NODE DETAIL PAGE — COSMIC EDITION 🌌
  * ============================================================================
  *
+ * MILESTONE 2.0 DESIGN REVOLUTION
+ *
  * Features:
+ * - COSMIC aurora background
  * - Stunning gradient headers
  * - Color-coded difficulty and type badges
  * - Premium glass morphism effects
  * - Animated progress indicators
  * - Real lesson content from backend API
  *
- * @design VIBRANT-PREMIUM-2024
+ * @phase MILESTONE-2.0-COSMIC-REVOLUTION
  */
 
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import {
     PageLayout,
     Section,
@@ -56,6 +60,74 @@ import {
     Flame,
     Brain,
 } from "lucide-react"
+
+/* ============================================================================
+   COSMIC AURORA BACKGROUND ✨
+   ============================================================================ */
+
+function CosmicAurora() {
+    return (
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+            {/* Purple orb - top right */}
+            <motion.div
+                className="absolute w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                    top: "-10%",
+                    right: "-5%",
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Cyan orb - bottom left */}
+            <motion.div
+                className="absolute w-[500px] h-[500px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                    bottom: "10%",
+                    left: "-10%",
+                }}
+                animate={{
+                    scale: [1.1, 1, 1.1],
+                    opacity: [0.2, 0.4, 0.2],
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Pink orb - center */}
+            <motion.div
+                className="absolute w-[400px] h-[400px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)",
+                    filter: "blur(80px)",
+                    top: "40%",
+                    left: "30%",
+                }}
+                animate={{
+                    x: [0, 50, 0],
+                    y: [0, -30, 0],
+                    opacity: [0.15, 0.25, 0.15],
+                }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Subtle grid overlay */}
+            <div
+                className="absolute inset-0 opacity-[0.015]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '60px 60px'
+                }}
+            />
+        </div>
+    )
+}
 
 /* ============================================================================
    VIBRANT COLOR SYSTEM
@@ -173,26 +245,37 @@ function NodeDetailSkeleton() {
         <div className="space-y-6">
             {/* Header skeleton */}
             <div className="relative rounded-3xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 via-purple-600/20 to-indigo-600/20 animate-pulse" />
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-600/10 via-purple-600/10 to-indigo-600/10" />
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent"
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
                 <div className="relative p-8 space-y-4">
-                    <div className="h-6 w-32 rounded-lg bg-zinc-800 animate-pulse" />
-                    <div className="h-10 w-96 rounded-lg bg-zinc-800 animate-pulse" />
-                    <div className="h-5 w-64 rounded-lg bg-zinc-800 animate-pulse" />
+                    <div className="h-6 w-32 rounded-lg bg-zinc-800/50" />
+                    <div className="h-10 w-96 rounded-lg bg-zinc-800/50" />
+                    <div className="h-5 w-64 rounded-lg bg-zinc-800/50" />
                     <div className="flex gap-3 pt-4">
-                        <div className="h-8 w-24 rounded-xl bg-zinc-800 animate-pulse" />
-                        <div className="h-8 w-24 rounded-xl bg-zinc-800 animate-pulse" />
-                        <div className="h-8 w-24 rounded-xl bg-zinc-800 animate-pulse" />
+                        <div className="h-8 w-24 rounded-xl bg-zinc-800/50" />
+                        <div className="h-8 w-24 rounded-xl bg-zinc-800/50" />
+                        <div className="h-8 w-24 rounded-xl bg-zinc-800/50" />
                     </div>
                 </div>
             </div>
 
             {/* Content skeleton */}
-            <div className="rounded-3xl bg-zinc-900/80 p-8 space-y-4">
-                <div className="h-6 w-48 rounded-lg bg-zinc-800 animate-pulse" />
+            <div className="rounded-3xl bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f] border border-purple-500/20 p-8 space-y-4">
+                <div className="h-6 w-48 rounded-lg bg-zinc-800/50" />
                 <div className="space-y-3 pt-4">
-                    <div className="h-4 w-full rounded bg-zinc-800 animate-pulse" />
-                    <div className="h-4 w-5/6 rounded bg-zinc-800 animate-pulse" />
-                    <div className="h-4 w-4/6 rounded bg-zinc-800 animate-pulse" />
+                    {Array.from({ length: 3 }).map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="h-4 rounded bg-zinc-800/50"
+                            style={{ width: `${100 - i * 15}%` }}
+                            animate={{ opacity: [0.5, 0.8, 0.5] }}
+                            transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
+                        />
+                    ))}
                 </div>
             </div>
         </div>
@@ -205,19 +288,36 @@ function NodeDetailSkeleton() {
 
 function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => void; slug: string }) {
     return (
-        <div className="relative rounded-3xl overflow-hidden max-w-md mx-auto">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative rounded-3xl overflow-hidden max-w-md mx-auto"
+        >
             {/* Background glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-rose-500/10 via-red-500/10 to-pink-500/10" />
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]" />
 
-            <div className="relative p-8 text-center">
-                <div className={cn(
-                    "w-20 h-20 rounded-2xl mx-auto mb-6",
-                    "bg-gradient-to-br from-rose-500 to-red-500",
-                    "flex items-center justify-center",
-                    "shadow-xl shadow-rose-500/30"
-                )}>
+            <div className={cn(
+                "relative p-8 text-center",
+                "border border-red-500/30 rounded-3xl",
+                "shadow-[0_0_40px_rgba(239,68,68,0.15)]"
+            )}>
+                <motion.div
+                    className={cn(
+                        "w-20 h-20 rounded-2xl mx-auto mb-6",
+                        "bg-gradient-to-br from-rose-500 to-red-500",
+                        "flex items-center justify-center"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            '0 0 20px rgba(239,68,68,0.3)',
+                            '0 0 40px rgba(239,68,68,0.5)',
+                            '0 0 20px rgba(239,68,68,0.3)'
+                        ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                >
                     <AlertCircle className="w-10 h-10 text-white" />
-                </div>
+                </motion.div>
                 <h2 className={cn(
                     "text-2xl font-bold mb-3",
                     "bg-clip-text text-transparent",
@@ -232,8 +332,9 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
                             variant="outline"
                             className={cn(
                                 "rounded-xl px-6",
-                                "border-zinc-700 hover:border-violet-500/50",
-                                "hover:bg-violet-500/10"
+                                "border-zinc-700 hover:border-purple-500/50",
+                                "hover:bg-purple-500/10",
+                                "transition-all"
                             )}
                         >
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -246,7 +347,9 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
                             "rounded-xl px-6",
                             "bg-gradient-to-r from-violet-500 to-purple-500",
                             "hover:from-violet-600 hover:to-purple-600",
-                            "shadow-lg shadow-violet-500/25"
+                            "shadow-[0_0_20px_rgba(139,92,246,0.3)]",
+                            "hover:shadow-[0_0_30px_rgba(139,92,246,0.5)]",
+                            "transition-all"
                         )}
                     >
                         <RefreshCw className="w-4 h-4 mr-2" />
@@ -254,7 +357,7 @@ function ErrorState({ error, onRetry, slug }: { error: string; onRetry: () => vo
                     </Button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -359,223 +462,284 @@ export default function SkillsMapNodeDetailPage() {
         : null
 
     return (
-        <PageLayout maxWidth="standard" background="gray">
-            {/* Premium back button */}
-            <Link
-                href={`/skillsmaps/${slug}`}
-                className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-8 group",
-                    "text-zinc-500 hover:text-violet-400",
-                    "transition-all duration-300"
-                )}
-            >
-                <div className={cn(
-                    "w-8 h-8 rounded-lg flex items-center justify-center",
-                    "bg-zinc-800/50 group-hover:bg-violet-500/20",
-                    "border border-zinc-700/50 group-hover:border-violet-500/30",
-                    "transition-all duration-300"
-                )}>
-                    <ArrowLeft className="w-4 h-4" />
-                </div>
-                <span>Tillbaka till {skillsmap?.title || "SkillsMap"}</span>
-            </Link>
+        <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
 
-            {loading ? (
-                <NodeDetailSkeleton />
-            ) : error ? (
-                <ErrorState error={error} onRetry={fetchData} slug={slug} />
-            ) : node && skillsmap ? (
-                <div className="space-y-8">
-                    {/* PREMIUM NODE HEADER */}
-                    <Section>
-                        <div className="relative rounded-3xl overflow-hidden">
-                            {/* Background gradient based on node type */}
-                            <div className={cn(
-                                "absolute inset-0",
-                                `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`,
-                                "opacity-10"
-                            )} />
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Premium back button */}
+                <Link
+                    href={`/skillsmaps/${slug}`}
+                    className={cn(
+                        "inline-flex items-center gap-2 text-sm mb-8 group",
+                        "text-zinc-500 hover:text-purple-400",
+                        "transition-all duration-300"
+                    )}
+                >
+                    <motion.div
+                        className={cn(
+                            "w-8 h-8 rounded-lg flex items-center justify-center",
+                            "bg-zinc-800/50 group-hover:bg-purple-500/20",
+                            "border border-zinc-700/50 group-hover:border-purple-500/30",
+                            "transition-all duration-300"
+                        )}
+                        whileHover={{ scale: 1.05 }}
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                    </motion.div>
+                    <span>Tillbaka till {skillsmap?.title || "SkillsMap"}</span>
+                </Link>
 
-                            {/* Animated glow */}
-                            <div className={cn(
-                                "absolute -inset-1 rounded-3xl blur-2xl opacity-20",
-                                `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`
-                            )} />
+                {loading ? (
+                    <NodeDetailSkeleton />
+                ) : error ? (
+                    <ErrorState error={error} onRetry={fetchData} slug={slug} />
+                ) : node && skillsmap ? (
+                    <motion.div
+                        className="space-y-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                    >
+                        {/* PREMIUM NODE HEADER */}
+                        <Section>
+                            <motion.div
+                                className="relative rounded-3xl overflow-hidden"
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {/* Background gradient based on node type */}
+                                <div className={cn(
+                                    "absolute inset-0",
+                                    `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`,
+                                    "opacity-10"
+                                )} />
 
-                            <div className={cn(
-                                "relative p-8 md:p-10",
-                                "bg-zinc-900/80 backdrop-blur-xl",
-                                "border border-white/10 rounded-3xl"
-                            )}>
-                                {/* Top row: progress + completion */}
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-3">
-                                        <div className={cn(
-                                            "px-4 py-2 rounded-xl",
-                                            "bg-zinc-800/80 border border-zinc-700/50",
-                                            "text-sm font-medium text-zinc-400"
-                                        )}>
-                                            Nod {node.orderIndex} av {skillsmap.totalNodes}
+                                {/* Animated glow */}
+                                <motion.div
+                                    className={cn(
+                                        "absolute -inset-1 rounded-3xl blur-2xl opacity-20",
+                                        `bg-gradient-to-r ${TYPE_COLORS[node.type as keyof typeof TYPE_COLORS]?.gradient || TYPE_COLORS.concept.gradient}`
+                                    )}
+                                    animate={{ opacity: [0.15, 0.25, 0.15] }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                />
+
+                                <div className={cn(
+                                    "relative p-8 md:p-10",
+                                    "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                                    "border border-purple-500/30 rounded-3xl",
+                                    "shadow-[0_0_40px_rgba(139,92,246,0.1)]"
+                                )}>
+                                    {/* Top row: progress + completion */}
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className={cn(
+                                                "px-4 py-2 rounded-xl",
+                                                "bg-zinc-800/50 border border-purple-500/20",
+                                                "text-sm font-medium text-zinc-400"
+                                            )}>
+                                                Nod {node.orderIndex} av {skillsmap.totalNodes}
+                                            </div>
+
+                                            {isCompleted && (
+                                                <motion.div
+                                                    className={cn(
+                                                        "flex items-center gap-2 px-4 py-2 rounded-xl",
+                                                        "bg-gradient-to-r from-emerald-500/10 to-teal-500/10",
+                                                        "border border-emerald-500/30",
+                                                        "text-emerald-400 font-medium"
+                                                    )}
+                                                    animate={{
+                                                        boxShadow: ['0 0 10px rgba(52,211,153,0.2)', '0 0 20px rgba(52,211,153,0.4)', '0 0 10px rgba(52,211,153,0.2)']
+                                                    }}
+                                                    transition={{ duration: 2, repeat: Infinity }}
+                                                >
+                                                    <CheckCircle2 className="w-4 h-4" />
+                                                    <span>Slutförd</span>
+                                                </motion.div>
+                                            )}
                                         </div>
 
-                                        {isCompleted && (
-                                            <div className={cn(
-                                                "flex items-center gap-2 px-4 py-2 rounded-xl",
-                                                "bg-gradient-to-r from-emerald-500/10 to-teal-500/10",
-                                                "border border-emerald-500/30",
-                                                "text-emerald-400 font-medium"
+                                        {/* XP Badge */}
+                                        <motion.div
+                                            className={cn(
+                                                "flex items-center gap-2 px-5 py-2.5 rounded-xl",
+                                                "bg-gradient-to-r from-amber-500/10 to-orange-500/10",
+                                                "border border-amber-500/30"
+                                            )}
+                                            animate={{
+                                                boxShadow: ['0 0 10px rgba(251,191,36,0.1)', '0 0 20px rgba(251,191,36,0.3)', '0 0 10px rgba(251,191,36,0.1)']
+                                            }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            <Zap className="w-5 h-5 text-amber-400" />
+                                            <span className={cn(
+                                                "text-lg font-bold",
+                                                "bg-clip-text text-transparent",
+                                                "bg-gradient-to-r from-amber-400 to-orange-400"
                                             )}>
-                                                <CheckCircle2 className="w-4 h-4" />
-                                                <span>Slutförd</span>
-                                            </div>
+                                                +{node.xpReward} XP
+                                            </span>
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Title with gradient */}
+                                    <motion.h1
+                                        className={cn(
+                                            "text-3xl md:text-4xl font-black mb-4",
+                                            "bg-clip-text text-transparent",
+                                            "bg-gradient-to-r from-white via-zinc-200 to-zinc-400"
                                         )}
-                                    </div>
+                                        animate={{
+                                            textShadow: ['0 0 20px rgba(139,92,246,0)', '0 0 30px rgba(139,92,246,0.3)', '0 0 20px rgba(139,92,246,0)']
+                                        }}
+                                        transition={{ duration: 3, repeat: Infinity }}
+                                    >
+                                        {node.title}
+                                    </motion.h1>
 
-                                    {/* XP Badge */}
-                                    <div className={cn(
-                                        "flex items-center gap-2 px-5 py-2.5 rounded-xl",
-                                        "bg-gradient-to-r from-amber-500/10 to-orange-500/10",
-                                        "border border-amber-500/30"
-                                    )}>
-                                        <Zap className="w-5 h-5 text-amber-400" />
-                                        <span className={cn(
-                                            "text-lg font-bold",
-                                            "bg-clip-text text-transparent",
-                                            "bg-gradient-to-r from-amber-400 to-orange-400"
-                                        )}>
-                                            +{node.xpReward} XP
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Title with gradient */}
-                                <h1 className={cn(
-                                    "text-3xl md:text-4xl font-black mb-4",
-                                    "bg-clip-text text-transparent",
-                                    "bg-gradient-to-r from-white via-zinc-200 to-zinc-400"
-                                )}>
-                                    {node.title}
-                                </h1>
-
-                                {/* Description */}
-                                {node.description && (
-                                    <p className="text-lg text-zinc-400 mb-8 max-w-2xl">
-                                        {node.description}
-                                    </p>
-                                )}
-
-                                {/* Meta badges */}
-                                <div className="flex flex-wrap items-center gap-3">
-                                    {/* Time */}
-                                    <div className={cn(
-                                        "flex items-center gap-2 px-4 py-2 rounded-xl",
-                                        "bg-zinc-800/60 border border-zinc-700/50"
-                                    )}>
-                                        <Clock className="w-4 h-4 text-zinc-500" />
-                                        <span className="text-sm font-medium text-zinc-400">
-                                            {node.estimatedMinutes} min
-                                        </span>
-                                    </div>
-
-                                    {/* Difficulty */}
-                                    <div className={cn(
-                                        "flex items-center gap-2 px-4 py-2 rounded-xl",
-                                        DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.bg || DIFFICULTY_COLORS.easy.bg,
-                                        DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.border || DIFFICULTY_COLORS.easy.border
-                                    )}>
-                                        <Star className={cn(
-                                            "w-4 h-4",
-                                            DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.text || DIFFICULTY_COLORS.easy.text
-                                        )} />
-                                        <span className={cn(
-                                            "text-sm font-bold uppercase tracking-wide",
-                                            DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.text || DIFFICULTY_COLORS.easy.text
-                                        )}>
-                                            {node.difficulty === "easy" ? "Enkel" : node.difficulty === "medium" ? "Medel" : "Svår"}
-                                        </span>
-                                    </div>
-
-                                    {/* Type */}
-                                    {(() => {
-                                        const typeConfig = TYPE_COLORS[node.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.concept
-                                        const TypeIcon = typeConfig.Icon
-                                        return (
-                                            <div className={cn(
-                                                "flex items-center gap-2 px-4 py-2 rounded-xl",
-                                                typeConfig.bg,
-                                                typeConfig.border
-                                            )}>
-                                                <TypeIcon className={cn("w-4 h-4", typeConfig.text)} />
-                                                <span className={cn(
-                                                    "text-sm font-bold uppercase tracking-wide",
-                                                    typeConfig.text
-                                                )}>
-                                                    {typeConfig.label}
-                                                </span>
-                                            </div>
-                                        )
-                                    })()}
-                                </div>
-                            </div>
-                        </div>
-                    </Section>
-
-                    {/* PREMIUM LESSON CONTENT */}
-                    <Section>
-                        <div className="relative rounded-3xl overflow-hidden">
-                            {/* Subtle glow */}
-                            <div className="absolute -inset-1 rounded-3xl blur-2xl opacity-10 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500" />
-
-                            <div className={cn(
-                                "relative",
-                                "bg-zinc-900/80 backdrop-blur-xl",
-                                "border border-white/10 rounded-3xl",
-                                "p-6 md:p-10"
-                            )}>
-                                {/* Section header */}
-                                <div className="flex items-center gap-4 mb-8 pb-6 border-b border-white/10">
-                                    <div className={cn(
-                                        "w-12 h-12 rounded-xl flex items-center justify-center",
-                                        "bg-gradient-to-br from-violet-500 to-purple-500",
-                                        "shadow-lg shadow-violet-500/25"
-                                    )}>
-                                        <BookOpen className="w-6 h-6 text-white" />
-                                    </div>
-                                    <div>
-                                        <h2 className={cn(
-                                            "text-xl font-bold",
-                                            "bg-clip-text text-transparent",
-                                            "bg-gradient-to-r from-violet-400 to-purple-400"
-                                        )}>
-                                            Lektionsinnehåll
-                                        </h2>
-                                        <p className="text-sm text-zinc-500">
-                                            Läs igenom materialet och slutför lektionen
+                                    {/* Description */}
+                                    {node.description && (
+                                        <p className="text-lg text-zinc-400 mb-8 max-w-2xl">
+                                            {node.description}
                                         </p>
+                                    )}
+
+                                    {/* Meta badges */}
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        {/* Time */}
+                                        <div className={cn(
+                                            "flex items-center gap-2 px-4 py-2 rounded-xl",
+                                            "bg-zinc-800/50 border border-purple-500/20"
+                                        )}>
+                                            <Clock className="w-4 h-4 text-zinc-500" />
+                                            <span className="text-sm font-medium text-zinc-400">
+                                                {node.estimatedMinutes} min
+                                            </span>
+                                        </div>
+
+                                        {/* Difficulty */}
+                                        <motion.div
+                                            className={cn(
+                                                "flex items-center gap-2 px-4 py-2 rounded-xl",
+                                                DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.bg || DIFFICULTY_COLORS.easy.bg,
+                                                DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.border || DIFFICULTY_COLORS.easy.border
+                                            )}
+                                            whileHover={{ scale: 1.02 }}
+                                        >
+                                            <Star className={cn(
+                                                "w-4 h-4",
+                                                DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.text || DIFFICULTY_COLORS.easy.text
+                                            )} />
+                                            <span className={cn(
+                                                "text-sm font-bold uppercase tracking-wide",
+                                                DIFFICULTY_COLORS[node.difficulty as keyof typeof DIFFICULTY_COLORS]?.text || DIFFICULTY_COLORS.easy.text
+                                            )}>
+                                                {node.difficulty === "easy" ? "Enkel" : node.difficulty === "medium" ? "Medel" : "Svår"}
+                                            </span>
+                                        </motion.div>
+
+                                        {/* Type */}
+                                        {(() => {
+                                            const typeConfig = TYPE_COLORS[node.type as keyof typeof TYPE_COLORS] || TYPE_COLORS.concept
+                                            const TypeIcon = typeConfig.Icon
+                                            return (
+                                                <motion.div
+                                                    className={cn(
+                                                        "flex items-center gap-2 px-4 py-2 rounded-xl",
+                                                        typeConfig.bg,
+                                                        typeConfig.border
+                                                    )}
+                                                    whileHover={{ scale: 1.02 }}
+                                                >
+                                                    <TypeIcon className={cn("w-4 h-4", typeConfig.text)} />
+                                                    <span className={cn(
+                                                        "text-sm font-bold uppercase tracking-wide",
+                                                        typeConfig.text
+                                                    )}>
+                                                        {typeConfig.label}
+                                                    </span>
+                                                </motion.div>
+                                            )
+                                        })()}
                                     </div>
                                 </div>
+                            </motion.div>
+                        </Section>
 
-                                <LessonContent
-                                    content={filteredContent || node.content || ""}
-                                    title={node.title}
-                                    estimatedMinutes={node.estimatedMinutes}
+                        {/* PREMIUM LESSON CONTENT */}
+                        <Section>
+                            <motion.div
+                                className="relative rounded-3xl overflow-hidden"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                            >
+                                {/* Subtle glow */}
+                                <motion.div
+                                    className="absolute -inset-1 rounded-3xl blur-2xl opacity-10 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500"
+                                    animate={{ opacity: [0.05, 0.15, 0.05] }}
+                                    transition={{ duration: 4, repeat: Infinity }}
                                 />
-                            </div>
-                        </div>
-                    </Section>
 
-                    {/* Premium Task Footer */}
-                    <TaskFooter
-                        prevTaskUrl={prevNode ? `/skillsmaps/${slug}/nodes/${prevNode.id}` : undefined}
-                        nextTaskUrl={nextNode ? `/skillsmaps/${slug}/nodes/${nextNode.id}` : undefined}
-                        onComplete={handleMarkComplete}
-                        xp={node.xpReward}
-                        difficulty={node.difficulty as 'easy' | 'medium' | 'hard'}
-                        isCompleted={isCompleted}
-                        isLoading={completing}
-                    />
-                </div>
-            ) : null}
-        </PageLayout>
+                                <div className={cn(
+                                    "relative",
+                                    "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                                    "border border-purple-500/30 rounded-3xl",
+                                    "shadow-[0_0_30px_rgba(139,92,246,0.08)]",
+                                    "p-6 md:p-10"
+                                )}>
+                                    {/* Section header */}
+                                    <div className="flex items-center gap-4 mb-8 pb-6 border-b border-purple-500/20">
+                                        <motion.div
+                                            className={cn(
+                                                "w-12 h-12 rounded-xl flex items-center justify-center",
+                                                "bg-gradient-to-br from-violet-500 to-purple-500"
+                                            )}
+                                            animate={{
+                                                boxShadow: ['0 0 15px rgba(139,92,246,0.3)', '0 0 25px rgba(139,92,246,0.5)', '0 0 15px rgba(139,92,246,0.3)']
+                                            }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            <BookOpen className="w-6 h-6 text-white" />
+                                        </motion.div>
+                                        <div>
+                                            <h2 className={cn(
+                                                "text-xl font-bold",
+                                                "bg-clip-text text-transparent",
+                                                "bg-gradient-to-r from-violet-400 to-purple-400"
+                                            )}>
+                                                Lektionsinnehåll
+                                            </h2>
+                                            <p className="text-sm text-zinc-500">
+                                                Läs igenom materialet och slutför lektionen
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <LessonContent
+                                        content={filteredContent || node.content || ""}
+                                        title={node.title}
+                                        estimatedMinutes={node.estimatedMinutes}
+                                    />
+                                </div>
+                            </motion.div>
+                        </Section>
+
+                        {/* Premium Task Footer */}
+                        <TaskFooter
+                            prevTaskUrl={prevNode ? `/skillsmaps/${slug}/nodes/${prevNode.id}` : undefined}
+                            nextTaskUrl={nextNode ? `/skillsmaps/${slug}/nodes/${nextNode.id}` : undefined}
+                            onComplete={handleMarkComplete}
+                            xp={node.xpReward}
+                            difficulty={node.difficulty as 'easy' | 'medium' | 'hard'}
+                            isCompleted={isCompleted}
+                            isLoading={completing}
+                        />
+                    </motion.div>
+                ) : null}
+            </div>
+        </div>
     )
 }

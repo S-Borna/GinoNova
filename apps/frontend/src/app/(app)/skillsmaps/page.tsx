@@ -6,7 +6,7 @@
  * ============================================================================
  *
  * Netflix + Disney + Google Design Revolution
- * 
+ *
  * Main SkillsMaps page with:
  * - COSMIC background with aurora effects
  * - Premium SkillsMapSelector grid
@@ -49,8 +49,8 @@ function PageSkeleton() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Array.from({ length: 6 }).map((_, i) => (
-                    <motion.div 
-                        key={i} 
+                    <motion.div
+                        key={i}
                         className="h-72 rounded-2xl bg-gradient-to-br from-purple-900/10 to-zinc-900"
                         animate={{ opacity: [0.5, 0.8, 0.5] }}
                         transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
@@ -67,7 +67,7 @@ function PageSkeleton() {
 
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className={cn(
@@ -79,12 +79,12 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
                 boxShadow: "0 0 60px rgba(239,68,68,0.15)",
             }}
         >
-            <motion.div 
+            <motion.div
                 className={cn(
                     "w-20 h-20 mx-auto mb-6 rounded-2xl",
                     "bg-red-500/20 flex items-center justify-center"
                 )}
-                animate={{ 
+                animate={{
                     boxShadow: [
                         "0 0 20px rgba(239,68,68,0.3)",
                         "0 0 40px rgba(239,68,68,0.5)",
@@ -99,8 +99,8 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
                 Kunde inte ladda SkillsMaps
             </h2>
             <p className="text-zinc-400 mb-8">{error}</p>
-            <Button 
-                onClick={onRetry} 
+            <Button
+                onClick={onRetry}
                 className="rounded-xl bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500"
             >
                 <RefreshCw className="w-4 h-4 mr-2" />
