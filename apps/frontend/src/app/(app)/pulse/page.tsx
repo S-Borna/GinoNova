@@ -347,7 +347,7 @@ function WeeklySessionCard() {
                     transition={{ duration: 2.5, repeat: Infinity }}
                 >
                     {formatTimeShort(weeklyTotalSeconds)}
-                </p>
+                </motion.p>
                 <p className="text-sm text-zinc-500 mt-1">denna vecka</p>
             </div>
 

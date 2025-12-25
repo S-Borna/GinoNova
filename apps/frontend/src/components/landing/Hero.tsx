@@ -46,7 +46,7 @@ import {
     CheckCircle2,
     Globe,
     Shield,
-    Infinity,
+    Infinity as InfinityIcon,
 } from "lucide-react"
 
 /* ============================================================================
@@ -478,7 +478,7 @@ function SocialProofTicker() {
         { icon: Star, text: "4.9/5 betyg" },
         { icon: Globe, text: "Svenskt community" },
         { icon: Shield, text: "Ingen kreditkort krävs" },
-        { icon: Infinity, text: "Livstids tillgång" },
+        { icon: InfinityIcon, text: "Livstids tillgång" },
     ]
 
     return (
