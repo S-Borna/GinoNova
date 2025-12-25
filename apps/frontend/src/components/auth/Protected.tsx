@@ -4,7 +4,7 @@
  * Protected Route Component
  * MILESTONE 2.0: Now a SOFT gate - shows content but prompts for login
  * for premium features only (AI Quiz, saved progress, etc.)
- * 
+ *
  * Use this ONLY for truly premium features, not for content access.
  */
 
@@ -54,7 +54,7 @@ export function Protected({ children, softPrompt = false, featureName = "this fe
                 <div className="blur-sm pointer-events-none opacity-50">
                     {children}
                 </div>
-                
+
                 {/* Upgrade prompt overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/80 backdrop-blur-sm rounded-xl">
                     <div className="text-center p-8 max-w-md">
@@ -63,7 +63,7 @@ export function Protected({ children, softPrompt = false, featureName = "this fe
                             Logga in för {featureName}
                         </h3>
                         <p className="text-zinc-400 mb-6">
-                            Skapa ett gratis konto för att spara dina framsteg och 
+                            Skapa ett gratis konto för att spara dina framsteg och
                             få tillgång till premium-funktioner.
                         </p>
                         <div className="flex gap-3 justify-center">

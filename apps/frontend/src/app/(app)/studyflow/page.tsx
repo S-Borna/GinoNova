@@ -2,27 +2,23 @@
 
 /**
  * ============================================================================
- * MAGNETEN — Personal Learning Compass (formerly Studyflow)
+ * MAGNETEN — Personal Learning Compass — COSMIC EDITION 🌌
  * ============================================================================
  *
- * Premium Upgrade Phase 2 - Complete Transformation
+ * COSMIC DESIGN:
+ * - Deep space background (#05050a)
+ * - Multi-layered aurora orbs
+ * - Pulsating icon glows
+ * - Netflix-smooth animations
  *
- * Features:
- * - 🐺 Dallas AI Wizard with 40 smart predefined questions
- * - 📅 Schedule & Reminders management
- * - ⭐ Bookmarked Tasks (Gold Cards - synced from sidebar)
- * - 💡 Personalized learning recommendations
- * - 🔥 Streak tracking and motivation
- * - ⏰ Quick actions for navigation
- *
- * @phase Premium Upgrade Phase 2
- * @design Magneten - Learning Compass
+ * @phase MILESTONE-2.0-COSMIC
  */
 
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { useBookmarks } from "@/hooks/useBookmarks"
@@ -49,6 +45,52 @@ import {
     ExternalLink,
     BookmarkX,
 } from "lucide-react"
+
+/* ============================================================================
+   COSMIC AURORA BACKGROUND
+   ============================================================================ */
+
+function CosmicAurora() {
+    return (
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 bg-[#05050a]" />
+            <div
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '60px 60px'
+                }}
+            />
+            <motion.div
+                className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.04) 40%, transparent 70%)',
+                }}
+                animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.7, 0.5] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+                className="absolute -bottom-60 -left-60 w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, transparent 60%)',
+                }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+            <motion.div
+                className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full"
+                style={{
+                    background: 'radial-gradient(circle, rgba(236, 72, 153, 0.06) 0%, transparent 60%)',
+                }}
+                animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+            />
+        </div>
+    )
+}
 
 /* ============================================================================
    DALLAS WIZARD - 40 Smart Questions with Keyword Matching
@@ -210,59 +252,82 @@ function DallasChat() {
     };
 
     return (
-        <div className={cn(
-            "rounded-2xl overflow-hidden",
-            "bg-zinc-900/80 backdrop-blur-sm",
-            "border border-zinc-800/60"
-        )}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+                "rounded-2xl overflow-hidden",
+                "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                "border border-purple-500/20",
+                "shadow-[0_0_40px_rgba(139,92,246,0.1)]"
+            )}
+        >
             {/* Header */}
             <div className={cn(
                 "flex items-center gap-3 px-4 py-4",
-                "border-b border-zinc-800/60",
-                "bg-gradient-to-r from-purple-900/20 to-blue-900/20"
+                "border-b border-purple-500/20",
+                "bg-gradient-to-r from-purple-900/30 to-blue-900/20"
             )}>
-                {/* Dallas Avatar */}
-                <div className={cn(
-                    "w-10 h-10 rounded-xl flex items-center justify-center",
-                    "bg-gradient-to-br from-purple-500 to-blue-600",
-                    "shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-                )}>
+                {/* Dallas Avatar - Pulsating Glow */}
+                <motion.div
+                    className={cn(
+                        "w-10 h-10 rounded-xl flex items-center justify-center",
+                        "bg-gradient-to-br from-purple-500 to-blue-600",
+                        "shadow-[0_0_25px_rgba(139,92,246,0.5)]"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            '0 0 25px rgba(139,92,246,0.5)',
+                            '0 0 35px rgba(139,92,246,0.7)',
+                            '0 0 25px rgba(139,92,246,0.5)'
+                        ]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                >
                     <span className="text-xl">🐺</span>
-                </div>
+                </motion.div>
                 <div>
                     <h3 className="font-semibold text-zinc-100">Dallas</h3>
-                    <p className="text-xs text-zinc-400">Din DevOps-guide</p>
+                    <p className="text-xs text-purple-300/60">Din DevOps-guide</p>
                 </div>
-                <div className="ml-auto flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="ml-auto flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                    <motion.div
+                        className="w-2 h-2 rounded-full bg-emerald-400"
+                        animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                    />
                     <span className="text-xs text-emerald-400">Online</span>
                 </div>
             </div>
 
-            {/* Messages */}
+            {/* Messages - Cosmic chat bubbles */}
             <div className="h-64 overflow-y-auto p-4 space-y-4">
-                {messages.map(msg => (
-                    <div
+                {messages.map((msg, index) => (
+                    <motion.div
                         key={msg.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
                         className={cn(
                             "flex gap-3",
                             msg.role === "user" && "flex-row-reverse"
                         )}
                     >
                         {msg.role === "dallas" && (
-                            <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0 border border-purple-500/30">
                                 <span className="text-sm">🐺</span>
                             </div>
                         )}
                         <div className={cn(
                             "max-w-[80%] rounded-xl px-4 py-2.5",
                             msg.role === "dallas"
-                                ? "bg-zinc-800/50 text-zinc-200"
-                                : "bg-purple-600/30 text-zinc-100"
+                                ? "bg-zinc-800/70 text-zinc-200 border border-zinc-700/50"
+                                : "bg-gradient-to-r from-purple-600/40 to-purple-500/30 text-zinc-100 border border-purple-500/30"
                         )}>
                             <p className="text-sm">{msg.content}</p>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
 
                 {isTyping && (
@@ -283,8 +348,8 @@ function DallasChat() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="p-4 border-t border-zinc-800/60">
+            {/* Input - Cosmic styling */}
+            <div className="p-4 border-t border-purple-500/20">
                 <div className="flex gap-2">
                     <input
                         type="text"
@@ -294,27 +359,29 @@ function DallasChat() {
                         placeholder="Skriv till Dallas..."
                         className={cn(
                             "flex-1 px-4 py-2.5 rounded-xl",
-                            "bg-zinc-800/50 border border-zinc-700/50",
+                            "bg-[#0a0a0f] border border-purple-500/30",
                             "text-zinc-100 placeholder:text-zinc-500",
-                            "focus:outline-none focus:border-purple-500/50",
-                            "transition-colors"
+                            "focus:outline-none focus:border-purple-500/60 focus:ring-2 focus:ring-purple-500/20",
+                            "transition-all duration-300"
                         )}
                     />
-                    <button
+                    <motion.button
                         onClick={handleSend}
                         disabled={!input.trim()}
+                        whileHover={{ scale: input.trim() ? 1.05 : 1 }}
+                        whileTap={{ scale: input.trim() ? 0.95 : 1 }}
                         className={cn(
                             "p-2.5 rounded-xl transition-all",
                             input.trim()
-                                ? "bg-purple-600 hover:bg-purple-500 text-white"
+                                ? "bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white shadow-[0_0_20px_rgba(139,92,246,0.4)]"
                                 : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                         )}
                     >
                         <Send className="w-5 h-5" />
-                    </button>
+                    </motion.button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -345,38 +412,66 @@ function ScheduleSection() {
     };
 
     return (
-        <div className={cn(
-            "rounded-2xl overflow-hidden",
-            "bg-zinc-900/80 backdrop-blur-sm",
-            "border border-zinc-800/60"
-        )}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+                "rounded-2xl overflow-hidden",
+                "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                "border border-emerald-500/20",
+                "shadow-[0_0_30px_rgba(52,211,153,0.05)]"
+            )}
+        >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-800/60">
+            <div className="flex items-center justify-between px-4 py-4 border-b border-emerald-500/20">
                 <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-emerald-400" />
+                    <motion.div
+                        animate={{
+                            boxShadow: [
+                                '0 0 10px rgba(52,211,153,0.3)',
+                                '0 0 20px rgba(52,211,153,0.5)',
+                                '0 0 10px rgba(52,211,153,0.3)'
+                            ]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="p-1.5 rounded-lg"
+                    >
+                        <Calendar className="w-5 h-5 text-emerald-400" />
+                    </motion.div>
                     <h3 className="font-semibold text-zinc-100">Ditt Schema</h3>
                 </div>
                 <span className="text-xs text-zinc-500">Klicka för att gå till task</span>
             </div>
 
-            {/* Reminders List */}
+            {/* Reminders List - Cosmic styling */}
             <div className="p-4 space-y-3 max-h-64 overflow-y-auto">
                 {reminders.length === 0 ? (
                     <div className="text-center py-6">
-                        <Bell className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
+                        <motion.div
+                            animate={{ opacity: [0.5, 0.8, 0.5] }}
+                            transition={{ duration: 3, repeat: Infinity }}
+                        >
+                            <Bell className="w-10 h-10 text-emerald-500/30 mx-auto mb-3" />
+                        </motion.div>
                         <p className="text-sm text-zinc-400">Inga påminnelser ännu</p>
                         <p className="text-xs text-zinc-500 mt-1">Bokmärk tasks för att lägga till här</p>
                     </div>
                 ) : (
-                    reminders.map(reminder => (
-                        <div
+                    reminders.map((reminder, index) => (
+                        <motion.div
                             key={reminder.id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.05 }}
                             onClick={handleReminderClick}
                             className={cn(
                                 "flex items-center gap-3 p-3 rounded-xl cursor-pointer",
-                                "bg-zinc-800/40 border border-zinc-700/30",
-                                "group transition-all hover:border-emerald-500/30 hover:bg-zinc-800/60",
-                                reminder.isActive && "border-emerald-500/30"
+                                "bg-[#0a0a0f]/50 border",
+                                "group transition-all duration-300",
+                                reminder.isActive
+                                    ? "border-emerald-500/40 hover:border-emerald-400/60 hover:shadow-[0_0_20px_rgba(52,211,153,0.15)]"
+                                    : "border-zinc-700/30 hover:border-zinc-600/50"
                             )}
                         >
                             <button
@@ -386,18 +481,18 @@ function ScheduleSection() {
                                 }}
                                 className={cn(
                                     "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                                    "transition-colors",
+                                    "transition-all duration-300",
                                     reminder.isActive
-                                        ? "bg-emerald-500/20 text-emerald-400"
-                                        : "bg-zinc-700/50 text-zinc-500"
+                                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                                        : "bg-zinc-700/50 text-zinc-500 border border-zinc-600/30"
                                 )}
                             >
                                 <Bell className="w-4 h-4" />
                             </button>
                             <div className="flex-1 min-w-0">
                                 <p className={cn(
-                                    "text-sm font-medium truncate group-hover:text-emerald-300",
-                                    reminder.isActive ? "text-zinc-200" : "text-zinc-500"
+                                    "text-sm font-medium truncate transition-colors",
+                                    reminder.isActive ? "text-zinc-200 group-hover:text-emerald-300" : "text-zinc-500"
                                 )}>
                                     {reminder.title}
                                 </p>
@@ -405,7 +500,7 @@ function ScheduleSection() {
                                     {reminder.module} • {reminder.day} {reminder.time}
                                 </p>
                             </div>
-                            <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 transition-colors" />
+                            <ChevronRight className="w-4 h-4 text-zinc-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all duration-300" />
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -415,11 +510,11 @@ function ScheduleSection() {
                             >
                                 <X className="w-4 h-4" />
                             </button>
-                        </div>
+                        </motion.div>
                     ))
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -442,39 +537,60 @@ function RecommendationsSection() {
     };
 
     return (
-        <div className={cn(
-            "rounded-2xl overflow-hidden",
-            "bg-zinc-900/80 backdrop-blur-sm",
-            "border border-zinc-800/60"
-        )}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+                "rounded-2xl overflow-hidden",
+                "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                "border border-purple-500/20",
+                "shadow-[0_0_30px_rgba(139,92,246,0.05)]"
+            )}
+        >
             {/* Header */}
-            <div className="flex items-center gap-2 px-4 py-4 border-b border-zinc-800/60">
-                <Sparkles className="w-5 h-5 text-purple-400" />
+            <div className="flex items-center gap-2 px-4 py-4 border-b border-purple-500/20">
+                <motion.div
+                    animate={{
+                        rotate: [0, 10, -10, 0],
+                        scale: [1, 1.1, 1]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                >
+                    <Sparkles className="w-5 h-5 text-purple-400" />
+                </motion.div>
                 <h3 className="font-semibold text-zinc-100">Rekommenderat för dig</h3>
             </div>
 
-            {/* Recommendations */}
+            {/* Recommendations - Cosmic cards */}
             <div className="p-4 space-y-3">
                 {recommendations.map((rec, index) => (
-                    <div
+                    <motion.div
                         key={rec.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                         onClick={() => router.push("/modules")}
                         className={cn(
                             "flex items-start gap-3 p-3 rounded-xl",
-                            "bg-zinc-800/40 border border-zinc-700/30",
-                            "hover:border-purple-500/30 hover:bg-zinc-800/60",
-                            "transition-all cursor-pointer group"
+                            "bg-[#0a0a0f]/50 border border-purple-500/20",
+                            "hover:border-purple-400/40 hover:shadow-[0_0_25px_rgba(139,92,246,0.15)]",
+                            "transition-all duration-300 cursor-pointer group"
                         )}
                     >
-                        <div className={cn(
-                            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                            "bg-purple-500/20 text-purple-400"
-                        )}>
+                        <motion.div
+                            className={cn(
+                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                                "bg-gradient-to-br from-purple-500/30 to-purple-600/20 text-purple-400",
+                                "border border-purple-500/30"
+                            )}
+                            whileHover={{ scale: 1.1 }}
+                        >
                             {index + 1}
-                        </div>
+                        </motion.div>
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                                <p className="text-sm font-medium text-zinc-200 group-hover:text-purple-300">
+                                <p className="text-sm font-medium text-zinc-200 group-hover:text-purple-300 transition-colors">
                                     {rec.title}
                                 </p>
                                 <span className={cn(
@@ -486,17 +602,22 @@ function RecommendationsSection() {
                             </div>
                             <p className="text-xs text-zinc-500 mb-2">{rec.module}</p>
                             <div className="flex items-center gap-2">
-                                <span className="text-xs text-zinc-400 italic">&quot;{rec.reason}&quot;</span>
+                                <span className="text-xs text-purple-300/60 italic">&quot;{rec.reason}&quot;</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-1 text-amber-400 shrink-0">
-                            <Zap className="w-3.5 h-3.5" />
+                            <motion.div
+                                animate={{ scale: [1, 1.2, 1] }}
+                                transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                                <Zap className="w-3.5 h-3.5" />
+                            </motion.div>
                             <span className="text-sm font-medium">+{rec.xp}</span>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -510,39 +631,84 @@ function StatsCard() {
     const tasksThisWeek = 12;
 
     return (
-        <div className={cn(
-            "rounded-2xl overflow-hidden",
-            "bg-gradient-to-br from-orange-900/20 via-zinc-900/80 to-zinc-900/80",
-            "border border-orange-500/20",
-            "shadow-[0_0_30px_rgba(249,115,22,0.1)]"
-        )}>
-            {/* Streak Display */}
-            <div className="p-6 text-center">
-                <div className={cn(
-                    "w-20 h-20 mx-auto mb-4 rounded-2xl",
-                    "bg-gradient-to-br from-orange-500 to-red-600",
-                    "flex items-center justify-center",
-                    "shadow-[0_0_30px_rgba(249,115,22,0.4)]",
-                    "animate-pulse"
-                )}>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className={cn(
+                "rounded-2xl overflow-hidden",
+                "bg-gradient-to-br from-orange-900/20 via-[#0d0d14] to-[#0a0a0f]",
+                "border border-orange-500/30",
+                "shadow-[0_0_40px_rgba(249,115,22,0.1)]"
+            )}
+        >
+            {/* Streak Display - Pulsating Cosmic Fire */}
+            <div className="p-6 text-center relative">
+                {/* Background glow */}
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent"
+                    animate={{ opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                />
+
+                <motion.div
+                    className={cn(
+                        "w-20 h-20 mx-auto mb-4 rounded-2xl relative",
+                        "bg-gradient-to-br from-orange-500 to-red-600",
+                        "flex items-center justify-center"
+                    )}
+                    animate={{
+                        boxShadow: [
+                            '0 0 30px rgba(249,115,22,0.4)',
+                            '0 0 50px rgba(249,115,22,0.6)',
+                            '0 0 30px rgba(249,115,22,0.4)'
+                        ],
+                        scale: [1, 1.05, 1]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
                     <Flame className="w-10 h-10 text-white" />
-                </div>
-                <p className="text-4xl font-bold text-orange-400 mb-1">{streak}</p>
+                </motion.div>
+                <motion.p
+                    className="text-4xl font-bold text-orange-400 mb-1"
+                    animate={{ scale: [1, 1.02, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                >
+                    {streak}
+                </motion.p>
                 <p className="text-sm text-zinc-400">dagars streak 🔥</p>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-px bg-zinc-800/50">
-                <div className="p-4 bg-zinc-900/80 text-center">
-                    <p className="text-2xl font-bold text-amber-400">{totalXP.toLocaleString()}</p>
+            {/* Stats Grid - Cosmic glow */}
+            <div className="grid grid-cols-2 gap-px bg-orange-500/10">
+                <motion.div
+                    className="p-4 bg-[#0a0a0f] text-center"
+                    whileHover={{ backgroundColor: 'rgba(249,115,22,0.05)' }}
+                >
+                    <motion.p
+                        className="text-2xl font-bold text-amber-400"
+                        animate={{ textShadow: ['0 0 10px rgba(251,191,36,0.3)', '0 0 20px rgba(251,191,36,0.5)', '0 0 10px rgba(251,191,36,0.3)'] }}
+                        transition={{ duration: 2.5, repeat: Infinity }}
+                    >
+                        {totalXP.toLocaleString()}
+                    </motion.p>
                     <p className="text-xs text-zinc-500">Total XP</p>
-                </div>
-                <div className="p-4 bg-zinc-900/80 text-center">
-                    <p className="text-2xl font-bold text-emerald-400">{tasksThisWeek}</p>
+                </motion.div>
+                <motion.div
+                    className="p-4 bg-[#0a0a0f] text-center"
+                    whileHover={{ backgroundColor: 'rgba(52,211,153,0.05)' }}
+                >
+                    <motion.p
+                        className="text-2xl font-bold text-emerald-400"
+                        animate={{ textShadow: ['0 0 10px rgba(52,211,153,0.3)', '0 0 20px rgba(52,211,153,0.5)', '0 0 10px rgba(52,211,153,0.3)'] }}
+                        transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
+                    >
+                        {tasksThisWeek}
+                    </motion.p>
                     <p className="text-xs text-zinc-500">Tasks denna vecka</p>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -554,33 +720,47 @@ function QuickActions() {
     const router = useRouter();
 
     const actions = [
-        { icon: BookOpen, label: "Fortsätt lära", href: "/modules", color: "from-purple-500 to-purple-600" },
-        { icon: Target, label: "Se progress", href: "/progress", color: "from-emerald-500 to-emerald-600" },
-        { icon: Timer, label: "Fokusläge", href: "/dashboard", color: "from-blue-500 to-blue-600" },
+        { icon: BookOpen, label: "Fortsätt lära", href: "/modules", color: "from-purple-500 to-purple-600", glow: "rgba(139,92,246,0.4)" },
+        { icon: Target, label: "Se progress", href: "/progress", color: "from-emerald-500 to-emerald-600", glow: "rgba(52,211,153,0.4)" },
+        { icon: Timer, label: "Fokusläge", href: "/dashboard", color: "from-blue-500 to-blue-600", glow: "rgba(59,130,246,0.4)" },
     ];
 
     return (
         <div className="grid grid-cols-3 gap-3">
             {actions.map((action, i) => (
-                <button
+                <motion.button
                     key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    whileHover={{
+                        scale: 1.05,
+                        boxShadow: `0 0 30px ${action.glow}`
+                    }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => router.push(action.href)}
                     className={cn(
                         "flex flex-col items-center gap-2 p-4 rounded-xl",
-                        "bg-zinc-800/40 border border-zinc-700/30",
-                        "hover:border-purple-500/30",
-                        "transition-all group"
+                        "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                        "border border-zinc-700/30",
+                        "hover:border-purple-500/40",
+                        "transition-all duration-300 group"
                     )}
                 >
-                    <div className={cn(
-                        "w-10 h-10 rounded-xl flex items-center justify-center",
-                        `bg-gradient-to-br ${action.color}`,
-                        "group-hover:shadow-lg group-hover:scale-105 transition-all"
-                    )}>
+                    <motion.div
+                        className={cn(
+                            "w-10 h-10 rounded-xl flex items-center justify-center",
+                            `bg-gradient-to-br ${action.color}`
+                        )}
+                        whileHover={{
+                            boxShadow: `0 0 25px ${action.glow}`,
+                        }}
+                        transition={{ duration: 0.3 }}
+                    >
                         <action.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="text-xs text-zinc-400 group-hover:text-zinc-200">{action.label}</span>
-                </button>
+                    </motion.div>
+                    <span className="text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors">{action.label}</span>
+                </motion.button>
             ))}
         </div>
     );
@@ -708,40 +888,70 @@ export default function MagnetenPage() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-zinc-950">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-                {/* Hero Header */}
-                <div className={cn(
-                    "relative overflow-hidden rounded-2xl",
-                    "bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900",
-                    "border border-purple-500/20",
-                    "p-8"
-                )}>
+        <div className="min-h-screen bg-[#05050a] relative">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+                {/* Hero Header - Cosmic Edition */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                        "relative overflow-hidden rounded-2xl",
+                        "bg-gradient-to-br from-[#0d0d14] via-purple-950/20 to-[#0a0a0f]",
+                        "border border-purple-500/30",
+                        "shadow-[0_0_60px_rgba(139,92,246,0.15)]",
+                        "p-8"
+                    )}
+                >
                     {/* Background effects */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                    <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl translate-y-1/2" />
+                    <motion.div
+                        className="absolute top-0 right-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+                        transition={{ duration: 8, repeat: Infinity }}
+                    />
+                    <motion.div
+                        className="absolute bottom-0 left-1/4 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl translate-y-1/2"
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+                        transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+                    />
 
                     <div className="relative flex items-center gap-4">
-                        <div className={cn(
-                            "w-14 h-14 rounded-2xl flex items-center justify-center",
-                            "bg-gradient-to-br from-purple-500 to-blue-600",
-                            "shadow-[0_0_30px_rgba(139,92,246,0.4)]"
-                        )}>
+                        <motion.div
+                            className={cn(
+                                "w-14 h-14 rounded-2xl flex items-center justify-center",
+                                "bg-gradient-to-br from-purple-500 to-blue-600"
+                            )}
+                            animate={{
+                                boxShadow: [
+                                    '0 0 30px rgba(139,92,246,0.4)',
+                                    '0 0 50px rgba(139,92,246,0.6)',
+                                    '0 0 30px rgba(139,92,246,0.4)'
+                                ]
+                            }}
+                            transition={{ duration: 2.5, repeat: Infinity }}
+                        >
                             <Compass className="w-7 h-7 text-white" />
-                        </div>
+                        </motion.div>
                         <div>
-                            <h1 className={cn(
-                                "text-2xl md:text-3xl font-bold",
-                                "bg-gradient-to-r from-zinc-100 via-purple-200 to-zinc-100 bg-clip-text text-transparent"
-                            )}>
+                            <motion.h1
+                                className={cn(
+                                    "text-2xl md:text-3xl font-bold",
+                                    "bg-gradient-to-r from-zinc-100 via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+                                )}
+                                animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+                                transition={{ duration: 5, repeat: Infinity }}
+                            >
                                 Ta en egen pulsmätning, {userName}!
-                            </h1>
-                            <p className="text-zinc-400 mt-1">
+                            </motion.h1>
+                            <p className="text-purple-200/60 mt-1">
                                 Planera din DevOps-resa, sätt upp mål och följ din progress
                             </p>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Main Grid */}
                 <div className="grid lg:grid-cols-3 gap-6">

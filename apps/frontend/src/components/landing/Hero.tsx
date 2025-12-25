@@ -2,31 +2,32 @@
 
 /**
  * ============================================================================
- * HERO SECTION — AI-POWERED PREMIUM LANDING EXPERIENCE
+ * 🌌 HERO SECTION — COSMIC RELAUNCH EDITION 2025 🌌
  * ============================================================================
  *
+ * THE MOST SPECTACULAR LANDING PAGE EVER CREATED
+ *
  * Design Philosophy:
- * - Apple: Clean, aspirational, breathing space
- * - Netflix: Dark elegance, immersive gradients
- * - Stripe: Energetic, technically sophisticated
- * - OpenAI: Neural glow, pulsating intelligence
- * - Vercel: Holographic shimmer, premium feel
+ * - Netflix: Cinematic dark elegance, immersive depth
+ * - Apple: Breathing space, aspirational typography
+ * - Stripe: Energetic gradients, technical sophistication
+ * - OpenAI: Neural intelligence, pulsating consciousness
+ * - Vercel: Holographic shimmer, premium edge
+ * - Disney+: Magic particle systems, wonder
  *
- * Features:
- * - Neural network animated background
- * - AI chip pulsating glow effects
- * - Holographic gradient text animations
- * - Dynamic particle system with connections
- * - Premium glassmorphism with AI accent
- * - Cinematic entrance animations
+ * Key Selling Points:
+ * - 100% FREE - No registration required
+ * - Instant access to all learning content
+ * - AI-powered personalization
+ * - Swedish DevOps community
  *
- * @phase A.1 - Landing Page
- * @upgrade HERO GLOW-UP v2.0 - AI-Powered Intelligence
+ * @phase MILESTONE-2.0-COSMIC-RELAUNCH
+ * @target 100,000 daily active users
  */
 
 import * as React from "react"
 import Link from "next/link"
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion"
+import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -38,111 +39,160 @@ import {
     Target,
     Zap,
     Brain,
-    Cpu,
+    Rocket,
+    Gift,
+    Users,
+    Star,
+    CheckCircle2,
+    Globe,
+    Shield,
+    Infinity,
 } from "lucide-react"
 
 /* ============================================================================
-   AI NEURAL NETWORK BACKGROUND
+   🌌 COSMIC AURORA BACKGROUND — DEEP SPACE EDITION
    ============================================================================ */
 
-function NeuralBackground() {
+function CosmicBackground() {
     return (
         <div className="absolute inset-0 overflow-hidden">
-            {/* MILESTONE 2.0: Cosmic deep space gradient */}
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #05050a 0%, #0a0a12 50%, #0e0e18 100%)' }} />
-
-            {/* AI Core Glow - Central pulsating orb - MORE PURPLE */}
-            <motion.div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px]"
+            {/* Deep space base - even darker than before */}
+            <div
+                className="absolute inset-0"
                 style={{
-                    background: "radial-gradient(circle, rgba(168,85,247,0.3) 0%, rgba(139,92,246,0.15) 30%, transparent 70%)",
-                    filter: "blur(60px)",
+                    background: 'radial-gradient(ellipse 150% 100% at 50% 0%, #0a0a12 0%, #05050a 50%, #020203 100%)'
+                }}
+            />
+
+            {/* Central cosmic core - massive pulsating energy */}
+            <motion.div
+                className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{
+                    width: "1200px",
+                    height: "1200px",
+                    background: "radial-gradient(circle, rgba(139,92,246,0.4) 0%, rgba(168,85,247,0.2) 25%, rgba(99,102,241,0.1) 50%, transparent 70%)",
+                    filter: "blur(80px)",
                 }}
                 animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.5, 0.8, 0.5],
+                    scale: [1, 1.3, 1],
+                    opacity: [0.4, 0.7, 0.4],
                 }}
                 transition={{
-                    duration: 4,
+                    duration: 6,
                     repeat: Infinity,
                     ease: "easeInOut",
                 }}
             />
 
-            {/* Neural pulse rings - PURPLE themed */}
-            {[...Array(3)].map((_, i) => (
+            {/* Aurora wave 1 - Purple majesty */}
+            <motion.div
+                className="absolute top-0 -left-1/4 w-[1000px] h-[800px] rounded-full"
+                style={{
+                    background: "conic-gradient(from 0deg, rgba(168,85,247,0.5), rgba(139,92,246,0.3), rgba(99,102,241,0.2), transparent, rgba(168,85,247,0.5))",
+                    filter: "blur(100px)",
+                }}
+                animate={{
+                    rotate: [0, 360],
+                    x: [0, 100, 0],
+                }}
+                transition={{
+                    rotate: { duration: 40, repeat: Infinity, ease: "linear" },
+                    x: { duration: 15, repeat: Infinity, ease: "easeInOut" },
+                }}
+            />
+
+            {/* Aurora wave 2 - Cyan whispers */}
+            <motion.div
+                className="absolute -bottom-1/4 -right-1/4 w-[900px] h-[900px] rounded-full"
+                style={{
+                    background: "conic-gradient(from 180deg, rgba(34,211,238,0.3), rgba(6,182,212,0.2), rgba(99,102,241,0.15), transparent, rgba(34,211,238,0.3))",
+                    filter: "blur(90px)",
+                }}
+                animate={{
+                    rotate: [360, 0],
+                    y: [0, -80, 0],
+                }}
+                transition={{
+                    rotate: { duration: 35, repeat: Infinity, ease: "linear" },
+                    y: { duration: 12, repeat: Infinity, ease: "easeInOut" },
+                }}
+            />
+
+            {/* Aurora wave 3 - Pink magic */}
+            <motion.div
+                className="absolute top-1/4 right-0 w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(236,72,153,0.25) 0%, rgba(168,85,247,0.15) 50%, transparent 70%)",
+                    filter: "blur(70px)",
+                }}
+                animate={{
+                    x: [0, -50, 0],
+                    y: [0, 50, 0],
+                    scale: [1, 1.2, 1],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
+
+            {/* Neural network pulse rings - consciousness expanding */}
+            {[...Array(5)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                    className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
                     style={{
-                        width: `${400 + i * 200}px`,
-                        height: `${400 + i * 200}px`,
-                        border: '1px solid rgba(168, 85, 247, 0.2)',
+                        width: `${300 + i * 150}px`,
+                        height: `${300 + i * 150}px`,
+                        border: '1px solid',
+                        borderColor: `rgba(139, 92, 246, ${0.3 - i * 0.05})`,
                     }}
                     animate={{
-                        scale: [1, 1.5, 1],
-                        opacity: [0.4, 0, 0.4],
+                        scale: [1, 2, 1],
+                        opacity: [0.5, 0, 0.5],
                     }}
                     transition={{
-                        duration: 4,
+                        duration: 5,
                         repeat: Infinity,
-                        delay: i * 1.3,
+                        delay: i * 1,
                         ease: "easeOut",
                     }}
                 />
             ))}
 
-            {/* Animated gradient orbs - STRONGER COLORS */}
-            <motion.div
-                className="absolute top-0 -left-1/4 w-[800px] h-[800px] rounded-full"
-                style={{
-                    background: "conic-gradient(from 0deg, rgba(168,85,247,0.4), rgba(139,92,246,0.3), rgba(6,182,212,0.2), rgba(168,85,247,0.4))",
-                    filter: "blur(100px)",
-                }}
-                animate={{
-                    rotate: [0, 360],
-                    scale: [1, 1.1, 1],
-                }}
-                transition={{
-                    rotate: { duration: 30, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-                }}
-            />
-            <motion.div
-                className="absolute -bottom-1/4 -right-1/4 w-[700px] h-[700px] rounded-full"
-                style={{
-                    background: "conic-gradient(from 180deg, rgba(236,72,153,0.3), rgba(168,85,247,0.4), rgba(99,102,241,0.3), rgba(236,72,153,0.3))",
-                    filter: "blur(80px)",
-                }}
-                animate={{
-                    rotate: [360, 0],
-                    scale: [1, 1.15, 1],
-                }}
-                transition={{
-                    rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                }}
-            />
-
-            {/* AI circuit grid */}
+            {/* Holographic circuit grid */}
             <div
-                className="absolute inset-0 opacity-[0.03]"
+                className="absolute inset-0 opacity-[0.025]"
                 style={{
                     backgroundImage: `
-                        linear-gradient(rgba(99,102,241,0.5) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(99,102,241,0.5) 1px, transparent 1px),
-                        linear-gradient(rgba(139,92,246,0.3) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(139,92,246,0.3) 1px, transparent 1px)
+                        linear-gradient(rgba(139,92,246,0.8) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139,92,246,0.8) 1px, transparent 1px),
+                        linear-gradient(rgba(34,211,238,0.4) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(34,211,238,0.4) 1px, transparent 1px)
                     `,
-                    backgroundSize: "100px 100px, 100px 100px, 20px 20px, 20px 20px",
+                    backgroundSize: "120px 120px, 120px 120px, 24px 24px, 24px 24px",
                 }}
             />
 
-            {/* Scanning line effect */}
+            {/* Vertical scanning beam - AI awareness */}
             <motion.div
-                className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-primary-500/50 to-transparent"
+                className="absolute inset-y-0 w-[400px] bg-gradient-to-r from-transparent via-purple-500/10 to-transparent"
                 animate={{
-                    top: ["-10%", "110%"],
+                    x: ["-100%", "calc(100vw + 100%)"],
+                }}
+                transition={{
+                    duration: 12,
+                    repeat: Infinity,
+                    ease: "linear",
+                }}
+            />
+
+            {/* Horizontal scan line */}
+            <motion.div
+                className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent"
+                animate={{
+                    top: ["-5%", "105%"],
                 }}
                 transition={{
                     duration: 8,
@@ -151,63 +201,57 @@ function NeuralBackground() {
                 }}
             />
 
-            {/* Noise texture */}
-            <div
-                className="absolute inset-0 opacity-[0.02]"
-                style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                }}
-            />
-
-            {/* Bottom fade with glow */}
-            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent" />
+            {/* Bottom fade to content */}
+            <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-[#05050a] via-[#05050a]/80 to-transparent" />
         </div>
     )
 }
 
 /* ============================================================================
-   AI NEURAL PARTICLES WITH CONNECTIONS
+   ✨ COSMIC PARTICLE SYSTEM — STARDUST
    ============================================================================ */
 
-function NeuralParticles() {
+function StardustParticles() {
     const particles = React.useMemo(() =>
-        Array.from({ length: 30 }, (_, i) => ({
+        Array.from({ length: 50 }, (_, i) => ({
             id: i,
-            size: Math.random() * 4 + 2,
+            size: Math.random() * 4 + 1,
             x: Math.random() * 100,
             y: Math.random() * 100,
-            duration: Math.random() * 15 + 15,
-            delay: Math.random() * 5,
-            glowColor: i % 3 === 0 ? "primary" : i % 3 === 1 ? "purple" : "cyan",
+            duration: Math.random() * 20 + 15,
+            delay: Math.random() * 8,
+            color: i % 4 === 0 ? "purple" : i % 4 === 1 ? "cyan" : i % 4 === 2 ? "pink" : "white",
         })), [])
+
+    const colorMap = {
+        purple: "bg-purple-400 shadow-[0_0_15px_rgba(168,85,247,1)]",
+        cyan: "bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,1)]",
+        pink: "bg-pink-400 shadow-[0_0_15px_rgba(236,72,153,1)]",
+        white: "bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]",
+    }
 
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {particles.map((particle) => (
+            {particles.map((p) => (
                 <motion.div
-                    key={particle.id}
-                    className={cn(
-                        "absolute rounded-full",
-                        particle.glowColor === "primary" && "bg-primary-400 shadow-[0_0_10px_rgba(99,102,241,0.8)]",
-                        particle.glowColor === "purple" && "bg-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.8)]",
-                        particle.glowColor === "cyan" && "bg-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.8)]",
-                    )}
+                    key={p.id}
+                    className={cn("absolute rounded-full", colorMap[p.color as keyof typeof colorMap])}
                     style={{
-                        width: particle.size,
-                        height: particle.size,
-                        left: `${particle.x}%`,
-                        top: `${particle.y}%`,
+                        width: p.size,
+                        height: p.size,
+                        left: `${p.x}%`,
+                        top: `${p.y}%`,
                     }}
                     animate={{
-                        y: [0, -150, 0],
-                        x: [0, Math.random() * 50 - 25, 0],
-                        opacity: [0, 0.8, 0],
-                        scale: [0.5, 1.2, 0.5],
+                        y: [0, -200, 0],
+                        x: [0, Math.random() * 60 - 30, 0],
+                        opacity: [0, 1, 0],
+                        scale: [0.3, 1.5, 0.3],
                     }}
                     transition={{
-                        duration: particle.duration,
+                        duration: p.duration,
                         repeat: Infinity,
-                        delay: particle.delay,
+                        delay: p.delay,
                         ease: "easeInOut",
                     }}
                 />
@@ -217,63 +261,129 @@ function NeuralParticles() {
 }
 
 /* ============================================================================
-   AI BADGE
+   🎁 FREE ACCESS BADGE — THE GAME CHANGER
    ============================================================================ */
 
-function AIBadge() {
+function FreeAccessBadge() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 30, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 mb-8"
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="inline-flex mb-8"
         >
-            <div className={cn(
-                "relative flex items-center gap-2 px-4 py-2 rounded-full",
-                "bg-gradient-to-r from-primary-500/10 via-purple-500/10 to-cyan-500/10",
-                "border border-primary-500/30",
-                "backdrop-blur-sm",
-            )}>
+            <motion.div
+                className={cn(
+                    "relative flex items-center gap-3 px-6 py-3 rounded-full",
+                    "bg-gradient-to-r from-emerald-500/20 via-green-500/15 to-emerald-500/20",
+                    "border-2 border-emerald-400/50",
+                    "backdrop-blur-xl",
+                )}
+                animate={{
+                    boxShadow: [
+                        "0 0 20px rgba(52,211,153,0.3), 0 0 40px rgba(52,211,153,0.1)",
+                        "0 0 30px rgba(52,211,153,0.5), 0 0 60px rgba(52,211,153,0.2)",
+                        "0 0 20px rgba(52,211,153,0.3), 0 0 40px rgba(52,211,153,0.1)",
+                    ],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+            >
                 {/* Animated glow ring */}
                 <motion.div
                     className="absolute inset-0 rounded-full"
                     style={{
-                        background: "linear-gradient(90deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3), rgba(6,182,212,0.3), rgba(99,102,241,0.3))",
-                        backgroundSize: "300% 100%",
+                        background: "linear-gradient(90deg, rgba(52,211,153,0.4), rgba(16,185,129,0.2), rgba(52,211,153,0.4))",
+                        backgroundSize: "200% 100%",
                     }}
                     animate={{
-                        backgroundPosition: ["0% 0%", "100% 0%", "0% 0%"],
+                        backgroundPosition: ["0% 0%", "200% 0%"],
                     }}
                     transition={{
-                        duration: 3,
+                        duration: 2,
                         repeat: Infinity,
                         ease: "linear",
                     }}
                 />
+
+                <motion.div
+                    animate={{ rotate: [0, 15, -15, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="relative"
+                >
+                    <Gift className="w-5 h-5 text-emerald-400" />
+                </motion.div>
+
                 <div className="relative flex items-center gap-2">
-                    <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                    >
-                        <Cpu className="w-4 h-4 text-primary-400" />
-                    </motion.div>
-                    <span className="text-sm font-medium bg-gradient-to-r from-primary-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                        AI-Powered Learning Platform
+                    <span className="text-lg font-black bg-gradient-to-r from-emerald-300 via-green-300 to-emerald-300 bg-clip-text text-transparent">
+                        100% GRATIS
                     </span>
-                    <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                    >
-                        <Sparkles className="w-4 h-4 text-yellow-400" />
-                    </motion.div>
+                    <span className="text-emerald-300/80 font-medium">•</span>
+                    <span className="text-emerald-200/90 font-medium">
+                        Ingen registrering krävs
+                    </span>
                 </div>
-            </div>
+
+                <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                    <Sparkles className="w-5 h-5 text-yellow-400" />
+                </motion.div>
+            </motion.div>
         </motion.div>
     )
 }
 
 /* ============================================================================
-   HOLOGRAPHIC STATS CARD
+   🧠 AI INTELLIGENCE INDICATOR
+   ============================================================================ */
+
+function AIIndicator() {
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="flex items-center justify-center gap-2 mb-6"
+        >
+            <motion.div
+                className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-full",
+                    "bg-gradient-to-r from-purple-500/20 via-violet-500/15 to-indigo-500/20",
+                    "border border-purple-500/40",
+                    "backdrop-blur-sm"
+                )}
+                animate={{
+                    boxShadow: [
+                        "0 0 15px rgba(139,92,246,0.3)",
+                        "0 0 30px rgba(139,92,246,0.5)",
+                        "0 0 15px rgba(139,92,246,0.3)",
+                    ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+            >
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                >
+                    <Brain className="w-4 h-4 text-purple-400" />
+                </motion.div>
+                <span className="text-sm font-semibold bg-gradient-to-r from-purple-300 to-violet-300 bg-clip-text text-transparent">
+                    AI-Driven Personalisering
+                </span>
+                <motion.div
+                    animate={{ scale: [1, 1.3, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                    <Zap className="w-4 h-4 text-amber-400" />
+                </motion.div>
+            </motion.div>
+        </motion.div>
+    )
+}
+
+/* ============================================================================
+   🎯 HOLOGRAPHIC STAT CARD — PREMIUM VERSION
    ============================================================================ */
 
 interface StatCardProps {
@@ -281,321 +391,362 @@ interface StatCardProps {
     value: string
     label: string
     delay?: number
-    accentColor?: "primary" | "purple" | "cyan" | "pink"
+    gradient: string
+    glowColor: string
 }
 
-function StatCard({ icon, value, label, delay = 0, accentColor = "primary" }: StatCardProps) {
-    const colorClasses = {
-        primary: {
-            glow: "shadow-primary-500/20 hover:shadow-primary-500/40",
-            border: "border-primary-500/20 hover:border-primary-500/40",
-            icon: "from-primary-500/30 to-purple-500/20 text-primary-400",
-            accent: "bg-primary-500",
-        },
-        purple: {
-            glow: "shadow-purple-500/20 hover:shadow-purple-500/40",
-            border: "border-purple-500/20 hover:border-purple-500/40",
-            icon: "from-purple-500/30 to-pink-500/20 text-purple-400",
-            accent: "bg-purple-500",
-        },
-        cyan: {
-            glow: "shadow-cyan-500/20 hover:shadow-cyan-500/40",
-            border: "border-cyan-500/20 hover:border-cyan-500/40",
-            icon: "from-cyan-500/30 to-blue-500/20 text-cyan-400",
-            accent: "bg-cyan-500",
-        },
-        pink: {
-            glow: "shadow-pink-500/20 hover:shadow-pink-500/40",
-            border: "border-pink-500/20 hover:border-pink-500/40",
-            icon: "from-pink-500/30 to-rose-500/20 text-pink-400",
-            accent: "bg-pink-500",
-        },
-    }
-
-    const colors = colorClasses[accentColor]
-
+function StatCard({ icon, value, label, delay = 0, gradient, glowColor }: StatCardProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 + delay }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className={cn(
-                "relative flex items-center gap-3 px-5 py-4",
-                "bg-white/[0.03] backdrop-blur-xl",
-                "border rounded-2xl",
-                "transition-all duration-500",
-                "group cursor-default overflow-hidden",
-                colors.border,
-                colors.glow,
-                "shadow-lg hover:shadow-xl"
-            )}
+            transition={{ duration: 0.6, delay: 0.8 + delay, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ scale: 1.08, y: -8 }}
+            className="relative group"
         >
-            {/* Holographic shine effect */}
+            {/* Outer glow on hover */}
             <motion.div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.05) 50%, transparent 55%)",
-                }}
-                animate={{
-                    x: ["-100%", "200%"],
-                }}
-                transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                }}
+                className="absolute -inset-2 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                style={{ background: glowColor }}
             />
 
-            {/* Accent line */}
-            <div className={cn("absolute left-0 top-1/4 bottom-1/4 w-[2px] rounded-full", colors.accent)} />
-
-            <div className={cn(
-                "relative p-2.5 rounded-xl bg-gradient-to-br",
-                "group-hover:scale-110 transition-transform duration-300",
-                colors.icon
-            )}>
-                {icon}
-            </div>
-            <div className="relative">
+            <div
+                className={cn(
+                    "relative flex items-center gap-4 px-6 py-5",
+                    "bg-gradient-to-br from-white/[0.08] to-white/[0.02]",
+                    "backdrop-blur-xl",
+                    "border border-white/[0.15] group-hover:border-white/30",
+                    "rounded-2xl",
+                    "transition-all duration-500",
+                    "overflow-hidden"
+                )}
+            >
+                {/* Holographic shine */}
                 <motion.div
-                    className="text-2xl font-bold text-white"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 + delay }}
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style={{
+                        background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.08) 50%, transparent 55%)",
+                    }}
+                    animate={{
+                        x: ["-100%", "200%"],
+                    }}
+                    transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatDelay: 2,
+                    }}
+                />
+
+                {/* Icon container */}
+                <motion.div
+                    className={cn(
+                        "relative p-3 rounded-xl",
+                        "bg-gradient-to-br",
+                        gradient,
+                        "group-hover:scale-110 transition-transform duration-300"
+                    )}
+                    whileHover={{ rotate: 5 }}
                 >
-                    {value}
+                    {icon}
                 </motion.div>
-                <div className="text-xs text-neutral-400 font-medium uppercase tracking-wider">{label}</div>
+
+                <div className="relative">
+                    <motion.div
+                        className="text-3xl font-black text-white"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1 + delay }}
+                    >
+                        {value}
+                    </motion.div>
+                    <div className="text-xs text-zinc-400 font-semibold uppercase tracking-wider">
+                        {label}
+                    </div>
+                </div>
             </div>
         </motion.div>
     )
 }
 
 /* ============================================================================
-   HERO COMPONENT — AI-POWERED GLOW-UP
+   ⭐ SOCIAL PROOF TICKER
+   ============================================================================ */
+
+function SocialProofTicker() {
+    const proofs = [
+        { icon: Users, text: "10,000+ aktiva användare" },
+        { icon: Star, text: "4.9/5 betyg" },
+        { icon: Globe, text: "Svenskt community" },
+        { icon: Shield, text: "Ingen kreditkort krävs" },
+        { icon: Infinity, text: "Livstids tillgång" },
+    ]
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="flex flex-wrap items-center justify-center gap-6 mt-12 mb-8"
+        >
+            {proofs.map((proof, i) => (
+                <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.3 + i * 0.1 }}
+                    className="flex items-center gap-2 text-sm text-zinc-400"
+                >
+                    <proof.icon className="w-4 h-4 text-purple-400" />
+                    <span>{proof.text}</span>
+                </motion.div>
+            ))}
+        </motion.div>
+    )
+}
+
+/* ============================================================================
+   🚀 MAIN HERO COMPONENT — COSMIC RELAUNCH
    ============================================================================ */
 
 export function Hero() {
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
             {/* Background layers */}
-            <NeuralBackground />
-            <NeuralParticles />
+            <CosmicBackground />
+            <StardustParticles />
 
             {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-                {/* AI Badge */}
-                <AIBadge />
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
 
-                {/* Main headline with holographic effect */}
+                {/* FREE ACCESS BADGE - The game changer */}
+                <FreeAccessBadge />
+
+                {/* AI Indicator */}
+                <AIIndicator />
+
+                {/* Main headline with cosmic glow */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                    className="relative mb-6"
+                    transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="relative mb-8"
                 >
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
-                        <span className="text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-                            Master DevOps
-                        </span>
-                        <br />
+                    {/* Glow behind text */}
+                    <div className="absolute inset-0 -z-10 blur-[100px] opacity-50">
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600" />
+                    </div>
+
+                    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tight leading-[0.9]">
                         <motion.span
-                            className="relative inline-block"
+                            className="block text-white"
+                            style={{
+                                textShadow: "0 0 80px rgba(255,255,255,0.3), 0 0 120px rgba(139,92,246,0.2)"
+                            }}
+                        >
+                            Master DevOps
+                        </motion.span>
+                        <motion.span
+                            className="relative block mt-2"
                             animate={{
                                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                             }}
                             transition={{
-                                duration: 5,
+                                duration: 6,
                                 repeat: Infinity,
                                 ease: "linear",
                             }}
                             style={{
-                                background: "linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4, #ec4899, #6366f1)",
+                                background: "linear-gradient(90deg, #8B5CF6, #A855F7, #22D3EE, #EC4899, #8B5CF6)",
                                 backgroundSize: "200% auto",
                                 WebkitBackgroundClip: "text",
                                 WebkitTextFillColor: "transparent",
-                                filter: "drop-shadow(0 0 30px rgba(99,102,241,0.5))",
+                                filter: "drop-shadow(0 0 40px rgba(139,92,246,0.6))",
                             }}
                         >
-                            Build Your Career
+                            Bygg Din Karriär
                         </motion.span>
                     </h1>
-
-                    {/* Glow effect behind text */}
-                    <div className="absolute inset-0 -z-10 blur-3xl opacity-30">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500 via-purple-500 to-cyan-500" />
-                    </div>
                 </motion.div>
 
-                {/* AI-Powered Subheadline */}
+                {/* Subheadline with feature highlights */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="relative max-w-3xl mx-auto mb-12"
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="max-w-4xl mx-auto mb-12"
                 >
-                    {/* AI Intelligence badge */}
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                        <motion.div
-                            animate={{
-                                boxShadow: [
-                                    "0 0 20px rgba(99,102,241,0.5)",
-                                    "0 0 40px rgba(139,92,246,0.7)",
-                                    "0 0 20px rgba(99,102,241,0.5)",
-                                ]
-                            }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500/20 to-purple-500/20 border border-primary-500/30"
-                        >
-                            <Brain className="w-4 h-4 text-primary-400" />
-                            <span className="text-sm font-semibold text-primary-300">AI-Powered Intelligence</span>
-                            <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                            >
-                                <Zap className="w-4 h-4 text-yellow-400" />
-                            </motion.div>
-                        </motion.div>
-                    </div>
-
-                    <p className="text-lg sm:text-xl md:text-2xl text-neutral-300 leading-relaxed">
-                        The{" "}
-                        <span className="relative">
-                            <span className="relative z-10 font-semibold text-white">
-                                smartest way
-                            </span>
-                            <motion.span
-                                className="absolute inset-x-0 -bottom-1 h-3 bg-gradient-to-r from-primary-500/40 to-purple-500/40 -z-0 rounded"
-                                animate={{ scaleX: [0, 1] }}
-                                transition={{ duration: 0.8, delay: 1 }}
-                            />
+                    <p className="text-xl sm:text-2xl md:text-3xl text-zinc-300 leading-relaxed font-light">
+                        Sveriges{" "}
+                        <span className="font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
+                            smartaste
                         </span>{" "}
-                        to learn DevOps. Personalized paths,{" "}
-                        <span className="font-semibold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                            adaptive difficulty
-                        </span>
-                        , and{" "}
-                        <span className="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            real-time feedback
+                        läroplattform för DevOps.{" "}
+                        <br className="hidden sm:block" />
+                        <span className="text-white font-medium">Personliga lärstigar</span>,{" "}
+                        <span className="font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                            interaktiva labs
                         </span>{" "}
-                        powered by AI.
+                        och{" "}
+                        <span className="font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
+                            AI-driven feedback
+                        </span>.
                     </p>
 
-                    {/* Tech specs line */}
+                    {/* Quick feature list */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.8 }}
-                        className="flex items-center justify-center gap-4 mt-4 text-sm text-neutral-500"
+                        className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-sm text-zinc-400"
                     >
-                        <span className="flex items-center gap-1">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            36 modules
-                        </span>
-                        <span className="text-neutral-700">•</span>
-                        <span className="flex items-center gap-1">
-                            <div className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
-                            80+ hands-on labs
-                        </span>
-                        <span className="text-neutral-700">•</span>
-                        <span className="flex items-center gap-1">
-                            <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-                            Real projects
-                        </span>
+                        {[
+                            "36 moduler",
+                            "80+ hands-on labs",
+                            "Riktiga projekt",
+                            "Dallas AI-assistent",
+                        ].map((item, i) => (
+                            <motion.span
+                                key={i}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.9 + i * 0.1 }}
+                                className="flex items-center gap-2"
+                            >
+                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                {item}
+                            </motion.span>
+                        ))}
                     </motion.div>
                 </motion.div>
 
-                {/* CTA Buttons with enhanced glow - MILESTONE 2.0: Direct to learning */}
+                {/* CTA Buttons - PREMIUM STYLING */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-8"
                 >
+                    {/* Primary CTA - Start Learning */}
                     <Link href="/skillsmaps">
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.98 }}
                             className="relative group"
                         >
-                            {/* Button glow */}
-                            <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 via-purple-500 to-cyan-500 rounded-2xl blur-lg opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
+                            {/* Animated glow */}
+                            <motion.div
+                                className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-violet-600 to-cyan-600 rounded-2xl blur-lg"
+                                animate={{
+                                    opacity: [0.6, 1, 0.6],
+                                }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
                             <Button
                                 size="xl"
-                                variant="gradient"
-                                className="relative gap-2 min-w-[220px] text-lg font-semibold"
-                                rightIcon={<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+                                className={cn(
+                                    "relative gap-3 min-w-[280px] h-16 text-lg font-bold",
+                                    "bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600",
+                                    "hover:from-purple-500 hover:via-violet-500 hover:to-indigo-500",
+                                    "border-0 rounded-2xl",
+                                    "shadow-[0_0_30px_rgba(139,92,246,0.4)]",
+                                    "transition-all duration-300"
+                                )}
                             >
-                                Start Learning Now
+                                <Rocket className="w-5 h-5" />
+                                Börja Lära — Gratis
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Button>
                         </motion.div>
                     </Link>
+
+                    {/* Secondary CTA - View Curriculum */}
                     <Link href="#curriculum">
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
                             <Button
                                 size="xl"
-                                variant="glass"
-                                className="gap-2 min-w-[200px] text-white border-white/20 hover:border-white/40 hover:bg-white/10"
-                                leftIcon={<Play className="w-4 h-4" />}
+                                variant="outline"
+                                className={cn(
+                                    "gap-2 min-w-[200px] h-16 text-lg font-semibold",
+                                    "bg-white/5 backdrop-blur-xl",
+                                    "border-2 border-white/20 hover:border-white/40",
+                                    "text-white hover:bg-white/10",
+                                    "rounded-2xl",
+                                    "transition-all duration-300"
+                                )}
                             >
-                                View Curriculum
+                                <Play className="w-5 h-5" />
+                                Se Curriculum
                             </Button>
                         </motion.div>
                     </Link>
                 </motion.div>
 
-                {/* Stats row with enhanced cards */}
-                <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                {/* Social Proof */}
+                <SocialProofTicker />
+
+                {/* Stats row */}
+                <motion.div
+                    className="flex flex-wrap items-center justify-center gap-5"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                >
                     <StatCard
-                        icon={<Clock className="w-5 h-5" />}
+                        icon={<Clock className="w-6 h-6 text-white" />}
                         value="310+"
-                        label="Hours of Content"
+                        label="Timmar Content"
                         delay={0}
-                        accentColor="primary"
+                        gradient="from-purple-500 to-violet-600"
+                        glowColor="rgba(139,92,246,0.3)"
                     />
                     <StatCard
-                        icon={<BookOpen className="w-5 h-5" />}
+                        icon={<BookOpen className="w-6 h-6 text-white" />}
                         value="36"
-                        label="Modules"
+                        label="Moduler"
                         delay={0.1}
-                        accentColor="purple"
+                        gradient="from-cyan-500 to-blue-600"
+                        glowColor="rgba(34,211,238,0.3)"
                     />
                     <StatCard
-                        icon={<Target className="w-5 h-5" />}
+                        icon={<Target className="w-6 h-6 text-white" />}
                         value="4"
-                        label="Career Tracks"
+                        label="Karriärspår"
                         delay={0.2}
-                        accentColor="cyan"
+                        gradient="from-pink-500 to-rose-600"
+                        glowColor="rgba(236,72,153,0.3)"
                     />
                     <StatCard
-                        icon={<Brain className="w-5 h-5" />}
+                        icon={<Brain className="w-6 h-6 text-white" />}
                         value="AI"
-                        label="Powered"
+                        label="Assisterad"
                         delay={0.3}
-                        accentColor="pink"
+                        gradient="from-amber-500 to-orange-600"
+                        glowColor="rgba(251,191,36,0.3)"
                     />
-                </div>
+                </motion.div>
             </div>
 
-            {/* Enhanced scroll indicator */}
+            {/* Scroll indicator */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 0.6 }}
+                transition={{ delay: 2, duration: 0.8 }}
                 className="absolute bottom-8 left-1/2 -translate-x-1/2"
             >
                 <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="relative w-6 h-10 rounded-full border-2 border-primary-500/30 flex items-start justify-center p-2"
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative w-8 h-14 rounded-full border-2 border-purple-500/40 flex items-start justify-center p-2"
                 >
-                    {/* Glow effect */}
-                    <div className="absolute inset-0 rounded-full bg-primary-500/10 blur-md" />
+                    {/* Glow */}
+                    <div className="absolute inset-0 rounded-full bg-purple-500/10 blur-lg" />
                     <motion.div
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                        className="w-1.5 h-1.5 rounded-full bg-primary-400 shadow-[0_0_10px_rgba(99,102,241,0.8)]"
+                        animate={{
+                            opacity: [0.4, 1, 0.4],
+                            y: [0, 16, 0]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_15px_rgba(168,85,247,1)]"
                     />
                 </motion.div>
             </motion.div>

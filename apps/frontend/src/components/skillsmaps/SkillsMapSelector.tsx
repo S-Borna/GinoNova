@@ -154,16 +154,16 @@ function FloatingParticles() {
                     ease: "easeInOut",
                 }}
             />
-            
+
             {/* Floating sparkle particles */}
             {[...Array(20)].map((_, i) => (
                 <motion.div
                     key={i}
                     className={cn(
                         "absolute rounded-full",
-                        i % 3 === 0 ? "w-1.5 h-1.5 bg-purple-400/40" : 
-                        i % 3 === 1 ? "w-1 h-1 bg-cyan-400/30" :
-                        "w-2 h-2 bg-pink-400/20"
+                        i % 3 === 0 ? "w-1.5 h-1.5 bg-purple-400/40" :
+                            i % 3 === 1 ? "w-1 h-1 bg-cyan-400/30" :
+                                "w-2 h-2 bg-pink-400/20"
                     )}
                     initial={{
                         x: `${Math.random() * 100}%`,
@@ -223,9 +223,9 @@ function SelectorHeader({
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
             <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/15 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
             <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
-            
+
             {/* Grid pattern overlay */}
-            <div 
+            <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
                     backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
@@ -237,13 +237,13 @@ function SelectorHeader({
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     <div>
                         <div className="flex items-center gap-3 mb-4">
-                            <motion.div 
+                            <motion.div
                                 className={cn(
                                     "p-3 rounded-2xl",
                                     "bg-gradient-to-br from-purple-600/30 to-cyan-500/20",
                                     "border border-purple-400/40"
                                 )}
-                                animate={{ 
+                                animate={{
                                     boxShadow: [
                                         "0 0 20px rgba(168,85,247,0.3)",
                                         "0 0 40px rgba(168,85,247,0.5)",
@@ -263,9 +263,9 @@ function SelectorHeader({
                                 "text-4xl md:text-5xl font-black tracking-tight",
                                 "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
                             )}
-                            style={{
-                                textShadow: "0 0 40px rgba(168,85,247,0.3)",
-                            }}>
+                                style={{
+                                    textShadow: "0 0 40px rgba(168,85,247,0.3)",
+                                }}>
                                 Dina SkillsMaps
                             </h1>
 
@@ -279,7 +279,7 @@ function SelectorHeader({
                                     "text-black text-sm font-bold",
                                     "transition-all duration-300"
                                 )}
-                                whileHover={{ 
+                                whileHover={{
                                     scale: 1.05,
                                     boxShadow: "0 0 30px rgba(251,191,36,0.5)",
                                 }}
@@ -290,7 +290,7 @@ function SelectorHeader({
                             </motion.button>
                         </div>
                         <p className="text-zinc-400 mt-3 text-lg">
-                            <span className="text-purple-400 font-semibold">{totalMaps}</span> kunskapsstigar • 
+                            <span className="text-purple-400 font-semibold">{totalMaps}</span> kunskapsstigar •
                             <span className="text-green-400 font-semibold"> {completedMaps}</span> klara
                         </p>
                     </div>
@@ -392,13 +392,13 @@ function CategoryTabs({
                         <span>{cat.label}</span>
                         <span className={cn(
                             "px-2 py-0.5 rounded-lg text-xs font-bold",
-                            isActive 
-                                ? "bg-white/20 text-white" 
+                            isActive
+                                ? "bg-white/20 text-white"
                                 : "bg-white/10 text-zinc-500"
                         )}>
                             {count}
                         </span>
-                        
+
                         {/* Active indicator glow */}
                         {isActive && (
                             <motion.div

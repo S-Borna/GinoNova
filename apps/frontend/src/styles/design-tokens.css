@@ -60,7 +60,7 @@
 
     /* ✨ Magic Gradient - The Disney Sparkle */
     --magic-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 25%, #06b6d4 50%, #22c55e 75%, #a855f7 100%);
-    --magic-shimmer: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    --magic-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
 
     /* Card gradients */
     --card-gradient: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(124, 58, 237, 0.04) 100%);
@@ -355,25 +355,21 @@
     --glass-blur-xl: 40px;
 
     /* ✨ Shimmer Effect */
-    --shimmer-gradient: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.05) 20%,
-        rgba(255, 255, 255, 0.1) 50%,
-        rgba(255, 255, 255, 0.05) 80%,
-        transparent 100%
-    );
+    --shimmer-gradient: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 20%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 80%,
+            transparent 100%);
 
     /* 🌈 Rainbow Border (for special moments) */
-    --rainbow-gradient: linear-gradient(
-        90deg,
-        #a855f7 0%,
-        #ec4899 20%,
-        #f97316 40%,
-        #fbbf24 60%,
-        #22c55e 80%,
-        #06b6d4 100%
-    );
+    --rainbow-gradient: linear-gradient(90deg,
+            #a855f7 0%,
+            #ec4899 20%,
+            #f97316 40%,
+            #fbbf24 60%,
+            #22c55e 80%,
+            #06b6d4 100%);
 }
 
 /* ============================================================================
@@ -381,54 +377,132 @@
    ============================================================================ */
 
 @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
-    50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+    }
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
 }
 
 @keyframes sparkle {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
 }
 
 @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 @keyframes border-glow {
-    0%, 100% { border-color: rgba(168, 85, 247, 0.3); }
-    50% { border-color: rgba(168, 85, 247, 0.6); }
+
+    0%,
+    100% {
+        border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    50% {
+        border-color: rgba(168, 85, 247, 0.6);
+    }
 }
 
 @keyframes rainbow-border {
-    0% { border-color: #a855f7; }
-    20% { border-color: #ec4899; }
-    40% { border-color: #f97316; }
-    60% { border-color: #fbbf24; }
-    80% { border-color: #22c55e; }
-    100% { border-color: #06b6d4; }
+    0% {
+        border-color: #a855f7;
+    }
+
+    20% {
+        border-color: #ec4899;
+    }
+
+    40% {
+        border-color: #f97316;
+    }
+
+    60% {
+        border-color: #fbbf24;
+    }
+
+    80% {
+        border-color: #22c55e;
+    }
+
+    100% {
+        border-color: #06b6d4;
+    }
 }
 
 @keyframes success-burst {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 @keyframes confetti {
-    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-100px) rotate(720deg);
+        opacity: 0;
+    }
 }
 
 /* ============================================================================
@@ -487,6 +561,7 @@
     position: relative;
     overflow: hidden;
 }
+
 .shimmer::after {
     content: '';
     position: absolute;
@@ -499,6 +574,7 @@
 .hover-glow:hover {
     box-shadow: var(--shadow-glow-purple);
 }
+
 .hover-glow-strong:hover {
     box-shadow: var(--shadow-glow-purple-strong);
 }
@@ -507,6 +583,7 @@
 .hover-lift {
     transition: transform 300ms var(--ease-netflix), box-shadow 300ms var(--ease-netflix);
 }
+
 .hover-lift:hover {
     transform: translateY(-6px) scale(1.01);
     box-shadow: var(--shadow-lift-glow);
@@ -533,6 +610,7 @@
 .gradient-border {
     position: relative;
 }
+
 .gradient-border::before {
     content: '';
     position: absolute;
@@ -573,6 +651,7 @@
 .card-netflix {
     transition: all 300ms var(--ease-netflix);
 }
+
 .card-netflix:hover {
     transform: scale(1.05);
     z-index: 10;

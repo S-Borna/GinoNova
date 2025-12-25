@@ -488,7 +488,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         />
 
                         {/* Grid pattern */}
-                        <div 
+                        <div
                             className="absolute inset-0 opacity-[0.03]"
                             style={{
                                 backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
@@ -546,7 +546,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                         {taskTypeConfig.label}
                                     </span>
                                     {isCompleted && (
-                                        <motion.span 
+                                        <motion.span
                                             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
                                             animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
                                             transition={{ duration: 2, repeat: Infinity }}
@@ -557,7 +557,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                     )}
                                 </div>
 
-                                <h1 
+                                <h1
                                     className={cn(
                                         "text-3xl md:text-4xl font-black mb-3 tracking-tight",
                                         "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
@@ -579,7 +579,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                         <Clock className="w-4 h-4 text-purple-400" />
                                         <span className="font-medium">{task.estimated_minutes} min</span>
                                     </span>
-                                    <motion.span 
+                                    <motion.span
                                         className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/30"
                                         whileHover={{ scale: 1.05 }}
                                     >
@@ -608,11 +608,11 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                         }}
                     >
                         {/* Subtle glow */}
-                        <div 
+                        <div
                             className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full opacity-20 blur-[80px] pointer-events-none"
                             style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)" }}
                         />
-                        
+
                         <div className="relative flex items-center gap-3 mb-8 pb-6 border-b border-purple-500/20">
                             <motion.div
                                 className={cn(
@@ -632,7 +632,7 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
                                 {hasContentBlocks ? "Interaktiv Lektion" : "Lektionsinnehåll"}
                             </Headline>
                             {hasContentBlocks && taskProgress && (
-                                <motion.span 
+                                <motion.span
                                     className="ml-auto text-sm font-medium px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30"
                                     animate={{ boxShadow: ["0 0 5px rgba(168,85,247,0.2)", "0 0 15px rgba(168,85,247,0.3)", "0 0 5px rgba(168,85,247,0.2)"] }}
                                     transition={{ duration: 2, repeat: Infinity }}

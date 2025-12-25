@@ -7,7 +7,7 @@
  *
  * PUBLIC layout wrapping all app pages - NO AUTH REQUIRED!
  * Includes Sidebar, TopBar, MobileNav from D.3 design sprint.
- * 
+ *
  * MILESTONE 2.0: Zero friction access - users can browse everything
  * without logging in. Auth is optional for saving progress.
  *
@@ -106,7 +106,7 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     // MILESTONE 2.0: NO AUTH REDIRECT - App is now PUBLIC!
     // Users can browse all content without logging in.
     // Auth is optional - only needed for saving progress, AI quiz, etc.
-    
+
     // Show brief loading only while auth state initializes (for optional user display)
     if (loading) {
         return <LoadingScreen />

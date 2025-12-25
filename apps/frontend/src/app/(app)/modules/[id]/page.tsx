@@ -299,7 +299,7 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
             />
 
             {/* Grid pattern overlay */}
-            <div 
+            <div
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
                     backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
@@ -344,7 +344,7 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
 
                 {/* Content */}
                 <div className="flex-1">
-                    <h1 
+                    <h1
                         className={cn(
                             "text-4xl md:text-5xl font-black mb-3 tracking-tight",
                             "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
@@ -386,8 +386,8 @@ function ModuleHeader({ module }: { module: ModuleDetailUI }) {
                             <span className="text-zinc-400 font-medium">Progress</span>
                             <span className={cn(
                                 "font-black text-2xl",
-                                isComplete 
-                                    ? "bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent" 
+                                isComplete
+                                    ? "bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent"
                                     : "bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
                             )}>
                                 {progress}%
@@ -469,8 +469,8 @@ function TaskCard({
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             style={{
-                boxShadow: isHovered 
-                    ? "0 20px 60px rgba(168,85,247,0.15), 0 0 40px rgba(168,85,247,0.1)" 
+                boxShadow: isHovered
+                    ? "0 20px 60px rgba(168,85,247,0.15), 0 0 40px rgba(168,85,247,0.1)"
                     : "0 4px 20px rgba(0,0,0,0.3)",
             }}
         >
@@ -527,7 +527,7 @@ function TaskCard({
                         </motion.button>
 
                         {isComplete && (
-                            <motion.div 
+                            <motion.div
                                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
                                 animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
                                 transition={{ duration: 2, repeat: Infinity }}
@@ -587,7 +587,7 @@ function TaskCard({
                     </div>
 
                     {/* XP */}
-                    <motion.div 
+                    <motion.div
                         className="flex items-center gap-1.5"
                         animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
                     >
@@ -812,7 +812,7 @@ export default function ModuleDetailPage() {
                                     "text-white font-bold text-lg",
                                     "transition-all duration-300"
                                 )}
-                                whileHover={{ 
+                                whileHover={{
                                     scale: 1.02,
                                     boxShadow: "0 0 50px rgba(168,85,247,0.5), 0 0 100px rgba(236,72,153,0.3)",
                                 }}

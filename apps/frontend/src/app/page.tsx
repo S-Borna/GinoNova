@@ -1,22 +1,22 @@
+"use client"
+
 /**
  * ============================================================================
- * LANDING PAGE — Public Home Page
+ * 🌌 LANDING PAGE — COSMIC RELAUNCH EDITION 🌌
  * ============================================================================
  *
  * The main entry point for DevOpsHub. A premium, high-conversion landing page
- * with smooth animations, beautiful gradients, and compelling copy.
+ * with a stunning Big Bang intro animation.
  *
- * Sections:
- * 1. Hero — Bold headline, stats, CTAs
- * 2. Tracks Preview — Four learning tracks
- * 3. Features — Platform capabilities
- * 4. Curriculum Preview — All 15 modules
- * 5. CTA Section — Final conversion push
- * 6. Footer — Navigation and branding
+ * Sequence:
+ * 1. Cosmic Intro Animation (3.5s) — Big Bang genesis moment
+ * 2. Landing Page Reveal — Hero, Tracks, Features, etc.
  *
- * @phase A.1 - Landing Page
+ * @phase MILESTONE-2.0-COSMIC-RELAUNCH
  */
 
+import * as React from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import {
     Hero,
     TracksPreview,
@@ -26,33 +26,69 @@ import {
     Footer,
     Navbar,
 } from "@/components/landing"
+import { CosmicIntro } from "@/components/landing/CosmicIntro"
 
 export default function LandingPage() {
+    const [showIntro, setShowIntro] = React.useState(true)
+    const [contentReady, setContentReady] = React.useState(false)
+
+    // Check if user has seen intro in this session
+    React.useEffect(() => {
+        const hasSeenIntro = sessionStorage.getItem("cosmic-intro-seen")
+        if (hasSeenIntro) {
+            setShowIntro(false)
+            setContentReady(true)
+        }
+    }, [])
+
+    const handleIntroComplete = React.useCallback(() => {
+        sessionStorage.setItem("cosmic-intro-seen", "true")
+        setShowIntro(false)
+        setContentReady(true)
+    }, [])
+
     return (
-        <div className="relative min-h-screen bg-neutral-950 text-white overflow-x-hidden">
-            {/* Navigation */}
-            <Navbar />
+        <>
+            {/* Cosmic Big Bang Intro */}
+            {showIntro && (
+                <CosmicIntro onComplete={handleIntroComplete} duration={3.5} />
+            )}
 
-            {/* Main Content */}
-            <main>
-                {/* Hero Section */}
-                <Hero />
+            {/* Main Landing Page */}
+            <AnimatePresence>
+                {contentReady && (
+                    <motion.div 
+                        className="relative min-h-screen bg-[#05050a] text-white overflow-x-hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        {/* Navigation */}
+                        <Navbar />
 
-                {/* Learning Tracks */}
-                <TracksPreview />
+                        {/* Main Content */}
+                        <main>
+                            {/* Hero Section */}
+                            <Hero />
 
-                {/* Platform Features */}
-                <Features />
+                            {/* Learning Tracks */}
+                            <TracksPreview />
 
-                {/* Full Curriculum */}
-                <CurriculumPreview />
+                            {/* Platform Features */}
+                            <Features />
 
-                {/* Final CTA */}
-                <CTASection />
-            </main>
+                            {/* Full Curriculum */}
+                            <CurriculumPreview />
 
-            {/* Footer */}
-            <Footer />
-        </div>
+                            {/* Final CTA */}
+                            <CTASection />
+                        </main>
+
+                        {/* Footer */}
+                        <Footer />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     )
 }

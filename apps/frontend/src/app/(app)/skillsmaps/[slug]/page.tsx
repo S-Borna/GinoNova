@@ -2,16 +2,18 @@
 
 /**
  * ============================================================================
- * SKILLSMAP DETAIL PAGE — REAL API DATA, NO MOCK DATA
+ * SKILLSMAP DETAIL PAGE — COSMIC EDITION 🌌
  * ============================================================================
+ *
+ * MILESTONE 2.0 DESIGN REVOLUTION
  *
  * Shows:
  * - SkillsMap header with progress
  * - List of nodes (tasks) from real backend API
  * - Node content viewer
- * - Premium design matching modules page
+ * - COSMIC aurora background
  *
- * @phase SKILLSMAPS-API-INTEGRATION
+ * @phase MILESTONE-2.0-COSMIC-REVOLUTION
  */
 
 import { useState, useEffect } from "react"
@@ -38,6 +40,74 @@ import {
 } from "lucide-react"
 
 /* ============================================================================
+   COSMIC AURORA BACKGROUND ✨
+   ============================================================================ */
+
+function CosmicAurora() {
+    return (
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+            {/* Purple orb - top right */}
+            <motion.div
+                className="absolute w-[600px] h-[600px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                    top: "-10%",
+                    right: "-5%",
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0.5, 0.3],
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Cyan orb - bottom left */}
+            <motion.div
+                className="absolute w-[500px] h-[500px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                    bottom: "10%",
+                    left: "-10%",
+                }}
+                animate={{
+                    scale: [1.1, 1, 1.1],
+                    opacity: [0.2, 0.4, 0.2],
+                }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Pink orb - center */}
+            <motion.div
+                className="absolute w-[400px] h-[400px] rounded-full"
+                style={{
+                    background: "radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)",
+                    filter: "blur(80px)",
+                    top: "40%",
+                    left: "30%",
+                }}
+                animate={{
+                    x: [0, 50, 0],
+                    y: [0, -30, 0],
+                    opacity: [0.15, 0.25, 0.15],
+                }}
+                transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Subtle grid overlay */}
+            <div
+                className="absolute inset-0 opacity-[0.015]"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '60px 60px'
+                }}
+            />
+        </div>
+    )
+}
+
+/* ============================================================================
    TYPES — Using types from skillsmaps lib
    ============================================================================ */
 
@@ -62,11 +132,23 @@ interface SkillsMapDetailUI {
 
 function DetailSkeleton() {
     return (
-        <div className="space-y-6 animate-pulse">
-            <div className="h-48 rounded-3xl bg-zinc-800/50" />
+        <div className="space-y-6">
+            {/* Shimmer header skeleton */}
+            <div className="relative h-52 rounded-3xl bg-gradient-to-br from-purple-900/20 to-[#0a0a0f] overflow-hidden border border-purple-500/20">
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/10 to-transparent"
+                    animate={{ x: ["-100%", "100%"] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
+            </div>
             <div className="space-y-4">
                 {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-28 rounded-2xl bg-zinc-800/50" />
+                    <motion.div
+                        key={i}
+                        className="h-28 rounded-2xl bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f] border border-purple-500/10"
+                        animate={{ opacity: [0.5, 0.8, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
+                    />
                 ))}
             </div>
         </div>
@@ -79,33 +161,52 @@ function DetailSkeleton() {
 
 function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) {
     return (
-        <div className={cn(
-            "max-w-md mx-auto text-center p-8 rounded-2xl",
-            "bg-zinc-900/80 border border-zinc-800"
-        )}>
-            <div className={cn(
-                "w-16 h-16 mx-auto mb-4 rounded-full",
-                "bg-red-500/20 flex items-center justify-center"
-            )}>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={cn(
+                "max-w-md mx-auto text-center p-8 rounded-2xl",
+                "bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f]",
+                "border border-red-500/30",
+                "shadow-[0_0_40px_rgba(239,68,68,0.15)]"
+            )}
+        >
+            <motion.div
+                className={cn(
+                    "w-16 h-16 mx-auto mb-4 rounded-full",
+                    "bg-red-500/20 flex items-center justify-center"
+                )}
+                animate={{
+                    boxShadow: [
+                        '0 0 20px rgba(239,68,68,0.2)',
+                        '0 0 40px rgba(239,68,68,0.4)',
+                        '0 0 20px rgba(239,68,68,0.2)'
+                    ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+            >
                 <AlertCircle className="w-8 h-8 text-red-400" />
-            </div>
+            </motion.div>
             <h2 className="text-xl font-semibold text-white mb-2">
                 SkillsMap hittades inte
             </h2>
             <p className="text-zinc-400 mb-6">{error}</p>
             <div className="flex gap-3 justify-center">
                 <Link prefetch={false} href="/skillsmaps">
-                    <Button variant="outline" className="rounded-xl">
+                    <Button variant="outline" className="rounded-xl border-zinc-700 hover:border-purple-500/50 transition-all">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Tillbaka
                     </Button>
                 </Link>
-                <Button onClick={onRetry} className="rounded-xl">
+                <Button
+                    onClick={onRetry}
+                    className="rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all"
+                >
                     <RefreshCw className="w-4 h-4 mr-2" />
                     Försök igen
                 </Button>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
@@ -125,38 +226,48 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
             animate={{ opacity: 1, y: 0 }}
             className={cn(
                 "relative overflow-hidden rounded-3xl",
-                "bg-gradient-to-br from-zinc-900 via-zinc-900/95 to-zinc-950",
-                "border border-white/10",
+                "bg-gradient-to-br from-[#0d0d14] via-[#0a0a0f] to-[#08080c]",
+                "border border-purple-500/30",
                 "p-8",
-                "shadow-2xl"
+                "shadow-[0_0_60px_rgba(139,92,246,0.15)]"
             )}
         >
             {/* Animated gradient background */}
             <div
-                className="absolute inset-0 opacity-10"
+                className="absolute inset-0 opacity-20"
                 style={{
                     background: `radial-gradient(circle at 70% 30%, ${skillsmap.color}40, transparent 50%), radial-gradient(circle at 30% 70%, ${skillsmap.color}20, transparent 40%)`
                 }}
             />
 
             {/* Colored glow based on skillsmap color */}
-            <div
-                className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-30"
+            <motion.div
+                className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] opacity-20"
                 style={{ backgroundColor: skillsmap.color }}
+                animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }}
+                transition={{ duration: 6, repeat: Infinity }}
             />
 
             {/* Second glow for depth */}
-            <div
-                className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full blur-[100px] opacity-20"
+            <motion.div
+                className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full blur-[100px] opacity-15"
                 style={{ backgroundColor: skillsmap.color }}
+                animate={{ scale: [1.1, 1, 1.1], opacity: [0.1, 0.2, 0.1] }}
+                transition={{ duration: 8, repeat: Infinity }}
             />
 
             {/* Sparkle for complete */}
             {isComplete && (
                 <motion.div
                     className="absolute top-6 right-6 text-emerald-400"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    animate={{
+                        rotate: 360,
+                        scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                        rotate: { duration: 4, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 2, repeat: Infinity }
+                    }}
                 >
                     <Sparkles className="w-6 h-6" />
                 </motion.div>
@@ -182,12 +293,22 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
 
                 {/* Content */}
                 <div className="flex-1">
-                    <h1 className={cn(
-                        "text-3xl md:text-4xl font-black mb-2",
-                        "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
-                    )}>
+                    <motion.h1
+                        className={cn(
+                            "text-3xl md:text-4xl font-black mb-2",
+                            "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+                        )}
+                        animate={{
+                            textShadow: [
+                                `0 0 20px ${skillsmap.color}00`,
+                                `0 0 30px ${skillsmap.color}40`,
+                                `0 0 20px ${skillsmap.color}00`
+                            ]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    >
                         {skillsmap.title}
-                    </h1>
+                    </motion.h1>
                     <p className="text-zinc-400 mb-4 max-w-2xl">
                         {skillsmap.description}
                     </p>
@@ -202,14 +323,20 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                             <Clock className="w-4 h-4" />
                             ~{skillsmap.estimatedHours}h
                         </span>
-                        <span className="flex items-center gap-1.5 font-bold">
+                        <motion.span
+                            className="flex items-center gap-1.5 font-bold"
+                            animate={{
+                                textShadow: ['0 0 10px rgba(251,191,36,0)', '0 0 20px rgba(251,191,36,0.5)', '0 0 10px rgba(251,191,36,0)']
+                            }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        >
                             <div className="p-1 rounded bg-gradient-to-r from-amber-500/20 to-yellow-500/20">
                                 <Zap className="w-4 h-4 text-amber-400" />
                             </div>
                             <span className="bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
                                 {skillsmap.totalXP} XP totalt
                             </span>
-                        </span>
+                        </motion.span>
                         <span className={cn(
                             "flex items-center gap-1.5 font-medium",
                             isComplete ? "text-emerald-400" : "text-purple-400"
@@ -223,14 +350,22 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                     <div className="max-w-md">
                         <div className="flex items-center justify-between text-sm mb-2">
                             <span className="text-zinc-400 font-medium">Progress</span>
-                            <span className={cn(
-                                "font-black text-lg",
-                                isComplete ? "text-emerald-400" : "bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent"
-                            )}>
+                            <motion.span
+                                className={cn(
+                                    "font-black text-lg",
+                                    isComplete ? "text-emerald-400" : "bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent"
+                                )}
+                                animate={{
+                                    textShadow: isComplete
+                                        ? ['0 0 10px rgba(52,211,153,0.3)', '0 0 20px rgba(52,211,153,0.6)', '0 0 10px rgba(52,211,153,0.3)']
+                                        : ['0 0 10px rgba(139,92,246,0.3)', '0 0 20px rgba(139,92,246,0.5)', '0 0 10px rgba(139,92,246,0.3)']
+                                }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
                                 {progress}%
-                            </span>
+                            </motion.span>
                         </div>
-                        <div className="h-3 bg-zinc-800/80 rounded-full overflow-hidden border border-zinc-700/50 relative">
+                        <div className="h-3 bg-zinc-800/50 rounded-full overflow-hidden border border-purple-500/20 relative">
                             <motion.div
                                 className="h-full rounded-full relative"
                                 style={{
@@ -241,7 +376,7 @@ function SkillsMapHeader({ skillsmap }: { skillsmap: SkillsMapDetailUI }) {
                                 }}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${progress}%` }}
-                                transition={{ duration: 1.2, ease: "easeOut" }}
+                                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                             >
                                 {/* Shimmer effect */}
                                 <motion.div
@@ -326,83 +461,88 @@ export default function SkillsMapDetailPage() {
     }
 
     return (
-        <PageLayout maxWidth="standard" background="gray">
-            {/* Back button */}
-            <Link
-                href="/skillsmaps"
-                className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-6",
-                    "text-zinc-500 hover:text-white",
-                    "transition-colors"
-                )}
-            >
-                <ArrowLeft className="w-4 h-4" />
-                Tillbaka till SkillsMaps
-            </Link>
+        <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+            {/* Cosmic Aurora Background */}
+            <CosmicAurora />
 
-            {loading ? (
-                <DetailSkeleton />
-            ) : error ? (
-                <ErrorState error={error} onRetry={fetchSkillsMap} />
-            ) : skillsmap ? (
-                <motion.div
-                    className="space-y-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                >
-                    {/* Header */}
-                    <SkillsMapHeader skillsmap={skillsmap} />
-
-                    {/* Continue button */}
-                    {nextNode && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <Button
-                                onClick={handleContinue}
-                                size="lg"
-                                className={cn(
-                                    "rounded-2xl px-8 py-6 text-base font-bold",
-                                    "bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600",
-                                    "hover:from-violet-500 hover:via-purple-500 hover:to-indigo-500",
-                                    "shadow-[0_0_30px_rgba(139,92,246,0.4)]",
-                                    "hover:shadow-[0_0_40px_rgba(139,92,246,0.6)]",
-                                    "transition-all duration-300",
-                                    "border border-violet-500/30"
-                                )}
-                            >
-                                <Play className="w-5 h-5 mr-2" />
-                                Fortsätt: {nextNode.title}
-                                <ChevronRight className="w-5 h-5 ml-2" />
-                            </Button>
-                        </motion.div>
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Back button */}
+                <Link
+                    href="/skillsmaps"
+                    className={cn(
+                        "inline-flex items-center gap-2 text-sm mb-6",
+                        "text-zinc-500 hover:text-purple-400",
+                        "transition-colors"
                     )}
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Tillbaka till SkillsMaps
+                </Link>
 
-                    {/* Nodes list */}
-                    <Section>
-                        <Headline level={2} className="mb-4 text-white">
-                            Noder
-                        </Headline>
-                        <div className="space-y-4">
-                            {skillsmap.nodes.map((node, index) => (
-                                <motion.div
-                                    key={node.id}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 + index * 0.05 }}
+                {loading ? (
+                    <DetailSkeleton />
+                ) : error ? (
+                    <ErrorState error={error} onRetry={fetchSkillsMap} />
+                ) : skillsmap ? (
+                    <motion.div
+                        className="space-y-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                    >
+                        {/* Header */}
+                        <SkillsMapHeader skillsmap={skillsmap} />
+
+                        {/* Continue button */}
+                        {nextNode && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                            >
+                                <Button
+                                    onClick={handleContinue}
+                                    size="lg"
+                                    className={cn(
+                                        "rounded-2xl px-8 py-6 text-base font-bold",
+                                        "bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600",
+                                        "hover:from-violet-500 hover:via-purple-500 hover:to-indigo-500",
+                                        "shadow-[0_0_40px_rgba(139,92,246,0.4)]",
+                                        "hover:shadow-[0_0_60px_rgba(139,92,246,0.6)]",
+                                        "transition-all duration-300",
+                                        "border border-violet-500/30"
+                                    )}
                                 >
-                                    <NodeCard
-                                        {...node}
-                                        onClick={handleNodeClick}
-                                    />
-                                </motion.div>
-                            ))}
-                        </div>
-                    </Section>
-                </motion.div>
-            ) : null}
-        </PageLayout>
+                                    <Play className="w-5 h-5 mr-2" />
+                                    Fortsätt: {nextNode.title}
+                                    <ChevronRight className="w-5 h-5 ml-2" />
+                                </Button>
+                            </motion.div>
+                        )}
+
+                        {/* Nodes list */}
+                        <Section>
+                            <Headline level={2} className="mb-4 text-white">
+                                Noder
+                            </Headline>
+                            <div className="space-y-4">
+                                {skillsmap.nodes.map((node, index) => (
+                                    <motion.div
+                                        key={node.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.1 + index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                                    >
+                                        <NodeCard
+                                            {...node}
+                                            onClick={handleNodeClick}
+                                        />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </Section>
+                    </motion.div>
+                ) : null}
+            </div>
+        </div>
     )
 }
