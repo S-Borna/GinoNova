@@ -775,108 +775,108 @@ export default function ModuleDetailPage() {
             <CosmicAurora />
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Back button — Premium styled */}
-            <Link
-                href="/modules"
-                className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
-                    "text-zinc-400 hover:text-white",
-                    "bg-white/5 hover:bg-white/10 border border-white/10",
-                    "transition-all duration-300"
-                )}
-            >
-                <ArrowLeft className="w-4 h-4" />
-                Tillbaka till Camp DevOps
-            </Link>
-
-            {loading ? (
-                <DetailSkeleton />
-            ) : error ? (
-                <ErrorState error={error} onRetry={fetchModule} />
-            ) : module ? (
-                <motion.div
-                    className="space-y-10"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                >
-                    {/* Header */}
-                    <ModuleHeader module={module} />
-
-                    {/* Continue button — Epic glow */}
-                    {nextTask && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <motion.button
-                                onClick={handleContinue}
-                                className={cn(
-                                    "inline-flex items-center gap-2 rounded-2xl px-8 py-4",
-                                    "bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600",
-                                    "text-white font-bold text-lg",
-                                    "transition-all duration-300"
-                                )}
-                                whileHover={{
-                                    scale: 1.02,
-                                    boxShadow: "0 0 50px rgba(168,85,247,0.5), 0 0 100px rgba(236,72,153,0.3)",
-                                }}
-                                whileTap={{ scale: 0.98 }}
-                                animate={{
-                                    boxShadow: [
-                                        "0 0 30px rgba(168,85,247,0.3)",
-                                        "0 0 60px rgba(168,85,247,0.5)",
-                                        "0 0 30px rgba(168,85,247,0.3)",
-                                    ],
-                                }}
-                                transition={{
-                                    boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                                }}
-                            >
-                                <Play className="w-5 h-5" />
-                                Fortsätt: {nextTask.title}
-                                <ChevronRight className="w-5 h-5" />
-                            </motion.button>
-                        </motion.div>
+                {/* Back button — Premium styled */}
+                <Link
+                    href="/modules"
+                    className={cn(
+                        "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
+                        "text-zinc-400 hover:text-white",
+                        "bg-white/5 hover:bg-white/10 border border-white/10",
+                        "transition-all duration-300"
                     )}
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Tillbaka till Camp DevOps
+                </Link>
 
-                    {/* Tasks grid */}
-                    <Section>
-                        <div className="flex items-center gap-3 mb-8">
+                {loading ? (
+                    <DetailSkeleton />
+                ) : error ? (
+                    <ErrorState error={error} onRetry={fetchModule} />
+                ) : module ? (
+                    <motion.div
+                        className="space-y-10"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                    >
+                        {/* Header */}
+                        <ModuleHeader module={module} />
+
+                        {/* Continue button — Epic glow */}
+                        {nextTask && (
                             <motion.div
-                                className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30"
-                                animate={{ boxShadow: ["0 0 10px rgba(168,85,247,0.2)", "0 0 20px rgba(168,85,247,0.4)", "0 0 10px rgba(168,85,247,0.2)"] }}
-                                transition={{ duration: 2, repeat: Infinity }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
                             >
-                                <BookOpen className="w-5 h-5 text-purple-400" />
-                            </motion.div>
-                            <Headline level={2} className="text-white font-bold">
-                                Tasks
-                            </Headline>
-                            <span className="text-zinc-500 text-sm ml-2">
-                                {module.tasks.length} lektioner
-                            </span>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {module.tasks.map((task, index) => (
-                                <motion.div
-                                    key={task.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 + index * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                                <motion.button
+                                    onClick={handleContinue}
+                                    className={cn(
+                                        "inline-flex items-center gap-2 rounded-2xl px-8 py-4",
+                                        "bg-gradient-to-r from-purple-600 via-pink-600 to-cyan-600",
+                                        "text-white font-bold text-lg",
+                                        "transition-all duration-300"
+                                    )}
+                                    whileHover={{
+                                        scale: 1.02,
+                                        boxShadow: "0 0 50px rgba(168,85,247,0.5), 0 0 100px rgba(236,72,153,0.3)",
+                                    }}
+                                    whileTap={{ scale: 0.98 }}
+                                    animate={{
+                                        boxShadow: [
+                                            "0 0 30px rgba(168,85,247,0.3)",
+                                            "0 0 60px rgba(168,85,247,0.5)",
+                                            "0 0 30px rgba(168,85,247,0.3)",
+                                        ],
+                                    }}
+                                    transition={{
+                                        boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                                    }}
                                 >
-                                    <TaskCard
-                                        task={task}
-                                        onClick={handleTaskClick}
-                                        isBookmarked={isBookmarked(task.id)}
-                                        onToggleBookmark={toggleBookmark}
-                                    />
+                                    <Play className="w-5 h-5" />
+                                    Fortsätt: {nextTask.title}
+                                    <ChevronRight className="w-5 h-5" />
+                                </motion.button>
+                            </motion.div>
+                        )}
+
+                        {/* Tasks grid */}
+                        <Section>
+                            <div className="flex items-center gap-3 mb-8">
+                                <motion.div
+                                    className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30"
+                                    animate={{ boxShadow: ["0 0 10px rgba(168,85,247,0.2)", "0 0 20px rgba(168,85,247,0.4)", "0 0 10px rgba(168,85,247,0.2)"] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                >
+                                    <BookOpen className="w-5 h-5 text-purple-400" />
                                 </motion.div>
-                            ))}
-                        </div>
-                    </Section>
-                </motion.div>
-            ) : null}
+                                <Headline level={2} className="text-white font-bold">
+                                    Tasks
+                                </Headline>
+                                <span className="text-zinc-500 text-sm ml-2">
+                                    {module.tasks.length} lektioner
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                {module.tasks.map((task, index) => (
+                                    <motion.div
+                                        key={task.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1 + index * 0.03, ease: [0.16, 1, 0.3, 1] }}
+                                    >
+                                        <TaskCard
+                                            task={task}
+                                            onClick={handleTaskClick}
+                                            isBookmarked={isBookmarked(task.id)}
+                                            onToggleBookmark={toggleBookmark}
+                                        />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </Section>
+                    </motion.div>
+                ) : null}
             </div>
         </div>
     )

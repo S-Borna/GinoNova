@@ -127,8 +127,8 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-30px" }}
-            transition={{ 
-                duration: 0.7, 
+            transition={{
+                duration: 0.7,
                 delay: index * 0.08,
                 ease: [0.16, 1, 0.3, 1]
             }}
@@ -139,7 +139,7 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
                 className="absolute -inset-1 rounded-2xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"
                 style={{ background: feature.glowColor }}
             />
-            
+
             <div
                 className={cn(
                     "relative h-full p-6 lg:p-8 rounded-2xl overflow-hidden",
@@ -318,7 +318,7 @@ export function Features() {
                                 "0 0 15px rgba(34,211,238,0.2)",
                             ]
                         }}
-                        transition={{ 
+                        transition={{
                             boxShadow: { duration: 2, repeat: Infinity }
                         }}
                     >
@@ -328,14 +328,14 @@ export function Features() {
 
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">
                         Allt du behöver för att{" "}
-                        <span 
+                        <span
                             className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent"
                             style={{ filter: "drop-shadow(0 0 25px rgba(34,211,238,0.4))" }}
                         >
                             Lyckas
                         </span>
                     </h2>
-                    
+
                     <p className="text-lg sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
                         En komplett läroplattform designad för maximal effektivitet.{" "}
                         <span className="text-white font-medium">Varje funktion tjänar din utveckling.</span>

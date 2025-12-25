@@ -76,7 +76,7 @@ export function Navbar() {
                             : "bg-transparent"
                     )}
                 />
-                
+
                 {/* Subtle glow line at top when scrolled */}
                 <motion.div
                     className={cn(

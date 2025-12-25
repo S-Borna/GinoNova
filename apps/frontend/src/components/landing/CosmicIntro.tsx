@@ -6,7 +6,7 @@
  * ============================================================================
  *
  * A mesmerizing intro animation that plays once when the landing page loads.
- * 
+ *
  * Sequence:
  * 1. Pure darkness (0-0.3s)
  * 2. Central core ignites with pulsating energy (0.3-1s)
@@ -15,7 +15,7 @@
  * 5. Graceful fade to landing page (2.5-3.5s)
  *
  * Inspired by: Bose, Apple, luxury brand intros
- * 
+ *
  * @phase MILESTONE-2.0-COSMIC-RELAUNCH
  */
 
@@ -54,7 +54,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 >
                     {/* Deep space background gradient */}
-                    <div 
+                    <div
                         className="absolute inset-0"
                         style={{
                             background: "radial-gradient(ellipse at center, #0a0a12 0%, #050508 40%, #020203 100%)"
@@ -68,16 +68,16 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             className="absolute rounded-full"
                             style={{
                                 border: `${1 + i * 0.3}px solid`,
-                                borderColor: i % 2 === 0 
-                                    ? "rgba(139, 92, 246, 0.6)" 
+                                borderColor: i % 2 === 0
+                                    ? "rgba(139, 92, 246, 0.6)"
                                     : "rgba(34, 211, 238, 0.4)",
                             }}
-                            initial={{ 
-                                width: 0, 
-                                height: 0, 
-                                opacity: 0 
+                            initial={{
+                                width: 0,
+                                height: 0,
+                                opacity: 0
                             }}
-                            animate={{ 
+                            animate={{
                                 width: [0, 200 + i * 180, 400 + i * 300],
                                 height: [0, 200 + i * 180, 400 + i * 300],
                                 opacity: [0, 0.8, 0],
@@ -98,16 +98,15 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             style={{
                                 width: "2px",
                                 height: "0px",
-                                background: `linear-gradient(to top, transparent, ${
-                                    i % 3 === 0 ? "rgba(168, 85, 247, 0.8)" :
-                                    i % 3 === 1 ? "rgba(34, 211, 238, 0.7)" :
-                                    "rgba(236, 72, 153, 0.6)"
-                                }, transparent)`,
+                                background: `linear-gradient(to top, transparent, ${i % 3 === 0 ? "rgba(168, 85, 247, 0.8)" :
+                                        i % 3 === 1 ? "rgba(34, 211, 238, 0.7)" :
+                                            "rgba(236, 72, 153, 0.6)"
+                                    }, transparent)`,
                                 transform: `rotate(${i * 30}deg)`,
                                 transformOrigin: "center bottom",
                             }}
                             initial={{ height: 0, opacity: 0 }}
-                            animate={{ 
+                            animate={{
                                 height: ["0px", "600px", "1200px"],
                                 opacity: [0, 1, 0],
                             }}
@@ -132,7 +131,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                 transformOrigin: "center bottom",
                             }}
                             initial={{ height: 0, opacity: 0 }}
-                            animate={{ 
+                            animate={{
                                 height: ["0px", "400px", "800px"],
                                 opacity: [0, 0.6, 0],
                             }}
@@ -152,7 +151,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             filter: "blur(40px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
-                        animate={{ 
+                        animate={{
                             width: [0, 400, 600, 300],
                             height: [0, 400, 600, 300],
                             opacity: [0, 0.8, 1, 0.6],
@@ -172,7 +171,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             filter: "blur(25px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
-                        animate={{ 
+                        animate={{
                             width: [0, 200, 300, 150],
                             height: [0, 200, 300, 150],
                             opacity: [0, 1, 1, 0.7],
@@ -192,7 +191,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             boxShadow: "0 0 60px rgba(255, 255, 255, 0.8), 0 0 120px rgba(139, 92, 246, 0.6), 0 0 200px rgba(168, 85, 247, 0.4)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0, scale: 0 }}
-                        animate={{ 
+                        animate={{
                             width: [0, 80, 120, 60],
                             height: [0, 80, 120, 60],
                             opacity: [0, 1, 1, 0.9],
@@ -212,7 +211,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             boxShadow: "0 0 40px #fff, 0 0 80px rgba(168, 85, 247, 1), 0 0 120px rgba(139, 92, 246, 0.8)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
-                        animate={{ 
+                        animate={{
                             width: [0, 30, 50, 20],
                             height: [0, 30, 50, 20],
                             opacity: [0, 1, 1, 1],
@@ -249,7 +248,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                             "rgba(236, 72, 153, 0.7)",
                             "rgba(255, 255, 255, 0.9)",
                         ]
-                        
+
                         return (
                             <motion.div
                                 key={`particle-${i}`}
@@ -260,13 +259,13 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                     background: colors[i % colors.length],
                                     boxShadow: `0 0 ${size * 2}px ${colors[i % colors.length]}`,
                                 }}
-                                initial={{ 
-                                    x: 0, 
-                                    y: 0, 
+                                initial={{
+                                    x: 0,
+                                    y: 0,
                                     opacity: 0,
                                     scale: 0,
                                 }}
-                                animate={{ 
+                                animate={{
                                     x: Math.cos(angle) * distance,
                                     y: Math.sin(angle) * distance,
                                     opacity: [0, 1, 0],
@@ -285,7 +284,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                     {[...Array(20)].map((_, i) => {
                         const angle = Math.random() * Math.PI * 2
                         const distance = 100 + Math.random() * 600
-                        
+
                         return (
                             <motion.div
                                 key={`stardust-${i}`}
@@ -293,12 +292,12 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                 style={{
                                     boxShadow: "0 0 6px rgba(255, 255, 255, 0.8)",
                                 }}
-                                initial={{ 
-                                    x: Math.cos(angle) * (distance * 0.3), 
-                                    y: Math.sin(angle) * (distance * 0.3), 
+                                initial={{
+                                    x: Math.cos(angle) * (distance * 0.3),
+                                    y: Math.sin(angle) * (distance * 0.3),
                                     opacity: 0,
                                 }}
-                                animate={{ 
+                                animate={{
                                     x: Math.cos(angle) * distance,
                                     y: Math.sin(angle) * distance,
                                     opacity: [0, 0.8, 0],
@@ -316,7 +315,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                     <motion.div
                         className="absolute flex items-center gap-3"
                         initial={{ opacity: 0, scale: 0.8, y: 100 }}
-                        animate={{ 
+                        animate={{
                             opacity: [0, 0, 1, 1, 0],
                             scale: [0.8, 0.8, 1, 1, 0.9],
                             y: [100, 100, 0, 0, -20],
@@ -330,7 +329,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                     >
                         <span className="text-4xl font-black tracking-tight">
                             <span className="text-white">DevOps</span>
-                            <span 
+                            <span
                                 className="bg-gradient-to-r from-purple-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent"
                                 style={{ filter: "drop-shadow(0 0 20px rgba(139, 92, 246, 0.8))" }}
                             >

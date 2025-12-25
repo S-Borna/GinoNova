@@ -36,7 +36,7 @@ export function CosmicAurora({
     const opacityMultiplier = intensity
 
     return (
-        <div 
+        <div
             className="fixed inset-0 overflow-hidden pointer-events-none"
             style={{ zIndex }}
         >

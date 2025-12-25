@@ -22,7 +22,7 @@ export default function AuthLayout({
                 {/* Cosmic background effects */}
                 <div className="absolute inset-0">
                     {/* Central cosmic glow */}
-                    <div 
+                    <div
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
                         style={{
                             background: "radial-gradient(circle, rgba(139,92,246,0.25) 0%, rgba(168,85,247,0.1) 40%, transparent 70%)",
@@ -30,14 +30,14 @@ export default function AuthLayout({
                         }}
                     />
                     {/* Secondary glow */}
-                    <div 
+                    <div
                         className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full"
                         style={{
                             background: "radial-gradient(circle, rgba(236,72,153,0.15) 0%, transparent 60%)",
                             filter: "blur(100px)",
                         }}
                     />
-                    <div 
+                    <div
                         className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full"
                         style={{
                             background: "radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 60%)",

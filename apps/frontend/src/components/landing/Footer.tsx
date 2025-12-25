@@ -87,7 +87,7 @@ export function Footer() {
         <footer className="relative bg-[#05050a] overflow-hidden">
             {/* Cosmic accent at top */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" />
-            
+
             {/* Ambient glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-purple-500/5 rounded-full blur-[150px] pointer-events-none" />
 
@@ -180,7 +180,7 @@ export function Footer() {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="flex items-center gap-3">
                             <motion.div
-                                animate={{ 
+                                animate={{
                                     rotate: [0, 10, -10, 0],
                                 }}
                                 transition={{ duration: 4, repeat: Infinity }}
@@ -189,8 +189,8 @@ export function Footer() {
                             </motion.div>
                             <span className="text-zinc-400">
                                 Redo att börja din DevOps-resa?{" "}
-                                <Link 
-                                    href="/skillsmaps" 
+                                <Link
+                                    href="/skillsmaps"
                                     className="text-purple-400 font-semibold hover:text-purple-300 transition-colors"
                                 >
                                     Börja gratis idag →
@@ -210,13 +210,13 @@ export function Footer() {
                         © {currentYear} The Ebadi Group. Alla rättigheter förbehållna.
                     </p>
 
-                    <motion.p 
+                    <motion.p
                         className="text-sm text-zinc-500 flex items-center gap-1.5"
                         whileHover={{ scale: 1.02 }}
                     >
                         Byggt med{" "}
                         <motion.span
-                            animate={{ 
+                            animate={{
                                 scale: [1, 1.2, 1],
                             }}
                             transition={{ duration: 1.5, repeat: Infinity }}
