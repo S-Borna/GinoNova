@@ -27,7 +27,7 @@ export interface PageLayoutProps {
     /** Maximum width variant */
     maxWidth?: 'narrow' | 'content' | 'standard' | 'wide' | 'full'
     /** Background color */
-    background?: 'white' | 'gray' | 'transparent' | 'subtle' | 'gradient'
+    background?: 'white' | 'gray' | 'transparent' | 'subtle' | 'gradient' | 'cosmic'
     /** Remove default padding */
     noPadding?: boolean
     /** HTML element to render as */
@@ -48,6 +48,8 @@ const backgroundMap = {
     transparent: 'bg-transparent',
     subtle: 'bg-neutral-50/50 dark:bg-neutral-950/50',
     gradient: 'bg-gradient-to-br from-white via-neutral-50 to-indigo-50/30 dark:from-neutral-900 dark:via-neutral-950 dark:to-indigo-950/20',
+    // ✨ MILESTONE 2.0: Netflix + Disney cosmic background
+    cosmic: 'bg-[#05050a]',
 }
 
 export function PageLayout({

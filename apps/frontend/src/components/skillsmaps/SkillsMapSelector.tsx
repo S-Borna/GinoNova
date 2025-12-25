@@ -2,17 +2,17 @@
 
 /**
  * ============================================================================
- * SKILLSMAP SELECTOR — Premium Glassmorphism Grid
+ * SKILLSMAP SELECTOR — MILESTONE 2.0: DISNEY + NETFLIX + GOOGLE
  * ============================================================================
  *
- * Premium SkillsMap selection grid matching PlatformSelector design:
- * - Glassmorphism cards with holographic borders
- * - Animated gradient backgrounds
- * - Floating particles effect
- * - 3D hover transforms
- * - Category filtering
+ * 🎬 Premium SkillsMap selection with:
+ * - Cosmic deep space background
+ * - Floating aurora particles
+ * - Netflix-smooth animations
+ * - Apple-level glassmorphism
+ * - Disney magical sparkles
  *
- * @phase SKILLSMAPS-INTEGRATION
+ * @phase MILESTONE-2.0
  */
 
 import { useState, useMemo, useEffect } from "react"
@@ -37,6 +37,8 @@ import {
     Rocket,
     Plus,
     Wand2,
+    Star,
+    Zap,
 } from "lucide-react"
 
 /* ============================================================================
@@ -111,16 +113,58 @@ function getCategory(slug: string): SkillsMapCategory {
 }
 
 /* ============================================================================
-   FLOATING PARTICLES
+   FLOATING PARTICLES — Aurora Effect ✨
    ============================================================================ */
 
 function FloatingParticles() {
     return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(15)].map((_, i) => (
+            {/* Aurora gradient orbs */}
+            <motion.div
+                className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-30"
+                style={{
+                    background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                }}
+                animate={{
+                    scale: [1, 1.2, 1],
+                    x: [0, 50, 0],
+                    y: [0, 30, 0],
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
+            <motion.div
+                className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full opacity-25"
+                style={{
+                    background: "radial-gradient(circle, rgba(6,182,212,0.4) 0%, transparent 70%)",
+                    filter: "blur(60px)",
+                }}
+                animate={{
+                    scale: [1, 1.3, 1],
+                    x: [0, -30, 0],
+                    y: [0, -50, 0],
+                }}
+                transition={{
+                    duration: 10,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+            />
+            
+            {/* Floating sparkle particles */}
+            {[...Array(20)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute w-1 h-1 bg-purple-500/20 rounded-full"
+                    className={cn(
+                        "absolute rounded-full",
+                        i % 3 === 0 ? "w-1.5 h-1.5 bg-purple-400/40" : 
+                        i % 3 === 1 ? "w-1 h-1 bg-cyan-400/30" :
+                        "w-2 h-2 bg-pink-400/20"
+                    )}
                     initial={{
                         x: `${Math.random() * 100}%`,
                         y: "110%",
@@ -128,8 +172,9 @@ function FloatingParticles() {
                     }}
                     animate={{
                         y: "-10%",
+                        opacity: [0, 0.8, 0],
                         transition: {
-                            duration: Math.random() * 15 + 20,
+                            duration: Math.random() * 10 + 15,
                             repeat: Infinity,
                             ease: "linear",
                             delay: Math.random() * 10,
@@ -142,7 +187,7 @@ function FloatingParticles() {
 }
 
 /* ============================================================================
-   HEADER COMPONENT
+   HEADER COMPONENT — Netflix Premium Hero Style 🎬
    ============================================================================ */
 
 function SelectorHeader({
@@ -166,97 +211,137 @@ function SelectorHeader({
             animate={{ opacity: 1, y: 0 }}
             className={cn(
                 "relative overflow-hidden rounded-3xl mb-8",
-                "bg-gradient-to-br from-zinc-900 via-purple-950/20 to-zinc-900",
-                "border border-purple-500/20",
-                "p-8"
+                "bg-[#0a0a0f]", // Deep cosmic background
+                "border border-purple-500/30",
+                "p-8 md:p-10"
             )}
+            style={{
+                boxShadow: "0 0 80px rgba(168,85,247,0.15), 0 0 40px rgba(6,182,212,0.1)",
+            }}
         >
-            {/* Ambient glow */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
-            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-indigo-500/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4" />
+            {/* EPIC AMBIENT GLOW — Multi-layered */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/15 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/4" />
+            <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[80px] -translate-x-1/2 -translate-y-1/2" />
+            
+            {/* Grid pattern overlay */}
+            <div 
+                className="absolute inset-0 opacity-[0.03]"
+                style={{
+                    backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                    backgroundSize: "40px 40px",
+                }}
+            />
 
             <div className="relative">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className={cn(
-                                "p-2 rounded-xl",
-                                "bg-gradient-to-br from-purple-500/20 to-indigo-500/20",
-                                "border border-purple-500/30"
-                            )}>
-                                <BookOpen className="w-5 h-5 text-purple-400" />
-                            </div>
-                            <span className="text-purple-400 font-semibold text-sm uppercase tracking-wider">
+                        <div className="flex items-center gap-3 mb-4">
+                            <motion.div 
+                                className={cn(
+                                    "p-3 rounded-2xl",
+                                    "bg-gradient-to-br from-purple-600/30 to-cyan-500/20",
+                                    "border border-purple-400/40"
+                                )}
+                                animate={{ 
+                                    boxShadow: [
+                                        "0 0 20px rgba(168,85,247,0.3)",
+                                        "0 0 40px rgba(168,85,247,0.5)",
+                                        "0 0 20px rgba(168,85,247,0.3)",
+                                    ]
+                                }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >
+                                <BookOpen className="w-6 h-6 text-purple-300" />
+                            </motion.div>
+                            <span className="text-purple-300 font-bold text-sm uppercase tracking-[0.2em]">
                                 SkillsMaps
                             </span>
                         </div>
                         <div className="flex items-center gap-4 flex-wrap">
                             <h1 className={cn(
-                                "text-3xl md:text-4xl font-black",
-                                "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
-                            )}>
+                                "text-4xl md:text-5xl font-black tracking-tight",
+                                "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+                            )}
+                            style={{
+                                textShadow: "0 0 40px rgba(168,85,247,0.3)",
+                            }}>
                                 Dina SkillsMaps
                             </h1>
 
-                            {/* CREATE CUSTOM PATH BUTTON */}
+                            {/* CREATE CUSTOM PATH BUTTON — Netflix Glow */}
                             <motion.button
                                 onClick={onCreatePath}
                                 className={cn(
-                                    "flex items-center gap-2 px-4 py-2 rounded-xl",
-                                    "bg-gradient-to-r from-amber-500/20 to-orange-500/20",
-                                    "border border-amber-500/30",
-                                    "text-amber-300 text-sm font-medium",
-                                    "hover:from-amber-500/30 hover:to-orange-500/30",
+                                    "flex items-center gap-2 px-5 py-2.5 rounded-xl",
+                                    "bg-gradient-to-r from-amber-500 to-orange-500",
+                                    "border border-amber-400/50",
+                                    "text-black text-sm font-bold",
                                     "transition-all duration-300"
                                 )}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
+                                whileHover={{ 
+                                    scale: 1.05,
+                                    boxShadow: "0 0 30px rgba(251,191,36,0.5)",
+                                }}
+                                whileTap={{ scale: 0.95 }}
                             >
                                 <Plus className="w-4 h-4" />
                                 Skapa egen SkillsMap
                             </motion.button>
                         </div>
-                        <p className="text-zinc-400 mt-2">
-                            {totalMaps} kunskapsstigar • {completedMaps} klara
+                        <p className="text-zinc-400 mt-3 text-lg">
+                            <span className="text-purple-400 font-semibold">{totalMaps}</span> kunskapsstigar • 
+                            <span className="text-green-400 font-semibold"> {completedMaps}</span> klara
                         </p>
                     </div>
 
-                    {/* Search */}
+                    {/* Search — Glassmorphism */}
                     <div className="relative">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400" />
                         <input
                             type="text"
                             placeholder="Sök SkillsMaps..."
                             value={searchQuery}
                             onChange={(e) => onSearchChange(e.target.value)}
                             className={cn(
-                                "w-full md:w-80 pl-12 pr-4 py-3 rounded-xl",
-                                "bg-zinc-800/50 border border-zinc-700/50",
+                                "w-full md:w-80 pl-12 pr-4 py-3.5 rounded-xl",
+                                "bg-white/5 backdrop-blur-xl",
+                                "border border-purple-500/30",
                                 "text-white placeholder-zinc-500",
-                                "focus:outline-none focus:border-purple-500/50",
+                                "focus:outline-none focus:border-purple-400/60 focus:bg-white/10",
                                 "transition-all duration-300"
                             )}
+                            style={{
+                                boxShadow: "inset 0 0 20px rgba(168,85,247,0.1)",
+                            }}
                         />
                     </div>
                 </div>
 
-                {/* Progress */}
+                {/* Progress — Premium Animated Bar */}
                 <div className={cn(
-                    "mt-6 p-4 rounded-xl",
-                    "bg-zinc-800/50 border border-zinc-700/50"
+                    "mt-8 p-5 rounded-2xl",
+                    "bg-white/5 backdrop-blur-xl",
+                    "border border-purple-500/20"
                 )}>
-                    <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-zinc-400">Total Progress</span>
-                        <span className="font-bold text-purple-400">{progress}%</span>
+                    <div className="flex items-center justify-between text-sm mb-3">
+                        <span className="text-zinc-300 font-medium">Total Progress</span>
+                        <span className="font-black text-2xl bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">{progress}%</span>
                     </div>
-                    <div className="h-2 bg-zinc-700 rounded-full overflow-hidden">
+                    <div className="h-3 bg-zinc-800/80 rounded-full overflow-hidden">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-purple-600 to-indigo-500"
+                            className="h-full bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-400 relative"
                             initial={{ width: 0 }}
                             animate={{ width: `${progress}%` }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            style={{ boxShadow: "0 0 20px rgba(139, 92, 246, 0.5)" }}
-                        />
+                            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            {/* Shimmer effect */}
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                animate={{ x: ["-100%", "200%"] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                            />
+                        </motion.div>
                     </div>
                 </div>
             </div>
@@ -265,7 +350,7 @@ function SelectorHeader({
 }
 
 /* ============================================================================
-   CATEGORY TABS
+   CATEGORY TABS — Netflix Style Horizontal Scroll ✨
    ============================================================================ */
 
 function CategoryTabs({
@@ -278,7 +363,7 @@ function CategoryTabs({
     counts: Record<SkillsMapCategory, number>
 }) {
     return (
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex flex-wrap gap-3 mb-10">
             {categories.map((cat) => {
                 const Icon = cat.icon
                 const isActive = activeCategory === cat.id
@@ -289,30 +374,42 @@ function CategoryTabs({
                         key={cat.id}
                         onClick={() => onCategoryChange(cat.id)}
                         className={cn(
-                            "flex items-center gap-2 px-4 py-2.5 rounded-xl",
-                            "text-sm font-medium transition-all duration-300",
-                            "border",
+                            "relative flex items-center gap-2.5 px-5 py-3 rounded-2xl",
+                            "text-sm font-semibold transition-all duration-300",
+                            "border backdrop-blur-sm",
                             isActive
-                                ? "bg-gradient-to-r text-white border-transparent shadow-lg"
-                                : "bg-zinc-900/50 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-300"
+                                ? "text-white border-purple-400/50"
+                                : "bg-white/5 text-zinc-400 border-white/10 hover:border-purple-500/30 hover:text-zinc-200 hover:bg-white/10"
                         )}
                         style={isActive ? {
-                            backgroundImage: `linear-gradient(to right, var(--tw-gradient-stops))`,
-                            // @ts-ignore
-                            "--tw-gradient-from": cat.color.split(" ")[0].replace("from-", ""),
-                            "--tw-gradient-to": cat.color.split(" ")[1].replace("to-", ""),
+                            background: "linear-gradient(135deg, rgba(168,85,247,0.3) 0%, rgba(6,182,212,0.2) 100%)",
+                            boxShadow: "0 0 30px rgba(168,85,247,0.3), inset 0 0 20px rgba(168,85,247,0.1)",
                         } : undefined}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
                     >
-                        <Icon className="w-4 h-4" />
+                        <Icon className={cn("w-4 h-4", isActive && "text-purple-300")} />
                         <span>{cat.label}</span>
                         <span className={cn(
-                            "px-1.5 py-0.5 rounded text-xs",
-                            isActive ? "bg-white/20" : "bg-zinc-800"
+                            "px-2 py-0.5 rounded-lg text-xs font-bold",
+                            isActive 
+                                ? "bg-white/20 text-white" 
+                                : "bg-white/10 text-zinc-500"
                         )}>
                             {count}
                         </span>
+                        
+                        {/* Active indicator glow */}
+                        {isActive && (
+                            <motion.div
+                                className="absolute inset-0 rounded-2xl"
+                                style={{
+                                    background: "linear-gradient(135deg, rgba(168,85,247,0.2) 0%, transparent 100%)",
+                                }}
+                                layoutId="activeTab"
+                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                            />
+                        )}
                     </motion.button>
                 )
             })}
