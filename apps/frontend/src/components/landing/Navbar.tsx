@@ -28,6 +28,7 @@ import {
     ChevronRight,
     Sparkles,
 } from "lucide-react"
+import { TentaCountdown } from "@/components/ui/tenta-countdown"
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -137,6 +138,11 @@ export function Navbar() {
                                 <Sparkles className="w-4 h-4 text-emerald-400" />
                             </motion.div>
                         </Link>
+
+                        {/* Countdown Timer - Desktop */}
+                        <div className="hidden md:block">
+                            <TentaCountdown variant="compact" />
+                        </div>
 
                         {/* Mobile menu button */}
                         <motion.button
