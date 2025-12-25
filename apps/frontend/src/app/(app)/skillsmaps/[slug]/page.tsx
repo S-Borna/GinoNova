@@ -456,18 +456,30 @@ export default function SkillsMapDetailPage() {
                             </motion.div>
                         )}
 
-                        {/* Nodes list */}
+                        {/* Nodes grid — Same as Camp DevOps Tasks */}
                         <Section>
-                            <Headline level={2} className="mb-4 text-white">
-                                Noder
-                            </Headline>
-                            <div className="space-y-4">
+                            <div className="flex items-center gap-3 mb-8">
+                                <motion.div
+                                    className="p-3 rounded-xl bg-purple-500/20 border border-purple-500/30"
+                                    animate={{ boxShadow: ["0 0 10px rgba(168,85,247,0.2)", "0 0 20px rgba(168,85,247,0.4)", "0 0 10px rgba(168,85,247,0.2)"] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                >
+                                    <BookOpen className="w-5 h-5 text-purple-400" />
+                                </motion.div>
+                                <Headline level={2} className="text-white font-bold">
+                                    Tasks
+                                </Headline>
+                                <span className="text-zinc-500 text-sm ml-2">
+                                    {skillsmap.nodes.length} lektioner
+                                </span>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {skillsmap.nodes.map((node, index) => (
                                     <motion.div
                                         key={node.id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.1 + index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1 + index * 0.03, ease: [0.16, 1, 0.3, 1] }}
                                     >
                                         <NodeCard
                                             {...node}
