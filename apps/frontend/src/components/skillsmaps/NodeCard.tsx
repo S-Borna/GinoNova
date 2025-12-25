@@ -300,134 +300,107 @@ export function NodeCard({
     return (
         <motion.article
             className={cn(
-                "group relative overflow-hidden",
+                "group relative h-full overflow-hidden",
                 "rounded-2xl",
-                "bg-[#0e0e18]/95 backdrop-blur-xl",
-                "border border-white/[0.06]",
+                "bg-[#0d0d12]", // Same as Camp DevOps TaskCard
+                "border border-purple-500/10",
                 "transition-all duration-500",
-                isHovered && cn(
-                    "border-white/10",
-                    "shadow-xl",
-                ),
+                "cursor-pointer",
                 isComplete && "opacity-80",
-                onClick && "cursor-pointer",
                 className
             )}
             style={{
-                boxShadow: isHovered ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${config.accentColor}20` : undefined,
-                borderColor: isHovered ? `${config.accentColor}30` : undefined,
+                boxShadow: isHovered
+                    ? "0 20px 60px rgba(168,85,247,0.15), 0 0 40px rgba(168,85,247,0.1)"
+                    : "0 4px 20px rgba(0,0,0,0.3)",
             }}
             onClick={handleClick}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -6, scale: 1.01 }}
-            transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
-            {/* Gradient overlay on hover */}
-            <motion.div
-                className={cn(
-                    "absolute inset-0",
-                    "bg-gradient-to-br",
-                    config.gradient,
-                )}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isHovered ? 0.04 : 0 }}
-                transition={{ duration: 0.4 }}
-            />
+            {/* Gradient border glow on hover */}
+            {isHovered && (
+                <motion.div
+                    className="absolute inset-0 rounded-2xl pointer-events-none"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    style={{
+                        background: "linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(6,182,212,0.1) 50%, rgba(236,72,153,0.15) 100%)",
+                    }}
+                />
+            )}
 
-            {/* Top gradient accent line */}
-            <motion.div
-                className={cn(
-                    "absolute top-0 left-0 right-0 h-1 bg-gradient-to-r",
-                    config.gradient,
-                )}
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: isHovered ? 1 : 0 }}
-                transition={{ duration: 0.3 }}
-                style={{ transformOrigin: "left" }}
-            />
-
-            {/* Shimmer effect */}
-            <motion.div
-                className="absolute inset-0 opacity-0"
-                initial={{ x: "-100%" }}
-                animate={{
-                    x: isHovered ? "100%" : "-100%",
-                    opacity: isHovered ? 1 : 0
-                }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
-                style={{
-                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent)",
-                }}
-            />
-            <div className="relative p-5">
+            <div className="relative p-6 flex flex-col h-full">
                 {/* Top Row: Icon + Type Badge + Bookmark */}
                 <div className="flex items-start justify-between mb-4">
-                    {/* Icon container with gradient and glow */}
+                    {/* Icon container with glow — Using emoji like Camp DevOps */}
                     <motion.div
                         className={cn(
-                            "relative w-14 h-14 rounded-xl flex items-center justify-center",
+                            "w-14 h-14 rounded-xl flex items-center justify-center",
                             config.bgClass,
-                            "border border-white/10",
+                            "border border-white/10"
                         )}
-                        style={{
-                            boxShadow: isHovered
-                                ? `0 8px 32px rgba(0,0,0,0.3), 0 0 20px ${config.accentColor}30`
-                                : "0 4px 16px rgba(0,0,0,0.2)"
-                        }}
                         animate={isHovered ? { scale: 1.1, rotate: 5 } : { scale: 1, rotate: 0 }}
-                        transition={{ duration: 0.35, ease: [0.165, 0.84, 0.44, 1] }}
+                        transition={{ duration: 0.3 }}
+                        style={{
+                            boxShadow: isHovered ? `0 0 30px ${config.accentColor}40` : "none",
+                        }}
                     >
-                        <config.icon className={cn("w-7 h-7", config.colorClass)} />
-                        {/* Sparkle effect on hover */}
-                        <AnimatePresence>
-                            {isHovered && (
-                                <motion.div
-                                    className="absolute -top-1 -right-1"
-                                    initial={{ scale: 0, rotate: -45 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    exit={{ scale: 0, rotate: 45 }}
-                                    transition={{ duration: 0.25 }}
-                                >
-                                    <Sparkles className={cn("w-4 h-4", config.colorClass)} />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        <span className="text-3xl">{config.emoji}</span>
                     </motion.div>
 
                     {/* Right side: Status + Bookmark */}
                     <div className="flex items-center gap-2">
                         {onToggleBookmark && (
-                            <BookmarkBtn
-                                isBookmarked={isBookmarked}
-                                onClick={handleBookmark}
-                                isLoading={bookmarkLoading}
-                            />
+                            <motion.button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleBookmark()
+                                }}
+                                className={cn(
+                                    "p-2 rounded-xl transition-all duration-200",
+                                    isBookmarked
+                                        ? "text-amber-400 bg-amber-500/20 border border-amber-500/30"
+                                        : "text-zinc-500 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent"
+                                )}
+                                whileHover={{ scale: 1.15 }}
+                                whileTap={{ scale: 0.9 }}
+                                disabled={bookmarkLoading}
+                            >
+                                {bookmarkLoading ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <Star className={cn("w-4 h-4", isBookmarked && "fill-current")} />
+                                )}
+                            </motion.button>
                         )}
 
                         {isComplete && (
                             <motion.div
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/25 to-green-500/25 border border-emerald-500/30"
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
+                                animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
+                                transition={{ duration: 2, repeat: Infinity }}
                             >
                                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                                <span className="text-xs font-semibold text-emerald-300">Klar</span>
+                                <span className="text-xs font-bold text-emerald-300">Klar</span>
                             </motion.div>
                         )}
                         {isInProgress && (
-                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-violet-500/25 to-purple-500/25 border border-violet-500/30">
-                                <Loader2 className="w-4 h-4 text-violet-400 animate-spin" />
-                                <span className="text-xs font-semibold text-violet-300">Pågår</span>
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-500/30">
+                                <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />
+                                <span className="text-xs font-bold text-purple-300">Pågår</span>
                             </div>
                         )}
                         {!isComplete && !isInProgress && (
                             <span className={cn(
-                                "px-2.5 py-1 rounded-full text-xs font-medium",
+                                "px-3 py-1.5 rounded-xl text-xs font-bold border",
                                 config.bgClass,
-                                config.colorClass
+                                config.colorClass,
+                                "border-white/10"
                             )}>
                                 {config.label}
                             </span>
@@ -435,106 +408,73 @@ export function NodeCard({
                     </div>
                 </div>
 
-                {/* Node number with gradient */}
-                <div className="flex items-center gap-2 mb-1">
-                    <span className={cn(
-                        "text-xs font-bold uppercase tracking-wider bg-gradient-to-r bg-clip-text text-transparent",
-                        config.gradient
-                    )}>
-                        Nod {orderIndex}
-                    </span>
-                    <div className={cn(
-                        "h-px flex-1 bg-gradient-to-r opacity-30",
-                        config.gradient
-                    )} />
-                </div>
+                {/* Task number */}
+                <span className="text-xs font-bold text-purple-400/60 uppercase tracking-[0.15em]">
+                    Task {orderIndex}
+                </span>
 
-                {/* Title with enhanced styling */}
+                {/* Title */}
                 <h3 className={cn(
-                    "text-lg font-bold leading-tight tracking-tight",
-                    "text-white",
-                    isComplete && "text-zinc-400",
-                    "group-hover:text-white transition-colors"
+                    "mt-2 text-xl font-bold leading-tight",
+                    "bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent",
+                    isComplete && "opacity-60"
                 )}>
                     {title}
                 </h3>
 
-                {/* Description */}
-                {description && (
-                    <p className="mt-2 text-sm text-zinc-500 line-clamp-2">
-                        {description}
-                    </p>
-                )}
+                {/* Description - flex-grow to push meta to bottom */}
+                <div className="flex-grow">
+                    {description && (
+                        <p className="mt-3 text-sm text-zinc-400 line-clamp-3 leading-relaxed">
+                            {description}
+                        </p>
+                    )}
+                </div>
 
-                {/* Meta row */}
-                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-zinc-800/50">
-                    {/* Time with icon */}
-                    <div className="flex items-center gap-1.5">
-                        <div className="p-1 rounded bg-zinc-800/50">
-                            <Clock className="w-3.5 h-3.5 text-zinc-400" />
-                        </div>
-                        <span className="text-xs font-medium text-zinc-400">{estimatedMinutes} min</span>
+                {/* Meta row - always at bottom */}
+                <div className="flex flex-wrap items-center gap-4 mt-5 pt-5 border-t border-purple-500/10">
+                    {/* Time */}
+                    <div className="flex items-center gap-1.5 text-zinc-400">
+                        <Clock className="w-4 h-4" />
+                        <span className="text-sm font-medium">{estimatedMinutes} min</span>
                     </div>
 
-                    {/* XP with vibrant gradient and pulse animation */}
+                    {/* XP */}
                     <motion.div
                         className="flex items-center gap-1.5"
-                        animate={{
-                            scale: isHovered ? [1, 1.1, 1] : 1
-                        }}
-                        transition={{ duration: 0.4 }}
+                        animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
                     >
-                        <div className="p-1 rounded bg-gradient-to-r from-amber-500/20 to-yellow-500/20">
-                            <Zap className="w-3.5 h-3.5 text-amber-400" />
-                        </div>
-                        <span className="text-xs font-bold bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-transparent">
-                            {xpReward} XP
-                        </span>
+                        <Zap className="w-4 h-4 text-amber-400" />
+                        <span className="text-sm font-black text-amber-400">{xpReward} XP</span>
                     </motion.div>
 
                     {/* Difficulty */}
                     <DifficultyDots difficulty={difficulty} isHovered={isHovered} />
 
-                    {/* Action button - Netflix-style */}
+                    {/* Action button */}
                     {!isComplete && (
                         <motion.button
                             onClick={(e) => {
                                 e.stopPropagation()
                                 handleClick()
                             }}
-                            disabled={isLoading}
                             className={cn(
-                                "ml-auto flex items-center gap-1.5 px-4 py-2.5 rounded-xl",
-                                "text-sm font-semibold transition-all duration-300",
-                                "bg-gradient-to-r",
-                                config.gradient,
-                                "text-white",
-                                isLoading && "opacity-50 cursor-wait"
+                                "ml-auto flex items-center gap-2 px-5 py-2.5 rounded-xl",
+                                "text-sm font-bold transition-all duration-300",
+                                "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
+                                "hover:from-purple-500 hover:to-pink-500"
                             )}
-                            style={{
-                                boxShadow: `0 4px 20px ${config.accentColor}40`
-                            }}
-                            whileHover={{
-                                scale: 1.05,
-                                boxShadow: `0 8px 30px ${config.accentColor}50`
-                            }}
+                            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(168,85,247,0.4)" }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            {isLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : isInProgress ? (
+                            {isInProgress ? (
                                 <>
                                     <span>Fortsätt</span>
-                                    <motion.div
-                                        animate={{ x: [0, 4, 0] }}
-                                        transition={{ duration: 1, repeat: Infinity }}
-                                    >
-                                        <ChevronRight className="w-4 h-4" />
-                                    </motion.div>
+                                    <ChevronRight className="w-4 h-4" />
                                 </>
                             ) : (
                                 <>
-                                    <Play className="w-3.5 h-3.5" />
+                                    <Play className="w-4 h-4" />
                                     <span>Börja</span>
                                 </>
                             )}
@@ -548,13 +488,13 @@ export function NodeCard({
                                 handleClick()
                             }}
                             className={cn(
-                                "ml-auto flex items-center gap-1.5 px-4 py-2.5 rounded-xl",
-                                "text-sm font-semibold transition-all duration-300",
-                                "bg-zinc-800/80 text-zinc-300 border border-zinc-700/50",
-                                "hover:bg-zinc-700/80 hover:text-white hover:border-zinc-600/50"
+                                "ml-auto flex items-center gap-1.5 px-4 py-2 rounded-xl",
+                                "text-sm font-medium transition-all duration-200",
+                                "bg-zinc-800 text-zinc-400",
+                                "hover:bg-zinc-700 hover:text-zinc-300"
                             )}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
                         >
                             <span>Granska</span>
                             <ChevronRight className="w-4 h-4" />
@@ -563,46 +503,17 @@ export function NodeCard({
                 </div>
             </div>
 
-            {/* Progress indicator for in-progress with shimmer */}
+            {/* Progress indicator for in-progress */}
             {isInProgress && (
-                <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-zinc-800/50 overflow-hidden">
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-zinc-800 rounded-b-2xl overflow-hidden">
                     <motion.div
-                        className={cn(
-                            "h-full bg-gradient-to-r",
-                            config.gradient
-                        )}
+                        className="h-full bg-purple-500"
                         initial={{ width: "0%" }}
-                        animate={{ width: "45%" }}
-                        transition={{ duration: 0.8, ease: [0.165, 0.84, 0.44, 1] }}
-                    />
-                    {/* Shimmer effect */}
-                    <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent"
-                        animate={{ x: ["-100%", "200%"] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                        animate={{ width: "33%" }}
+                        transition={{ duration: 0.5 }}
                     />
                 </div>
             )}
-
-            {/* Completion sparkle */}
-            <AnimatePresence>
-                {isComplete && isHovered && (
-                    <motion.div
-                        className="absolute top-3 right-3"
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0, rotate: 180 }}
-                        transition={{ duration: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
-                    >
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                        >
-                            <Sparkles className="w-5 h-5 text-emerald-400" />
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </motion.article>
     )
 }
