@@ -256,7 +256,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 }}
                                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                             />
-                            
+
                             {/* Main logo container */}
                             <div className={cn(
                                 "relative flex items-center gap-2 px-4 py-2 rounded-xl",
@@ -285,7 +285,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                         </motion.span>
                                     </div>
                                 </motion.div>
-                                
+
                                 {/* GinoNova text */}
                                 <div className="flex items-baseline">
                                     <motion.span
@@ -320,7 +320,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                         Nova
                                     </motion.span>
                                 </div>
-                                
+
                                 {/* Sparkle accent */}
                                 <motion.div
                                     className="absolute -top-1 -right-1"

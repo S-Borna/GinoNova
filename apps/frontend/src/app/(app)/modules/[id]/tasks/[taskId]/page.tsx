@@ -420,274 +420,274 @@ You've learned the core concepts of this topic. Practice these skills to reinfor
             <CosmicAurora />
 
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Back button */}
-            <Link
-                href={`/modules/${moduleId}`}
-                className={cn(
-                    "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
-                    "text-zinc-400 hover:text-white",
-                    "bg-white/5 hover:bg-white/10 border border-white/10",
-                    "transition-all duration-300"
-                )}
-            >
-                <ArrowLeft className="w-4 h-4" />
-                Tillbaka till {module?.name || "Module"}
-            </Link>
-
-            {loading ? (
-                <TaskDetailSkeleton />
-            ) : error ? (
-                <ErrorState error={error} onRetry={fetchData} moduleId={moduleId} />
-            ) : task ? (
-                <motion.div
-                    className="space-y-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                {/* Back button */}
+                <Link
+                    href={`/modules/${moduleId}`}
+                    className={cn(
+                        "inline-flex items-center gap-2 text-sm mb-6 px-4 py-2 rounded-xl",
+                        "text-zinc-400 hover:text-white",
+                        "bg-white/5 hover:bg-white/10 border border-white/10",
+                        "transition-all duration-300"
+                    )}
                 >
-                    {/* Task Header — EPIC Cosmic Premium Style */}
+                    <ArrowLeft className="w-4 h-4" />
+                    Tillbaka till {module?.name || "Module"}
+                </Link>
+
+                {loading ? (
+                    <TaskDetailSkeleton />
+                ) : error ? (
+                    <ErrorState error={error} onRetry={fetchData} moduleId={moduleId} />
+                ) : task ? (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={cn(
-                            "relative overflow-hidden rounded-3xl",
-                            "bg-[#0a0a0f]", // Deep cosmic
-                            "border border-purple-500/20",
-                            "p-8 md:p-10"
-                        )}
-                        style={{
-                            boxShadow: `0 0 80px ${moduleConfig.color}20, 0 0 40px rgba(168,85,247,0.1)`,
-                        }}
+                        className="space-y-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                     >
-                        {/* AURORA GLOW — Multi-layered */}
+                        {/* Task Header — EPIC Cosmic Premium Style */}
                         <motion.div
-                            className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={cn(
+                                "relative overflow-hidden rounded-3xl",
+                                "bg-[#0a0a0f]", // Deep cosmic
+                                "border border-purple-500/20",
+                                "p-8 md:p-10"
+                            )}
                             style={{
-                                background: `radial-gradient(circle, ${moduleConfig.color}50 0%, transparent 70%)`,
-                                filter: "blur(80px)",
+                                boxShadow: `0 0 80px ${moduleConfig.color}20, 0 0 40px rgba(168,85,247,0.1)`,
                             }}
-                            animate={{
-                                scale: [1, 1.2, 1],
-                                opacity: [0.3, 0.5, 0.3],
-                            }}
-                            transition={{
-                                duration: 6,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            }}
-                        />
-                        <motion.div
-                            className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full"
-                            style={{
-                                background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
-                                filter: "blur(60px)",
-                            }}
-                            animate={{
-                                scale: [1, 1.15, 1],
-                                x: [0, 20, 0],
-                            }}
-                            transition={{
-                                duration: 8,
-                                repeat: Infinity,
-                                ease: "easeInOut",
-                            }}
-                        />
-
-                        {/* Grid pattern */}
-                        <div
-                            className="absolute inset-0 opacity-[0.03]"
-                            style={{
-                                backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-                                backgroundSize: "40px 40px",
-                            }}
-                        />
-
-                        {/* Completed sparkle */}
-                        {isCompleted && (
+                        >
+                            {/* AURORA GLOW — Multi-layered */}
                             <motion.div
-                                className="absolute top-6 right-6"
-                                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                                transition={{ rotate: { duration: 4, repeat: Infinity, ease: "linear" }, scale: { duration: 2, repeat: Infinity } }}
-                            >
-                                <Sparkles className="w-8 h-8 text-emerald-400" />
-                            </motion.div>
-                        )}
-
-                        <div className="relative flex flex-col md:flex-row md:items-start gap-6">
-                            {/* Task Type Icon — Pulsating */}
-                            <motion.div
-                                className={cn(
-                                    "w-24 h-24 rounded-3xl flex items-center justify-center shrink-0",
-                                    "bg-gradient-to-br from-white/10 to-white/5",
-                                    "border border-white/20"
-                                )}
-                                style={{ boxShadow: `0 0 60px ${moduleConfig.color}40` }}
-                                whileHover={{ scale: 1.08, rotate: 5 }}
+                                className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full"
+                                style={{
+                                    background: `radial-gradient(circle, ${moduleConfig.color}50 0%, transparent 70%)`,
+                                    filter: "blur(80px)",
+                                }}
                                 animate={{
-                                    boxShadow: [
-                                        `0 0 40px ${moduleConfig.color}30`,
-                                        `0 0 80px ${moduleConfig.color}50`,
-                                        `0 0 40px ${moduleConfig.color}30`,
-                                    ],
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.3, 0.5, 0.3],
                                 }}
                                 transition={{
-                                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                                    duration: 6,
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
                                 }}
-                            >
-                                <span className="text-6xl drop-shadow-lg">{taskTypeConfig.emoji}</span>
-                            </motion.div>
+                            />
+                            <motion.div
+                                className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full"
+                                style={{
+                                    background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)",
+                                    filter: "blur(60px)",
+                                }}
+                                animate={{
+                                    scale: [1, 1.15, 1],
+                                    x: [0, 20, 0],
+                                }}
+                                transition={{
+                                    duration: 8,
+                                    repeat: Infinity,
+                                    ease: "easeInOut",
+                                }}
+                            />
 
-                            {/* Content */}
-                            <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-3">
-                                    <span className="text-xs font-bold text-purple-400/60 uppercase tracking-[0.15em]">
-                                        Task {task.order_index}
-                                    </span>
-                                    <span className={cn(
-                                        "px-3 py-1.5 rounded-xl text-xs font-bold border",
-                                        taskTypeConfig.bgClass,
-                                        taskTypeConfig.colorClass,
-                                        "border-white/10"
-                                    )}>
-                                        {taskTypeConfig.label}
-                                    </span>
-                                    {isCompleted && (
-                                        <motion.span
-                                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
-                                            animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
-                                            transition={{ duration: 2, repeat: Infinity }}
-                                        >
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                                            <span className="text-xs font-bold text-emerald-300">Klar</span>
-                                        </motion.span>
-                                    )}
-                                </div>
+                            {/* Grid pattern */}
+                            <div
+                                className="absolute inset-0 opacity-[0.03]"
+                                style={{
+                                    backgroundImage: "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                                    backgroundSize: "40px 40px",
+                                }}
+                            />
 
-                                <h1
-                                    className={cn(
-                                        "text-3xl md:text-4xl font-black mb-3 tracking-tight",
-                                        "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
-                                    )}
-                                    style={{ textShadow: `0 0 40px ${moduleConfig.color}40` }}
+                            {/* Completed sparkle */}
+                            {isCompleted && (
+                                <motion.div
+                                    className="absolute top-6 right-6"
+                                    animate={{ rotate: 360, scale: [1, 1.2, 1] }}
+                                    transition={{ rotate: { duration: 4, repeat: Infinity, ease: "linear" }, scale: { duration: 2, repeat: Infinity } }}
                                 >
-                                    {task.title}
-                                </h1>
+                                    <Sparkles className="w-8 h-8 text-emerald-400" />
+                                </motion.div>
+                            )}
 
-                                {task.description && (
-                                    <p className="text-zinc-300 text-lg mb-5 max-w-2xl leading-relaxed">
-                                        {task.description}
-                                    </p>
-                                )}
+                            <div className="relative flex flex-col md:flex-row md:items-start gap-6">
+                                {/* Task Type Icon — Pulsating */}
+                                <motion.div
+                                    className={cn(
+                                        "w-24 h-24 rounded-3xl flex items-center justify-center shrink-0",
+                                        "bg-gradient-to-br from-white/10 to-white/5",
+                                        "border border-white/20"
+                                    )}
+                                    style={{ boxShadow: `0 0 60px ${moduleConfig.color}40` }}
+                                    whileHover={{ scale: 1.08, rotate: 5 }}
+                                    animate={{
+                                        boxShadow: [
+                                            `0 0 40px ${moduleConfig.color}30`,
+                                            `0 0 80px ${moduleConfig.color}50`,
+                                            `0 0 40px ${moduleConfig.color}30`,
+                                        ],
+                                    }}
+                                    transition={{
+                                        boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                                    }}
+                                >
+                                    <span className="text-6xl drop-shadow-lg">{taskTypeConfig.emoji}</span>
+                                </motion.div>
 
-                                {/* Meta row — Premium styled */}
-                                <div className="flex flex-wrap items-center gap-5 text-sm">
-                                    <span className="flex items-center gap-2 text-zinc-300 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
-                                        <Clock className="w-4 h-4 text-purple-400" />
-                                        <span className="font-medium">{task.estimated_minutes} min</span>
-                                    </span>
-                                    <motion.span
-                                        className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/30"
-                                        whileHover={{ scale: 1.05 }}
+                                {/* Content */}
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <span className="text-xs font-bold text-purple-400/60 uppercase tracking-[0.15em]">
+                                            Task {task.order_index}
+                                        </span>
+                                        <span className={cn(
+                                            "px-3 py-1.5 rounded-xl text-xs font-bold border",
+                                            taskTypeConfig.bgClass,
+                                            taskTypeConfig.colorClass,
+                                            "border-white/10"
+                                        )}>
+                                            {taskTypeConfig.label}
+                                        </span>
+                                        {isCompleted && (
+                                            <motion.span
+                                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30"
+                                                animate={{ boxShadow: ["0 0 10px rgba(16,185,129,0.2)", "0 0 20px rgba(16,185,129,0.4)", "0 0 10px rgba(16,185,129,0.2)"] }}
+                                                transition={{ duration: 2, repeat: Infinity }}
+                                            >
+                                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                                                <span className="text-xs font-bold text-emerald-300">Klar</span>
+                                            </motion.span>
+                                        )}
+                                    </div>
+
+                                    <h1
+                                        className={cn(
+                                            "text-3xl md:text-4xl font-black mb-3 tracking-tight",
+                                            "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
+                                        )}
+                                        style={{ textShadow: `0 0 40px ${moduleConfig.color}40` }}
                                     >
-                                        <Zap className="w-4 h-4 text-amber-400" />
-                                        <span className="font-black text-amber-400">+{task.xp_reward} XP</span>
-                                    </motion.span>
-                                    <DifficultyDots difficulty={task.difficulty} />
+                                        {task.title}
+                                    </h1>
+
+                                    {task.description && (
+                                        <p className="text-zinc-300 text-lg mb-5 max-w-2xl leading-relaxed">
+                                            {task.description}
+                                        </p>
+                                    )}
+
+                                    {/* Meta row — Premium styled */}
+                                    <div className="flex flex-wrap items-center gap-5 text-sm">
+                                        <span className="flex items-center gap-2 text-zinc-300 bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                                            <Clock className="w-4 h-4 text-purple-400" />
+                                            <span className="font-medium">{task.estimated_minutes} min</span>
+                                        </span>
+                                        <motion.span
+                                            className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/30"
+                                            whileHover={{ scale: 1.05 }}
+                                        >
+                                            <Zap className="w-4 h-4 text-amber-400" />
+                                            <span className="font-black text-amber-400">+{task.xp_reward} XP</span>
+                                        </motion.span>
+                                        <DifficultyDots difficulty={task.difficulty} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
 
-                    {/* Lesson Content — Premium Cosmic Style */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className={cn(
-                            "relative overflow-hidden rounded-3xl",
-                            "bg-[#0a0a0f]/90 backdrop-blur-xl",
-                            "border border-purple-500/20",
-                            "p-8 md:p-10"
-                        )}
-                        style={{
-                            boxShadow: "0 0 60px rgba(168,85,247,0.08), 0 20px 40px rgba(0,0,0,0.4)",
-                        }}
-                    >
-                        {/* Subtle glow */}
-                        <div
-                            className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full opacity-20 blur-[80px] pointer-events-none"
-                            style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)" }}
-                        />
-
-                        <div className="relative flex items-center gap-3 mb-8 pb-6 border-b border-purple-500/20">
-                            <motion.div
-                                className={cn(
-                                    "p-3 rounded-xl",
-                                    hasContentBlocks ? "bg-purple-500/20" : "bg-blue-500/20",
-                                    "border border-white/10"
-                                )}
-                                whileHover={{ scale: 1.1 }}
-                            >
-                                {hasContentBlocks ? (
-                                    <Play className="w-5 h-5 text-purple-400" />
-                                ) : (
-                                    <BookOpen className="w-5 h-5 text-blue-400" />
-                                )}
-                            </motion.div>
-                            <Headline level={2} className="text-white font-bold">
-                                {hasContentBlocks ? "Interaktiv Lektion" : "Lektionsinnehåll"}
-                            </Headline>
-                            {hasContentBlocks && taskProgress && (
-                                <motion.span
-                                    className="ml-auto text-sm font-medium px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                                    animate={{ boxShadow: ["0 0 5px rgba(168,85,247,0.2)", "0 0 15px rgba(168,85,247,0.3)", "0 0 5px rgba(168,85,247,0.2)"] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    {taskProgress.progress_percent || 0}% klart
-                                </motion.span>
+                        {/* Lesson Content — Premium Cosmic Style */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className={cn(
+                                "relative overflow-hidden rounded-3xl",
+                                "bg-[#0a0a0f]/90 backdrop-blur-xl",
+                                "border border-purple-500/20",
+                                "p-8 md:p-10"
                             )}
-                        </div>
-
-                        <div className="relative">
-                            {hasContentBlocks ? (
-                                <ContentBlockRenderer
-                                    blocks={(task as any).content_blocks}
-                                    taskId={taskId}
-                                    progress={taskProgress}
-                                    onBlockComplete={handleBlockComplete}
-                                    onQuizAnswer={handleQuizAnswer}
-                                    onTerminalCommand={handleTerminalCommand}
-                                />
-                            ) : (
-                                <LessonContent
-                                    content={filteredContent || placeholderContent}
-                                    title={task.title}
-                                    estimatedMinutes={task.estimated_minutes}
-                                />
-                            )}
-                        </div>
-
-                        {/* Related Tasks / Fördjupning */}
-                        {relatedTasks.length > 0 && (
-                            <RelatedTasks
-                                tasks={relatedTasks}
-                                moduleId={moduleId}
-                                className="mt-10 pt-8 border-t border-purple-500/20"
+                            style={{
+                                boxShadow: "0 0 60px rgba(168,85,247,0.08), 0 20px 40px rgba(0,0,0,0.4)",
+                            }}
+                        >
+                            {/* Subtle glow */}
+                            <div
+                                className="absolute top-0 right-0 w-[300px] h-[300px] rounded-full opacity-20 blur-[80px] pointer-events-none"
+                                style={{ background: "radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)" }}
                             />
-                        )}
-                    </motion.div>
 
-                    {/* Actions - Using TaskFooter from @saas/ui */}
-                    <TaskFooter
-                        prevTaskUrl={prevTask ? `/modules/${moduleId}/tasks/${prevTask.id}` : undefined}
-                        nextTaskUrl={nextTask ? `/modules/${moduleId}/tasks/${nextTask.id}` : undefined}
-                        onComplete={handleMarkComplete}
-                        xp={task.xp_reward}
-                        difficulty={task.difficulty as 'easy' | 'medium' | 'hard'}
-                        isCompleted={isCompleted}
-                        isLoading={completing}
-                    />
-                </motion.div>
-            ) : null}
+                            <div className="relative flex items-center gap-3 mb-8 pb-6 border-b border-purple-500/20">
+                                <motion.div
+                                    className={cn(
+                                        "p-3 rounded-xl",
+                                        hasContentBlocks ? "bg-purple-500/20" : "bg-blue-500/20",
+                                        "border border-white/10"
+                                    )}
+                                    whileHover={{ scale: 1.1 }}
+                                >
+                                    {hasContentBlocks ? (
+                                        <Play className="w-5 h-5 text-purple-400" />
+                                    ) : (
+                                        <BookOpen className="w-5 h-5 text-blue-400" />
+                                    )}
+                                </motion.div>
+                                <Headline level={2} className="text-white font-bold">
+                                    {hasContentBlocks ? "Interaktiv Lektion" : "Lektionsinnehåll"}
+                                </Headline>
+                                {hasContentBlocks && taskProgress && (
+                                    <motion.span
+                                        className="ml-auto text-sm font-medium px-4 py-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                        animate={{ boxShadow: ["0 0 5px rgba(168,85,247,0.2)", "0 0 15px rgba(168,85,247,0.3)", "0 0 5px rgba(168,85,247,0.2)"] }}
+                                        transition={{ duration: 2, repeat: Infinity }}
+                                    >
+                                        {taskProgress.progress_percent || 0}% klart
+                                    </motion.span>
+                                )}
+                            </div>
+
+                            <div className="relative">
+                                {hasContentBlocks ? (
+                                    <ContentBlockRenderer
+                                        blocks={(task as any).content_blocks}
+                                        taskId={taskId}
+                                        progress={taskProgress}
+                                        onBlockComplete={handleBlockComplete}
+                                        onQuizAnswer={handleQuizAnswer}
+                                        onTerminalCommand={handleTerminalCommand}
+                                    />
+                                ) : (
+                                    <LessonContent
+                                        content={filteredContent || placeholderContent}
+                                        title={task.title}
+                                        estimatedMinutes={task.estimated_minutes}
+                                    />
+                                )}
+                            </div>
+
+                            {/* Related Tasks / Fördjupning */}
+                            {relatedTasks.length > 0 && (
+                                <RelatedTasks
+                                    tasks={relatedTasks}
+                                    moduleId={moduleId}
+                                    className="mt-10 pt-8 border-t border-purple-500/20"
+                                />
+                            )}
+                        </motion.div>
+
+                        {/* Actions - Using TaskFooter from @saas/ui */}
+                        <TaskFooter
+                            prevTaskUrl={prevTask ? `/modules/${moduleId}/tasks/${prevTask.id}` : undefined}
+                            nextTaskUrl={nextTask ? `/modules/${moduleId}/tasks/${nextTask.id}` : undefined}
+                            onComplete={handleMarkComplete}
+                            xp={task.xp_reward}
+                            difficulty={task.difficulty as 'easy' | 'medium' | 'hard'}
+                            isCompleted={isCompleted}
+                            isLoading={completing}
+                        />
+                    </motion.div>
+                ) : null}
             </div>
         </div>
     )

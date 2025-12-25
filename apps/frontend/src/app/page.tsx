@@ -45,7 +45,7 @@ export default function LandingPage() {
             {/* Main Landing Page */}
             <AnimatePresence>
                 {contentReady && (
-                    <motion.div 
+                    <motion.div
                         className="relative min-h-screen bg-[#05050a] text-white overflow-x-hidden"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}

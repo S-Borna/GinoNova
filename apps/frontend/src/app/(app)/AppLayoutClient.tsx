@@ -119,10 +119,10 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
     // COSMIC LOCKED OVERLAY - Show for non-authenticated users on protected pages
     // Camp DevOps (/modules) is the ONLY publicly accessible content
-    const isPublicPage = pathname?.startsWith("/modules") || 
-                         pathname === "/" || 
-                         pathname === "/login" || 
-                         pathname === "/register"
+    const isPublicPage = pathname?.startsWith("/modules") ||
+        pathname === "/" ||
+        pathname === "/login" ||
+        pathname === "/register"
     const showLockedOverlay = !user && !isPublicPage
 
     // Auto-collapse on tablet

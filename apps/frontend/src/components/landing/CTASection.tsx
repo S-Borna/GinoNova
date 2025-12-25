@@ -7,7 +7,7 @@
  *
  * The grand finale of the landing page.
  * Massive cosmic energy converging to a single point: START LEARNING.
- * 
+ *
  * Design Philosophy:
  * - Maximum visual impact
  * - Clear value proposition (FREE, no registration)
@@ -89,8 +89,8 @@ function CTABackground() {
                     className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full"
                     style={{
                         background: i % 2 === 0 ? "rgba(168,85,247,0.8)" : "rgba(34,211,238,0.8)",
-                        boxShadow: i % 2 === 0 
-                            ? "0 0 20px rgba(168,85,247,1)" 
+                        boxShadow: i % 2 === 0
+                            ? "0 0 20px rgba(168,85,247,1)"
                             : "0 0 20px rgba(34,211,238,1)",
                     }}
                     animate={{

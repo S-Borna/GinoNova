@@ -50,7 +50,7 @@ interface TentaCountdownProps {
 function calculateTimeLeft(): TimeLeft {
     const now = new Date()
     const difference = TENTA_DATE.getTime() - now.getTime()
-    
+
     if (difference <= 0) {
         return { days: 0, hours: 0, minutes: 0, seconds: 0, total: 0 }
     }
@@ -123,7 +123,7 @@ function CompactCountdown({ className }: { className?: string }) {
                 "w-4 h-4",
                 isUrgent ? "text-red-400" : "text-purple-400"
             )} />
-            
+
             <div className="flex items-center gap-1 font-mono text-sm font-bold">
                 {timeLeft.days > 0 && (
                     <>
@@ -275,7 +275,7 @@ function FullCountdown({ className }: { className?: string }) {
                                 {block.label}
                             </span>
                         </motion.div>
-                        
+
                         {index < timeBlocks.length - 1 && (
                             <span className={cn(
                                 "text-2xl font-bold",
@@ -293,7 +293,7 @@ function FullCountdown({ className }: { className?: string }) {
                 "text-sm text-center max-w-md",
                 isUrgent ? "text-red-300/70" : "text-zinc-400"
             )}>
-                {isUrgent 
+                {isUrgent
                     ? "🔥 Sista dagen! Du har pluggat hårt - nu är det dags att visa vad du kan!"
                     : "📚 Varje dag räknas. Fokusera, öva, och du kommer klara detta!"}
             </p>
