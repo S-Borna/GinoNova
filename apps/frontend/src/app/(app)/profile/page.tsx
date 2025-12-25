@@ -352,7 +352,7 @@ function LearningGoals({ goals }: { goals: LearningGoal[] }) {
                     );
                 })}
             </div>
-        </div>
+        </motion.div>
     );
 }
 
