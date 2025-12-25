@@ -48,19 +48,19 @@ import {
 function NeuralBackground() {
     return (
         <div className="absolute inset-0 overflow-hidden">
-            {/* Deep space gradient */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-900 via-neutral-950 to-black" />
+            {/* MILESTONE 2.0: Cosmic deep space gradient */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, #05050a 0%, #0a0a12 50%, #0e0e18 100%)' }} />
 
-            {/* AI Core Glow - Central pulsating orb */}
+            {/* AI Core Glow - Central pulsating orb - MORE PURPLE */}
             <motion.div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px]"
                 style={{
-                    background: "radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(139,92,246,0.1) 30%, transparent 70%)",
+                    background: "radial-gradient(circle, rgba(168,85,247,0.3) 0%, rgba(139,92,246,0.15) 30%, transparent 70%)",
                     filter: "blur(60px)",
                 }}
                 animate={{
                     scale: [1, 1.2, 1],
-                    opacity: [0.4, 0.7, 0.4],
+                    opacity: [0.5, 0.8, 0.5],
                 }}
                 transition={{
                     duration: 4,
@@ -69,18 +69,19 @@ function NeuralBackground() {
                 }}
             />
 
-            {/* Neural pulse rings */}
+            {/* Neural pulse rings - PURPLE themed */}
             {[...Array(3)].map((_, i) => (
                 <motion.div
                     key={i}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary-500/20"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full"
                     style={{
                         width: `${400 + i * 200}px`,
                         height: `${400 + i * 200}px`,
+                        border: '1px solid rgba(168, 85, 247, 0.2)',
                     }}
                     animate={{
                         scale: [1, 1.5, 1],
-                        opacity: [0.3, 0, 0.3],
+                        opacity: [0.4, 0, 0.4],
                     }}
                     transition={{
                         duration: 4,
@@ -91,11 +92,11 @@ function NeuralBackground() {
                 />
             ))}
 
-            {/* Animated gradient orbs - enhanced */}
+            {/* Animated gradient orbs - STRONGER COLORS */}
             <motion.div
                 className="absolute top-0 -left-1/4 w-[800px] h-[800px] rounded-full"
                 style={{
-                    background: "conic-gradient(from 0deg, rgba(99,102,241,0.3), rgba(139,92,246,0.2), rgba(6,182,212,0.1), rgba(99,102,241,0.3))",
+                    background: "conic-gradient(from 0deg, rgba(168,85,247,0.4), rgba(139,92,246,0.3), rgba(6,182,212,0.2), rgba(168,85,247,0.4))",
                     filter: "blur(100px)",
                 }}
                 animate={{
@@ -110,7 +111,7 @@ function NeuralBackground() {
             <motion.div
                 className="absolute -bottom-1/4 -right-1/4 w-[700px] h-[700px] rounded-full"
                 style={{
-                    background: "conic-gradient(from 180deg, rgba(236,72,153,0.2), rgba(139,92,246,0.3), rgba(99,102,241,0.2), rgba(236,72,153,0.2))",
+                    background: "conic-gradient(from 180deg, rgba(236,72,153,0.3), rgba(168,85,247,0.4), rgba(99,102,241,0.3), rgba(236,72,153,0.3))",
                     filter: "blur(80px)",
                 }}
                 animate={{
