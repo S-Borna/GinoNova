@@ -349,39 +349,7 @@ export function CTASection() {
                     </Link>
                 </motion.div>
 
-                {/* Social proof bottom */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="flex items-center justify-center gap-6 mt-12"
-                >
-                    <div className="flex -space-x-2">
-                        {[...Array(5)].map((_, i) => (
-                            <div
-                                key={i}
-                                className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 border-2 border-[#05050a] flex items-center justify-center"
-                            >
-                                <span className="text-xs font-bold text-white">
-                                    {String.fromCharCode(65 + i)}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="text-sm text-zinc-400">
-                        <span className="text-white font-bold">10,000+</span> användare lär sig redan
-                    </div>
-                    <div className="flex items-center gap-1">
-                        {[...Array(5)].map((_, i) => (
-                            <Star
-                                key={i}
-                                className="w-4 h-4 text-amber-400 fill-amber-400"
-                            />
-                        ))}
-                        <span className="ml-1 text-sm text-zinc-400">4.9</span>
-                    </div>
-                </motion.div>
+
             </div>
         </section>
     )
