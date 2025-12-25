@@ -19,6 +19,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
 import {
@@ -232,31 +233,143 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                     className={cn(
                         "flex items-center",
                         "transition-all duration-300",
-                        "hover:opacity-80"
+                        "hover:opacity-90 group"
                     )}
                 >
-                    {/* DevOpsHub Logo - Full word in badge */}
+                    {/* GinoNova Logo - Spectacular Design */}
                     {!collapsed ? (
-                        <div className={cn(
-                            "flex items-center px-3 py-1.5 rounded-lg",
-                            "bg-gradient-to-r from-purple-600 to-purple-500",
-                            "shadow-[0_0_20px_rgba(139,92,246,0.4)]"
-                        )}>
-                            <span className="text-base font-bold text-white tracking-tight">
-                                DevOpsHub
-                            </span>
-                        </div>
+                        <motion.div
+                            className="relative"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            {/* Outer glow pulse */}
+                            <motion.div
+                                className="absolute -inset-2 rounded-2xl opacity-60"
+                                style={{
+                                    background: "linear-gradient(135deg, rgba(139,92,246,0.4), rgba(236,72,153,0.3), rgba(6,182,212,0.3))",
+                                    filter: "blur(12px)",
+                                }}
+                                animate={{
+                                    opacity: [0.4, 0.7, 0.4],
+                                    scale: [1, 1.05, 1],
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            
+                            {/* Main logo container */}
+                            <div className={cn(
+                                "relative flex items-center gap-2 px-4 py-2 rounded-xl",
+                                "bg-gradient-to-r from-[#0d0d14] via-[#12121a] to-[#0d0d14]",
+                                "border border-purple-500/30",
+                                "shadow-[0_0_30px_rgba(139,92,246,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                            )}>
+                                {/* Nova star icon */}
+                                <motion.div
+                                    className="relative"
+                                    animate={{ rotate: [0, 360] }}
+                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                                >
+                                    <div className={cn(
+                                        "w-7 h-7 rounded-lg",
+                                        "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-400",
+                                        "flex items-center justify-center",
+                                        "shadow-[0_0_15px_rgba(168,85,247,0.6)]"
+                                    )}>
+                                        <motion.span
+                                            className="text-white text-sm font-black"
+                                            animate={{ scale: [1, 1.1, 1] }}
+                                            transition={{ duration: 2, repeat: Infinity }}
+                                        >
+                                            ✦
+                                        </motion.span>
+                                    </div>
+                                </motion.div>
+                                
+                                {/* GinoNova text */}
+                                <div className="flex items-baseline">
+                                    <motion.span
+                                        className="text-lg font-black tracking-tight"
+                                        style={{
+                                            background: "linear-gradient(135deg, #fff 0%, #e9d5ff 50%, #fff 100%)",
+                                            backgroundSize: "200% auto",
+                                            WebkitBackgroundClip: "text",
+                                            WebkitTextFillColor: "transparent",
+                                        }}
+                                        animate={{
+                                            backgroundPosition: ["0% center", "200% center"],
+                                        }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        Gino
+                                    </motion.span>
+                                    <motion.span
+                                        className="text-lg font-black tracking-tight"
+                                        style={{
+                                            background: "linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)",
+                                            backgroundSize: "200% auto",
+                                            WebkitBackgroundClip: "text",
+                                            WebkitTextFillColor: "transparent",
+                                            filter: "drop-shadow(0 0 8px rgba(168,85,247,0.5))",
+                                        }}
+                                        animate={{
+                                            backgroundPosition: ["0% center", "200% center"],
+                                        }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        Nova
+                                    </motion.span>
+                                </div>
+                                
+                                {/* Sparkle accent */}
+                                <motion.div
+                                    className="absolute -top-1 -right-1"
+                                    animate={{
+                                        scale: [1, 1.3, 1],
+                                        opacity: [0.5, 1, 0.5],
+                                    }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                >
+                                    <span className="text-xs">✨</span>
+                                </motion.div>
+                            </div>
+                        </motion.div>
                     ) : (
-                        /* Collapsed: Only show D icon */
-                        <div className={cn(
-                            "w-8 h-8 rounded-lg",
-                            "bg-gradient-to-br from-purple-500 to-purple-700",
-                            "flex items-center justify-center",
-                            "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
-                            "text-white font-bold text-sm"
-                        )}>
-                            D
-                        </div>
+                        /* Collapsed: Nova star only */
+                        <motion.div
+                            className="relative"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            {/* Glow */}
+                            <motion.div
+                                className="absolute -inset-1 rounded-xl opacity-60"
+                                style={{
+                                    background: "linear-gradient(135deg, rgba(168,85,247,0.5), rgba(236,72,153,0.4))",
+                                    filter: "blur(8px)",
+                                }}
+                                animate={{ opacity: [0.4, 0.7, 0.4] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
+                            <div className={cn(
+                                "relative w-9 h-9 rounded-xl",
+                                "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-400",
+                                "flex items-center justify-center",
+                                "shadow-[0_0_20px_rgba(168,85,247,0.5)]",
+                                "border border-purple-400/30"
+                            )}>
+                                <motion.span
+                                    className="text-white text-base font-black"
+                                    animate={{
+                                        scale: [1, 1.2, 1],
+                                        rotate: [0, 180, 360],
+                                    }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                >
+                                    ✦
+                                </motion.span>
+                            </div>
+                        </motion.div>
                     )}
                 </Link>
             </div>
