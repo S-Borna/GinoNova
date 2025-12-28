@@ -95,12 +95,12 @@ const MOCK_MODULES: EnhancedModule[] = [
         id: "doe25-tenta",
         name: "DOE25 Tenta",
         slug: "doe25-tenta",
-        description: "Komplett tentaplugg för Linux/Unix Server - Alla 8 kursmål (KM1-KM8). Tenta: 7 januari 2025.",
+        description: "Komplett tentaplugg för Linux/Unix Server - Alla 9 kursmål (KM1-KM9 inkl. Bash VG). Tenta: 7 januari 2025.",
         order_index: 0,
         orderIndex: 0,
         difficulty: "intermediate",
-        estimated_hours: 30,
-        estimatedHours: 30,
+        estimated_hours: 35,
+        estimatedHours: 35,
         prerequisites: [],
         is_active: true,
         track_id: "tenta",
@@ -109,10 +109,10 @@ const MOCK_MODULES: EnhancedModule[] = [
         icon: "📝",
         progress: 0,
         tasksCompleted: 0,
-        totalTasks: 8,
+        totalTasks: 9,
         status: "not_started",
-        tags: ["Linux", "Tenta", "KM1-KM8"],
-        xp: 3000,
+        tags: ["Linux", "Tenta", "KM1-KM9", "Bash VG"],
+        xp: 3500,
     },
     // =========== BOOTCAMP MODULER ===========
     {
@@ -630,7 +630,7 @@ export default function ModulesPage() {
                             if (excludedSlugs.includes(slug)) return false
 
                             // Exclude backend tenta/tentaplugg modules - we use DOE25 instead
-                            if (name.includes("tenta") || name.includes("tentaplugg") || 
+                            if (name.includes("tenta") || name.includes("tentaplugg") ||
                                 slug.includes("tenta") || slug.includes("tentaplugg")) {
                                 return false
                             }
