@@ -1190,6 +1190,624 @@ Använd fetch när du vill se vad som ändrats innan du mergar.`
                     message: "Du har slutfört KM8: Git & versionshantering! 🎉"
                 }
             ]
+        },
+
+        // ============================================
+        // KM9: BASH-SKRIPTNING (VG-KRITISKT)
+        // ============================================
+        {
+            id: "doe25-km9-bash",
+            title: "KM9: Bash-skriptning",
+            description: "Utveckla och planera Bash-skript för att automatisera systemutvecklingsflöden (VG-krav)",
+            order_index: 9,
+            estimated_minutes: 90,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "Bash-skriptning – Automatisera Linux",
+                    learning_objectives: [
+                        "Shebang och skriptstruktur",
+                        "Variabler och quoting",
+                        "Villkorssatser (if/elif/else, case)",
+                        "Loopar (for, while, until)",
+                        "Funktioner och argument",
+                        "Input/Output med read och echo",
+                        "Arrays och strängoperationer",
+                        "Exit codes och felsökning"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "VG-kravet för Bash",
+                    explanation: `**Från kursplanen:**
+"Med stor säkerhet och skicklighet utveckla och planera Bash-skript för att automatisera systemutvecklingsflöden"
+
+**Detta innebär att du ska kunna:**
+- Skriva fungerande skript från scratch
+- Förstå och förklara varje del
+- Kombinera flera koncept i ett skript
+- Felsöka och debugga skript`,
+                    pro_tip: "Tentan är på papper – du måste kunna skriva korrekt syntax utan hjälp från terminalen!"
+                },
+                {
+                    type: "concept",
+                    title: "Shebang och grundstruktur",
+                    explanation: `**Shebang – första raden:**
+
+#!/bin/bash
+# eller
+#!/usr/bin/env bash
+
+**Vad gör shebang?**
+Talar om för operativsystemet vilken tolk (interpreter) som ska köra skriptet.
+
+**Utan shebang:** Systemet vet inte att det är ett Bash-skript.
+
+**Göra skript körbart:**
+
+chmod +x script.sh
+./script.sh`
+                },
+                {
+                    type: "code",
+                    title: "Grundläggande skriptstruktur",
+                    language: "bash",
+                    code: `#!/bin/bash
+# =========================================
+# Skriptnamn: example.sh
+# Beskrivning: Exempelskript för tentan
+# =========================================
+
+# Aktivera strikt läge (rekommenderas)
+set -e  # Avbryt vid fel
+set -u  # Fel vid odefinierade variabler
+
+# Variabler
+NAME="Said"
+COUNT=5
+
+# Huvudlogik
+echo "Hej $NAME!"
+echo "Count: $COUNT"`
+                },
+                {
+                    type: "concept",
+                    title: "Variabler och quoting",
+                    explanation: `**Skapa variabler:**
+
+NAME="Said"          # Sträng
+COUNT=5              # Tal (egentligen också sträng)
+EMPTY=""             # Tom sträng
+
+**Läsa variabler:**
+
+echo $NAME           # Fungerar oftast
+echo "$NAME"         # Säkrare - behåller mellanslag
+echo '$NAME'         # Literal - skriver ut $NAME
+echo "\${NAME}"       # Explicit - för sammansättning
+
+**VIKTIGT om quoting:**
+| Typ | Effekt |
+|-----|--------|
+| "dubbla" | Variabelexpansion sker |
+| 'enkla' | Allt är literal text |
+| ingen | Farligt! Orddelning kan ske |`,
+                    pro_tip: "Använd ALLTID dubbla citattecken runt variabler: \"$VAR\" – det förhindrar orddelning och glob-expansion."
+                },
+                {
+                    type: "concept",
+                    title: "Speciella variabler",
+                    explanation: `**Argument till skriptet:**
+| Variabel | Betydelse |
+|----------|-----------|
+| $0 | Skriptets namn |
+| $1 | Första argumentet |
+| $2 | Andra argumentet |
+| $@ | Alla argument (som separata ord) |
+| $* | Alla argument (som en sträng) |
+| $# | Antal argument |
+
+**Exit status:**
+| Variabel | Betydelse |
+|----------|-----------|
+| $? | Exit-kod från senaste kommando (0 = OK) |
+| $$ | Processens PID |
+
+**Exempel:**
+#!/bin/bash
+echo "Skript: $0"
+echo "Första arg: $1"
+echo "Antal args: $#"
+echo "Alla args: $@"`
+                },
+                {
+                    type: "concept",
+                    title: "if-satser (villkor)",
+                    explanation: `**Grundläggande syntax:**
+
+if [ VILLKOR ]; then
+    KOMMANDON
+fi
+
+**Med else:**
+
+if [ VILLKOR ]; then
+    KOMMANDON
+else
+    ANDRA_KOMMANDON
+fi
+
+**Med elif:**
+
+if [ TEST1 ]; then
+    CMD1
+elif [ TEST2 ]; then
+    CMD2
+else
+    CMD3
+fi
+
+**[ ] vs [[ ]]:**
+- [ ] = POSIX-kompatibel, fungerar överallt
+- [[ ]] = Bash-specifik, stödjer regex och glob`
+                },
+                {
+                    type: "concept",
+                    title: "Testoperatorer",
+                    explanation: `**Filjämförelser:**
+| Operator | Betydelse |
+|----------|-----------|
+| -f fil | Är en vanlig fil |
+| -d dir | Är en katalog |
+| -e path | Existerar |
+| -r fil | Läsbar |
+| -w fil | Skrivbar |
+| -x fil | Körbar |
+
+**Strängjämförelser:**
+| Operator | Betydelse |
+|----------|-----------|
+| = eller == | Lika |
+| != | Olika |
+| -z "$str" | Tom sträng |
+| -n "$str" | Inte tom |
+
+**Numeriska jämförelser:**
+| Operator | Betydelse |
+|----------|-----------|
+| -eq | Equal (==) |
+| -ne | Not equal (!=) |
+| -lt | Less than (<) |
+| -le | Less or equal (<=) |
+| -gt | Greater than (>) |
+| -ge | Greater or equal (>=) |`
+                },
+                {
+                    type: "code",
+                    title: "if-exempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+# Kontrollera om fil finns
+
+if [ -f "/etc/passwd" ]; then
+    echo "Filen finns!"
+else
+    echo "Filen saknas!"
+fi
+
+# Numerisk jämförelse
+AGE=25
+if [ "$AGE" -ge 18 ]; then
+    echo "Myndig"
+else
+    echo "Omyndig"
+fi
+
+# Strängjämförelse
+NAME="Said"
+if [ "$NAME" = "Said" ]; then
+    echo "Hej Said!"
+fi
+
+# Kombinera villkor
+if [ -f "$1" ] && [ -r "$1" ]; then
+    echo "Filen finns och är läsbar"
+fi`
+                },
+                {
+                    type: "concept",
+                    title: "case-satser",
+                    explanation: `**Syntax:**
+
+case UTTRYCK in
+    MÖNSTER1)
+        KOMMANDON
+        ;;
+    MÖNSTER2)
+        KOMMANDON
+        ;;
+    *)
+        DEFAULT_KOMMANDON
+        ;;
+esac
+
+**Använd case när:**
+- Du har många alternativ
+- if/elif skulle bli för långt
+- Du vill matcha mönster (glob)`,
+                    pro_tip: "Glöm inte ;; efter varje block och * för default-fallet!"
+                },
+                {
+                    type: "code",
+                    title: "case-exempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+# Menyval
+
+echo "Välj alternativ:"
+echo "1) Skapa backup"
+echo "2) Visa loggar"
+echo "3) Avsluta"
+read -p "Val: " choice
+
+case "$choice" in
+    1)
+        echo "Skapar backup..."
+        tar -czvf backup.tar.gz /home
+        ;;
+    2)
+        echo "Visar loggar..."
+        tail -20 /var/log/syslog
+        ;;
+    3)
+        echo "Hejdå!"
+        exit 0
+        ;;
+    *)
+        echo "Ogiltigt val!"
+        exit 1
+        ;;
+esac`
+                },
+                {
+                    type: "concept",
+                    title: "for-loop",
+                    explanation: `**Syntax:**
+
+for VARIABEL in LISTA; do
+    KOMMANDON
+done
+
+**Olika sätt att skapa listan:**
+
+# Explicit lista
+for fruit in apple banana cherry; do
+    echo "$fruit"
+done
+
+# Filer
+for file in *.txt; do
+    echo "Fil: $file"
+done
+
+# Sekvens
+for i in {1..5}; do
+    echo "Nummer: $i"
+done
+
+# Command substitution
+for user in $(cat /etc/passwd | cut -d: -f1); do
+    echo "User: $user"
+done`
+                },
+                {
+                    type: "concept",
+                    title: "while och until",
+                    explanation: `**while – kör MEDAN villkoret är sant:**
+
+while [ VILLKOR ]; do
+    KOMMANDON
+done
+
+**until – kör TILLS villkoret blir sant:**
+
+until [ VILLKOR ]; do
+    KOMMANDON
+done
+
+**Skillnaden:**
+- while: Fortsätter så länge villkoret är SANT
+- until: Fortsätter så länge villkoret är FALSKT`
+                },
+                {
+                    type: "code",
+                    title: "Loop-exempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+# while-loop: Räkna till 5
+
+i=1
+while [ "$i" -le 5 ]; do
+    echo "Nummer: $i"
+    i=$((i + 1))
+done
+
+# until-loop: Vänta på fil
+until [ -f "/tmp/ready.txt" ]; do
+    echo "Väntar på fil..."
+    sleep 2
+done
+echo "Fil hittad!"
+
+# Oändlig loop med break
+while true; do
+    read -p "Skriv 'quit' för att avsluta: " input
+    if [ "$input" = "quit" ]; then
+        break
+    fi
+    echo "Du skrev: $input"
+done
+
+# continue - hoppa över iteration
+for i in {1..10}; do
+    if [ $((i % 2)) -eq 0 ]; then
+        continue  # Hoppa över jämna tal
+    fi
+    echo "Udda: $i"
+done`
+                },
+                {
+                    type: "concept",
+                    title: "Funktioner",
+                    explanation: `**Syntax:**
+
+# Sätt 1
+function_name() {
+    KOMMANDON
+}
+
+# Sätt 2
+function function_name {
+    KOMMANDON
+}
+
+**Argument i funktioner:**
+
+greet() {
+    echo "Hej $1!"  # $1 = första argumentet till funktionen
+}
+greet "Said"  # Output: Hej Said!
+
+**Return vs echo:**
+- return sätter exit-kod (0-255)
+- echo skriver ut värde som kan fångas`,
+                    pro_tip: "Funktioner måste definieras INNAN de anropas i skriptet!"
+                },
+                {
+                    type: "code",
+                    title: "Funktionsexempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+# Funktion som returnerar värde via echo
+
+get_date() {
+    date +%Y-%m-%d
+}
+
+# Funktion med argument
+backup_file() {
+    local file="$1"  # local = lokal variabel
+    local backup="\${file}.bak"
+    
+    if [ -f "$file" ]; then
+        cp "$file" "$backup"
+        echo "Backup skapad: $backup"
+        return 0
+    else
+        echo "Fil finns inte: $file"
+        return 1
+    fi
+}
+
+# Användning
+TODAY=$(get_date)
+echo "Dagens datum: $TODAY"
+
+backup_file "/etc/passwd"
+if [ $? -eq 0 ]; then
+    echo "Backup lyckades!"
+fi`
+                },
+                {
+                    type: "concept",
+                    title: "read – Användarinput",
+                    explanation: `**Grundsyntax:**
+
+read VARIABEL
+
+**Flaggor:**
+| Flagga | Effekt |
+|--------|--------|
+| -p "text" | Visa prompt |
+| -s | Tyst läge (lösenord) |
+| -n X | Läs max X tecken |
+| -t X | Timeout efter X sekunder |
+
+**Exempel:**
+
+read -p "Namn: " name
+read -s -p "Lösenord: " password
+echo  # Ny rad efter lösenord
+echo "Hej $name!"`
+                },
+                {
+                    type: "concept",
+                    title: "Arrays (listor)",
+                    explanation: `**Skapa array:**
+
+FRUITS=(apple banana cherry)
+# eller
+COLORS[0]="red"
+COLORS[1]="green"
+COLORS[2]="blue"
+
+**Läsa element:**
+
+echo "\${FRUITS[0]}"    # Första (apple)
+echo "\${FRUITS[2]}"    # Tredje (cherry)
+echo "\${FRUITS[@]}"    # Alla element
+echo "\${#FRUITS[@]}"   # Antal element (3)
+
+**Loopa genom array:**
+
+for fruit in "\${FRUITS[@]}"; do
+    echo "Frukt: $fruit"
+done`,
+                    pro_tip: "Arrays börjar på index 0, inte 1!"
+                },
+                {
+                    type: "concept",
+                    title: "Strängoperationer",
+                    explanation: `**Längd:**
+
+NAME="Said"
+echo \${#NAME}  # 4
+
+**Substring:**
+
+STRING="Hello World"
+echo \${STRING:0:5}   # Hello (från index 0, 5 tecken)
+echo \${STRING:6}     # World (från index 6 till slut)
+
+**Ta bort del av sträng:**
+
+FILE="dokument.tar.gz"
+echo \${FILE%.*}     # dokument.tar (ta bort sista ändelse)
+echo \${FILE%%.*}    # dokument (ta bort alla ändelser)
+
+PATH="/home/said/fil.txt"
+echo \${PATH##*/}    # fil.txt (ta bort sökväg)
+
+**Defaultvärden:**
+
+echo \${NAME:-"default"}  # Använd default om NAME är tom`
+                },
+                {
+                    type: "concept",
+                    title: "Exit codes och felsökning",
+                    explanation: `**Exit codes:**
+- 0 = Framgång
+- 1-255 = Fel (olika betydelser)
+
+# Avsluta med specifik kod
+exit 0  # OK
+exit 1  # Generellt fel
+
+# Kolla senaste exit-kod
+if [ $? -eq 0 ]; then
+    echo "Kommandot lyckades"
+fi
+
+**Felsökningsalternativ:**
+
+set -e  # Avbryt vid första fel
+set -u  # Fel vid odefinierade variabler
+set -x  # Skriv ut varje kommando (debug)
+set -o pipefail  # Fånga fel i pipes
+
+**Kombinera:**
+#!/bin/bash
+set -euo pipefail  # Strikt läge`,
+                    pro_tip: "set -x är guld värt för felsökning – det visar exakt vad som körs!"
+                },
+                {
+                    type: "code",
+                    title: "Komplett skriptexempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+# =========================================
+# backup.sh - Automatisk backup
+# VG-nivå exempelskript
+# =========================================
+set -euo pipefail
+
+# Konfiguration
+BACKUP_DIR="/tmp/backups"
+SOURCE_DIR="\${1:-/home}"
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_FILE="$BACKUP_DIR/backup_$DATE.tar.gz"
+
+# Funktion: Logga meddelanden
+log() {
+    echo "[$(date +%H:%M:%S)] $1"
+}
+
+# Funktion: Skapa backup
+create_backup() {
+    local source="$1"
+    local dest="$2"
+    
+    if [ ! -d "$source" ]; then
+        log "FEL: Källkatalog finns inte: $source"
+        return 1
+    fi
+    
+    log "Skapar backup av $source..."
+    tar -czvf "$dest" "$source" 2>/dev/null
+    
+    if [ $? -eq 0 ]; then
+        log "Backup klar: $dest"
+        return 0
+    else
+        log "FEL: Backup misslyckades!"
+        return 1
+    fi
+}
+
+# Huvudprogram
+main() {
+    log "=== Backup startar ==="
+    mkdir -p "$BACKUP_DIR"
+    
+    if create_backup "$SOURCE_DIR" "$BACKUP_FILE"; then
+        log "=== Backup slutförd ==="
+        exit 0
+    else
+        log "=== Backup misslyckades ==="
+        exit 1
+    fi
+}
+
+main`
+                },
+                {
+                    type: "concept",
+                    title: "Vanliga tentafrågor Bash",
+                    explanation: `**Typiska frågor:**
+
+1. **Vad gör shebang?**
+   → Anger vilken tolk som kör skriptet
+
+2. **Skillnad [ ] vs [[ ]]?**
+   → [ ] POSIX, [[ ]] Bash-specifik med extra features
+
+3. **Vad gör set -e?**
+   → Avbryter skriptet vid första fel
+
+4. **Skillnad $@ vs $*?**
+   → $@ behåller argument som separata, $* slår ihop dem
+
+5. **Hur fångar du output från ett kommando?**
+   → result=$(command) eller result=\`command\`
+
+6. **Vad betyder exit 0 vs exit 1?**
+   → 0 = framgång, 1 = fel`
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har slutfört KM9: Bash-skriptning! 🚀 Nu har du VG-material!"
+                }
+            ]
         }
     ]
 };
