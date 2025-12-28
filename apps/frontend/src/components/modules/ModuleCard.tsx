@@ -61,6 +61,8 @@ export interface ModuleCardProps {
    ============================================================================ */
 
 const moduleColors: Record<string, string> = {
+    // DOE25 Tenta - Prioriterad tentaplugg!
+    "doe25-tenta": "#EF4444",
     // Linux 24/7 - Vår första modul!
     "linux-247": "#FCC624",
     "environment-tooling-setup": "#6366f1",

@@ -629,6 +629,12 @@ export default function ModulesPage() {
                             const excludedSlugs = ["docker-fundamentals", "docker-advanced-production"]
                             if (excludedSlugs.includes(slug)) return false
 
+                            // Exclude backend tenta/tentaplugg modules - we use DOE25 instead
+                            if (name.includes("tenta") || name.includes("tentaplugg") || 
+                                slug.includes("tenta") || slug.includes("tentaplugg")) {
+                                return false
+                            }
+
                             const devopsKeywords = [
                                 "linux", "docker", "kubernetes", "k8s", "cicd", "ci-cd", "ci/cd",
                                 "terraform", "ansible", "aws", "cloud", "git", "shell", "bash",
@@ -677,7 +683,13 @@ export default function ModulesPage() {
                         })
                 )
 
-                setModules(modulesWithTasks)
+                // ALWAYS prepend DOE25 Tenta as first module
+                const doe25Module = MOCK_MODULES.find(m => m.id === "doe25-tenta")
+                if (doe25Module) {
+                    setModules([doe25Module, ...modulesWithTasks])
+                } else {
+                    setModules(modulesWithTasks)
+                }
             } else {
                 // Fallback to mock data when backend unavailable
                 console.log("[Modules] Using mock data - backend unavailable or empty")
