@@ -304,11 +304,6 @@ export function CosmicLockedOverlay({
                     </Link>
                 </div>
 
-                {/* Bottom text */}
-                <p className="text-zinc-500 text-xs text-center mt-6">
-                    Gå med 10,000+ användare som lär sig DevOps
-                </p>
-
                 {/* Decorative rocket */}
                 <motion.div
                     className="absolute -top-4 -right-4"
