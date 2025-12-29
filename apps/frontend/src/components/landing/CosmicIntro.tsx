@@ -71,10 +71,10 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                             style={{
                                 border: `${1.5 + i * 0.4}px solid`,
                                 borderColor: i % 3 === 0
-                                    ? "rgba(255, 215, 0, 0.7)"  // Gold
+                                    ? "rgba(139, 92, 246, 0.6)"  // Purple
                                     : i % 3 === 1
-                                    ? "rgba(168, 85, 247, 0.6)"  // Purple
-                                    : "rgba(255, 255, 255, 0.4)", // White
+                                    ? "rgba(99, 102, 241, 0.5)"  // Indigo
+                                    : "rgba(167, 139, 250, 0.4)", // Light purple
                             }}
                             initial={{
                                 width: 0,
@@ -102,10 +102,10 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                             style={{
                                 width: "3px",
                                 height: "0px",
-                                background: `linear-gradient(to top, transparent, ${i % 4 === 0 ? "rgba(255, 215, 0, 0.9)" :
-                                        i % 4 === 1 ? "rgba(168, 85, 247, 0.8)" :
-                                        i % 4 === 2 ? "rgba(255, 180, 0, 0.7)" :
-                                            "rgba(236, 72, 153, 0.6)"
+                                background: `linear-gradient(to top, transparent, ${i % 4 === 0 ? "rgba(139, 92, 246, 0.8)" :
+                                        i % 4 === 1 ? "rgba(99, 102, 241, 0.7)" :
+                                        i % 4 === 2 ? "rgba(167, 139, 250, 0.6)" :
+                                            "rgba(196, 181, 253, 0.5)"
                                     }, transparent)`,
                                 transform: `rotate(${i * 22.5}deg)`,
                                 transformOrigin: "center bottom",
@@ -148,11 +148,11 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                         />
                     ))}
 
-                    {/* Central core - outer glow - GOLD/PURPLE */}
+                    {/* Central core - outer glow - PURPLE/VIOLET */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(255, 215, 0, 0.5) 0%, rgba(168, 85, 247, 0.3) 40%, transparent 70%)",
+                            background: "radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(99, 102, 241, 0.25) 40%, transparent 70%)",
                             filter: "blur(50px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
@@ -168,11 +168,11 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                         }}
                     />
 
-                    {/* Central core - mid glow - WARM GOLD */}
+                    {/* Central core - mid glow - SOFT VIOLET */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(255, 200, 50, 0.6) 0%, rgba(255, 150, 0, 0.4) 50%, transparent 70%)",
+                            background: "radial-gradient(circle, rgba(167, 139, 250, 0.5) 0%, rgba(139, 92, 246, 0.35) 50%, transparent 70%)",
                             filter: "blur(30px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
@@ -188,12 +188,12 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                         }}
                     />
 
-                    {/* Central core - inner bright - WHITE HOT CENTER */}
+                    {/* Central core - inner bright - SOFT WHITE/PURPLE CENTER */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 240, 200, 0.95) 30%, rgba(255, 200, 100, 0.7) 60%, transparent 80%)",
-                            boxShadow: "0 0 80px rgba(255, 255, 255, 0.9), 0 0 150px rgba(255, 215, 0, 0.7), 0 0 250px rgba(255, 150, 0, 0.5)",
+                            background: "radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(224, 231, 255, 0.85) 30%, rgba(167, 139, 250, 0.6) 60%, transparent 80%)",
+                            boxShadow: "0 0 60px rgba(255, 255, 255, 0.6), 0 0 120px rgba(139, 92, 246, 0.5), 0 0 200px rgba(99, 102, 241, 0.4)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0, scale: 0 }}
                         animate={{
@@ -213,8 +213,8 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "linear-gradient(135deg, #fff 0%, #ffd700 50%, #ff8c00 100%)",
-                            boxShadow: "0 0 50px #fff, 0 0 100px rgba(255, 215, 0, 1), 0 0 150px rgba(255, 150, 0, 0.9)",
+                            background: "linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #8b5cf6 100%)",
+                            boxShadow: "0 0 40px rgba(255, 255, 255, 0.7), 0 0 80px rgba(139, 92, 246, 0.8), 0 0 120px rgba(99, 102, 241, 0.6)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
                         animate={{
@@ -243,17 +243,17 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                         />
                     </motion.div>
 
-                    {/* Particle dust explosion - more particles, golden/purple mix */}
+                    {/* Particle dust explosion - purple/violet mix */}
                     {[...Array(60)].map((_, i) => {
                         const angle = (i / 60) * Math.PI * 2
                         const distance = 350 + Math.random() * 600
                         const size = 2 + Math.random() * 5
                         const colors = [
-                            "rgba(255, 215, 0, 0.95)",   // Gold
-                            "rgba(255, 180, 0, 0.9)",   // Orange gold
-                            "rgba(168, 85, 247, 0.85)", // Purple
-                            "rgba(255, 255, 255, 0.95)", // White
-                            "rgba(255, 150, 50, 0.8)",  // Warm orange
+                            "rgba(139, 92, 246, 0.9)",   // Purple
+                            "rgba(167, 139, 250, 0.85)", // Light purple
+                            "rgba(99, 102, 241, 0.8)",   // Indigo
+                            "rgba(224, 231, 255, 0.9)",  // Soft white
+                            "rgba(196, 181, 253, 0.85)", // Lavender
                         ]
 
                         return (
@@ -287,7 +287,7 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                         )
                     })}
 
-                    {/* Stardust particles - slower, ambient - golden dust */}
+                    {/* Stardust particles - slower, ambient - purple dust */}
                     {[...Array(30)].map((_, i) => {
                         const angle = Math.random() * Math.PI * 2
                         const distance = 100 + Math.random() * 700
@@ -297,10 +297,10 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 key={`stardust-${i}`}
                                 className="absolute w-1 h-1 rounded-full"
                                 style={{
-                                    background: i % 2 === 0 ? "#ffd700" : "#fff",
+                                    background: i % 2 === 0 ? "#a78bfa" : "#e0e7ff",
                                     boxShadow: i % 2 === 0 
-                                        ? "0 0 8px rgba(255, 215, 0, 0.9)"
-                                        : "0 0 6px rgba(255, 255, 255, 0.8)",
+                                        ? "0 0 8px rgba(167, 139, 250, 0.8)"
+                                        : "0 0 6px rgba(224, 231, 255, 0.7)",
                                 }}
                                 initial={{
                                     x: Math.cos(angle) * (distance * 0.3),
@@ -342,9 +342,9 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                             className="relative"
                             animate={{
                                 textShadow: [
-                                    "0 0 20px rgba(255, 215, 0, 0.5)",
-                                    "0 0 40px rgba(255, 215, 0, 0.8)",
-                                    "0 0 20px rgba(255, 215, 0, 0.5)",
+                                    "0 0 15px rgba(139, 92, 246, 0.4)",
+                                    "0 0 30px rgba(139, 92, 246, 0.6)",
+                                    "0 0 15px rgba(139, 92, 246, 0.4)",
                                 ]
                             }}
                             transition={{
@@ -353,26 +353,26 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 ease: "easeInOut",
                             }}
                         >
-                            <span 
+                            <span
                                 className="text-6xl md:text-7xl font-black tracking-tight"
                                 style={{
-                                    background: "linear-gradient(135deg, #fff 0%, #ffd700 30%, #ffb800 50%, #ffd700 70%, #fff 100%)",
+                                    background: "linear-gradient(135deg, #e0e7ff 0%, #a78bfa 30%, #8b5cf6 50%, #a78bfa 70%, #e0e7ff 100%)",
                                     backgroundClip: "text",
                                     WebkitBackgroundClip: "text",
                                     color: "transparent",
-                                    filter: "drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 60px rgba(255, 180, 0, 0.5))",
+                                    filter: "drop-shadow(0 0 25px rgba(139, 92, 246, 0.7)) drop-shadow(0 0 50px rgba(124, 58, 237, 0.4))",
                                 }}
                             >
-                                GinoNivo
+                                GinoNova
                             </span>
                         </motion.div>
-                        
+
                         {/* Subtle tagline */}
                         <motion.span
                             className="text-sm md:text-base font-medium tracking-[0.3em] uppercase"
                             style={{
-                                color: "rgba(255, 255, 255, 0.7)",
-                                textShadow: "0 0 20px rgba(255, 215, 0, 0.4)",
+                                color: "rgba(200, 180, 255, 0.8)",
+                                textShadow: "0 0 15px rgba(139, 92, 246, 0.3)",
                             }}
                             initial={{ opacity: 0, y: 10 }}
                             animate={{

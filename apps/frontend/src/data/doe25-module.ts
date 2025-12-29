@@ -1598,7 +1598,7 @@ get_date() {
 backup_file() {
     local file="$1"  # local = lokal variabel
     local backup="\${file}.bak"
-    
+
     if [ -f "$file" ]; then
         cp "$file" "$backup"
         echo "Backup skapad: $backup"
@@ -1746,15 +1746,15 @@ log() {
 create_backup() {
     local source="$1"
     local dest="$2"
-    
+
     if [ ! -d "$source" ]; then
         log "FEL: Källkatalog finns inte: $source"
         return 1
     fi
-    
+
     log "Skapar backup av $source..."
     tar -czvf "$dest" "$source" 2>/dev/null
-    
+
     if [ $? -eq 0 ]; then
         log "Backup klar: $dest"
         return 0
@@ -1768,7 +1768,7 @@ create_backup() {
 main() {
     log "=== Backup startar ==="
     mkdir -p "$BACKUP_DIR"
-    
+
     if create_backup "$SOURCE_DIR" "$BACKUP_FILE"; then
         log "=== Backup slutförd ==="
         exit 0
