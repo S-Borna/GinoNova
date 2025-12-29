@@ -6,13 +6,15 @@
  * ============================================================================
  *
  * A mesmerizing intro animation that plays once when the landing page loads.
+ * Premium GinoNivo brand reveal with dramatic explosion effect.
  *
  * Sequence:
- * 1. Pure darkness (0-0.3s)
- * 2. Central core ignites with pulsating energy (0.3-1s)
- * 3. Light rings expand outward like planetary rings (1-2s)
+ * 1. Pure darkness with subtle pulse (0-0.5s)
+ * 2. Central core ignites with golden/purple energy (0.5-1.2s)
+ * 3. Shockwave rings expand outward (1-2s)
  * 4. Energy beams radiate from center (1.5-2.5s)
- * 5. Graceful fade to landing page (2.5-3.5s)
+ * 5. GinoNivo logo reveal with glow (2-3s)
+ * 6. Graceful fade to landing page (3-4s)
  *
  * Inspired by: Bose, Apple, luxury brand intros
  *
@@ -27,12 +29,12 @@ interface CosmicIntroProps {
     duration?: number // Total duration in seconds
 }
 
-export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
+export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
     const [phase, setPhase] = React.useState<"ignite" | "expand" | "fade">("ignite")
 
     React.useEffect(() => {
-        // Phase transitions
-        const igniteTimer = setTimeout(() => setPhase("expand"), 800)
+        // Phase transitions - slightly longer for more dramatic effect
+        const igniteTimer = setTimeout(() => setPhase("expand"), 1000)
         const fadeTimer = setTimeout(() => setPhase("fade"), duration * 1000 - 1000)
         const completeTimer = setTimeout(onComplete, duration * 1000)
 
@@ -62,15 +64,17 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                     />
 
                     {/* Expanding ring waves - outer to inner stagger */}
-                    {[...Array(8)].map((_, i) => (
+                    {[...Array(10)].map((_, i) => (
                         <motion.div
                             key={`ring-${i}`}
                             className="absolute rounded-full"
                             style={{
-                                border: `${1 + i * 0.3}px solid`,
-                                borderColor: i % 2 === 0
-                                    ? "rgba(139, 92, 246, 0.6)"
-                                    : "rgba(34, 211, 238, 0.4)",
+                                border: `${1.5 + i * 0.4}px solid`,
+                                borderColor: i % 3 === 0
+                                    ? "rgba(255, 215, 0, 0.7)"  // Gold
+                                    : i % 3 === 1
+                                    ? "rgba(168, 85, 247, 0.6)"  // Purple
+                                    : "rgba(255, 255, 255, 0.4)", // White
                             }}
                             initial={{
                                 width: 0,
@@ -78,41 +82,42 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                 opacity: 0
                             }}
                             animate={{
-                                width: [0, 200 + i * 180, 400 + i * 300],
-                                height: [0, 200 + i * 180, 400 + i * 300],
-                                opacity: [0, 0.8, 0],
+                                width: [0, 200 + i * 200, 500 + i * 350],
+                                height: [0, 200 + i * 200, 500 + i * 350],
+                                opacity: [0, 0.9, 0],
                             }}
                             transition={{
-                                duration: 2.5,
-                                delay: 0.5 + i * 0.15,
+                                duration: 2.8,
+                                delay: 0.6 + i * 0.12,
                                 ease: [0.16, 1, 0.3, 1],
                             }}
                         />
                     ))}
 
                     {/* Energy beams radiating outward */}
-                    {[...Array(12)].map((_, i) => (
+                    {[...Array(16)].map((_, i) => (
                         <motion.div
                             key={`beam-${i}`}
                             className="absolute origin-center"
                             style={{
-                                width: "2px",
+                                width: "3px",
                                 height: "0px",
-                                background: `linear-gradient(to top, transparent, ${i % 3 === 0 ? "rgba(168, 85, 247, 0.8)" :
-                                        i % 3 === 1 ? "rgba(34, 211, 238, 0.7)" :
+                                background: `linear-gradient(to top, transparent, ${i % 4 === 0 ? "rgba(255, 215, 0, 0.9)" :
+                                        i % 4 === 1 ? "rgba(168, 85, 247, 0.8)" :
+                                        i % 4 === 2 ? "rgba(255, 180, 0, 0.7)" :
                                             "rgba(236, 72, 153, 0.6)"
                                     }, transparent)`,
-                                transform: `rotate(${i * 30}deg)`,
+                                transform: `rotate(${i * 22.5}deg)`,
                                 transformOrigin: "center bottom",
                             }}
                             initial={{ height: 0, opacity: 0 }}
                             animate={{
-                                height: ["0px", "600px", "1200px"],
+                                height: ["0px", "800px", "1500px"],
                                 opacity: [0, 1, 0],
                             }}
                             transition={{
-                                duration: 2,
-                                delay: 0.8 + i * 0.05,
+                                duration: 2.2,
+                                delay: 0.9 + i * 0.04,
                                 ease: [0.16, 1, 0.3, 1],
                             }}
                         />
@@ -143,59 +148,59 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                         />
                     ))}
 
-                    {/* Central core - outer glow */}
+                    {/* Central core - outer glow - GOLD/PURPLE */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(168, 85, 247, 0.2) 40%, transparent 70%)",
-                            filter: "blur(40px)",
+                            background: "radial-gradient(circle, rgba(255, 215, 0, 0.5) 0%, rgba(168, 85, 247, 0.3) 40%, transparent 70%)",
+                            filter: "blur(50px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
                         animate={{
-                            width: [0, 400, 600, 300],
-                            height: [0, 400, 600, 300],
-                            opacity: [0, 0.8, 1, 0.6],
+                            width: [0, 500, 700, 400],
+                            height: [0, 500, 700, 400],
+                            opacity: [0, 0.9, 1, 0.7],
                         }}
                         transition={{
-                            duration: 2.5,
+                            duration: 2.8,
                             delay: 0.2,
                             ease: [0.16, 1, 0.3, 1],
                         }}
                     />
 
-                    {/* Central core - mid glow */}
+                    {/* Central core - mid glow - WARM GOLD */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(34, 211, 238, 0.5) 0%, rgba(99, 102, 241, 0.3) 50%, transparent 70%)",
-                            filter: "blur(25px)",
+                            background: "radial-gradient(circle, rgba(255, 200, 50, 0.6) 0%, rgba(255, 150, 0, 0.4) 50%, transparent 70%)",
+                            filter: "blur(30px)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
                         animate={{
-                            width: [0, 200, 300, 150],
-                            height: [0, 200, 300, 150],
-                            opacity: [0, 1, 1, 0.7],
+                            width: [0, 250, 350, 180],
+                            height: [0, 250, 350, 180],
+                            opacity: [0, 1, 1, 0.8],
                         }}
                         transition={{
-                            duration: 2.2,
+                            duration: 2.5,
                             delay: 0.3,
                             ease: [0.16, 1, 0.3, 1],
                         }}
                     />
 
-                    {/* Central core - inner bright */}
+                    {/* Central core - inner bright - WHITE HOT CENTER */}
                     <motion.div
                         className="absolute rounded-full"
                         style={{
-                            background: "radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(200, 180, 255, 0.9) 30%, rgba(139, 92, 246, 0.6) 60%, transparent 80%)",
-                            boxShadow: "0 0 60px rgba(255, 255, 255, 0.8), 0 0 120px rgba(139, 92, 246, 0.6), 0 0 200px rgba(168, 85, 247, 0.4)",
+                            background: "radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 240, 200, 0.95) 30%, rgba(255, 200, 100, 0.7) 60%, transparent 80%)",
+                            boxShadow: "0 0 80px rgba(255, 255, 255, 0.9), 0 0 150px rgba(255, 215, 0, 0.7), 0 0 250px rgba(255, 150, 0, 0.5)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0, scale: 0 }}
                         animate={{
-                            width: [0, 80, 120, 60],
-                            height: [0, 80, 120, 60],
-                            opacity: [0, 1, 1, 0.9],
-                            scale: [0, 1.2, 1, 0.8],
+                            width: [0, 100, 150, 80],
+                            height: [0, 100, 150, 80],
+                            opacity: [0, 1, 1, 0.95],
+                            scale: [0, 1.3, 1.1, 0.9],
                         }}
                         transition={{
                             duration: 2,
@@ -206,47 +211,49 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
 
                     {/* Pulsating core center - the ignition point */}
                     <motion.div
-                        className="absolute rounded-full bg-white"
+                        className="absolute rounded-full"
                         style={{
-                            boxShadow: "0 0 40px #fff, 0 0 80px rgba(168, 85, 247, 1), 0 0 120px rgba(139, 92, 246, 0.8)",
+                            background: "linear-gradient(135deg, #fff 0%, #ffd700 50%, #ff8c00 100%)",
+                            boxShadow: "0 0 50px #fff, 0 0 100px rgba(255, 215, 0, 1), 0 0 150px rgba(255, 150, 0, 0.9)",
                         }}
                         initial={{ width: 0, height: 0, opacity: 0 }}
                         animate={{
-                            width: [0, 30, 50, 20],
-                            height: [0, 30, 50, 20],
+                            width: [0, 40, 60, 25],
+                            height: [0, 40, 60, 25],
                             opacity: [0, 1, 1, 1],
                         }}
                         transition={{
-                            duration: 1.5,
+                            duration: 1.8,
                             delay: 0.3,
                             ease: [0.16, 1, 0.3, 1],
                         }}
                     >
-                        {/* Inner pulse */}
+                        {/* Inner pulse - breathing effect */}
                         <motion.div
                             className="absolute inset-0 rounded-full bg-white"
                             animate={{
-                                scale: [1, 1.5, 1],
-                                opacity: [1, 0.5, 1],
+                                scale: [1, 1.8, 1],
+                                opacity: [1, 0.3, 1],
                             }}
                             transition={{
-                                duration: 0.8,
+                                duration: 0.6,
                                 repeat: Infinity,
                                 ease: "easeInOut",
                             }}
                         />
                     </motion.div>
 
-                    {/* Particle dust explosion */}
-                    {[...Array(40)].map((_, i) => {
-                        const angle = (i / 40) * Math.PI * 2
-                        const distance = 300 + Math.random() * 500
-                        const size = 2 + Math.random() * 4
+                    {/* Particle dust explosion - more particles, golden/purple mix */}
+                    {[...Array(60)].map((_, i) => {
+                        const angle = (i / 60) * Math.PI * 2
+                        const distance = 350 + Math.random() * 600
+                        const size = 2 + Math.random() * 5
                         const colors = [
-                            "rgba(168, 85, 247, 0.9)",
-                            "rgba(34, 211, 238, 0.8)",
-                            "rgba(236, 72, 153, 0.7)",
-                            "rgba(255, 255, 255, 0.9)",
+                            "rgba(255, 215, 0, 0.95)",   // Gold
+                            "rgba(255, 180, 0, 0.9)",   // Orange gold
+                            "rgba(168, 85, 247, 0.85)", // Purple
+                            "rgba(255, 255, 255, 0.95)", // White
+                            "rgba(255, 150, 50, 0.8)",  // Warm orange
                         ]
 
                         return (
@@ -257,7 +264,7 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                     width: size,
                                     height: size,
                                     background: colors[i % colors.length],
-                                    boxShadow: `0 0 ${size * 2}px ${colors[i % colors.length]}`,
+                                    boxShadow: `0 0 ${size * 3}px ${colors[i % colors.length]}`,
                                 }}
                                 initial={{
                                     x: 0,
@@ -269,28 +276,31 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                     x: Math.cos(angle) * distance,
                                     y: Math.sin(angle) * distance,
                                     opacity: [0, 1, 0],
-                                    scale: [0, 1.5, 0],
+                                    scale: [0, 2, 0],
                                 }}
                                 transition={{
-                                    duration: 2,
-                                    delay: 0.8 + Math.random() * 0.5,
+                                    duration: 2.5,
+                                    delay: 0.9 + Math.random() * 0.6,
                                     ease: [0.16, 1, 0.3, 1],
                                 }}
                             />
                         )
                     })}
 
-                    {/* Stardust particles - slower, ambient */}
-                    {[...Array(20)].map((_, i) => {
+                    {/* Stardust particles - slower, ambient - golden dust */}
+                    {[...Array(30)].map((_, i) => {
                         const angle = Math.random() * Math.PI * 2
-                        const distance = 100 + Math.random() * 600
+                        const distance = 100 + Math.random() * 700
 
                         return (
                             <motion.div
                                 key={`stardust-${i}`}
-                                className="absolute w-1 h-1 rounded-full bg-white"
+                                className="absolute w-1 h-1 rounded-full"
                                 style={{
-                                    boxShadow: "0 0 6px rgba(255, 255, 255, 0.8)",
+                                    background: i % 2 === 0 ? "#ffd700" : "#fff",
+                                    boxShadow: i % 2 === 0 
+                                        ? "0 0 8px rgba(255, 215, 0, 0.9)"
+                                        : "0 0 6px rgba(255, 255, 255, 0.8)",
                                 }}
                                 initial={{
                                     x: Math.cos(angle) * (distance * 0.3),
@@ -300,42 +310,84 @@ export function CosmicIntro({ onComplete, duration = 3.5 }: CosmicIntroProps) {
                                 animate={{
                                     x: Math.cos(angle) * distance,
                                     y: Math.sin(angle) * distance,
-                                    opacity: [0, 0.8, 0],
+                                    opacity: [0, 0.9, 0],
                                 }}
                                 transition={{
-                                    duration: 3,
-                                    delay: 0.5 + i * 0.1,
+                                    duration: 3.5,
+                                    delay: 0.6 + i * 0.08,
                                     ease: "easeOut",
                                 }}
                             />
                         )
                     })}
 
-                    {/* Logo/brand reveal - optional DevOpsHub text */}
+                    {/* ===== GINONIVO LOGO REVEAL ===== */}
                     <motion.div
-                        className="absolute flex items-center gap-3"
-                        initial={{ opacity: 0, scale: 0.8, y: 100 }}
+                        className="absolute flex flex-col items-center gap-2"
+                        initial={{ opacity: 0, scale: 0.5, y: 80 }}
                         animate={{
                             opacity: [0, 0, 1, 1, 0],
-                            scale: [0.8, 0.8, 1, 1, 0.9],
-                            y: [100, 100, 0, 0, -20],
+                            scale: [0.5, 0.5, 1.1, 1, 0.95],
+                            y: [80, 80, 0, 0, -10],
                         }}
                         transition={{
-                            duration: 3,
-                            delay: 0.5,
-                            times: [0, 0.3, 0.5, 0.8, 1],
+                            duration: 3.5,
+                            delay: 0.6,
+                            times: [0, 0.25, 0.45, 0.85, 1],
                             ease: [0.16, 1, 0.3, 1],
                         }}
                     >
-                        <span className="text-4xl font-black tracking-tight">
-                            <span className="text-white">DevOps</span>
-                            <span
-                                className="bg-gradient-to-r from-purple-400 via-violet-400 to-cyan-400 bg-clip-text text-transparent"
-                                style={{ filter: "drop-shadow(0 0 20px rgba(139, 92, 246, 0.8))" }}
+                        {/* Main Logo Text */}
+                        <motion.div
+                            className="relative"
+                            animate={{
+                                textShadow: [
+                                    "0 0 20px rgba(255, 215, 0, 0.5)",
+                                    "0 0 40px rgba(255, 215, 0, 0.8)",
+                                    "0 0 20px rgba(255, 215, 0, 0.5)",
+                                ]
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
+                        >
+                            <span 
+                                className="text-6xl md:text-7xl font-black tracking-tight"
+                                style={{
+                                    background: "linear-gradient(135deg, #fff 0%, #ffd700 30%, #ffb800 50%, #ffd700 70%, #fff 100%)",
+                                    backgroundClip: "text",
+                                    WebkitBackgroundClip: "text",
+                                    color: "transparent",
+                                    filter: "drop-shadow(0 0 30px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 60px rgba(255, 180, 0, 0.5))",
+                                }}
                             >
-                                Hub
+                                GinoNivo
                             </span>
-                        </span>
+                        </motion.div>
+                        
+                        {/* Subtle tagline */}
+                        <motion.span
+                            className="text-sm md:text-base font-medium tracking-[0.3em] uppercase"
+                            style={{
+                                color: "rgba(255, 255, 255, 0.7)",
+                                textShadow: "0 0 20px rgba(255, 215, 0, 0.4)",
+                            }}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{
+                                opacity: [0, 0, 1, 1, 0],
+                                y: [10, 10, 0, 0, -5],
+                            }}
+                            transition={{
+                                duration: 3.5,
+                                delay: 0.8,
+                                times: [0, 0.3, 0.5, 0.85, 1],
+                                ease: "easeOut",
+                            }}
+                        >
+                            Master the Cloud
+                        </motion.span>
                     </motion.div>
                 </motion.div>
             ) : null}

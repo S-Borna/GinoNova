@@ -37,9 +37,9 @@ export default function LandingPage() {
 
     return (
         <>
-            {/* Cosmic Big Bang Intro */}
+            {/* Cosmic Big Bang Intro - GinoNivo Reveal */}
             {showIntro && (
-                <CosmicIntro onComplete={handleIntroComplete} duration={3.5} />
+                <CosmicIntro onComplete={handleIntroComplete} duration={4} />
             )}
 
             {/* Main Landing Page */}
