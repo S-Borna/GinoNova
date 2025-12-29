@@ -45,16 +45,17 @@ class FeatureAccessResponse(BaseModel):
 
 # === Access Control ===
 
-QUIZ_ACCESS_USERS = {
-    "said.ebadi@hotmail.com",
-}
+# Premium = All logged-in users have access
+# No whitelist needed anymore
 
 
 def check_quiz_access(user: UserPublic) -> bool:
-    """Check if user has access to AI Quiz feature"""
-    if hasattr(user, 'is_admin') and user.is_admin:
-        return True
-    return user.email.lower() in QUIZ_ACCESS_USERS
+    """Check if user has access to AI Quiz feature.
+    
+    Premium = logged in. All authenticated users have access.
+    """
+    # All logged-in users have access (premium = inlogg)
+    return True
 
 
 # === Endpoints ===
