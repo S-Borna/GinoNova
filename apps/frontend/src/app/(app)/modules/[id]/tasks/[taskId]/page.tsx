@@ -62,7 +62,7 @@ import {
 import { DOE25_MODULE, DOE25Task, getTaskById } from "@/data/doe25-module"
 
 /* ============================================================================
-   DOE25 CONTENT GENERATOR
+   DOE25 CONTENT GENERATOR - EPIC EDITION
    ============================================================================ */
 
 function generateDOE25Content(task: DOE25Task): string {
@@ -108,6 +108,124 @@ function generateDOE25Content(task: DOE25Task): string {
             case "checkpoint":
                 if (block.message) {
                     content += `---\n\n✅ **${block.message}**\n\n`
+                }
+                break
+
+            // === NEW INTERACTIVE TYPES ===
+            
+            case "scenario":
+                content += `\n---\n\n`
+                if (block.scenario_title) {
+                    content += `## ${block.scenario_title}\n\n`
+                }
+                if (block.scenario_context) {
+                    content += `> 📋 **Scenario:** ${block.scenario_context}\n\n`
+                }
+                if (block.scenario_symptoms && block.scenario_symptoms.length > 0) {
+                    content += `**Symptom:**\n`
+                    for (const symptom of block.scenario_symptoms) {
+                        content += `- ❌ ${symptom}\n`
+                    }
+                    content += `\n`
+                }
+                if (block.scenario_solution) {
+                    content += `<details>\n<summary>💡 Visa lösning</summary>\n\n${block.scenario_solution}\n\n</details>\n\n`
+                }
+                break
+
+            case "quiz":
+                content += `\n---\n\n`
+                if (block.title) {
+                    content += `### ${block.title}\n\n`
+                }
+                if (block.question) {
+                    content += `**${block.question}**\n\n`
+                }
+                if (block.options && block.options.length > 0) {
+                    content += `| Val | Alternativ |\n|-----|------------|\n`
+                    block.options.forEach((opt, i) => {
+                        const letter = String.fromCharCode(65 + i)
+                        content += `| ${letter} | ${opt.text} |\n`
+                    })
+                    content += `\n`
+                    // Add correct answer in details
+                    const correctIndex = block.options.findIndex(o => o.correct)
+                    if (correctIndex !== -1) {
+                        const correctLetter = String.fromCharCode(65 + correctIndex)
+                        const correctOpt = block.options[correctIndex]
+                        content += `<details>\n<summary>✅ Visa rätt svar</summary>\n\n**${correctLetter}** är rätt! ${correctOpt.feedback || ''}\n\n</details>\n\n`
+                    }
+                }
+                if (block.hint) {
+                    content += `> 💭 **Ledtråd:** ${block.hint}\n\n`
+                }
+                break
+
+            case "challenge":
+                content += `\n---\n\n`
+                if (block.title) {
+                    content += `### ${block.title}\n\n`
+                }
+                if (block.challenge_task) {
+                    content += `**Uppgift:** ${block.challenge_task}\n\n`
+                }
+                if (block.challenge_commands && block.challenge_commands.length > 0) {
+                    content += `<details>\n<summary>🔧 Visa lösningskommandon</summary>\n\n\`\`\`bash\n`
+                    for (const cmd of block.challenge_commands) {
+                        content += `${cmd}\n`
+                    }
+                    content += `\`\`\`\n\n</details>\n\n`
+                }
+                if (block.expected_output) {
+                    content += `**Förväntat resultat:** \`${block.expected_output}\`\n\n`
+                }
+                break
+
+            case "diagram":
+                if (block.title) {
+                    content += `### ${block.title}\n\n`
+                }
+                if (block.diagram) {
+                    content += `\`\`\`\n${block.diagram}\n\`\`\`\n\n`
+                }
+                if (block.diagram_caption) {
+                    content += `*${block.diagram_caption}*\n\n`
+                }
+                break
+
+            case "warning":
+                content += `\n`
+                const warningIcon = block.warning_level === 'danger' ? '🚨' : block.warning_level === 'warning' ? '⚠️' : 'ℹ️'
+                if (block.title) {
+                    content += `> ${warningIcon} **${block.title}**\n>\n`
+                }
+                if (block.explanation) {
+                    const lines = block.explanation.split('\n')
+                    for (const line of lines) {
+                        content += `> ${line}\n`
+                    }
+                }
+                content += `\n`
+                break
+
+            case "comparison":
+                if (block.title) {
+                    content += `### ${block.title}\n\n`
+                }
+                if (block.compare_items && block.compare_items.length > 0) {
+                    for (const item of block.compare_items) {
+                        content += `**${item.name}**\n`
+                        if (item.pros.length > 0) {
+                            content += `- ✅ Fördelar: ${item.pros.join(', ')}\n`
+                        }
+                        if (item.cons.length > 0) {
+                            content += `- ❌ Nackdelar: ${item.cons.join(', ')}\n`
+                        }
+                        if (item.use_case) {
+                            content += `- 🎯 Använd: ${item.use_case}\n`
+                        }
+                        content += `\n`
+                    }
                 }
                 break
         }

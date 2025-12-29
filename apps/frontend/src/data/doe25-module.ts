@@ -2,8 +2,14 @@
 // Innehåll baserat på kursföreläsningar och hands-on övningar
 // Tentadatum: 7 januari 2025
 
+export interface QuizOption {
+    text: string;
+    correct?: boolean;
+    feedback?: string;
+}
+
 export interface ContentBlock {
-    type: 'intro' | 'concept' | 'code' | 'checkpoint';
+    type: 'intro' | 'concept' | 'code' | 'checkpoint' | 'scenario' | 'quiz' | 'challenge' | 'diagram' | 'warning' | 'comparison';
     title?: string;
     headline?: string;
     explanation?: string;
@@ -12,6 +18,26 @@ export interface ContentBlock {
     language?: string;
     pro_tip?: string;
     message?: string;
+    // Scenario-specifika
+    scenario_title?: string;
+    scenario_context?: string;
+    scenario_symptoms?: string[];
+    scenario_solution?: string;
+    // Quiz-specifika
+    question?: string;
+    options?: QuizOption[];
+    hint?: string;
+    // Challenge-specifika
+    challenge_task?: string;
+    challenge_commands?: string[];
+    expected_output?: string;
+    // Diagram-specifika
+    diagram?: string;
+    diagram_caption?: string;
+    // Comparison-specifika
+    compare_items?: { name: string; pros: string[]; cons: string[]; use_case: string }[];
+    // Warning/danger
+    warning_level?: 'info' | 'warning' | 'danger';
 }
 
 export interface DOE25Task {
@@ -40,143 +66,366 @@ export const DOE25_MODULE: DOE25Module = {
     slug: "doe25-tenta",
     description: "Komplett tentaplugg för Linux/Unix Server - Kursmål 1-8",
     difficulty: "intermediate",
-    estimated_hours: 30,
+    estimated_hours: 35,
     exam_date: "2025-01-07T09:30:00",
     tasks: [
         // ============================================
-        // KM1: FELSÖKNING OCH ÅTGÄRDER
+        // KM1: FELSÖKNING OCH ÅTGÄRDER - EPIC EDITION
         // ============================================
         {
             id: "doe25-km1-felsokning",
             title: "KM1: Felsökning och åtgärder",
             description: "Redogöra för grundläggande metoder för felsökning och åtgärder i Linux/Unix-system",
             order_index: 1,
-            estimated_minutes: 45,
+            estimated_minutes: 60,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Felsökning – Systematisk metodik",
+                    headline: "🔥 Felsökning – Bli en Linux-detektiv",
                     learning_objectives: [
                         "Felsökningsprocessen i 7 steg",
                         "Loggfiler och journalctl",
                         "Processhantering (ps, kill, top)",
                         "Systemresurser (df, free, lsblk)",
-                        "Tjänstehantering (systemctl)"
+                        "Tjänstehantering (systemctl)",
+                        "Verkliga felsökningsscenarier"
                     ]
                 },
+
+                // === SCENARIO 1: SERVERN LIGGER ===
+                {
+                    type: "scenario",
+                    scenario_title: "🚨 INCIDENT: Webbservern svarar inte!",
+                    scenario_context: "Det är måndag morgon 08:47. Din chef ringer i panik: 'SAJTEN ÄR NERE! Kunderna kan inte logga in!' Du SSH:ar in på servern. Vad gör du?",
+                    scenario_symptoms: [
+                        "Webbsidan visar 'Connection refused'",
+                        "Kunder rapporterar timeout",
+                        "Det fungerade igår kväll"
+                    ]
+                },
+
                 {
                     type: "concept",
-                    title: "Systematisk felsökningsmetodik",
-                    explanation: `**Steg-för-steg-processen:**
+                    title: "Systematisk felsökning i 7 steg",
+                    explanation: `**Din checklista vid VARJE incident:**
 
-1. **IDENTIFIERA** → Vad är symtomet? Vad fungerar inte?
-2. **REPRODUCERA** → Kan du få felet att hända igen?
-3. **ISOLERA** → Var uppstår felet? (nätverk? disk? process? behörighet?)
-4. **DIAGNOSTISERA** → Vilka loggar/verktyg visar vad som händer?
-5. **ÅTGÄRDA** → Fixa grundorsaken, inte symtomet
-6. **VERIFIERA** → Bekräfta att problemet är löst
-7. **DOKUMENTERA** → Skriv ner vad du gjorde (för framtiden)`,
-                    pro_tip: "Tänk som en läkare. Du behandlar inte bara feber (symtom), du tar reda på varför patienten har feber (grundorsak)."
+┌─────────────────────────────────────────────────────────────┐
+│  1️⃣  IDENTIFIERA    │  Vad är symtomet exakt?              │
+│  2️⃣  REPRODUCERA    │  Kan du återskapa felet?             │
+│  3️⃣  ISOLERA        │  Nätverk? Disk? Process? Behörighet? │
+│  4️⃣  DIAGNOSTISERA  │  Vad säger loggarna?                 │
+│  5️⃣  ÅTGÄRDA        │  Fixa ORSAKEN, inte symtomet         │
+│  6️⃣  VERIFIERA      │  Fungerar det nu?                    │
+│  7️⃣  DOKUMENTERA    │  Skriv ner för framtiden!            │
+└─────────────────────────────────────────────────────────────┘`,
+                    pro_tip: "Tänk som en läkare: Du behandlar inte bara feber (symtom), du tar reda på VARFÖR patienten har feber (grundorsak). Annars kommer febern tillbaka!"
                 },
+
+                // === QUIZ: VAD GÖR DU FÖRST? ===
+                {
+                    type: "quiz",
+                    title: "🎯 Snabbtest: Rätt ordning?",
+                    question: "Webbservern ligger. Vad är det FÖRSTA du bör göra?",
+                    options: [
+                        { text: "Starta om servern direkt", correct: false, feedback: "Nej! Om du startar om förlorar du bevis. Kolla loggarna först." },
+                        { text: "Kolla om nginx-processen körs", correct: true, feedback: "Rätt! Verifiera först att tjänsten faktiskt är igång." },
+                        { text: "Ringa tillbaka chefen", correct: false, feedback: "Chefen kan vänta. Fixa problemet först." },
+                        { text: "Installera om nginx", correct: false, feedback: "Överkill! Ta reda på vad som är fel innan du gör drastiska ändringar." }
+                    ],
+                    hint: "Tänk 'minsta möjliga åtgärd först'"
+                },
+
+                {
+                    type: "diagram",
+                    title: "Felsökningsflöde",
+                    diagram: `
+┌──────────────────┐
+│   PROBLEM!       │
+└────────┬─────────┘
+         ▼
+┌──────────────────┐     ┌─────────────────────┐
+│ Körs tjänsten?   │──NO─▶│ systemctl start X   │
+│ systemctl status │      └─────────────────────┘
+└────────┬─────────┘
+         │ YES
+         ▼
+┌──────────────────┐     ┌─────────────────────┐
+│ Lyssnar på port? │──NO─▶│ Kolla config        │
+│ ss -tuln         │      │ Port blocked?       │
+└────────┬─────────┘      └─────────────────────┘
+         │ YES
+         ▼
+┌──────────────────┐     ┌─────────────────────┐
+│ Brandväggen?     │──NO─▶│ ufw allow / iptables│
+│ ufw status       │      └─────────────────────┘
+└────────┬─────────┘
+         │ OK
+         ▼
+┌──────────────────┐
+│ Kolla loggar!    │
+│ journalctl -u X  │
+└──────────────────┘`,
+                    diagram_caption: "Följ detta flöde för att systematiskt hitta felet"
+                },
+
+                // === CHALLENGE 1 ===
+                {
+                    type: "challenge",
+                    title: "💪 Challenge: Diagnos-kommandon",
+                    challenge_task: "Du misstänker att nginx är nere. Skriv de 3 kommandon du skulle köra för att verifiera och starta tjänsten.",
+                    challenge_commands: [
+                        "systemctl status nginx",
+                        "systemctl start nginx",
+                        "systemctl status nginx"
+                    ],
+                    expected_output: "Active: active (running)"
+                },
+
+                // === LOGGFILER ===
                 {
                     type: "concept",
-                    title: "Loggfiler – systemets svarta låda",
-                    explanation: `**Var loggar finns:**
+                    title: "Loggfiler – Systemets svarta låda 🔍",
+                    explanation: `**Linux sparar ALLT. Hitta det.**
 
-\`\`\`
-/var/log/           ← Huvudkatalog för loggar
-├── syslog          ← Allmän systemlogg (Debian/Ubuntu)
-├── messages        ← Allmän systemlogg (RHEL/Fedora)
-├── auth.log        ← Inloggningsförsök, sudo-användning
-├── kern.log        ← Kernel-meddelanden
-├── dmesg           ← Boot-meddelanden, hårdvara
-├── apt/            ← Pakethantering (Debian)
-└── dnf.log         ← Pakethantering (Fedora)
-\`\`\`
-
-**Varför journalctl?** Systemd samlar alla loggar på ett ställe med metadata (tid, tjänst, prioritet). Enklare att filtrera än att grep:a i textfiler.`
+┌─────────────────────────────────────────────────────────────┐
+│  /var/log/                                                  │
+│  ├── syslog        ← Allmän logg (Debian/Ubuntu)            │
+│  ├── messages      ← Allmän logg (RHEL/Fedora)              │
+│  ├── auth.log      ← SSH-inlogg, sudo, security             │
+│  ├── kern.log      ← Kernel panic, drivrutiner              │
+│  ├── dmesg         ← Boot, hårdvara                         │
+│  └── nginx/        ← App-specifika loggar                   │
+│      ├── access.log                                         │
+│      └── error.log  ← GULD vid felsökning!                  │
+└─────────────────────────────────────────────────────────────┘`
                 },
+
+                {
+                    type: "comparison",
+                    title: "journalctl vs traditionella loggar",
+                    compare_items: [
+                        {
+                            name: "journalctl",
+                            pros: ["Allt på ett ställe", "Kraftfull filtrering", "Metadata (tid, prioritet)", "Binärt format = snabbt"],
+                            cons: ["Bara systemd-system", "Kräver root för allt"],
+                            use_case: "Moderna system (Ubuntu 16+, RHEL 7+)"
+                        },
+                        {
+                            name: "tail/grep /var/log/*",
+                            pros: ["Fungerar överallt", "Textfiler = enkelt", "Ingen inlärningskurva"],
+                            cons: ["Måste veta vilken fil", "Långsamt på stora filer"],
+                            use_case: "Äldre system, snabb troubleshooting"
+                        }
+                    ]
+                },
+
                 {
                     type: "code",
-                    title: "Loggkommandon",
+                    title: "journalctl - Din nya bästa vän",
                     language: "bash",
-                    code: `# Journalctl - moderna sättet
-journalctl                      # Alla loggar
-journalctl -u ssh               # Specifik tjänst
-journalctl -p err               # Endast fel
-journalctl --since "1 hour ago" # Senaste timmen
-journalctl -f                   # Följ i realtid (som tail -f)
+                    code: `# Grundläggande
+journalctl                        # Alla loggar (ctrl+c för att avsluta)
+journalctl -f                     # Följ live (som tail -f)
 
-# Traditionella loggfiler
-tail -f /var/log/syslog         # Följ i realtid`
+# Filtrera på tjänst
+journalctl -u nginx               # Bara nginx
+journalctl -u ssh -u nginx        # SSH och nginx
+
+# Filtrera på tid
+journalctl --since "1 hour ago"
+journalctl --since "2025-01-07 08:00"
+journalctl --since yesterday
+
+# Filtrera på allvarlighetsgrad
+journalctl -p err                 # Errors och värre
+journalctl -p warning             # Warnings och värre
+
+# PRO COMBO: Senaste nginx-fel sista timmen
+journalctl -u nginx -p err --since "1 hour ago"
+
+# Exportera för analys
+journalctl -u nginx > nginx_debug.log`
                 },
+
+                // === QUIZ 2 ===
+                {
+                    type: "quiz",
+                    title: "🎯 Loggquiz",
+                    question: "Var hittar du misslyckade SSH-inloggningsförsök?",
+                    options: [
+                        { text: "/var/log/syslog", correct: false, feedback: "Kan finnas här, men inte specifikt för auth." },
+                        { text: "/var/log/auth.log", correct: true, feedback: "Exakt rätt! Auth.log loggar all autentisering." },
+                        { text: "/var/log/kern.log", correct: false, feedback: "Nej, det är kernel-meddelanden." },
+                        { text: "/etc/passwd", correct: false, feedback: "Det är användardatabasen, inte en logg." }
+                    ],
+                    hint: "Tänk 'auth' = authentication"
+                },
+
+                // === PROCESSHANTERING ===
+                {
+                    type: "warning",
+                    title: "⚠️ VARNING: kill -9",
+                    warning_level: "danger",
+                    explanation: `**kill -9 (SIGKILL) är en sista utväg!**
+
+\`kill PID\` = SIGTERM = "Snälla avsluta, städa upp först"
+\`kill -9 PID\` = SIGKILL = "DÖ NU!" (ingen cleanup)
+
+**Risker med SIGKILL:**
+- Osparade filer förloras
+- Databaser kan korrumperas
+- Temporära filer städas inte
+- Låsfiler blir kvar (kan blocka omstart)
+
+**Tumregel:** Försök ALLTID med \`kill\` först. Vänta 10 sek. Om processen inte dör, DÅ \`kill -9\`.`
+                },
+
                 {
                     type: "concept",
-                    title: "Processhantering",
-                    explanation: `**Visa processer:**
-- \`ps aux\` - Alla processer, detaljerad info
-- \`ps -ef\` - Alternativ format
-- \`top\` - Realtidsvy (interaktiv)
-- \`htop\` - Bättre realtidsvy (om installerad)
-- \`pgrep -a nginx\` - Hitta process via namn
+                    title: "Processhantering - Hitta och döda",
+                    explanation: `**Processtatuskoder (STAT-kolumnen i ps):**
 
-**Tolka ps-output:**
-\`\`\`
-USER   PID  %CPU %MEM    VSZ   RSS TTY  STAT START   TIME COMMAND
-root     1   0.0  0.1 169584 13256 ?    Ss   Dec24   0:02 /sbin/init
-\`\`\`
+| Kod | Betydelse | Vad det innebär |
+|-----|-----------|-----------------|
+| R   | Running   | Kör just nu |
+| S   | Sleeping  | Väntar på något (normalt) |
+| D   | Disk wait | Väntar på I/O (kan inte avbrytas!) |
+| Z   | Zombie    | Död men inte städad (förälder har inte hämtat exit-kod) |
+| T   | Stopped   | Pausad (Ctrl+Z eller SIGSTOP) |
 
-- **PID**: Process-ID (unikt nummer)
-- **%CPU/%MEM**: Resursanvändning
-- **STAT**: S=sleeping, R=running, Z=zombie, D=uninterruptible
-- **TTY**: Terminal (? = ingen terminal = daemon/bakgrund)`,
-                    pro_tip: "SIGTERM före SIGKILL! SIGTERM låter processen städa upp (stänga filer, spara data). SIGKILL dödar direkt utan cleanup – risk för korruption."
+**Pro-tip:** En process i D-state (disk wait) kan INTE dödas med kill -9. Du måste vänta eller starta om.`
                 },
+
                 {
                     type: "code",
-                    title: "Process- och resurskommandon",
+                    title: "Process-kommandon du MÅSTE kunna",
                     language: "bash",
-                    code: `# Processer
-ps aux                         # Lista processer
-top / htop                     # Realtid
-kill PID                       # SIGTERM (snäll avslutning)
-kill -9 PID                    # SIGKILL (tvångsavslutning)
-killall processnamn            # Avsluta alla med det namnet
+                    code: `# HITTA processer
+ps aux                           # Alla processer, all info
+ps aux | grep nginx              # Filtrera på namn
+pgrep -a nginx                   # PID + kommandorad
+pidof nginx                      # Bara PID
 
-# Resurser
-df -h                          # Diskutrymme per partition
-du -sh /var/log                # Storlek på specifik katalog
-free -h                        # RAM-användning
-lsblk                          # Blockenheter (diskar, partitioner)
+# TOP/HTOP - realtidsvy
+top                              # Standard (tryck q för quit)
+htop                             # Snyggare (installera först)
+# I top: M = sortera på minne, P = CPU, k = kill
 
-# Nätverk
-ss -tuln                       # Öppna portar
-ip a                           # IP-adresser
-ip r                           # Routing-tabell
+# DÖDA processer
+kill 1234                        # SIGTERM till PID 1234
+kill -15 1234                    # Samma sak (15 = TERM)
+kill -9 1234                     # SIGKILL (sista utväg!)
+killall nginx                    # Alla nginx-processer
+pkill -f "python script.py"      # Matcha på hela kommandot
 
-# Tjänster (systemd)
-systemctl status nginx          # Status för tjänst
-systemctl start nginx           # Starta
-systemctl stop nginx            # Stoppa
-systemctl restart nginx         # Omstart
-systemctl enable nginx          # Starta automatiskt vid boot
-systemctl disable nginx         # Starta INTE vid boot
-systemctl list-units --failed   # Visa misslyckade tjänster`
+# SIGNALER att kunna
+# SIGTERM (15) - Snäll avslutning
+# SIGKILL (9)  - Tvångsavslutning
+# SIGHUP (1)   - Reload config (nginx, apache)
+# SIGSTOP (19) - Pausa
+# SIGCONT (18) - Fortsätt`
                 },
+
+                // === SCENARIO 2 ===
+                {
+                    type: "scenario",
+                    scenario_title: "🚨 INCIDENT: Disken är full!",
+                    scenario_context: "Plötsligt kan ingen spara filer. Du kör df -h och ser: /dev/sda1 100% used. Vad gör du?",
+                    scenario_symptoms: [
+                        "'No space left on device' errors",
+                        "Tjänster börjar krasha",
+                        "Kan inte skapa nya filer"
+                    ],
+                    scenario_solution: `**Snabb räddning:**
+1. \`df -h\` - Bekräfta vilken partition
+2. \`du -sh /var/*\` - Hitta största katalogen
+3. \`du -sh /var/log/*\` - Oftast är det loggar!
+4. \`journalctl --vacuum-size=500M\` - Rensa journalctl
+5. \`find /var/log -name "*.gz" -mtime +30 -delete\` - Gamla komprimerade loggar
+6. \`df -h\` - Verifiera att det hjälpte`
+                },
+
+                {
+                    type: "code",
+                    title: "Resurskommandon - Disk, RAM, Nätverk",
+                    language: "bash",
+                    code: `# === DISK ===
+df -h                            # Diskutrymme per partition
+df -h /var                       # Specifik mountpoint
+du -sh /var/log                  # Storlek på katalog
+du -sh /var/* | sort -h          # Sorterat på storlek
+lsblk                            # Blockenheter (diskar)
+lsblk -f                         # Med filsystem-info
+
+# === RAM ===
+free -h                          # Minnesanvändning
+# OBS: "available" är vad du kan använda, inte "free"!
+
+# === NÄTVERK ===
+ss -tuln                         # Öppna portar (t=tcp, u=udp, l=listen, n=numeric)
+ss -tulnp                        # Med process-info (kräver root)
+ip a                             # IP-adresser
+ip r                             # Routing-tabell
+ping -c 4 google.com             # Testa anslutning
+
+# === SYSTEMD TJÄNSTER ===
+systemctl status nginx           # Detaljerad status
+systemctl is-active nginx        # Bara "active" eller "inactive"
+systemctl is-enabled nginx       # Startar vid boot?
+systemctl list-units --failed    # VIKTIGT: Visa kraschade tjänster`
+                },
+
+                // === QUIZ 3 ===
+                {
+                    type: "quiz",
+                    title: "🎯 free -h Quiz",
+                    question: "free -h visar: total=8G, used=6G, free=500M, available=3G. Hur mycket minne kan du använda?",
+                    options: [
+                        { text: "500M (free kolumnen)", correct: false, feedback: "Fel! Linux använder 'free' till cache - det är inte förlorat minne." },
+                        { text: "3G (available kolumnen)", correct: true, feedback: "Rätt! 'Available' visar vad som faktiskt går att använda, inklusive cache som kan frigöras." },
+                        { text: "2G (total - used)", correct: false, feedback: "Nära, men 'available' är mer exakt." },
+                        { text: "8G (total)", correct: false, feedback: "Nej, en del används redan." }
+                    ],
+                    hint: "Linux älskar att cacha - det är smart, inte ett problem!"
+                },
+
+                // === FINAL CHALLENGE ===
+                {
+                    type: "challenge",
+                    title: "🏆 Boss Challenge: Full felsökning",
+                    challenge_task: "Nginx svarar inte på port 80. Skriv kommandona i rätt ordning för att diagnostisera och fixa.",
+                    challenge_commands: [
+                        "systemctl status nginx",
+                        "journalctl -u nginx -p err --since '10 min ago'",
+                        "ss -tuln | grep :80",
+                        "systemctl restart nginx",
+                        "curl localhost"
+                    ],
+                    expected_output: "<!DOCTYPE html>..."
+                },
+
                 {
                     type: "concept",
-                    title: "Minnestolkning",
-                    explanation: `**free -h output:**
+                    title: "Minnestolkning - Förstå free -h",
+                    explanation: `**Exempel på output:**
 \`\`\`
               total        used        free      shared  buff/cache   available
 Mem:          7.7Gi       2.1Gi       3.2Gi       234Mi       2.4Gi       5.1Gi
 \`\`\`
 
-**Viktigt:** \`available\` är vad du faktiskt kan använda, inte \`free\`. Linux använder ledigt RAM till cache (det är bra, inte ett problem).`
+**Vad betyder kolumnerna?**
+- **total**: Totalt installerat RAM
+- **used**: Aktivt använt av program
+- **free**: Helt oanvänt (Linux försöker minimera detta!)
+- **buff/cache**: Använt för disk-cache (kan frigöras vid behov)
+- **available**: ⭐ DET DU BRYR DIG OM - vad program faktiskt kan använda
+
+**Kom ihåg:** Linux med lite "free" är BRA - det betyder att RAM används effektivt för cache. Oroa dig när "available" är lågt!`
                 },
+
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM1: Felsökning och åtgärder!"
+                    message: "🎉 GRATTIS! Du har klarat KM1: Felsökning och åtgärder! Du är nu redo att tackla verkliga Linux-problem som en pro."
                 }
             ]
         },
