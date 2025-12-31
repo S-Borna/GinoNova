@@ -112,7 +112,7 @@ function generateDOE25Content(task: DOE25Task): string {
                 break
 
             // === NEW INTERACTIVE TYPES ===
-            
+
             case "scenario":
                 content += `\n---\n\n`
                 if (block.scenario_title) {

@@ -1,6 +1,5 @@
-// DOE25 Tenta Module - Linux/Unix Server
-// Innehåll baserat på kursföreläsningar och hands-on övningar
-// Tentadatum: 7 januari 2025
+// DOE25 Tentaplugg Module - 25 Tasks
+// Interfaces
 
 export interface QuizOption {
     text: string;
@@ -8,36 +7,42 @@ export interface QuizOption {
     feedback?: string;
 }
 
+export interface CompareItem {
+    name: string;
+    pros: string[];
+    cons: string[];
+    use_case?: string;
+}
+
 export interface ContentBlock {
-    type: 'intro' | 'concept' | 'code' | 'checkpoint' | 'scenario' | 'quiz' | 'challenge' | 'diagram' | 'warning' | 'comparison';
+    type: string;
     title?: string;
     headline?: string;
     explanation?: string;
-    learning_objectives?: string[];
     code?: string;
     language?: string;
+    options?: QuizOption[];
+    question?: string;
+    hint?: string;
     pro_tip?: string;
-    message?: string;
-    // Scenario-specifika
+    warning?: string;
+    warning_level?: string;
+    learning_objectives?: string[];
     scenario_title?: string;
     scenario_context?: string;
     scenario_symptoms?: string[];
     scenario_solution?: string;
-    // Quiz-specifika
-    question?: string;
-    options?: QuizOption[];
-    hint?: string;
-    // Challenge-specifika
     challenge_task?: string;
     challenge_commands?: string[];
     expected_output?: string;
-    // Diagram-specifika
     diagram?: string;
     diagram_caption?: string;
-    // Comparison-specifika
-    compare_items?: { name: string; pros: string[]; cons: string[]; use_case: string }[];
-    // Warning/danger
-    warning_level?: 'info' | 'warning' | 'danger';
+    message?: string;
+    items?: string[];
+    compare_items?: CompareItem[];
+    summary_title?: string;
+    key_points?: string[];
+    next_step?: string;
 }
 
 export interface DOE25Task {
@@ -54,2007 +59,2721 @@ export interface DOE25Module {
     name: string;
     slug: string;
     description: string;
-    difficulty: 'beginner' | 'intermediate' | 'advanced';
+    difficulty: "beginner" | "intermediate" | "advanced" | "expert";
     estimated_hours: number;
     exam_date: string;
     tasks: DOE25Task[];
 }
 
+// ============================================
+// DOE25 TENTAPLUGG MODULE - 25 TASKS
+// ============================================
+
 export const DOE25_MODULE: DOE25Module = {
     id: "doe25-tenta",
-    name: "DOE25 Tenta",
+    name: "DOE25 Tentaplugg",
     slug: "doe25-tenta",
-    description: "Komplett tentaplugg för Linux/Unix Server - Kursmål 1-8",
+    description: "Komplett tentaplugg med 25 tasks: Linux Grunder, Bash Scripting, System Administration & DevOps",
     difficulty: "intermediate",
-    estimated_hours: 35,
+    estimated_hours: 40,
     exam_date: "2025-01-07T09:30:00",
     tasks: [
         // ============================================
-        // KM1: FELSÖKNING OCH ÅTGÄRDER - EPIC EDITION
+        // MODUL 0: LINUX GRUNDER (2 tasks)
         // ============================================
         {
-            id: "doe25-km1-felsokning",
-            title: "KM1: Felsökning och åtgärder",
-            description: "Redogöra för grundläggande metoder för felsökning och åtgärder i Linux/Unix-system",
+            id: "doe25-0-1-subnetting",
+            title: "0.1 Subnetting & Nätverk",
+            description: "Förstå IP-adresser, subnätmasker och nätverksberäkningar",
             order_index: 1,
-            estimated_minutes: 60,
+            estimated_minutes: 45,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "🔥 Felsökning – Bli en Linux-detektiv",
+                    headline: "🌐 Subnetting & Nätverk",
                     learning_objectives: [
-                        "Felsökningsprocessen i 7 steg",
-                        "Loggfiler och journalctl",
-                        "Processhantering (ps, kill, top)",
-                        "Systemresurser (df, free, lsblk)",
-                        "Tjänstehantering (systemctl)",
-                        "Verkliga felsökningsscenarier"
+                        "IPv4-adressering och klasser",
+                        "Subnätmasker och CIDR-notation",
+                        "Beräkna nätverksadress, broadcast och hosts",
+                        "Praktiska subnetting-exempel"
                     ]
                 },
-
-                // === SCENARIO 1: SERVERN LIGGER ===
-                {
-                    type: "scenario",
-                    scenario_title: "🚨 INCIDENT: Webbservern svarar inte!",
-                    scenario_context: "Det är måndag morgon 08:47. Din chef ringer i panik: 'SAJTEN ÄR NERE! Kunderna kan inte logga in!' Du SSH:ar in på servern. Vad gör du?",
-                    scenario_symptoms: [
-                        "Webbsidan visar 'Connection refused'",
-                        "Kunder rapporterar timeout",
-                        "Det fungerade igår kväll"
-                    ]
-                },
-
                 {
                     type: "concept",
-                    title: "Systematisk felsökning i 7 steg",
-                    explanation: `**Din checklista vid VARJE incident:**
+                    title: "IPv4-adressering",
+                    explanation: `En IPv4-adress består av 32 bitar uppdelade i 4 oktetter:
 
 ┌─────────────────────────────────────────────────────────────┐
-│  1️⃣  IDENTIFIERA    │  Vad är symtomet exakt?              │
-│  2️⃣  REPRODUCERA    │  Kan du återskapa felet?             │
-│  3️⃣  ISOLERA        │  Nätverk? Disk? Process? Behörighet? │
-│  4️⃣  DIAGNOSTISERA  │  Vad säger loggarna?                 │
-│  5️⃣  ÅTGÄRDA        │  Fixa ORSAKEN, inte symtomet         │
-│  6️⃣  VERIFIERA      │  Fungerar det nu?                    │
-│  7️⃣  DOKUMENTERA    │  Skriv ner för framtiden!            │
-└─────────────────────────────────────────────────────────────┘`,
-                    pro_tip: "Tänk som en läkare: Du behandlar inte bara feber (symtom), du tar reda på VARFÖR patienten har feber (grundorsak). Annars kommer febern tillbaka!"
-                },
+│  192    .    168    .    1      .    100                    │
+│  11000000   10101000   00000001   01100100                  │
+│  Oktett 1   Oktett 2   Oktett 3   Oktett 4                  │
+└─────────────────────────────────────────────────────────────┘
 
-                // === QUIZ: VAD GÖR DU FÖRST? ===
-                {
-                    type: "quiz",
-                    title: "🎯 Snabbtest: Rätt ordning?",
-                    question: "Webbservern ligger. Vad är det FÖRSTA du bör göra?",
-                    options: [
-                        { text: "Starta om servern direkt", correct: false, feedback: "Nej! Om du startar om förlorar du bevis. Kolla loggarna först." },
-                        { text: "Kolla om nginx-processen körs", correct: true, feedback: "Rätt! Verifiera först att tjänsten faktiskt är igång." },
-                        { text: "Ringa tillbaka chefen", correct: false, feedback: "Chefen kan vänta. Fixa problemet först." },
-                        { text: "Installera om nginx", correct: false, feedback: "Överkill! Ta reda på vad som är fel innan du gör drastiska ändringar." }
-                    ],
-                    hint: "Tänk 'minsta möjliga åtgärd först'"
+Varje oktett kan vara 0-255 (8 bitar = 2^8 = 256 värden)`
                 },
-
-                {
-                    type: "diagram",
-                    title: "Felsökningsflöde",
-                    diagram: `
-┌──────────────────┐
-│   PROBLEM!       │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐     ┌─────────────────────┐
-│ Körs tjänsten?   │──NO─▶│ systemctl start X   │
-│ systemctl status │      └─────────────────────┘
-└────────┬─────────┘
-         │ YES
-         ▼
-┌──────────────────┐     ┌─────────────────────┐
-│ Lyssnar på port? │──NO─▶│ Kolla config        │
-│ ss -tuln         │      │ Port blocked?       │
-└────────┬─────────┘      └─────────────────────┘
-         │ YES
-         ▼
-┌──────────────────┐     ┌─────────────────────┐
-│ Brandväggen?     │──NO─▶│ ufw allow / iptables│
-│ ufw status       │      └─────────────────────┘
-└────────┬─────────┘
-         │ OK
-         ▼
-┌──────────────────┐
-│ Kolla loggar!    │
-│ journalctl -u X  │
-└──────────────────┘`,
-                    diagram_caption: "Följ detta flöde för att systematiskt hitta felet"
-                },
-
-                // === CHALLENGE 1 ===
-                {
-                    type: "challenge",
-                    title: "💪 Challenge: Diagnos-kommandon",
-                    challenge_task: "Du misstänker att nginx är nere. Skriv de 3 kommandon du skulle köra för att verifiera och starta tjänsten.",
-                    challenge_commands: [
-                        "systemctl status nginx",
-                        "systemctl start nginx",
-                        "systemctl status nginx"
-                    ],
-                    expected_output: "Active: active (running)"
-                },
-
-                // === LOGGFILER ===
                 {
                     type: "concept",
-                    title: "Loggfiler – Systemets svarta låda 🔍",
-                    explanation: `**Linux sparar ALLT. Hitta det.**
+                    title: "IP-klasser (historiskt)",
+                    explanation: `┌─────────┬───────────────────┬────────────────┬──────────────┐
+│ Klass   │ Första oktett     │ Default mask   │ Nätverk      │
+├─────────┼───────────────────┼────────────────┼──────────────┤
+│ A       │ 1-126             │ 255.0.0.0      │ Stora        │
+│ B       │ 128-191           │ 255.255.0.0    │ Medelstora   │
+│ C       │ 192-223           │ 255.255.255.0  │ Små          │
+└─────────┴───────────────────┴────────────────┴──────────────┘
+
+OBS: 127.x.x.x är reserverat för loopback (localhost)`
+                },
+                {
+                    type: "concept",
+                    title: "CIDR-notation",
+                    explanation: `CIDR (Classless Inter-Domain Routing) ersatte klasserna:
 
 ┌─────────────────────────────────────────────────────────────┐
-│  /var/log/                                                  │
-│  ├── syslog        ← Allmän logg (Debian/Ubuntu)            │
-│  ├── messages      ← Allmän logg (RHEL/Fedora)              │
-│  ├── auth.log      ← SSH-inlogg, sudo, security             │
-│  ├── kern.log      ← Kernel panic, drivrutiner              │
-│  ├── dmesg         ← Boot, hårdvara                         │
-│  └── nginx/        ← App-specifika loggar                   │
-│      ├── access.log                                         │
-│      └── error.log  ← GULD vid felsökning!                  │
+│  192.168.1.0/24                                             │
+│              └── Antal nätverksbitar (24 av 32)             │
+│                                                             │
+│  /24 = 255.255.255.0   (24 ettor, 8 nollor)                │
+│  /16 = 255.255.0.0     (16 ettor, 16 nollor)               │
+│  /8  = 255.0.0.0       (8 ettor, 24 nollor)                │
 └─────────────────────────────────────────────────────────────┘`
                 },
-
-                {
-                    type: "comparison",
-                    title: "journalctl vs traditionella loggar",
-                    compare_items: [
-                        {
-                            name: "journalctl",
-                            pros: ["Allt på ett ställe", "Kraftfull filtrering", "Metadata (tid, prioritet)", "Binärt format = snabbt"],
-                            cons: ["Bara systemd-system", "Kräver root för allt"],
-                            use_case: "Moderna system (Ubuntu 16+, RHEL 7+)"
-                        },
-                        {
-                            name: "tail/grep /var/log/*",
-                            pros: ["Fungerar överallt", "Textfiler = enkelt", "Ingen inlärningskurva"],
-                            cons: ["Måste veta vilken fil", "Långsamt på stora filer"],
-                            use_case: "Äldre system, snabb troubleshooting"
-                        }
-                    ]
-                },
-
-                {
-                    type: "code",
-                    title: "journalctl - Din nya bästa vän",
-                    language: "bash",
-                    code: `# Grundläggande
-journalctl                        # Alla loggar (ctrl+c för att avsluta)
-journalctl -f                     # Följ live (som tail -f)
-
-# Filtrera på tjänst
-journalctl -u nginx               # Bara nginx
-journalctl -u ssh -u nginx        # SSH och nginx
-
-# Filtrera på tid
-journalctl --since "1 hour ago"
-journalctl --since "2025-01-07 08:00"
-journalctl --since yesterday
-
-# Filtrera på allvarlighetsgrad
-journalctl -p err                 # Errors och värre
-journalctl -p warning             # Warnings och värre
-
-# PRO COMBO: Senaste nginx-fel sista timmen
-journalctl -u nginx -p err --since "1 hour ago"
-
-# Exportera för analys
-journalctl -u nginx > nginx_debug.log`
-                },
-
-                // === QUIZ 2 ===
-                {
-                    type: "quiz",
-                    title: "🎯 Loggquiz",
-                    question: "Var hittar du misslyckade SSH-inloggningsförsök?",
-                    options: [
-                        { text: "/var/log/syslog", correct: false, feedback: "Kan finnas här, men inte specifikt för auth." },
-                        { text: "/var/log/auth.log", correct: true, feedback: "Exakt rätt! Auth.log loggar all autentisering." },
-                        { text: "/var/log/kern.log", correct: false, feedback: "Nej, det är kernel-meddelanden." },
-                        { text: "/etc/passwd", correct: false, feedback: "Det är användardatabasen, inte en logg." }
-                    ],
-                    hint: "Tänk 'auth' = authentication"
-                },
-
-                // === PROCESSHANTERING ===
-                {
-                    type: "warning",
-                    title: "⚠️ VARNING: kill -9",
-                    warning_level: "danger",
-                    explanation: `**kill -9 (SIGKILL) är en sista utväg!**
-
-\`kill PID\` = SIGTERM = "Snälla avsluta, städa upp först"
-\`kill -9 PID\` = SIGKILL = "DÖ NU!" (ingen cleanup)
-
-**Risker med SIGKILL:**
-- Osparade filer förloras
-- Databaser kan korrumperas
-- Temporära filer städas inte
-- Låsfiler blir kvar (kan blocka omstart)
-
-**Tumregel:** Försök ALLTID med \`kill\` först. Vänta 10 sek. Om processen inte dör, DÅ \`kill -9\`.`
-                },
-
                 {
                     type: "concept",
-                    title: "Processhantering - Hitta och döda",
-                    explanation: `**Processtatuskoder (STAT-kolumnen i ps):**
+                    title: "Subnätberäkning",
+                    explanation: `För 192.168.1.100/24:
 
-| Kod | Betydelse | Vad det innebär |
-|-----|-----------|-----------------|
-| R   | Running   | Kör just nu |
-| S   | Sleeping  | Väntar på något (normalt) |
-| D   | Disk wait | Väntar på I/O (kan inte avbrytas!) |
-| Z   | Zombie    | Död men inte städad (förälder har inte hämtat exit-kod) |
-| T   | Stopped   | Pausad (Ctrl+Z eller SIGSTOP) |
+┌─────────────────────────────────────────────────────────────┐
+│  Nätverksadress:  192.168.1.0    (första i subnätet)       │
+│  Broadcast:       192.168.1.255  (sista i subnätet)        │
+│  Första host:     192.168.1.1                               │
+│  Sista host:      192.168.1.254                             │
+│  Antal hosts:     254 (2^8 - 2)                             │
+└─────────────────────────────────────────────────────────────┘
 
-**Pro-tip:** En process i D-state (disk wait) kan INTE dödas med kill -9. Du måste vänta eller starta om.`
+Formel: Antal hosts = 2^(32-prefix) - 2
+        -2 för nätverksadress och broadcast`
                 },
-
                 {
                     type: "code",
-                    title: "Process-kommandon du MÅSTE kunna",
+                    title: "Praktiska kommandon",
                     language: "bash",
-                    code: `# HITTA processer
-ps aux                           # Alla processer, all info
-ps aux | grep nginx              # Filtrera på namn
-pgrep -a nginx                   # PID + kommandorad
-pidof nginx                      # Bara PID
+                    code: `# Visa nätverkskonfiguration
+ip addr show
+ip route show
 
-# TOP/HTOP - realtidsvy
-top                              # Standard (tryck q för quit)
-htop                             # Snyggare (installera först)
-# I top: M = sortera på minne, P = CPU, k = kill
+# Visa subnätinfo
+ipcalc 192.168.1.100/24
 
-# DÖDA processer
-kill 1234                        # SIGTERM till PID 1234
-kill -15 1234                    # Samma sak (15 = TERM)
-kill -9 1234                     # SIGKILL (sista utväg!)
-killall nginx                    # Alla nginx-processer
-pkill -f "python script.py"      # Matcha på hela kommandot
-
-# SIGNALER att kunna
-# SIGTERM (15) - Snäll avslutning
-# SIGKILL (9)  - Tvångsavslutning
-# SIGHUP (1)   - Reload config (nginx, apache)
-# SIGSTOP (19) - Pausa
-# SIGCONT (18) - Fortsätt`
+# Testa nätverksanslutning
+ping -c 3 192.168.1.1
+traceroute google.com`
                 },
-
-                // === SCENARIO 2 ===
-                {
-                    type: "scenario",
-                    scenario_title: "🚨 INCIDENT: Disken är full!",
-                    scenario_context: "Plötsligt kan ingen spara filer. Du kör df -h och ser: /dev/sda1 100% used. Vad gör du?",
-                    scenario_symptoms: [
-                        "'No space left on device' errors",
-                        "Tjänster börjar krasha",
-                        "Kan inte skapa nya filer"
-                    ],
-                    scenario_solution: `**Snabb räddning:**
-1. \`df -h\` - Bekräfta vilken partition
-2. \`du -sh /var/*\` - Hitta största katalogen
-3. \`du -sh /var/log/*\` - Oftast är det loggar!
-4. \`journalctl --vacuum-size=500M\` - Rensa journalctl
-5. \`find /var/log -name "*.gz" -mtime +30 -delete\` - Gamla komprimerade loggar
-6. \`df -h\` - Verifiera att det hjälpte`
-                },
-
-                {
-                    type: "code",
-                    title: "Resurskommandon - Disk, RAM, Nätverk",
-                    language: "bash",
-                    code: `# === DISK ===
-df -h                            # Diskutrymme per partition
-df -h /var                       # Specifik mountpoint
-du -sh /var/log                  # Storlek på katalog
-du -sh /var/* | sort -h          # Sorterat på storlek
-lsblk                            # Blockenheter (diskar)
-lsblk -f                         # Med filsystem-info
-
-# === RAM ===
-free -h                          # Minnesanvändning
-# OBS: "available" är vad du kan använda, inte "free"!
-
-# === NÄTVERK ===
-ss -tuln                         # Öppna portar (t=tcp, u=udp, l=listen, n=numeric)
-ss -tulnp                        # Med process-info (kräver root)
-ip a                             # IP-adresser
-ip r                             # Routing-tabell
-ping -c 4 google.com             # Testa anslutning
-
-# === SYSTEMD TJÄNSTER ===
-systemctl status nginx           # Detaljerad status
-systemctl is-active nginx        # Bara "active" eller "inactive"
-systemctl is-enabled nginx       # Startar vid boot?
-systemctl list-units --failed    # VIKTIGT: Visa kraschade tjänster`
-                },
-
-                // === QUIZ 3 ===
                 {
                     type: "quiz",
-                    title: "🎯 free -h Quiz",
-                    question: "free -h visar: total=8G, used=6G, free=500M, available=3G. Hur mycket minne kan du använda?",
+                    question: "Hur många hosts kan finnas i ett /24 nätverk?",
                     options: [
-                        { text: "500M (free kolumnen)", correct: false, feedback: "Fel! Linux använder 'free' till cache - det är inte förlorat minne." },
-                        { text: "3G (available kolumnen)", correct: true, feedback: "Rätt! 'Available' visar vad som faktiskt går att använda, inklusive cache som kan frigöras." },
-                        { text: "2G (total - used)", correct: false, feedback: "Nära, men 'available' är mer exakt." },
-                        { text: "8G (total)", correct: false, feedback: "Nej, en del används redan." }
+                        { text: "256", correct: false, feedback: "Nej, 2 adresser är reserverade" },
+                        { text: "254", correct: true, feedback: "Rätt! 2^8 - 2 = 254 (minus nätverksadress och broadcast)" },
+                        { text: "255", correct: false, feedback: "Nej, glöm inte broadcast-adressen" },
+                        { text: "252", correct: false, feedback: "Nej, det blir för få" }
                     ],
-                    hint: "Linux älskar att cacha - det är smart, inte ett problem!"
+                    hint: "Tänk på vilka adresser som är reserverade"
                 },
-
-                // === FINAL CHALLENGE ===
                 {
-                    type: "challenge",
-                    title: "🏆 Boss Challenge: Full felsökning",
-                    challenge_task: "Nginx svarar inte på port 80. Skriv kommandona i rätt ordning för att diagnostisera och fixa.",
-                    challenge_commands: [
-                        "systemctl status nginx",
-                        "journalctl -u nginx -p err --since '10 min ago'",
-                        "ss -tuln | grep :80",
-                        "systemctl restart nginx",
-                        "curl localhost"
+                    type: "quiz",
+                    question: "Vad är broadcast-adressen för 10.0.0.0/8?",
+                    options: [
+                        { text: "10.0.0.255", correct: false, feedback: "Nej, /8 har större range" },
+                        { text: "10.255.255.255", correct: true, feedback: "Rätt! Alla hostbitar satta till 1" },
+                        { text: "10.0.255.255", correct: false, feedback: "Nej, /8 inkluderar mer" },
+                        { text: "255.255.255.255", correct: false, feedback: "Nej, det är begränsat broadcast" }
                     ],
-                    expected_output: "<!DOCTYPE html>..."
+                    hint: "/8 betyder att bara första oktetten är nätverksdelen"
                 },
-
-                {
-                    type: "concept",
-                    title: "Minnestolkning - Förstå free -h",
-                    explanation: `**Exempel på output:**
-\`\`\`
-              total        used        free      shared  buff/cache   available
-Mem:          7.7Gi       2.1Gi       3.2Gi       234Mi       2.4Gi       5.1Gi
-\`\`\`
-
-**Vad betyder kolumnerna?**
-- **total**: Totalt installerat RAM
-- **used**: Aktivt använt av program
-- **free**: Helt oanvänt (Linux försöker minimera detta!)
-- **buff/cache**: Använt för disk-cache (kan frigöras vid behov)
-- **available**: ⭐ DET DU BRYR DIG OM - vad program faktiskt kan använda
-
-**Kom ihåg:** Linux med lite "free" är BRA - det betyder att RAM används effektivt för cache. Oroa dig när "available" är lågt!`
-                },
-
                 {
                     type: "checkpoint",
-                    message: "🎉 GRATTIS! Du har klarat KM1: Felsökning och åtgärder! Du är nu redo att tackla verkliga Linux-problem som en pro."
+                    message: "Du har klarat Subnetting! 🌐 Nätverksgrunder avklarade."
                 }
             ]
         },
-
-        // ============================================
-        // KM2: LAGRINGSPRINCIPER
-        // ============================================
         {
-            id: "doe25-km2-lagring",
-            title: "KM2: Lagringsprinciper",
-            description: "Redogöra för lagringsprinciper för Linux/Unix-filsystem",
+            id: "doe25-0-2-filsystem",
+            title: "0.2 Linux Filsystem",
+            description: "Förstå Linux filsystemhierarkin och viktiga kataloger",
             order_index: 2,
             estimated_minutes: 40,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Lagring – Filsystem, LVM och RAID",
+                    headline: "📁 Linux Filsystem",
                     learning_objectives: [
-                        "FHS - Filesystem Hierarchy Standard",
-                        "Filsystemtyper (ext4, XFS)",
-                        "LVM - Logical Volume Manager",
-                        "RAID-nivåer (0, 1, 5)",
-                        "Hårda vs symboliska länkar"
+                        "FHS (Filesystem Hierarchy Standard)",
+                        "Viktiga systemkataloger",
+                        "Filtyper i Linux",
+                        "Navigering och sökvägar"
                     ]
                 },
                 {
                     type: "concept",
-                    title: "FHS - Filesystem Hierarchy Standard",
-                    explanation: `**Viktiga kataloger:**
+                    title: "Filesystem Hierarchy Standard",
+                    explanation: `Linux använder en trädstruktur med / (root) som topp:
 
-| Katalog | Innehåll |
-|---------|----------|
-| \`/etc\` | Konfigurationsfiler (textbaserade, redigerbara) |
-| \`/var/log\` | Loggfiler |
-| \`/home\` | Användarnas hemkataloger |
-| \`/tmp\` | Temporära filer (rensas vid omstart) |
-| \`/opt\` | Tredjepartsprogram |
-| \`/mnt\` | Tillfälliga monteringspunkter |
-| \`/bin\` | Grundläggande kommandon |
-| \`/sbin\` | Systemadministrationskommandon |
-| \`/usr\` | Användarprogram och data |`
+┌─────────────────────────────────────────────────────────────┐
+│  /                        ← Roten av allt                   │
+│  ├── bin/                 ← Grundläggande binärer           │
+│  ├── boot/                ← Bootloader, kernel              │
+│  ├── dev/                 ← Enheter (devices)               │
+│  ├── etc/                 ← Systemkonfiguration             │
+│  ├── home/                ← Användarnas hemkataloger        │
+│  ├── lib/                 ← Delade bibliotek                │
+│  ├── media/               ← Flyttbara media                 │
+│  ├── mnt/                 ← Temporära mount points          │
+│  ├── opt/                 ← Tredjepartsprogram              │
+│  ├── proc/                ← Processinfo (virtuellt)         │
+│  ├── root/                ← Roots hemkatalog                │
+│  ├── sbin/                ← Systemadmin-binärer             │
+│  ├── srv/                 ← Tjänstedata                     │
+│  ├── sys/                 ← Systeminfo (virtuellt)          │
+│  ├── tmp/                 ← Temporära filer                 │
+│  ├── usr/                 ← Användarprogram                 │
+│  └── var/                 ← Variabel data (loggar etc)      │
+└─────────────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "concept",
-                    title: "Filsystemtyper",
-                    explanation: `**ext4 vs XFS:**
-
-| Egenskap | ext4 | XFS |
-|----------|------|-----|
-| Standard | Debian/Ubuntu | RHEL/Fedora |
-| Storlek | Bra för mindre | Stora filer, enterprise |
-| Krympning | Ja | Nej |
-| Journaling | Ja | Ja |
-
-**Journaling:** Loggar ändringar innan de görs → möjliggör återställning vid krasch.`
+                    title: "Viktiga kataloger - detaljer",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  /etc/                                                      │
+│  ├── passwd          ← Användarinfo                         │
+│  ├── shadow          ← Krypterade lösenord                  │
+│  ├── group           ← Gruppinfo                            │
+│  ├── fstab           ← Filsystem att mounta                 │
+│  ├── hosts           ← Lokal DNS                            │
+│  ├── ssh/            ← SSH-konfiguration                    │
+│  └── systemd/        ← Systemd-tjänster                     │
+├─────────────────────────────────────────────────────────────┤
+│  /var/                                                      │
+│  ├── log/            ← Systemloggar                         │
+│  ├── www/            ← Webbserver-filer                     │
+│  ├── lib/            ← Variabel programdata                 │
+│  └── spool/          ← Köer (mail, print)                   │
+└─────────────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "concept",
-                    title: "LVM - Logical Volume Manager",
-                    explanation: `**Vad LVM gör:**
-Abstraktion mellan fysisk disk och filsystem → dynamisk storleksändring utan omstart.
+                    title: "Filtyper i Linux",
+                    explanation: `Linux har 7 filtyper (visas med ls -l):
 
-**Hierarki:**
-\`\`\`
-Physical Volumes (PV)  →  /dev/sda1, /dev/sdb1
-        ↓
-Volume Groups (VG)     →  vg_data
-        ↓
-Logical Volumes (LV)   →  lv_home, lv_var
-\`\`\`
-
-**Fördelar:**
-- Utöka/krympa volymer utan omstart
-- Samla flera diskar till en pool
-- Snapshots för backup`
+┌──────┬─────────────────┬─────────────────────────────────────┐
+│ Typ  │ Namn            │ Beskrivning                         │
+├──────┼─────────────────┼─────────────────────────────────────┤
+│  -   │ Regular file    │ Vanlig fil                          │
+│  d   │ Directory       │ Katalog                             │
+│  l   │ Symbolic link   │ Genväg/länk                         │
+│  c   │ Character device│ Teckenenhet (terminal)              │
+│  b   │ Block device    │ Blockenhet (disk)                   │
+│  s   │ Socket          │ Nätverkskommunikation               │
+│  p   │ Named pipe      │ FIFO för IPC                        │
+└──────┴─────────────────┴─────────────────────────────────────┘`
                 },
                 {
                     type: "code",
-                    title: "LVM-kommandon",
+                    title: "Navigeringskommandon",
                     language: "bash",
-                    code: `# Visa LVM-info
-pvs                           # Physical Volumes
-vgs                           # Volume Groups
-lvs                           # Logical Volumes
+                    code: `# Absolut vs relativ sökväg
+cd /etc/ssh        # Absolut (från root)
+cd ../lib          # Relativ (från nuvarande)
 
-# Utöka en Logical Volume
-lvextend -L +10G /dev/vg/lv   # Lägg till 10GB
-resize2fs /dev/vg/lv          # Utöka filsystemet (ext4)
-xfs_growfs /dev/vg/lv         # Utöka filsystemet (XFS)`
+# Visa kataloginnehåll
+ls -la             # Alla filer, lång format
+ls -lh             # Human-readable storlekar
+tree -L 2          # Trädvy, 2 nivåer
+
+# Hitta filer
+find / -name "*.conf" -type f
+locate nginx.conf
+which python3
+
+# Diskutrymme
+df -h              # Filsystem användning
+du -sh /var/log    # Katalogstorlek`
                 },
                 {
-                    type: "concept",
-                    title: "RAID-nivåer",
-                    explanation: `**RAID 0 - Striping:**
-- Data sprids över diskar
-- Ingen redundans
-- Snabbt, men en disk dör = allt borta
-
-**RAID 1 - Mirroring:**
-- Identisk kopia på två diskar
-- En disk kan dö
-- Halva kapaciteten
-
-**RAID 5 - Striping + Paritet:**
-- Data + paritet sprids
-- En disk kan dö
-- Bra balans prestanda/redundans`,
-                    pro_tip: "RAID är INTE backup! RAID skyddar mot diskfel, inte mot radering eller korruption."
+                    type: "quiz",
+                    question: "Var lagras systemkonfigurationsfiler i Linux?",
+                    options: [
+                        { text: "/var", correct: false, feedback: "Nej, /var är för variabel data som loggar" },
+                        { text: "/etc", correct: true, feedback: "Rätt! /etc innehåller systemkonfiguration" },
+                        { text: "/usr", correct: false, feedback: "Nej, /usr innehåller användarprogram" },
+                        { text: "/opt", correct: false, feedback: "Nej, /opt är för tredjepartsprogram" }
+                    ],
+                    hint: "Tänk 'etcetera' - allt möjligt konfigurationsgrejer"
                 },
                 {
-                    type: "concept",
-                    title: "Länkar - Hårda vs Symboliska",
-                    explanation: `**Hård länk:**
-- Pekar direkt på inode (data)
-- Överlever om original tas bort
-- Fungerar endast inom samma filsystem
-- \`ln fil hardlink\`
-
-**Symbolisk länk (symlink):**
-- Pekar på filnamn (sökväg)
-- Bryts om original tas bort
-- Kan korsa filsystem
-- \`ln -s fil symlink\``,
-                    pro_tip: "Tänk hård länk som alias till samma data. Symlink som en genväg."
-                },
-                {
-                    type: "code",
-                    title: "Disk- och länkkommandon",
-                    language: "bash",
-                    code: `# Diskinfo
-df -h                          # Diskutrymme per partition
-du -sh katalog                 # Katalogstorlek
-lsblk                          # Blockenheter
-lsblk -f                       # Med filsysteminfo
-
-# Montering
-mount /dev/sdb1 /mnt/disk      # Montera
-umount /mnt/disk               # Avmontera
-cat /etc/fstab                 # Permanenta monteringar
-
-# Länkar
-ln fil hardlink                # Hård länk
-ln -s fil symlink              # Symbolisk länk
-ls -li                         # Visa inode-nummer`
+                    type: "quiz",
+                    question: "Vilken katalog innehåller systemloggar?",
+                    options: [
+                        { text: "/etc/log", correct: false, feedback: "Nej, /etc är för konfiguration" },
+                        { text: "/var/log", correct: true, feedback: "Rätt! /var/log innehåller alla systemloggar" },
+                        { text: "/log", correct: false, feedback: "Nej, den katalogen finns inte standard" },
+                        { text: "/usr/log", correct: false, feedback: "Nej, /usr är för program" }
+                    ],
+                    hint: "Loggar är variabel data..."
                 },
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM2: Lagringsprinciper!"
+                    message: "Du har klarat Linux Filsystem! 📁 MODUL 0 KLAR!"
                 }
             ]
         },
-
         // ============================================
-        // KM3: RÄTTIGHETER & ANVÄNDARE
+        // MODUL 1: BASH SCRIPTING (11 tasks)
         // ============================================
         {
-            id: "doe25-km3-rattigheter",
-            title: "KM3: Rättigheter & användare",
-            description: "Redogöra för principer för rättigheter i Linux/Unix-system",
+            id: "doe25-1-1-bash-grunder",
+            title: "1.1 Bash Grunder",
+            description: "Grundläggande bash-kommandon och skriptstruktur",
             order_index: 3,
+            estimated_minutes: 45,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🐚 Bash Grunder",
+                    learning_objectives: [
+                        "Shebang och skriptstruktur",
+                        "Köra och göra skript exekverbara",
+                        "Grundläggande I/O (echo, read)",
+                        "Exit codes och felhantering"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Shebang - Skriptets första rad",
+                    explanation: `Shebang talar om vilken tolk som ska köra skriptet:
+
+┌─────────────────────────────────────────────────────────────┐
+│  #!/bin/bash          ← Använd bash                         │
+│  #!/usr/bin/env bash  ← Portabel (hittar bash i PATH)       │
+│  #!/bin/sh            ← POSIX shell (mer portabel)          │
+│  #!/usr/bin/python3   ← Python-skript                       │
+└─────────────────────────────────────────────────────────────┘
+
+VIKTIGT: Shebang MÅSTE vara första raden, inga mellanslag före #`
+                },
+                {
+                    type: "code",
+                    title: "Ditt första skript",
+                    language: "bash",
+                    code: `#!/bin/bash
+# mitt_skript.sh - En enkel demo
+
+# Skriv ut text
+echo "Hej från mitt skript!"
+
+# Läs input från användaren
+read -p "Vad heter du? " namn
+echo "Trevligt att träffas, $namn!"
+
+# Exit med statuskod
+exit 0`
+                },
+                {
+                    type: "code",
+                    title: "Köra skript",
+                    language: "bash",
+                    code: `# Metod 1: Gör exekverbar och kör
+chmod +x mitt_skript.sh
+./mitt_skript.sh
+
+# Metod 2: Kör med bash direkt
+bash mitt_skript.sh
+
+# Metod 3: Source (kör i nuvarande shell)
+source mitt_skript.sh
+. mitt_skript.sh`
+                },
+                {
+                    type: "concept",
+                    title: "Exit Codes",
+                    explanation: `Varje kommando returnerar en exit code:
+
+┌─────────┬─────────────────────────────────────────────────────┐
+│ Code    │ Betydelse                                           │
+├─────────┼─────────────────────────────────────────────────────┤
+│ 0       │ Framgång (allt gick bra)                            │
+│ 1       │ Allmänt fel                                         │
+│ 2       │ Felaktig användning av kommando                     │
+│ 126     │ Kommando finns men är ej körbart                    │
+│ 127     │ Kommando hittades inte                              │
+│ 128+N   │ Dödad av signal N                                   │
+└─────────┴─────────────────────────────────────────────────────┘
+
+Kolla senaste exit code: echo $?`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad betyder exit code 0?",
+                    options: [
+                        { text: "Fel uppstod", correct: false, feedback: "Nej, 0 är bra!" },
+                        { text: "Kommandot lyckades", correct: true, feedback: "Rätt! 0 = framgång i Unix" },
+                        { text: "Kommandot hittades inte", correct: false, feedback: "Nej, det är 127" },
+                        { text: "Skriptet avbröts", correct: false, feedback: "Nej, det är 128+" }
+                    ],
+                    hint: "I Unix betyder 0 alltid framgång"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Bash Grunder! 🐚"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-2-variabler",
+            title: "1.2 Variabler & Datatyper",
+            description: "Variabler, miljövariabler och stränghantering i Bash",
+            order_index: 4,
             estimated_minutes: 50,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Rättigheter – rwx, chmod och speciella bitar",
+                    headline: "📦 Variabler & Datatyper",
                     learning_objectives: [
-                        "Filbehörigheter (rwx)",
-                        "Numerisk och symbolisk chmod",
-                        "SUID, SGID, Sticky bit",
-                        "Användar- och grupphantering",
-                        "sudo och /etc/sudoers"
+                        "Deklarera och använda variabler",
+                        "Miljövariabler vs lokala variabler",
+                        "Strängmanipulation",
+                        "Arrayer i Bash"
                     ]
                 },
                 {
                     type: "concept",
-                    title: "Från Hands-on 1 december",
-                    explanation: `**Det här gjorde ni i kursen:**
+                    title: "Variabler i Bash",
+                    explanation: `Bash-variabler har inga explicita typer - allt är strängar!
 
-Skapa användare:
-\`\`\`bash
-# Skapa 5 användare
-sudo useradd -m Alice
-sudo useradd -m Bob
-sudo useradd -m Charlie
-sudo useradd -m David
-sudo useradd -m Evert
-\`\`\`
-
-**-m flaggan** = Skapar hemkatalog automatiskt under \`/home/användarnamn\`
-
-Skapa grupp och lägg till medlemmar:
-\`\`\`bash
-# Skapa gruppen developers
-sudo groupadd developers
-
-# Lägg till Alice, Charlie och Evert i gruppen
-sudo usermod -aG developers Alice
-sudo usermod -aG developers Charlie
-sudo usermod -aG developers Evert
-\`\`\`
-
-**-aG flaggan:**
-- \`-a\` = append (lägg till, ersätt inte befintliga grupper)
-- \`-G\` = secondary group`
-                },
-                {
-                    type: "concept",
-                    title: "Filbehörigheter - rwx",
-                    explanation: `**Tolka behörigheter:**
-\`\`\`
--rwxr-xr-- 1 said developers 4096 Dec 1 10:00 script.sh
-│├─┤├─┤├─┤
-│ │  │  └── Others: r-- (läs)
-│ │  └───── Group: r-x (läs, kör)
-│ └──────── Owner: rwx (läs, skriv, kör)
-└────────── Filtyp: - = fil, d = katalog
-\`\`\`
-
-**Numeriska värden:**
-- r (read) = 4
-- w (write) = 2
-- x (execute) = 1
-
-**Vanliga kombinationer:**
-- \`755\` = rwxr-xr-x (script som alla kan köra)
-- \`644\` = rw-r--r-- (vanlig fil)
-- \`700\` = rwx------ (privat)
-- \`600\` = rw------- (endast ägaren kan läsa/skriva)`
-                },
-                {
-                    type: "concept",
-                    title: "Delad katalog med SGID",
-                    explanation: `**Från kursen:**
-\`\`\`bash
-# Skapa katalog för teamet
-sudo mkdir -p /opt/developers
-
-# Sätt ägare och grupp
-sudo chown root:developers /opt/developers
-
-# SGID + rwx för grupp, ingen access för others
-sudo chmod 2770 /opt/developers
-\`\`\`
-
-**Vad betyder 2770?**
-- \`2\` = SGID-bit (Set Group ID)
-- \`7\` = rwx för ägare (root)
-- \`7\` = rwx för gruppen (developers)
-- \`0\` = ingen access för others
-
-**SGID-effekten:** Alla filer som skapas i \`/opt/developers\` får automatiskt gruppen \`developers\`, oavsett vem som skapar dem.`
-                },
-                {
-                    type: "concept",
-                    title: "Speciella bitar",
-                    explanation: `| Bit | Numeriskt | Effekt på fil | Effekt på katalog |
-|-----|-----------|---------------|-------------------|
-| SUID | 4xxx | Körs som filägaren | - |
-| SGID | 2xxx | Körs som filgruppen | Nya filer ärver grupp |
-| Sticky | 1xxx | - | Bara ägaren kan radera |
-
-**Exempel:**
-\`\`\`bash
-chmod 4755 /usr/bin/passwd   # SUID - kör som root
-chmod 2770 /opt/shared       # SGID - nya filer får gruppägare
-chmod 1777 /tmp              # Sticky - bara ägare kan radera
-\`\`\``
-                },
-                {
-                    type: "concept",
-                    title: "Lösenord och utgångsdatum",
-                    explanation: `**Från kursen:**
-\`\`\`bash
-# Sätt utgångsdatum för Bob och David (31 dec 2025)
-sudo chage -E 2025-12-31 Bob
-sudo chage -E 2025-12-31 David
-
-# Tvinga Evert att byta lösenord vid nästa inloggning
-sudo passwd --expire Evert
-\`\`\`
-
-**chage-kommandon att kunna:**
-\`\`\`bash
-chage -l användare     # Lista lösenordsinställningar
-chage -E YYYY-MM-DD    # Sätt utgångsdatum
-chage -M 90            # Lösenord måste bytas var 90:e dag
-chage -m 7             # Minst 7 dagar mellan byten
-chage -d 0 användare   # Tvinga lösenordsbyte vid nästa inloggning
-\`\`\``
-                },
-                {
-                    type: "concept",
-                    title: "Viktiga filer för användare",
-                    explanation: `| Fil | Innehåll |
-|-----|----------|
-| \`/etc/passwd\` | Användarinfo (UID, GID, hemkatalog, shell) |
-| \`/etc/shadow\` | Krypterade lösenord och lösenordspolicy |
-| \`/etc/group\` | Gruppinfo och medlemmar |
-| \`/etc/gshadow\` | Grupplösenord (sällan använt) |
-| \`/etc/sudoers\` | Sudo-konfiguration (redigera med visudo) |
-
-**Exempel från /etc/passwd:**
-\`\`\`
-Alice:x:1001:1001::/home/Alice:/bin/bash
-\`\`\`
-Format: \`användarnamn:x:UID:GID:kommentar:hemkatalog:shell\``
+┌─────────────────────────────────────────────────────────────┐
+│  REGLER:                                                    │
+│  • Inga mellanslag runt =                                   │
+│  • Börja med bokstav eller _                                │
+│  • Använd $ för att läsa värdet                             │
+│  • Använd "quotes" för strängar med mellanslag              │
+└─────────────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "code",
-                    title: "Användar- och rättighetskommandon",
+                    title: "Variabeldeklaration",
                     language: "bash",
-                    code: `# Rättigheter
-chmod 755 fil                  # rwxr-xr-x
-chmod u+x fil                  # Ägare +execute
-chmod g+s katalog              # SGID (ärv grupp)
-chmod +t katalog               # Sticky bit
+                    code: `#!/bin/bash
 
-# Ägare
-chown user:group fil
-chown -R user:group katalog    # Rekursivt
+# Enkla variabler
+namn="Anna"
+alder=25
+stad="Stockholm"
 
-# Användare
-useradd -m -s /bin/bash -G grupp user
-passwd user
-usermod -aG grupp user         # Lägg till i grupp
-userdel -r user                # Ta bort med hemkatalog
+# Använda variabler
+echo "Hej $namn!"
+echo "Du är $alder år och bor i $stad"
 
-# Grupper
-groupadd gruppnamn
-groups användarnamn            # Visa användarens grupper
-getent group gruppnamn         # Visa gruppmedlemmar
+# Curly braces för tydlighet
+echo "\${namn}s ålder är \${alder}"
 
-# Sudo
-visudo                         # Redigera /etc/sudoers säkert
-# user ALL=(ALL) NOPASSWD: ALL`
+# Kommandosubstitution
+datum=$(date +%Y-%m-%d)
+filer=$(ls | wc -l)
+echo "Datum: $datum, Antal filer: $filer"`
+                },
+                {
+                    type: "concept",
+                    title: "Miljövariabler",
+                    explanation: `Miljövariabler ärvs av barnprocesser:
+
+┌─────────────────────────────────────────────────────────────┐
+│  Viktiga miljövariabler:                                    │
+│  $HOME     - Hemkatalog                                     │
+│  $USER     - Användarnamn                                   │
+│  $PATH     - Sökvägar för kommandon                         │
+│  $PWD      - Nuvarande katalog                              │
+│  $SHELL    - Nuvarande shell                                │
+│  $?        - Senaste exit code                              │
+│  $$        - Nuvarande process ID                           │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Strängmanipulation",
+                    language: "bash",
+                    code: `#!/bin/bash
+str="Hello World"
+
+# Längd
+echo \${#str}              # 11
+
+# Substring
+echo \${str:0:5}           # Hello
+echo \${str:6}             # World
+
+# Ersätt
+echo \${str/World/Bash}    # Hello Bash
+echo \${str//o/0}          # Hell0 W0rld
+
+# Ta bort mönster
+fil="dokument.txt.bak"
+echo \${fil%.bak}          # dokument.txt
+echo \${fil%%.*}           # dokument`
+                },
+                {
+                    type: "code",
+                    title: "Arrayer",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Deklarera array
+frukter=("äpple" "banan" "citron")
+
+# Åtkomst
+echo \${frukter[0]}        # äpple
+echo \${frukter[@]}        # alla element
+echo \${#frukter[@]}       # antal element (3)
+
+# Loopa
+for frukt in "\${frukter[@]}"; do
+    echo "Frukt: $frukt"
+done
+
+# Lägg till element
+frukter+=("dadel")`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur får du längden av variabeln $str?",
+                    options: [
+                        { text: "len($str)", correct: false, feedback: "Nej, det är Python-syntax" },
+                        { text: "\\${#str}", correct: true, feedback: "Rätt! # ger längden" },
+                        { text: "$str.length", correct: false, feedback: "Nej, det är annan syntax" },
+                        { text: "strlen $str", correct: false, feedback: "Nej, det finns inte i bash" }
+                    ],
+                    hint: "# används för längd i bash"
                 },
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM3: Rättigheter & användare!"
+                    message: "Du har klarat Variabler! 📦"
                 }
             ]
         },
-
-        // ============================================
-        // KM4: KONFIGURATION & ADMINISTRATION
-        // ============================================
         {
-            id: "doe25-km4-administration",
-            title: "KM4: Konfiguration & administration",
-            description: "Redogöra för principer för konfiguration av Linux/Unix-system",
-            order_index: 4,
-            estimated_minutes: 45,
-            content_blocks: [
-                {
-                    type: "intro",
-                    headline: "Administration – Paket, systemd och SSH",
-                    learning_objectives: [
-                        "Pakethantering (apt, dnf)",
-                        "Systemd och tjänster",
-                        "Cron för schemalagda jobb",
-                        "SSH-konfiguration och härdning"
-                    ]
-                },
-                {
-                    type: "concept",
-                    title: "Pakethantering",
-                    explanation: `**Debian/Ubuntu (apt):**
-\`\`\`bash
-apt update              # Uppdatera paketlista (inte paketen)
-apt upgrade             # Uppgradera installerade paket
-apt install paket       # Installera
-apt remove paket        # Ta bort (behåll config)
-apt purge paket         # Ta bort inkl. config
-apt search sökord       # Sök paket
-\`\`\`
-
-**Fedora/RHEL (dnf):**
-\`\`\`bash
-dnf check-update        # Kolla tillgängliga uppdateringar
-dnf upgrade             # Uppgradera
-dnf install paket
-dnf remove paket
-dnf search sökord
-\`\`\``,
-                    pro_tip: "apt update uppdaterar LISTAN över paket. apt upgrade uppdaterar PAKETEN."
-                },
-                {
-                    type: "concept",
-                    title: "Systemd och tjänster",
-                    explanation: `**Grundläggande tjänsthantering:**
-\`\`\`bash
-systemctl status tjänst      # Visa status
-systemctl start tjänst       # Starta
-systemctl stop tjänst        # Stoppa
-systemctl restart tjänst     # Omstart
-systemctl reload tjänst      # Ladda om config utan omstart
-systemctl enable tjänst      # Autostart vid boot
-systemctl disable tjänst     # Ingen autostart
-systemctl daemon-reload      # Efter servicefil-ändring
-\`\`\`
-
-**Targets (motsvarar runlevels):**
-- \`multi-user.target\` = Fleranvändarläge utan GUI (runlevel 3)
-- \`graphical.target\` = Med GUI (runlevel 5)
-- \`rescue.target\` = Räddningsläge (runlevel 1)`
-                },
-                {
-                    type: "concept",
-                    title: "Cron - Schemalagda jobb",
-                    explanation: `**Cron-format:**
-\`\`\`
-┌───────────── minut (0-59)
-│ ┌───────────── timme (0-23)
-│ │ ┌───────────── dag i månaden (1-31)
-│ │ │ ┌───────────── månad (1-12)
-│ │ │ │ ┌───────────── veckodag (0-7, 0 och 7 = söndag)
-│ │ │ │ │
-* * * * * kommando
-\`\`\`
-
-**Exempel:**
-- \`*/5 * * * *\` = var 5:e minut
-- \`0 2 * * *\` = kl 02:00 dagligen
-- \`0 3 * * 1\` = kl 03:00 måndagar
-- \`0 0 1 * *\` = midnatt första dagen varje månad`
-                },
-                {
-                    type: "code",
-                    title: "Cron-kommandon",
-                    language: "bash",
-                    code: `# Redigera användarens crontab
-crontab -e
-
-# Lista cron-jobb
-crontab -l
-
-# System-wide cron
-cat /etc/crontab
-ls /etc/cron.d/
-ls /etc/cron.daily/
-ls /etc/cron.hourly/`
-                },
-                {
-                    type: "concept",
-                    title: "SSH-härdning (från föreläsningen 19 nov)",
-                    explanation: `**Varför SSH-härdning?**
-SSH är porten till din server. Default-inställningar är osäkra:
-- Port 22 är känt mål för attacker
-- Lösenordsinloggning kan bruteforcas
-- Root-access direkt är farligt
-
-**Steg 1: Generera SSH-nyckel (på din maskin)**
-\`\`\`bash
-ssh-keygen -t ed25519 -C "said@devops"
-# Privat nyckel: ~/.ssh/id_ed25519
-# Publik nyckel: ~/.ssh/id_ed25519.pub
-\`\`\`
-
-**ed25519 vs RSA:**
-- ed25519 = modernare, kortare nycklar, snabbare
-- RSA = äldre, kompatibelt med allt`
-                },
-                {
-                    type: "concept",
-                    title: "SSH-härdning config",
-                    explanation: `**Kopiera publik nyckel till server:**
-\`\`\`bash
-ssh-copy-id -i ~/.ssh/id_ed25519.pub said@192.168.1.100
-\`\`\`
-
-**Viktigt om behörigheter:**
-- \`~/.ssh\` måste vara \`700\`
-- \`~/.ssh/authorized_keys\` måste vara \`600\`
-- Annars vägrar SSH använda nycklarna!
-
-**Härdning i /etc/ssh/sshd_config.d/01-hardening.conf:**
-\`\`\`bash
-Port 6622                      # Byt från standardport 22
-PasswordAuthentication no      # Tillåt INTE lösenord
-PermitRootLogin no             # Tillåt INTE root-inloggning
-AllowUsers said                # Tillåt ENDAST specifika användare
-\`\`\``,
-                    pro_tip: "Testa alltid i en NY terminal innan du stänger den gamla - annars kan du låsa ut dig!"
-                },
-                {
-                    type: "code",
-                    title: "SSH och brandvägg",
-                    language: "bash",
-                    code: `# Starta om SSH efter ändring
-sudo systemctl restart sshd
-
-# Ubuntu (UFW)
-sudo ufw allow 6622/tcp
-sudo ufw enable
-sudo ufw status
-
-# Fedora (FirewallD)
-sudo firewall-cmd --permanent --add-port=6622/tcp
-sudo firewall-cmd --reload
-sudo firewall-cmd --list-all
-
-# SSH-config på klienten (~/.ssh/config)
-Host ubuntu-vm
-    HostName 192.168.1.100
-    User said
-    Port 6622
-    IdentityFile ~/.ssh/id_ed25519
-
-# Nu: ssh ubuntu-vm`
-                },
-                {
-                    type: "checkpoint",
-                    message: "Du har slutfört KM4: Konfiguration & administration!"
-                }
-            ]
-        },
-
-        // ============================================
-        // KM5: NÄTVERK, OSI & SUBNETTING
-        // ============================================
-        {
-            id: "doe25-km5-natverk",
-            title: "KM5: Nätverk, OSI & subnetting",
-            description: "Redogöra för grundläggande nätverksteknik, bland annat OSI-modellen och subnetting",
+            id: "doe25-1-3-regex",
+            title: "1.3 Reguljära Uttryck (Regex)",
+            description: "Mönstermatchning med reguljära uttryck",
             order_index: 5,
-            estimated_minutes: 60,
+            estimated_minutes: 55,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Nätverk – OSI, TCP/IP och subnetting",
+                    headline: "🔍 Reguljära Uttryck",
                     learning_objectives: [
-                        "OSI-modellens 7 lager",
-                        "TCP vs UDP",
-                        "IP-adressering och privata intervall",
-                        "Subnetting och CIDR",
-                        "Viktiga portar"
+                        "Grundläggande regex-syntax",
+                        "Metatecken och kvantifierare",
+                        "grep med regex",
+                        "Praktiska regex-mönster"
                     ]
                 },
                 {
                     type: "concept",
-                    title: "OSI-modellen – de 7 lagren",
-                    explanation: `**Minnesregel (uppifrån):** "Alla Personer Som Talar Norska Dricker Fanta"
+                    title: "Regex Grunderna",
+                    explanation: `Reguljära uttryck matchar textmönster:
 
-| Lager | Namn | Funktion | Protokoll |
-|-------|------|----------|-----------|
-| 7 | Application | Användargränssnitt | HTTP, SSH, DNS |
-| 6 | Presentation | Format, kryptering | SSL/TLS, JPEG |
-| 5 | Session | Sessionshantering | NetBIOS |
-| 4 | Transport | End-to-end leverans | TCP, UDP |
-| 3 | Network | Routing, adressering | IP, ICMP |
-| 2 | Data Link | Lokal leverans | Ethernet, MAC |
-| 1 | Physical | Elektriska signaler | Kablar, Wi-Fi |
-
-**Analogi – skicka ett paket:**
-1. Application: Du skriver ett brev
-2. Presentation: Du översätter till gemensamt språk
-3. Session: Du etablerar kontakt
-4. Transport: Du delar upp brevet i numrerade sidor
-5. Network: Du skriver mottagarens adress
-6. Data Link: Posten hittar rätt hus på gatan
-7. Physical: Lastbilen kör brevet fysiskt`
+┌─────────┬─────────────────────────────────────────────────────┐
+│ Tecken  │ Betydelse                                           │
+├─────────┼─────────────────────────────────────────────────────┤
+│ .       │ Matchar ETT valfritt tecken                         │
+│ *       │ 0 eller fler av föregående                          │
+│ +       │ 1 eller fler av föregående                          │
+│ ?       │ 0 eller 1 av föregående                             │
+│ ^       │ Början av rad                                       │
+│ $       │ Slutet av rad                                       │
+│ []      │ Teckenklasser [abc] eller [a-z]                     │
+│ [^]     │ Negerad teckenklass [^abc]                          │
+│ |       │ Alternativ (eller)                                  │
+│ ()      │ Gruppering                                          │
+└─────────┴─────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "concept",
-                    title: "TCP vs UDP",
-                    explanation: `| Egenskap | TCP | UDP |
-|----------|-----|-----|
-| Anslutning | Connection-oriented | Connectionless |
-| Tillförlitlighet | Garanterad leverans | Best effort |
-| Ordning | Garanterad ordning | Ingen garanti |
-| Hastighet | Långsammare | Snabbare |
-| Användning | HTTP, SSH, e-post | DNS, video, gaming |
-
-**Analogi:**
-- TCP = Rekommenderat brev med kvittens. Du vet att det kom fram.
-- UDP = Vykort. Snabbt, men ingen garanti.
-
-**TCP 3-way handshake:**
-\`\`\`
-Klient  →  SYN        →  Server    "Vill ansluta"
-Klient  ←  SYN-ACK    ←  Server    "OK, jag lyssnar"
-Klient  →  ACK        →  Server    "Fint, vi kör"
-\`\`\``
-                },
-                {
-                    type: "concept",
-                    title: "IP-adressering",
-                    explanation: `**IPv4-format:** 4 oktetter à 8 bitar = 32 bitar totalt
-\`192.168.1.10\`
-
-**Privata adressintervall (RFC 1918):**
-- \`10.0.0.0/8\` (10.0.0.0 – 10.255.255.255)
-- \`172.16.0.0/12\` (172.16.0.0 – 172.31.255.255)
-- \`192.168.0.0/16\` (192.168.0.0 – 192.168.255.255)
-
-**Speciella adresser:**
-- \`127.0.0.1\` = localhost (loopback)
-- \`0.0.0.0\` = "alla interface" eller "okänd"
-- \`255.255.255.255\` = broadcast`
-                },
-                {
-                    type: "concept",
-                    title: "Subnetting – dela upp nätverk",
-                    explanation: `**Varför subnetting?**
-- Effektiv användning av IP-adresser
-- Isolera nätverkssegment (säkerhet)
-- Minska broadcast-domäner
-
-**CIDR-notation och hosts:**
-| Prefix | Mask | Adresser | Hosts |
-|--------|------|----------|-------|
-| /24 | 255.255.255.0 | 256 | 254 |
-| /25 | 255.255.255.128 | 128 | 126 |
-| /26 | 255.255.255.192 | 64 | 62 |
-| /27 | 255.255.255.224 | 32 | 30 |
-| /28 | 255.255.255.240 | 16 | 14 |
-
-**Formel:** Hosts = 2^(32-prefix) - 2
-(-2 för nätverks- och broadcast-adress)`,
-                    pro_tip: "Binär subnetting: 256 - sista oktetten i masken = 'magiskt nummer'. För /26: 256-192=64, subnät börjar vid 0, 64, 128, 192..."
-                },
-                {
-                    type: "concept",
-                    title: "Subnetting-exempel",
-                    explanation: `**Givet: 192.168.1.0/24, dela i 4 subnät**
-
-Steg 1: Vi behöver 2 extra bitar (2² = 4)
-Steg 2: /24 + 2 = /26
-
-**Resultat:**
-\`\`\`
-Subnät 1: 192.168.1.0/26    (0-63,   host: 1-62)
-Subnät 2: 192.168.1.64/26   (64-127, host: 65-126)
-Subnät 3: 192.168.1.128/26  (128-191, host: 129-190)
-Subnät 4: 192.168.1.192/26  (192-255, host: 193-254)
-\`\`\``
-                },
-                {
-                    type: "concept",
-                    title: "Viktiga portar",
-                    explanation: `| Port | Protokoll | Tjänst |
-|------|-----------|--------|
-| 22 | TCP | SSH |
-| 25 | TCP | SMTP (e-post) |
-| 53 | TCP/UDP | DNS |
-| 80 | TCP | HTTP |
-| 443 | TCP | HTTPS |
-| 3306 | TCP | MySQL |
-| 5432 | TCP | PostgreSQL |`
+                    title: "Kvantifierare",
+                    explanation: `┌─────────────┬───────────────────────────────────────────────┐
+│ Kvantifierare│ Betydelse                                     │
+├─────────────┼───────────────────────────────────────────────┤
+│ {n}         │ Exakt n gånger                                 │
+│ {n,}        │ n eller fler gånger                            │
+│ {n,m}       │ Mellan n och m gånger                          │
+│ *           │ Samma som {0,}                                 │
+│ +           │ Samma som {1,}                                 │
+│ ?           │ Samma som {0,1}                                │
+└─────────────┴───────────────────────────────────────────────┘`
                 },
                 {
                     type: "code",
-                    title: "Nätverkskommandon",
+                    title: "grep med regex",
                     language: "bash",
-                    code: `# Visa konfiguration
-ip a                    # IP-adresser
-ip r                    # Routing-tabell
-ip link                 # Interface-status
+                    code: `# Grundläggande grep
+grep "error" /var/log/syslog
 
-# Testa anslutning
-ping 8.8.8.8            # ICMP echo
-ping google.com         # Testa DNS-upplösning
-traceroute google.com   # Spåra vägen
+# Extended regex (-E)
+grep -E "error|warning" logfil.txt
 
-# DNS
-nslookup google.com     # DNS-uppslagning
-dig google.com          # Detaljerad DNS
+# Case insensitive (-i)
+grep -i "ERROR" logfil.txt
 
-# Portar och anslutningar
-ss -tuln                # Lyssnande portar
-ss -tun                 # Aktiva anslutningar`
+# Visa radnummer (-n)
+grep -n "pattern" fil.txt
+
+# Invertera matchning (-v)
+grep -v "^#" config.conf   # Exkludera kommentarer
+
+# Endast filnamn (-l)
+grep -l "TODO" *.py`
+                },
+                {
+                    type: "code",
+                    title: "Praktiska regex-exempel",
+                    language: "bash",
+                    code: `# Matcha IP-adresser
+grep -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" access.log
+
+# Matcha e-postadresser
+grep -E "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" fil.txt
+
+# Matcha datum (YYYY-MM-DD)
+grep -E "[0-9]{4}-[0-9]{2}-[0-9]{2}" logg.txt
+
+# Rader som börjar med siffra
+grep "^[0-9]" fil.txt
+
+# Rader som slutar med punkt
+grep "\.$" fil.txt
+
+# Tomma rader
+grep "^$" fil.txt`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad matchar regex-mönstret ^#?",
+                    options: [
+                        { text: "Rader som innehåller #", correct: false, feedback: "Nej, ^ betyder början" },
+                        { text: "Rader som börjar med #", correct: true, feedback: "Rätt! ^ = radstart" },
+                        { text: "Rader som slutar med #", correct: false, feedback: "Nej, $ är för radslut" },
+                        { text: "Alla #-tecken", correct: false, feedback: "Nej, ^ begränsar till start" }
+                    ],
+                    hint: "^ betyder början av raden"
                 },
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM5: Nätverk, OSI & subnetting!"
+                    message: "Du har klarat Regex! 🔍"
                 }
             ]
         },
-
-        // ============================================
-        // KM6: ARKIVERING & BACKUP
-        // ============================================
         {
-            id: "doe25-km6-backup",
-            title: "KM6: Arkivering & backup",
-            description: "Beskriva metoder för arkivering och backup på Linux/Unix-servrar",
+            id: "doe25-1-4-sed",
+            title: "1.4 sed - Stream Editor",
+            description: "Textmanipulation med sed",
             order_index: 6,
-            estimated_minutes: 30,
+            estimated_minutes: 50,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Backup – 3-2-1-regeln och verktyg",
+                    headline: "✂️ sed - Stream Editor",
                     learning_objectives: [
-                        "3-2-1-regeln för backup",
-                        "Backup-typer (full, inkrementell, differentiell)",
-                        "tar för arkivering",
-                        "rsync för synkronisering"
+                        "Grundläggande sed-syntax",
+                        "Sök och ersätt",
+                        "Radera och infoga rader",
+                        "In-place editing"
                     ]
                 },
                 {
                     type: "concept",
-                    title: "3-2-1-regeln",
-                    explanation: `**3** kopior av data
-**2** olika lagringsmedier
-**1** off-site (annan fysisk plats)
+                    title: "sed Syntax",
+                    explanation: `sed processar text rad för rad:
 
-**Exempel:**
-- Originaldata på servern
-- Backup på NAS lokalt
-- Kopia i molnet (S3, Backblaze)`,
-                    pro_tip: "En backup du aldrig testat är ingen backup. Testa återställning regelbundet!"
-                },
-                {
-                    type: "concept",
-                    title: "Backup-typer",
-                    explanation: `| Typ | Beskrivning | Tid | Plats | Återställning |
-|-----|-------------|-----|-------|---------------|
-| Full | Allt varje gång | Lång | Stor | Snabb |
-| Inkrementell | Ändringar sedan senaste | Kort | Liten | Långsam |
-| Differentiell | Ändringar sedan fulla | Medel | Medel | Medel |
-
-**Strategi-exempel:**
-- Söndag: Full backup
-- Måndag-Lördag: Inkrementell
-- Återställning: Full + alla inkrementella`,
-                    pro_tip: "Inkrementell sparar mest plats men kräver alla backups för återställning."
+┌─────────────────────────────────────────────────────────────┐
+│  sed [OPTIONS] 'COMMAND' file                               │
+│                                                             │
+│  Vanliga options:                                           │
+│  -i       In-place (ändra filen direkt)                     │
+│  -n       Suppress automatic printing                       │
+│  -e       Flera kommandon                                   │
+│  -r/-E    Extended regex                                    │
+└─────────────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "code",
-                    title: "tar – arkivering",
+                    title: "Sök och ersätt",
                     language: "bash",
-                    code: `# Skapa arkiv
-tar -cvf backup.tar /etc             # Create, Verbose, File
-tar -czvf backup.tar.gz /etc         # Med gzip-komprimering
-tar -cjvf backup.tar.bz2 /etc        # Med bzip2
+                    code: `# Grundläggande ersättning
+sed 's/gammal/ny/' fil.txt           # Första på varje rad
+sed 's/gammal/ny/g' fil.txt          # Alla förekomster
+sed 's/gammal/ny/gi' fil.txt         # Case insensitive
 
-# Minnesregel för tar-flaggor:
-# c = Create
-# x = Extract
-# t = lisT
-# v = Verbose
-# f = File
-# z = gZip
+# In-place editing (ändra filen)
+sed -i 's/fel/rätt/g' fil.txt
+sed -i.bak 's/fel/rätt/g' fil.txt    # Med backup
 
-# Lista innehåll
-tar -tvf backup.tar.gz
-
-# Extrahera
-tar -xzvf backup.tar.gz              # Packa upp
-tar -xzvf backup.tar.gz -C /restore/ # Till specifik katalog`
+# Delimiter kan vara annat än /
+sed 's|/usr/local|/opt|g' fil.txt
+sed 's#http://#https://#g' fil.txt`
                 },
                 {
                     type: "code",
-                    title: "rsync – synkronisering",
+                    title: "Radera och visa rader",
                     language: "bash",
-                    code: `# Lokal synk
-rsync -av /source/ /backup/
-# -a = archive (behåller rättigheter, timestamps etc)
-# -v = verbose
+                    code: `# Radera rader
+sed '/pattern/d' fil.txt             # Rader med pattern
+sed '5d' fil.txt                     # Rad 5
+sed '1,10d' fil.txt                  # Rad 1-10
+sed '/^#/d' fil.txt                  # Kommentarer
+sed '/^$/d' fil.txt                  # Tomma rader
 
-# Fjärr (över SSH)
-rsync -avz /local/ user@server:/backup/
-# -z = komprimering
+# Visa specifika rader
+sed -n '5p' fil.txt                  # Rad 5
+sed -n '1,10p' fil.txt               # Rad 1-10
+sed -n '/error/p' fil.txt            # Rader med error`
+                },
+                {
+                    type: "code",
+                    title: "Avancerade exempel",
+                    language: "bash",
+                    code: `# Infoga text
+sed '1i\\Första raden' fil.txt       # Före rad 1
+sed '$a\\Sista raden' fil.txt        # Efter sista
 
-# --delete tar bort filer på destination som inte finns i source
-rsync -av --delete /source/ /backup/`
+# Flera kommandon
+sed -e 's/foo/bar/g' -e 's/baz/qux/g' fil.txt
+
+# Adressering
+sed '10,20s/old/new/g' fil.txt       # Rad 10-20
+sed '/START/,/END/d' fil.txt         # Mellan mönster
+
+# Gruppering och backreference
+sed 's/\\(.*\\):\\(.*\\)/\\2:\\1/' fil.txt # Byt ordning`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad gör sed 's/foo/bar/g' fil.txt?",
+                    options: [
+                        { text: "Ersätter första foo med bar", correct: false, feedback: "Nej, g gör alla" },
+                        { text: "Ersätter alla foo med bar", correct: true, feedback: "Rätt! g = global" },
+                        { text: "Raderar foo", correct: false, feedback: "Nej, s är för substitution" },
+                        { text: "Söker efter foo", correct: false, feedback: "Nej, den ersätter" }
+                    ],
+                    hint: "g står för global"
                 },
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM6: Arkivering & backup!"
+                    message: "Du har klarat sed! ✂️"
                 }
             ]
         },
-
-        // ============================================
-        // KM7: CONTAINERTEKNIK (DOCKER)
-        // ============================================
         {
-            id: "doe25-km7-docker",
-            title: "KM7: Containerteknik (Docker)",
-            description: "Förklara grunderna i containerteknik i Linux och dess användningsområden",
+            id: "doe25-1-5-awk",
+            title: "1.5 awk - Textbearbetning",
+            description: "Kolumnbaserad textbearbetning med awk",
             order_index: 7,
+            estimated_minutes: 55,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "📊 awk - Textbearbetning",
+                    learning_objectives: [
+                        "awk grundsyntax",
+                        "Fält och kolumner",
+                        "Mönstermatchning",
+                        "Inbyggda variabler"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "awk Syntax",
+                    explanation: `awk processar text kolumnvis:
+
+┌─────────────────────────────────────────────────────────────┐
+│  awk 'pattern { action }' file                              │
+│                                                             │
+│  Fält (kolumner):                                           │
+│  $0  - Hela raden                                           │
+│  $1  - Första fältet                                        │
+│  $2  - Andra fältet                                         │
+│  $NF - Sista fältet                                         │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Grundläggande awk",
+                    language: "bash",
+                    code: `# Skriv ut specifika kolumner
+awk '{print $1}' fil.txt             # Första kolumnen
+awk '{print $1, $3}' fil.txt         # Kolumn 1 och 3
+awk '{print $NF}' fil.txt            # Sista kolumnen
+
+# Annan delimiter (-F)
+awk -F: '{print $1}' /etc/passwd     # Användarnamn
+awk -F, '{print $2}' data.csv        # CSV kolumn 2
+
+# Formaterad output
+awk '{printf "%-10s %s\\n", $1, $2}' fil.txt`
+                },
+                {
+                    type: "concept",
+                    title: "Inbyggda variabler",
+                    explanation: `┌─────────┬─────────────────────────────────────────────────────┐
+│ Variabel│ Betydelse                                           │
+├─────────┼─────────────────────────────────────────────────────┤
+│ NR      │ Radnummer (Number of Record)                        │
+│ NF      │ Antal fält på raden (Number of Fields)              │
+│ FS      │ Fältseparator (Field Separator)                     │
+│ OFS     │ Output field separator                              │
+│ RS      │ Record separator (radbrytning)                      │
+│ FILENAME│ Nuvarande filnamn                                   │
+└─────────┴─────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Mönster och villkor",
+                    language: "bash",
+                    code: `# Med mönster
+awk '/error/ {print}' logg.txt       # Rader med error
+awk '$3 > 100 {print $1}' data.txt   # Villkor på kolumn
+
+# BEGIN och END
+awk 'BEGIN {print "Start"} {print} END {print "Slut"}' fil.txt
+
+# Summera kolumn
+awk '{sum += $1} END {print sum}' numbers.txt
+
+# Räkna rader
+awk 'END {print NR}' fil.txt
+
+# Unika värden
+awk '!seen[$1]++' fil.txt`
+                },
+                {
+                    type: "code",
+                    title: "Praktiska exempel",
+                    language: "bash",
+                    code: `# Analysera /etc/passwd
+awk -F: '$3 >= 1000 {print $1}' /etc/passwd   # Vanliga users
+
+# Diskutrymme per filsystem
+df -h | awk 'NR>1 {print $5, $6}'
+
+# Processer per användare
+ps aux | awk '{count[$1]++} END {for (u in count) print u, count[u]}'
+
+# Logganalys - requests per IP
+awk '{print $1}' access.log | sort | uniq -c | sort -rn | head`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad skriver awk '{print $NF}' ut?",
+                    options: [
+                        { text: "Första fältet", correct: false, feedback: "Nej, det är $1" },
+                        { text: "Sista fältet", correct: true, feedback: "Rätt! NF = Number of Fields" },
+                        { text: "Antal fält", correct: false, feedback: "Nej, då skulle det vara print NF" },
+                        { text: "Hela raden", correct: false, feedback: "Nej, det är $0" }
+                    ],
+                    hint: "NF står för Number of Fields"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat awk! 📊"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-6-villkor",
+            title: "1.6 Villkor (if/else)",
+            description: "Villkorssatser och test-kommandon i Bash",
+            order_index: 8,
             estimated_minutes: 45,
             content_blocks: [
                 {
                     type: "intro",
-                    headline: "Docker – kör vad som helst, var som helst",
+                    headline: "🔀 Villkor (if/else)",
                     learning_objectives: [
-                        "Skillnad container vs VM",
-                        "Image vs container",
-                        "Grundläggande docker-kommandon",
-                        "Dockerfile och volymer"
+                        "if/elif/else syntax",
+                        "test-kommandot och [ ]",
+                        "Strängjämförelser",
+                        "Numeriska jämförelser",
+                        "Filjämförelser"
                     ]
                 },
                 {
                     type: "concept",
-                    title: "Container vs VM",
-                    explanation: `| Egenskap | VM | Container |
-|----------|-----|----------|
-| Isolering | Full OS | Delar kernel |
-| Storlek | Gigabyte | Megabyte |
-| Uppstart | Minuter | Sekunder |
-| Overhead | Hög | Låg |
+                    title: "if/else Syntax",
+                    explanation: `Grundläggande villkorsstruktur:
 
-**Underliggande teknologi (Linux kernel):**
-- **Namespaces**: Isolering (process, nätverk, filsystem)
-- **Cgroups**: Resursbegränsning (CPU, RAM)
-- **Union filesystem**: Lager på lager`,
-                    pro_tip: "Tänk VM som att bygga ett helt hus per gäst. Container är hyreslägenhet med delad grund, el, VVS."
+┌─────────────────────────────────────────────────────────────┐
+│  if [ villkor ]; then                                       │
+│      # kod om sant                                          │
+│  elif [ annat_villkor ]; then                               │
+│      # kod om annat sant                                    │
+│  else                                                       │
+│      # kod om falskt                                        │
+│  fi                                                         │
+└─────────────────────────────────────────────────────────────┘
+
+VIKTIGT: Mellanslag krävs inuti [ ] !`
                 },
                 {
                     type: "concept",
-                    title: "Image vs Container",
-                    explanation: `**Image:**
-- Mall/ritning för en container
-- Read-only lager
-- Byggs från Dockerfile
-- Delas via registries (Docker Hub)
-
-**Container:**
-- Körande instans av en image
-- Eget skrivbart lager ovanpå imagen
-- Isolerad process
-
-**Analogi:** Image = Klass, Container = Objekt/instans`,
-                    pro_tip: "En image kan ha många körande containers. Ändring i en container påverkar inte andra."
+                    title: "Jämförelseoperatorer",
+                    explanation: `┌──────────────────────────────────────────────────────────────┐
+│  STRÄNGAR:                                                   │
+│  =, ==    Lika med         [ "$a" = "$b" ]                   │
+│  !=      Inte lika         [ "$a" != "$b" ]                  │
+│  -z      Tom sträng        [ -z "$str" ]                     │
+│  -n      Ej tom            [ -n "$str" ]                     │
+├──────────────────────────────────────────────────────────────┤
+│  NUMMER:                                                     │
+│  -eq     Equal             [ $a -eq $b ]                     │
+│  -ne     Not equal         [ $a -ne $b ]                     │
+│  -lt     Less than         [ $a -lt $b ]                     │
+│  -le     Less or equal     [ $a -le $b ]                     │
+│  -gt     Greater than      [ $a -gt $b ]                     │
+│  -ge     Greater or equal  [ $a -ge $b ]                     │
+└──────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "concept",
+                    title: "Filtest",
+                    explanation: `┌─────────┬─────────────────────────────────────────────────────┐
+│ Test    │ Betydelse                                           │
+├─────────┼─────────────────────────────────────────────────────┤
+│ -e      │ Filen existerar                                     │
+│ -f      │ Är en vanlig fil                                    │
+│ -d      │ Är en katalog                                       │
+│ -r      │ Är läsbar                                           │
+│ -w      │ Är skrivbar                                         │
+│ -x      │ Är exekverbar                                       │
+│ -s      │ Har storlek > 0                                     │
+│ -L      │ Är symbolisk länk                                   │
+└─────────┴─────────────────────────────────────────────────────┘`
                 },
                 {
                     type: "code",
-                    title: "Docker-kommandon",
-                    language: "bash",
-                    code: `# === IMAGES ===
-docker pull nginx              # Ladda ner
-docker images                  # Lista lokala
-docker rmi nginx               # Ta bort
-
-# === CONTAINERS ===
-docker run nginx               # Skapa och starta
-docker run -d nginx            # Detached (bakgrund)
-docker run -d -p 8080:80 nginx # Port-mapping host:container
-docker run -d --name web nginx # Med namn
-
-docker ps                      # Körande containers
-docker ps -a                   # Alla (även stoppade)
-
-docker stop web                # Stoppa
-docker start web               # Starta
-docker rm web                  # Ta bort
-
-# === INSPEKTERA ===
-docker logs web                # Visa loggar
-docker logs -f web             # Följ loggar
-docker exec -it web bash       # Shell i container`
-                },
-                {
-                    type: "concept",
-                    title: "Dockerfile",
-                    explanation: `\`\`\`dockerfile
-FROM ubuntu:22.04           # Bas-image
-
-RUN apt-get update && \\     # Installera
-    apt-get install -y nginx
-
-COPY index.html /var/www/   # Kopiera filer
-
-EXPOSE 80                   # Dokumentera port
-
-CMD ["nginx", "-g", "daemon off;"]  # Startkommando
-\`\`\`
-
-**Bygg:** \`docker build -t myapp:v1 .\`
-**Kör:** \`docker run -d -p 8080:80 myapp:v1\``,
-                    pro_tip: "FROM = bas, RUN = bygg-steg, COPY = filer in, CMD = startkommando."
-                },
-                {
-                    type: "concept",
-                    title: "Volymer – persistent data",
-                    explanation: `Containers är ephemeral – data försvinner vid borttagning.
-
-**Lösning: Volymer**
-\`\`\`bash
-# Named volume
-docker run -v mydata:/data nginx
-
-# Bind mount
-docker run -v /host/path:/container/path nginx
-\`\`\``,
-                    pro_tip: "Databaser i containers MÅSTE ha volymer, annars försvinner all data."
-                },
-                {
-                    type: "checkpoint",
-                    message: "Du har slutfört KM7: Containerteknik (Docker)!"
-                }
-            ]
-        },
-
-        // ============================================
-        // KM8: GIT & VERSIONSHANTERING
-        // ============================================
-        {
-            id: "doe25-km8-git",
-            title: "KM8: Git & versionshantering",
-            description: "Förklara användningen av versionshanteringsverktyg som Git i moderna utvecklingsprocesser",
-            order_index: 8,
-            estimated_minutes: 35,
-            content_blocks: [
-                {
-                    type: "intro",
-                    headline: "Git – tidsmaskinen för kod",
-                    learning_objectives: [
-                        "Varför versionshantering behövs",
-                        "git add, commit, push, pull",
-                        "Branching och merging",
-                        "Gits roll i DevOps"
-                    ]
-                },
-                {
-                    type: "concept",
-                    title: "Git-koncept",
-                    explanation: `**Utan Git:** fil_v1.txt, fil_final.txt, fil_final_FINAL.txt
-**Med Git:** Fullständig historik, samarbete, trygghet
-
-**Repository (repo):** Projektmapp med all historik (.git-mappen)
-
-**Workflow:**
-\`\`\`
-Working directory → Staging → Local repo → Remote repo
-Ändra filer → git add → git commit → git push
-              staging    lokal historik  server
-\`\`\`
-
-**Branch:** Parallell utvecklingslinje
-**Commit:** En sparad version med meddelande`,
-                    pro_tip: "Staging area låter dig välja exakt vad som ska ingå i nästa commit."
-                },
-                {
-                    type: "code",
-                    title: "Git-kommandon",
-                    language: "bash",
-                    code: `# Setup
-git config --global user.name "Said"
-git config --global user.email "said@example.com"
-
-# Skapa/klona
-git init                        # Nytt repo
-git clone <url>                 # Kopiera
-
-# Dagligt arbete
-git status                      # Vad har ändrats?
-git add .                       # Stagea allt
-git commit -m "Beskrivning"     # Spara
-git push                        # Skicka till server
-git pull                        # Hämta från server
-
-# Historik
-git log --oneline               # Kompakt historik
-git diff                        # Visa ändringar
-
-# Branches
-git branch                      # Lista
-git checkout -b feature         # Skapa och byt
-git merge feature               # Mergea in
-
-# Ångra
-git revert <commit>             # Säker ångrning (ny commit)
-git reset --hard HEAD~1         # Farligt (tar bort)`
-                },
-                {
-                    type: "concept",
-                    title: "Branching-workflow",
-                    explanation: `**Varför branches?**
-- Jobba på features utan att störa main
-- Experimentera säkert
-- Code review via pull requests
-
-**Vanligt flöde:**
-\`\`\`bash
-git checkout -b feature/login   # Skapa branch
-# ... arbeta ...
-git add . && git commit -m "Add login"
-git push -u origin feature/login
-# → Pull Request → Code Review → Merge
-\`\`\``,
-                    pro_tip: "Aldrig commit direkt till main i team-projekt. Använd branches och pull requests."
-                },
-                {
-                    type: "concept",
-                    title: "Git i DevOps",
-                    explanation: `**CI/CD-koppling:**
-1. Developer pushar kod
-2. CI-pipeline triggas automatiskt
-3. Tester körs
-4. Om OK → deploy
-
-**GitOps:**
-- Infrastruktur definieras i Git
-- Ändringar via pull requests
-- Automatisk deploy från main`,
-                    pro_tip: "Git är navet i modern DevOps. All förändring – kod, infrastruktur, config – går genom Git."
-                },
-                {
-                    type: "concept",
-                    title: "Fetch vs Pull",
-                    explanation: `**git fetch:** Hämtar ändringar men integrerar dem INTE
-**git pull:** fetch + merge (hämtar och integrerar)
-
-Använd fetch när du vill se vad som ändrats innan du mergar.`
-                },
-                {
-                    type: "checkpoint",
-                    message: "Du har slutfört KM8: Git & versionshantering! 🎉"
-                }
-            ]
-        },
-
-        // ============================================
-        // KM9: BASH-SKRIPTNING (VG-KRITISKT)
-        // ============================================
-        {
-            id: "doe25-km9-bash",
-            title: "KM9: Bash-skriptning",
-            description: "Utveckla och planera Bash-skript för att automatisera systemutvecklingsflöden (VG-krav)",
-            order_index: 9,
-            estimated_minutes: 90,
-            content_blocks: [
-                {
-                    type: "intro",
-                    headline: "Bash-skriptning – Automatisera Linux",
-                    learning_objectives: [
-                        "Shebang och skriptstruktur",
-                        "Variabler och quoting",
-                        "Villkorssatser (if/elif/else, case)",
-                        "Loopar (for, while, until)",
-                        "Funktioner och argument",
-                        "Input/Output med read och echo",
-                        "Arrays och strängoperationer",
-                        "Exit codes och felsökning"
-                    ]
-                },
-                {
-                    type: "concept",
-                    title: "VG-kravet för Bash",
-                    explanation: `**Från kursplanen:**
-"Med stor säkerhet och skicklighet utveckla och planera Bash-skript för att automatisera systemutvecklingsflöden"
-
-**Detta innebär att du ska kunna:**
-- Skriva fungerande skript från scratch
-- Förstå och förklara varje del
-- Kombinera flera koncept i ett skript
-- Felsöka och debugga skript`,
-                    pro_tip: "Tentan är på papper – du måste kunna skriva korrekt syntax utan hjälp från terminalen!"
-                },
-                {
-                    type: "concept",
-                    title: "Shebang och grundstruktur",
-                    explanation: `**Shebang – första raden:**
-
-#!/bin/bash
-# eller
-#!/usr/bin/env bash
-
-**Vad gör shebang?**
-Talar om för operativsystemet vilken tolk (interpreter) som ska köra skriptet.
-
-**Utan shebang:** Systemet vet inte att det är ett Bash-skript.
-
-**Göra skript körbart:**
-
-chmod +x script.sh
-./script.sh`
-                },
-                {
-                    type: "code",
-                    title: "Grundläggande skriptstruktur",
+                    title: "Praktiska exempel",
                     language: "bash",
                     code: `#!/bin/bash
-# =========================================
-# Skriptnamn: example.sh
-# Beskrivning: Exempelskript för tentan
-# =========================================
 
-# Aktivera strikt läge (rekommenderas)
-set -e  # Avbryt vid fel
-set -u  # Fel vid odefinierade variabler
-
-# Variabler
-NAME="Said"
-COUNT=5
-
-# Huvudlogik
-echo "Hej $NAME!"
-echo "Count: $COUNT"`
-                },
-                {
-                    type: "concept",
-                    title: "Variabler och quoting",
-                    explanation: `**Skapa variabler:**
-
-NAME="Said"          # Sträng
-COUNT=5              # Tal (egentligen också sträng)
-EMPTY=""             # Tom sträng
-
-**Läsa variabler:**
-
-echo $NAME           # Fungerar oftast
-echo "$NAME"         # Säkrare - behåller mellanslag
-echo '$NAME'         # Literal - skriver ut $NAME
-echo "\${NAME}"       # Explicit - för sammansättning
-
-**VIKTIGT om quoting:**
-| Typ | Effekt |
-|-----|--------|
-| "dubbla" | Variabelexpansion sker |
-| 'enkla' | Allt är literal text |
-| ingen | Farligt! Orddelning kan ske |`,
-                    pro_tip: "Använd ALLTID dubbla citattecken runt variabler: \"$VAR\" – det förhindrar orddelning och glob-expansion."
-                },
-                {
-                    type: "concept",
-                    title: "Speciella variabler",
-                    explanation: `**Argument till skriptet:**
-| Variabel | Betydelse |
-|----------|-----------|
-| $0 | Skriptets namn |
-| $1 | Första argumentet |
-| $2 | Andra argumentet |
-| $@ | Alla argument (som separata ord) |
-| $* | Alla argument (som en sträng) |
-| $# | Antal argument |
-
-**Exit status:**
-| Variabel | Betydelse |
-|----------|-----------|
-| $? | Exit-kod från senaste kommando (0 = OK) |
-| $$ | Processens PID |
-
-**Exempel:**
-#!/bin/bash
-echo "Skript: $0"
-echo "Första arg: $1"
-echo "Antal args: $#"
-echo "Alla args: $@"`
-                },
-                {
-                    type: "concept",
-                    title: "if-satser (villkor)",
-                    explanation: `**Grundläggande syntax:**
-
-if [ VILLKOR ]; then
-    KOMMANDON
-fi
-
-**Med else:**
-
-if [ VILLKOR ]; then
-    KOMMANDON
-else
-    ANDRA_KOMMANDON
-fi
-
-**Med elif:**
-
-if [ TEST1 ]; then
-    CMD1
-elif [ TEST2 ]; then
-    CMD2
-else
-    CMD3
-fi
-
-**[ ] vs [[ ]]:**
-- [ ] = POSIX-kompatibel, fungerar överallt
-- [[ ]] = Bash-specifik, stödjer regex och glob`
-                },
-                {
-                    type: "concept",
-                    title: "Testoperatorer",
-                    explanation: `**Filjämförelser:**
-| Operator | Betydelse |
-|----------|-----------|
-| -f fil | Är en vanlig fil |
-| -d dir | Är en katalog |
-| -e path | Existerar |
-| -r fil | Läsbar |
-| -w fil | Skrivbar |
-| -x fil | Körbar |
-
-**Strängjämförelser:**
-| Operator | Betydelse |
-|----------|-----------|
-| = eller == | Lika |
-| != | Olika |
-| -z "$str" | Tom sträng |
-| -n "$str" | Inte tom |
-
-**Numeriska jämförelser:**
-| Operator | Betydelse |
-|----------|-----------|
-| -eq | Equal (==) |
-| -ne | Not equal (!=) |
-| -lt | Less than (<) |
-| -le | Less or equal (<=) |
-| -gt | Greater than (>) |
-| -ge | Greater or equal (>=) |`
-                },
-                {
-                    type: "code",
-                    title: "if-exempel",
-                    language: "bash",
-                    code: `#!/bin/bash
-# Kontrollera om fil finns
-
+# Kontrollera fil
 if [ -f "/etc/passwd" ]; then
-    echo "Filen finns!"
+    echo "Filen existerar"
 else
-    echo "Filen saknas!"
+    echo "Filen finns inte"
 fi
 
 # Numerisk jämförelse
-AGE=25
-if [ "$AGE" -ge 18 ]; then
-    echo "Myndig"
+age=25
+if [ $age -ge 18 ]; then
+    echo "Vuxen"
 else
-    echo "Omyndig"
+    echo "Minderårig"
 fi
 
 # Strängjämförelse
-NAME="Said"
-if [ "$NAME" = "Said" ]; then
-    echo "Hej Said!"
+read -p "Ja eller Nej? " svar
+if [ "$svar" = "ja" ]; then
+    echo "Du svarade ja"
 fi
 
 # Kombinera villkor
-if [ -f "$1" ] && [ -r "$1" ]; then
-    echo "Filen finns och är läsbar"
+if [ -f "$fil" ] && [ -r "$fil" ]; then
+    echo "Fil finns och är läsbar"
 fi`
                 },
                 {
-                    type: "concept",
-                    title: "case-satser",
-                    explanation: `**Syntax:**
-
-case UTTRYCK in
-    MÖNSTER1)
-        KOMMANDON
-        ;;
-    MÖNSTER2)
-        KOMMANDON
-        ;;
-    *)
-        DEFAULT_KOMMANDON
-        ;;
-esac
-
-**Använd case när:**
-- Du har många alternativ
-- if/elif skulle bli för långt
-- Du vill matcha mönster (glob)`,
-                    pro_tip: "Glöm inte ;; efter varje block och * för default-fallet!"
+                    type: "quiz",
+                    question: "Hur testar du om variabeln $x är större än 10?",
+                    options: [
+                        { text: "[ $x > 10 ]", correct: false, feedback: "Nej, > är redirect i shell" },
+                        { text: "[ $x -gt 10 ]", correct: true, feedback: "Rätt! -gt = greater than" },
+                        { text: "[ $x greater 10 ]", correct: false, feedback: "Nej, fel syntax" },
+                        { text: "if $x > 10", correct: false, feedback: "Nej, helt fel syntax" }
+                    ],
+                    hint: "-gt står för greater than"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Villkor! 🔀"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-7-interaktiva",
+            title: "1.7 Interaktiva Skript",
+            description: "Användarinput och menysystem",
+            order_index: 9,
+            estimated_minutes: 40,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "💬 Interaktiva Skript",
+                    learning_objectives: [
+                        "read-kommandot",
+                        "select för menyer",
+                        "case-satser",
+                        "Användarvalidering"
+                    ]
                 },
                 {
                     type: "code",
-                    title: "case-exempel",
+                    title: "read - Läsa input",
                     language: "bash",
                     code: `#!/bin/bash
-# Menyval
 
-echo "Välj alternativ:"
-echo "1) Skapa backup"
-echo "2) Visa loggar"
-echo "3) Avsluta"
-read -p "Val: " choice
+# Enkel input
+read -p "Ditt namn: " namn
+echo "Hej $namn!"
 
-case "$choice" in
-    1)
-        echo "Skapar backup..."
-        tar -czvf backup.tar.gz /home
+# Med timeout
+read -t 10 -p "Svara inom 10 sek: " svar
+
+# Dold input (lösenord)
+read -s -p "Lösenord: " password
+echo  # Ny rad efter dold input
+
+# Läs till array
+read -a ord -p "Skriv ord: "
+echo "Första ordet: \${ord[0]}"`
+                },
+                {
+                    type: "code",
+                    title: "select - Menyval",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+echo "Välj en frukt:"
+select frukt in "Äpple" "Banan" "Citron" "Avsluta"; do
+    case $frukt in
+        "Äpple")
+            echo "Du valde äpple"
+            ;;
+        "Banan")
+            echo "Du valde banan"
+            ;;
+        "Citron")
+            echo "Du valde citron"
+            ;;
+        "Avsluta")
+            echo "Hejdå!"
+            break
+            ;;
+        *)
+            echo "Ogiltigt val"
+            ;;
+    esac
+done`
+                },
+                {
+                    type: "code",
+                    title: "case - Mönstermatchning",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+read -p "Ange kommando: " cmd
+
+case $cmd in
+    start|begin)
+        echo "Startar..."
         ;;
-    2)
-        echo "Visar loggar..."
-        tail -20 /var/log/syslog
+    stop|end)
+        echo "Stoppar..."
         ;;
-    3)
-        echo "Hejdå!"
-        exit 0
+    status)
+        echo "Visar status..."
         ;;
     *)
-        echo "Ogiltigt val!"
+        echo "Okänt kommando: $cmd"
+        echo "Använd: start|stop|status"
         exit 1
         ;;
 esac`
                 },
                 {
-                    type: "concept",
-                    title: "for-loop",
-                    explanation: `**Syntax:**
+                    type: "quiz",
+                    question: "Hur läser du lösenord utan att visa det?",
+                    options: [
+                        { text: "read -p password", correct: false, feedback: "Nej, -p är för prompt" },
+                        { text: "read -s password", correct: true, feedback: "Rätt! -s = silent/secret" },
+                        { text: "read --hidden password", correct: false, feedback: "Nej, den flaggan finns inte" },
+                        { text: "password = input()", correct: false, feedback: "Nej, det är Python" }
+                    ],
+                    hint: "-s gömmer input"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Interaktiva Skript! 💬"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-8-loopar",
+            title: "1.8 Loopar (for/while)",
+            description: "Iteration med for och while-loopar",
+            order_index: 10,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🔄 Loopar",
+                    learning_objectives: [
+                        "for-loopar",
+                        "while-loopar",
+                        "until-loopar",
+                        "break och continue"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "for-loopar",
+                    language: "bash",
+                    code: `#!/bin/bash
 
-for VARIABEL in LISTA; do
-    KOMMANDON
+# Lista
+for frukt in äpple banan citron; do
+    echo "Frukt: $frukt"
 done
 
-**Olika sätt att skapa listan:**
-
-# Explicit lista
-for fruit in apple banana cherry; do
-    echo "$fruit"
-done
-
-# Filer
-for file in *.txt; do
-    echo "Fil: $file"
-done
-
-# Sekvens
+# Range
 for i in {1..5}; do
     echo "Nummer: $i"
 done
 
-# Command substitution
-for user in $(cat /etc/passwd | cut -d: -f1); do
-    echo "User: $user"
+# Med steg
+for i in {0..10..2}; do
+    echo "Jämnt: $i"
+done
+
+# C-style
+for ((i=0; i<5; i++)); do
+    echo "Index: $i"
+done
+
+# Filer i katalog
+for fil in *.txt; do
+    echo "Bearbetar: $fil"
 done`
                 },
                 {
-                    type: "concept",
-                    title: "while och until",
-                    explanation: `**while – kör MEDAN villkoret är sant:**
-
-while [ VILLKOR ]; do
-    KOMMANDON
-done
-
-**until – kör TILLS villkoret blir sant:**
-
-until [ VILLKOR ]; do
-    KOMMANDON
-done
-
-**Skillnaden:**
-- while: Fortsätter så länge villkoret är SANT
-- until: Fortsätter så länge villkoret är FALSKT`
-                },
-                {
                     type: "code",
-                    title: "Loop-exempel",
+                    title: "while-loopar",
                     language: "bash",
                     code: `#!/bin/bash
-# while-loop: Räkna till 5
 
-i=1
-while [ "$i" -le 5 ]; do
-    echo "Nummer: $i"
-    i=$((i + 1))
+# Enkel while
+count=1
+while [ $count -le 5 ]; do
+    echo "Count: $count"
+    ((count++))
 done
 
-# until-loop: Vänta på fil
-until [ -f "/tmp/ready.txt" ]; do
-    echo "Väntar på fil..."
-    sleep 2
-done
-echo "Fil hittad!"
+# Läs fil rad för rad
+while IFS= read -r line; do
+    echo "Rad: $line"
+done < fil.txt
 
 # Oändlig loop med break
 while true; do
-    read -p "Skriv 'quit' för att avsluta: " input
-    if [ "$input" = "quit" ]; then
-        break
-    fi
-    echo "Du skrev: $input"
-done
-
-# continue - hoppa över iteration
-for i in {1..10}; do
-    if [ $((i % 2)) -eq 0 ]; then
-        continue  # Hoppa över jämna tal
-    fi
-    echo "Udda: $i"
+    read -p "Kommando (q=quit): " cmd
+    [ "$cmd" = "q" ] && break
+    echo "Du skrev: $cmd"
 done`
                 },
                 {
-                    type: "concept",
-                    title: "Funktioner",
-                    explanation: `**Syntax:**
-
-# Sätt 1
-function_name() {
-    KOMMANDON
-}
-
-# Sätt 2
-function function_name {
-    KOMMANDON
-}
-
-**Argument i funktioner:**
-
-greet() {
-    echo "Hej $1!"  # $1 = första argumentet till funktionen
-}
-greet "Said"  # Output: Hej Said!
-
-**Return vs echo:**
-- return sätter exit-kod (0-255)
-- echo skriver ut värde som kan fångas`,
-                    pro_tip: "Funktioner måste definieras INNAN de anropas i skriptet!"
-                },
-                {
                     type: "code",
-                    title: "Funktionsexempel",
+                    title: "until och kontroll",
                     language: "bash",
                     code: `#!/bin/bash
-# Funktion som returnerar värde via echo
 
-get_date() {
-    date +%Y-%m-%d
-}
+# until - kör tills villkoret är sant
+count=1
+until [ $count -gt 5 ]; do
+    echo "Count: $count"
+    ((count++))
+done
 
-# Funktion med argument
-backup_file() {
-    local file="$1"  # local = lokal variabel
-    local backup="\${file}.bak"
+# break - avbryt loop
+for i in {1..10}; do
+    [ $i -eq 5 ] && break
+    echo $i
+done
 
-    if [ -f "$file" ]; then
-        cp "$file" "$backup"
-        echo "Backup skapad: $backup"
-        return 0
-    else
-        echo "Fil finns inte: $file"
-        return 1
-    fi
-}
-
-# Användning
-TODAY=$(get_date)
-echo "Dagens datum: $TODAY"
-
-backup_file "/etc/passwd"
-if [ $? -eq 0 ]; then
-    echo "Backup lyckades!"
-fi`
+# continue - hoppa till nästa iteration
+for i in {1..5}; do
+    [ $i -eq 3 ] && continue
+    echo $i    # Skriver 1 2 4 5
+done`
                 },
                 {
-                    type: "concept",
-                    title: "read – Användarinput",
-                    explanation: `**Grundsyntax:**
-
-read VARIABEL
-
-**Flaggor:**
-| Flagga | Effekt |
-|--------|--------|
-| -p "text" | Visa prompt |
-| -s | Tyst läge (lösenord) |
-| -n X | Läs max X tecken |
-| -t X | Timeout efter X sekunder |
-
-**Exempel:**
-
-read -p "Namn: " name
-read -s -p "Lösenord: " password
-echo  # Ny rad efter lösenord
-echo "Hej $name!"`
-                },
-                {
-                    type: "concept",
-                    title: "Arrays (listor)",
-                    explanation: `**Skapa array:**
-
-FRUITS=(apple banana cherry)
-# eller
-COLORS[0]="red"
-COLORS[1]="green"
-COLORS[2]="blue"
-
-**Läsa element:**
-
-echo "\${FRUITS[0]}"    # Första (apple)
-echo "\${FRUITS[2]}"    # Tredje (cherry)
-echo "\${FRUITS[@]}"    # Alla element
-echo "\${#FRUITS[@]}"   # Antal element (3)
-
-**Loopa genom array:**
-
-for fruit in "\${FRUITS[@]}"; do
-    echo "Frukt: $fruit"
-done`,
-                    pro_tip: "Arrays börjar på index 0, inte 1!"
-                },
-                {
-                    type: "concept",
-                    title: "Strängoperationer",
-                    explanation: `**Längd:**
-
-NAME="Said"
-echo \${#NAME}  # 4
-
-**Substring:**
-
-STRING="Hello World"
-echo \${STRING:0:5}   # Hello (från index 0, 5 tecken)
-echo \${STRING:6}     # World (från index 6 till slut)
-
-**Ta bort del av sträng:**
-
-FILE="dokument.tar.gz"
-echo \${FILE%.*}     # dokument.tar (ta bort sista ändelse)
-echo \${FILE%%.*}    # dokument (ta bort alla ändelser)
-
-PATH="/home/said/fil.txt"
-echo \${PATH##*/}    # fil.txt (ta bort sökväg)
-
-**Defaultvärden:**
-
-echo \${NAME:-"default"}  # Använd default om NAME är tom`
-                },
-                {
-                    type: "concept",
-                    title: "Exit codes och felsökning",
-                    explanation: `**Exit codes:**
-- 0 = Framgång
-- 1-255 = Fel (olika betydelser)
-
-# Avsluta med specifik kod
-exit 0  # OK
-exit 1  # Generellt fel
-
-# Kolla senaste exit-kod
-if [ $? -eq 0 ]; then
-    echo "Kommandot lyckades"
-fi
-
-**Felsökningsalternativ:**
-
-set -e  # Avbryt vid första fel
-set -u  # Fel vid odefinierade variabler
-set -x  # Skriv ut varje kommando (debug)
-set -o pipefail  # Fånga fel i pipes
-
-**Kombinera:**
-#!/bin/bash
-set -euo pipefail  # Strikt läge`,
-                    pro_tip: "set -x är guld värt för felsökning – det visar exakt vad som körs!"
-                },
-                {
-                    type: "code",
-                    title: "Komplett skriptexempel",
-                    language: "bash",
-                    code: `#!/bin/bash
-# =========================================
-# backup.sh - Automatisk backup
-# VG-nivå exempelskript
-# =========================================
-set -euo pipefail
-
-# Konfiguration
-BACKUP_DIR="/tmp/backups"
-SOURCE_DIR="\${1:-/home}"
-DATE=$(date +%Y%m%d_%H%M%S)
-BACKUP_FILE="$BACKUP_DIR/backup_$DATE.tar.gz"
-
-# Funktion: Logga meddelanden
-log() {
-    echo "[$(date +%H:%M:%S)] $1"
-}
-
-# Funktion: Skapa backup
-create_backup() {
-    local source="$1"
-    local dest="$2"
-
-    if [ ! -d "$source" ]; then
-        log "FEL: Källkatalog finns inte: $source"
-        return 1
-    fi
-
-    log "Skapar backup av $source..."
-    tar -czvf "$dest" "$source" 2>/dev/null
-
-    if [ $? -eq 0 ]; then
-        log "Backup klar: $dest"
-        return 0
-    else
-        log "FEL: Backup misslyckades!"
-        return 1
-    fi
-}
-
-# Huvudprogram
-main() {
-    log "=== Backup startar ==="
-    mkdir -p "$BACKUP_DIR"
-
-    if create_backup "$SOURCE_DIR" "$BACKUP_FILE"; then
-        log "=== Backup slutförd ==="
-        exit 0
-    else
-        log "=== Backup misslyckades ==="
-        exit 1
-    fi
-}
-
-main`
-                },
-                {
-                    type: "concept",
-                    title: "Vanliga tentafrågor Bash",
-                    explanation: `**Typiska frågor:**
-
-1. **Vad gör shebang?**
-   → Anger vilken tolk som kör skriptet
-
-2. **Skillnad [ ] vs [[ ]]?**
-   → [ ] POSIX, [[ ]] Bash-specifik med extra features
-
-3. **Vad gör set -e?**
-   → Avbryter skriptet vid första fel
-
-4. **Skillnad $@ vs $*?**
-   → $@ behåller argument som separata, $* slår ihop dem
-
-5. **Hur fångar du output från ett kommando?**
-   → result=$(command) eller result=\`command\`
-
-6. **Vad betyder exit 0 vs exit 1?**
-   → 0 = framgång, 1 = fel`
+                    type: "quiz",
+                    question: "Hur loopar du genom filer med .log-extension?",
+                    options: [
+                        { text: "for f in *.log; do", correct: true, feedback: "Rätt! Glob-mönster fungerar i for" },
+                        { text: "foreach *.log", correct: false, feedback: "Nej, det är annan syntax" },
+                        { text: "while *.log; do", correct: false, feedback: "Nej, while tar villkor" },
+                        { text: "loop files *.log", correct: false, feedback: "Nej, det finns inte" }
+                    ],
+                    hint: "for med glob-mönster"
                 },
                 {
                     type: "checkpoint",
-                    message: "Du har slutfört KM9: Bash-skriptning! 🚀 Nu har du VG-material!"
+                    message: "Du har klarat Loopar! 🔄"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-9-parametrar",
+            title: "1.9 Skriptparametrar",
+            description: "Hantera argument och options i skript",
+            order_index: 11,
+            estimated_minutes: 45,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "📥 Skriptparametrar",
+                    learning_objectives: [
+                        "Positionsparametrar ($1, $2...)",
+                        "Specialvariabler ($#, $@, $*)",
+                        "shift-kommandot",
+                        "getopts för flaggor"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Positionsparametrar",
+                    explanation: `┌─────────┬─────────────────────────────────────────────────────┐
+│ Variabel│ Betydelse                                           │
+├─────────┼─────────────────────────────────────────────────────┤
+│ $0      │ Skriptets namn                                      │
+│ $1-$9   │ Argument 1-9                                        │
+│ \${10}   │ Argument 10+                                        │
+│ $#      │ Antal argument                                      │
+│ $@      │ Alla argument (separata)                            │
+│ $*      │ Alla argument (en sträng)                           │
+│ $?      │ Exit code från förra kommandot                      │
+│ $$      │ Skriptets PID                                       │
+└─────────┴─────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Grundläggande parametrar",
+                    language: "bash",
+                    code: `#!/bin/bash
+# Kör: ./script.sh arg1 arg2 arg3
+
+echo "Skript: $0"
+echo "Första arg: $1"
+echo "Andra arg: $2"
+echo "Antal args: $#"
+echo "Alla args: $@"
+
+# Loopa genom alla
+for arg in "$@"; do
+    echo "Argument: $arg"
+done
+
+# Kontrollera antal
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <arg1> <arg2>"
+    exit 1
+fi`
+                },
+                {
+                    type: "code",
+                    title: "getopts för flaggor",
+                    language: "bash",
+                    code: `#!/bin/bash
+# Kör: ./script.sh -v -f filnamn -n 5
+
+verbose=false
+filename=""
+count=1
+
+while getopts "vf:n:" opt; do
+    case $opt in
+        v) verbose=true ;;
+        f) filename="$OPTARG" ;;
+        n) count="$OPTARG" ;;
+        ?) echo "Usage: $0 [-v] [-f file] [-n num]"
+           exit 1 ;;
+    esac
+done
+
+echo "Verbose: $verbose"
+echo "File: $filename"
+echo "Count: $count"`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad innehåller $# i ett skript?",
+                    options: [
+                        { text: "Skriptets namn", correct: false, feedback: "Nej, det är $0" },
+                        { text: "Antal argument", correct: true, feedback: "Rätt! # = antal" },
+                        { text: "Alla argument", correct: false, feedback: "Nej, det är $@ eller $*" },
+                        { text: "Exit code", correct: false, feedback: "Nej, det är $?" }
+                    ],
+                    hint: "# brukar betyda antal/nummer"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Skriptparametrar! 📥"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-10-funktioner",
+            title: "1.10 Funktioner",
+            description: "Återanvändbar kod med funktioner",
+            order_index: 12,
+            estimated_minutes: 45,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🔧 Funktioner",
+                    learning_objectives: [
+                        "Definiera funktioner",
+                        "Parametrar och returvärden",
+                        "Lokala variabler",
+                        "Rekursion"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "Definiera funktioner",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Syntax 1
+function hello() {
+    echo "Hej från funktion!"
+}
+
+# Syntax 2 (POSIX)
+goodbye() {
+    echo "Hejdå!"
+}
+
+# Anropa
+hello
+goodbye`
+                },
+                {
+                    type: "code",
+                    title: "Parametrar och return",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Funktion med parametrar
+greet() {
+    local name="$1"    # Lokal variabel
+    local age="$2"
+    echo "Hej $name, du är $age år"
+}
+
+# Anropa med argument
+greet "Anna" 25
+
+# Return value (0-255)
+is_even() {
+    if [ $(($1 % 2)) -eq 0 ]; then
+        return 0   # true
+    else
+        return 1   # false
+    fi
+}
+
+if is_even 4; then
+    echo "4 är jämnt"
+fi`
+                },
+                {
+                    type: "code",
+                    title: "Returnera data",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Returnera via echo (capture med $())
+get_date() {
+    date +%Y-%m-%d
+}
+today=$(get_date)
+echo "Idag: $today"
+
+# Returnera via global variabel
+calculate() {
+    result=$(($1 + $2))
+}
+calculate 5 3
+echo "Summa: $result"`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur gör du en variabel lokal i en funktion?",
+                    options: [
+                        { text: "var name=value", correct: false, feedback: "Nej, det är globalt" },
+                        { text: "local name=value", correct: true, feedback: "Rätt! local begränsar scope" },
+                        { text: "private name=value", correct: false, feedback: "Nej, finns inte i bash" },
+                        { text: "my name=value", correct: false, feedback: "Nej, det är Perl" }
+                    ],
+                    hint: "Nyckelordet är 'local'"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Funktioner! 🔧"
+                }
+            ]
+        },
+        {
+            id: "doe25-1-11-signals",
+            title: "1.11 Signaler & Traps",
+            description: "Hantera signaler och cleanup",
+            order_index: 13,
+            estimated_minutes: 40,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🚨 Signaler & Traps",
+                    learning_objectives: [
+                        "Vanliga Unix-signaler",
+                        "trap-kommandot",
+                        "Cleanup vid avslut",
+                        "Hantera Ctrl+C"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Vanliga signaler",
+                    explanation: `┌─────────┬─────────┬───────────────────────────────────────────┐
+│ Signal  │ Nummer  │ Beskrivning                               │
+├─────────┼─────────┼───────────────────────────────────────────┤
+│ SIGHUP  │ 1       │ Hangup (terminal stängd)                  │
+│ SIGINT  │ 2       │ Interrupt (Ctrl+C)                        │
+│ SIGQUIT │ 3       │ Quit (Ctrl+\\)                             │
+│ SIGKILL │ 9       │ Kill (kan ej fångas)                      │
+│ SIGTERM │ 15      │ Terminate (default för kill)              │
+│ SIGSTOP │ 19      │ Stop (kan ej fångas)                      │
+└─────────┴─────────┴───────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "trap - Fånga signaler",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Cleanup-funktion
+cleanup() {
+    echo "Städar upp..."
+    rm -f /tmp/myapp_*.tmp
+    exit 0
+}
+
+# Fånga signaler
+trap cleanup SIGINT SIGTERM EXIT
+
+# Skapa tempfil
+tmpfile=$(mktemp /tmp/myapp_XXXXXX.tmp)
+echo "Tempfil: $tmpfile"
+
+# Huvudloop
+echo "Tryck Ctrl+C för att avsluta..."
+while true; do
+    sleep 1
+done`
+                },
+                {
+                    type: "code",
+                    title: "Praktiska trap-exempel",
+                    language: "bash",
+                    code: `#!/bin/bash
+
+# Ignorera Ctrl+C
+trap '' SIGINT
+echo "Ctrl+C ignoreras..."
+
+# Återställ default
+trap - SIGINT
+
+# Trap på error
+trap 'echo "Fel på rad $LINENO"' ERR
+
+# Cleanup vid alla exits
+trap 'rm -f "$lockfile"' EXIT
+lockfile="/var/run/myapp.lock"`
+                },
+                {
+                    type: "quiz",
+                    question: "Vilken signal skickas vid Ctrl+C?",
+                    options: [
+                        { text: "SIGKILL", correct: false, feedback: "Nej, SIGKILL är signal 9" },
+                        { text: "SIGTERM", correct: false, feedback: "Nej, SIGTERM är default för kill" },
+                        { text: "SIGINT", correct: true, feedback: "Rätt! INT = Interrupt" },
+                        { text: "SIGHUP", correct: false, feedback: "Nej, HUP är hangup" }
+                    ],
+                    hint: "INT = Interrupt"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Signaler! 🚨 MODUL 1 KLAR!"
+                }
+            ]
+        },
+        // ============================================
+        // MODUL 2: LINUX SYSTEM ADMINISTRATION (8 tasks)
+        // ============================================
+        {
+            id: "doe25-2-1-users",
+            title: "2.1 Användarhantering",
+            description: "Skapa och hantera användare och grupper",
+            order_index: 14,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "👤 Användarhantering",
+                    learning_objectives: [
+                        "Skapa och ta bort användare",
+                        "Gruppadministration",
+                        "passwd, shadow och group-filer",
+                        "sudo-konfiguration"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Viktiga filer",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  /etc/passwd   - Användarinfo (alla kan läsa)               │
+│  Format: user:x:UID:GID:GECOS:home:shell                    │
+│                                                             │
+│  /etc/shadow   - Lösenord (endast root)                     │
+│  Format: user:hash:lastchg:min:max:warn:inactive:expire     │
+│                                                             │
+│  /etc/group    - Gruppinfo                                  │
+│  Format: group:x:GID:members                                │
+│                                                             │
+│  /etc/sudoers  - sudo-behörigheter                          │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Användarkommandon",
+                    language: "bash",
+                    code: `# Skapa användare
+sudo useradd -m -s /bin/bash anna    # Med hemkatalog
+sudo useradd -m -G sudo,docker bob   # Med grupper
+
+# Sätt lösenord
+sudo passwd anna
+
+# Ändra användare
+sudo usermod -aG docker anna         # Lägg till i grupp
+sudo usermod -s /bin/zsh anna        # Ändra shell
+
+# Ta bort användare
+sudo userdel anna                    # Behåll hemkatalog
+sudo userdel -r anna                 # Ta bort allt
+
+# Visa info
+id anna
+groups anna
+getent passwd anna`
+                },
+                {
+                    type: "code",
+                    title: "Grupphantering",
+                    language: "bash",
+                    code: `# Skapa grupp
+sudo groupadd developers
+
+# Lägg till användare i grupp
+sudo usermod -aG developers anna
+
+# Ta bort från grupp
+sudo gpasswd -d anna developers
+
+# Ta bort grupp
+sudo groupdel developers
+
+# Visa grupper
+groups
+cat /etc/group | grep developers`
+                },
+                {
+                    type: "quiz",
+                    question: "Var lagras krypterade lösenord?",
+                    options: [
+                        { text: "/etc/passwd", correct: false, feedback: "Nej, där finns bara x" },
+                        { text: "/etc/shadow", correct: true, feedback: "Rätt! shadow är skyddad" },
+                        { text: "/etc/security", correct: false, feedback: "Nej, fel katalog" },
+                        { text: "/home/user/.password", correct: false, feedback: "Nej, finns inte" }
+                    ],
+                    hint: "shadow = skugga (dolt)"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Användarhantering! 👤"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-2-permissions",
+            title: "2.2 Filrättigheter",
+            description: "Behörigheter, chmod och chown",
+            order_index: 15,
+            estimated_minutes: 55,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🔐 Filrättigheter",
+                    learning_objectives: [
+                        "rwx-systemet",
+                        "chmod (symbolisk och numerisk)",
+                        "chown och chgrp",
+                        "Speciella bitar (SUID, SGID, sticky)"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Rättighetssystemet",
+                    explanation: `Linux använder rwx för tre kategorier:
+
+┌─────────────────────────────────────────────────────────────┐
+│  -rwxr-xr-x  1 anna developers 4096 Jan 1 file.txt         │
+│  │└┬┘└┬┘└┬┘                                                 │
+│  │ │  │  └── Others (alla andra)                            │
+│  │ │  └───── Group (gruppmedlemmar)                         │
+│  │ └──────── User/Owner (ägaren)                            │
+│  └────────── Filtyp (- = fil, d = katalog)                  │
+├─────────────────────────────────────────────────────────────┤
+│  r = read (4)    - Läsa fil / lista katalog                 │
+│  w = write (2)   - Ändra fil / skapa i katalog              │
+│  x = execute (1) - Köra fil / gå in i katalog               │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "chmod - Ändra rättigheter",
+                    language: "bash",
+                    code: `# Numeriskt (oktalt)
+chmod 755 script.sh      # rwxr-xr-x
+chmod 644 config.txt     # rw-r--r--
+chmod 700 privat/        # rwx------
+
+# Symboliskt
+chmod u+x script.sh      # Ge user execute
+chmod g-w fil.txt        # Ta bort group write
+chmod o=r fil.txt        # Sätt others till read
+chmod a+r fil.txt        # Alla får read
+
+# Rekursivt
+chmod -R 755 katalog/`
+                },
+                {
+                    type: "code",
+                    title: "chown/chgrp - Ändra ägare",
+                    language: "bash",
+                    code: `# Ändra ägare
+sudo chown anna fil.txt
+sudo chown anna:developers fil.txt   # Ägare och grupp
+
+# Ändra grupp
+sudo chgrp developers fil.txt
+
+# Rekursivt
+sudo chown -R www-data:www-data /var/www/`
+                },
+                {
+                    type: "concept",
+                    title: "Speciella bitar",
+                    explanation: `┌─────────┬─────────┬───────────────────────────────────────────┐
+│ Bit     │ Nummer  │ Effekt                                    │
+├─────────┼─────────┼───────────────────────────────────────────┤
+│ SUID    │ 4000    │ Kör som filens ägare                      │
+│ SGID    │ 2000    │ Kör som filens grupp / ärv grupp          │
+│ Sticky  │ 1000    │ Endast ägare kan radera (t.ex. /tmp)      │
+└─────────┴─────────┴───────────────────────────────────────────┘
+
+chmod 4755 fil      # SUID + rwxr-xr-x
+chmod 2755 katalog  # SGID
+chmod 1777 /tmp     # Sticky + rwxrwxrwx`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad betyder chmod 644?",
+                    options: [
+                        { text: "rwxrwxrwx", correct: false, feedback: "Nej, det är 777" },
+                        { text: "rw-r--r--", correct: true, feedback: "Rätt! 6=rw, 4=r, 4=r" },
+                        { text: "rwxr-xr-x", correct: false, feedback: "Nej, det är 755" },
+                        { text: "rw-rw-rw-", correct: false, feedback: "Nej, det är 666" }
+                    ],
+                    hint: "6=4+2=r+w, 4=r"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Filrättigheter! 🔐"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-3-ssh",
+            title: "2.3 SSH & Säkerhet",
+            description: "SSH-konfiguration och nyckelautentisering",
+            order_index: 16,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🔑 SSH & Säkerhet",
+                    learning_objectives: [
+                        "SSH-nyckelpar",
+                        "SSH-konfiguration",
+                        "sshd_config säkerhet",
+                        "SSH tunnlar"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "SSH-nycklar",
+                    language: "bash",
+                    code: `# Generera nyckelpar
+ssh-keygen -t ed25519 -C "email@example.com"
+ssh-keygen -t rsa -b 4096 -C "email@example.com"
+
+# Kopiera publik nyckel till server
+ssh-copy-id user@server
+# Eller manuellt:
+cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+
+# SSH-agent
+eval $(ssh-agent)
+ssh-add ~/.ssh/id_ed25519`
+                },
+                {
+                    type: "concept",
+                    title: "SSH-filer",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  ~/.ssh/                                                    │
+│  ├── id_ed25519        ← Privat nyckel (SKYDDA!)            │
+│  ├── id_ed25519.pub    ← Publik nyckel (dela ut)            │
+│  ├── authorized_keys   ← Tillåtna publika nycklar           │
+│  ├── known_hosts       ← Kända servrar                      │
+│  └── config            ← Klientkonfiguration                │
+│                                                             │
+│  /etc/ssh/                                                  │
+│  └── sshd_config       ← Serverkonfiguration                │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Säkra sshd_config",
+                    language: "bash",
+                    code: `# /etc/ssh/sshd_config
+
+# Stäng av root-login
+PermitRootLogin no
+
+# Bara nyckelautentisering
+PasswordAuthentication no
+PubkeyAuthentication yes
+
+# Begränsa användare
+AllowUsers anna bob
+AllowGroups sshusers
+
+# Ändra port (security through obscurity)
+Port 2222
+
+# Starta om efter ändringar
+sudo systemctl restart sshd`
+                },
+                {
+                    type: "code",
+                    title: "SSH tunnlar",
+                    language: "bash",
+                    code: `# Lokal tunnel (local port forwarding)
+# Nå remote:3306 via localhost:3307
+ssh -L 3307:localhost:3306 user@server
+
+# Remote tunnel (remote port forwarding)
+# Exponera lokal port på remote server
+ssh -R 8080:localhost:80 user@server
+
+# SOCKS proxy
+ssh -D 1080 user@server`
+                },
+                {
+                    type: "quiz",
+                    question: "Vilken fil innehåller tillåtna publika nycklar?",
+                    options: [
+                        { text: "~/.ssh/id_rsa.pub", correct: false, feedback: "Nej, det är din publik nyckel" },
+                        { text: "~/.ssh/authorized_keys", correct: true, feedback: "Rätt!" },
+                        { text: "~/.ssh/known_hosts", correct: false, feedback: "Nej, det är kända servrar" },
+                        { text: "/etc/ssh/sshd_config", correct: false, feedback: "Nej, det är serverkonfig" }
+                    ],
+                    hint: "authorized = tillåtna"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat SSH! 🔑"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-4-ufw",
+            title: "2.4 UFW Brandvägg",
+            description: "Enkel brandväggskonfiguration med UFW",
+            order_index: 17,
+            estimated_minutes: 40,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🛡️ UFW Brandvägg",
+                    learning_objectives: [
+                        "UFW grundläggande användning",
+                        "Tillåta och blockera portar",
+                        "Applikationsprofiler",
+                        "Loggning"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "UFW - Uncomplicated Firewall",
+                    explanation: `UFW är ett användarvänligt gränssnitt till iptables:
+
+┌─────────────────────────────────────────────────────────────┐
+│  UFW är DEFAULT på Ubuntu/Debian                            │
+│  Förenklar brandväggsregler betydligt                       │
+│  Arbetar med INPUT/OUTPUT/FORWARD chains                    │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Grundläggande UFW",
+                    language: "bash",
+                    code: `# Status
+sudo ufw status
+sudo ufw status verbose
+
+# Aktivera/avaktivera
+sudo ufw enable
+sudo ufw disable
+
+# Default policies
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+# Tillåt port
+sudo ufw allow 22              # SSH
+sudo ufw allow 80/tcp          # HTTP
+sudo ufw allow 443/tcp         # HTTPS
+
+# Blockera
+sudo ufw deny 23               # Telnet`
+                },
+                {
+                    type: "code",
+                    title: "Avancerade regler",
+                    language: "bash",
+                    code: `# Tillåt från specifik IP
+sudo ufw allow from 192.168.1.100
+sudo ufw allow from 192.168.1.0/24 to any port 22
+
+# Begränsa (rate limiting)
+sudo ufw limit ssh             # Max 6 conn/30s
+
+# Applikationsprofiler
+sudo ufw app list
+sudo ufw allow 'Nginx Full'
+sudo ufw allow 'OpenSSH'
+
+# Ta bort regel
+sudo ufw delete allow 80
+sudo ufw status numbered
+sudo ufw delete 3`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur tillåter du SSH med UFW?",
+                    options: [
+                        { text: "ufw open 22", correct: false, feedback: "Nej, fel syntax" },
+                        { text: "ufw allow 22", correct: true, feedback: "Rätt!" },
+                        { text: "ufw permit ssh", correct: false, feedback: "Nej, fel syntax" },
+                        { text: "ufw enable ssh", correct: false, feedback: "Nej, enable aktiverar UFW" }
+                    ],
+                    hint: "allow = tillåt"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat UFW! 🛡️"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-5-firewalld",
+            title: "2.5 Firewalld",
+            description: "Brandvägg för RHEL/CentOS med zoner",
+            order_index: 18,
+            estimated_minutes: 45,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🔥 Firewalld",
+                    learning_objectives: [
+                        "Zoner och tjänster",
+                        "firewall-cmd kommandon",
+                        "Permanenta vs runtime regler",
+                        "Rich rules"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Firewalld zoner",
+                    explanation: `Firewalld använder zoner för olika säkerhetsnivåer:
+
+┌─────────────────────────────────────────────────────────────┐
+│  drop      - Droppa allt, ingen respons                     │
+│  block     - Reject med ICMP prohibited                     │
+│  public    - Opålitligt (default för nya interfaces)        │
+│  external  - För NAT/masquerading                           │
+│  dmz       - Demilitariserad zon                            │
+│  work      - Arbetsdatorer                                  │
+│  home      - Hemdatorer                                     │
+│  internal  - Interna nät                                    │
+│  trusted   - Tillåt allt                                    │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "firewall-cmd grunderna",
+                    language: "bash",
+                    code: `# Status
+sudo firewall-cmd --state
+sudo firewall-cmd --list-all
+
+# Zoner
+sudo firewall-cmd --get-zones
+sudo firewall-cmd --get-default-zone
+sudo firewall-cmd --get-active-zones
+
+# Lista tjänster
+sudo firewall-cmd --get-services
+sudo firewall-cmd --list-services`
+                },
+                {
+                    type: "code",
+                    title: "Hantera regler",
+                    language: "bash",
+                    code: `# Tillåt tjänst (runtime)
+sudo firewall-cmd --add-service=http
+
+# Permanent (överlevener reboot)
+sudo firewall-cmd --permanent --add-service=https
+sudo firewall-cmd --reload
+
+# Tillåt port
+sudo firewall-cmd --permanent --add-port=8080/tcp
+
+# Ta bort
+sudo firewall-cmd --permanent --remove-service=http
+
+# Ändra zon för interface
+sudo firewall-cmd --zone=trusted --change-interface=eth1`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur gör du en firewalld-regel permanent?",
+                    options: [
+                        { text: "--save", correct: false, feedback: "Nej, det finns inte" },
+                        { text: "--permanent", correct: true, feedback: "Rätt! Och glöm inte --reload" },
+                        { text: "--persist", correct: false, feedback: "Nej, fel flagga" },
+                        { text: "firewall-cmd save", correct: false, feedback: "Nej, fel syntax" }
+                    ],
+                    hint: "permanent = beständig"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Firewalld! 🔥"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-6-lagring",
+            title: "2.6 Lagring & Filsystem",
+            description: "Partitioner, LVM och montering",
+            order_index: 19,
+            estimated_minutes: 55,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "💾 Lagring & Filsystem",
+                    learning_objectives: [
+                        "Partitionering (fdisk, parted)",
+                        "Filsystem (ext4, xfs)",
+                        "Montering och fstab",
+                        "LVM grunderna"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Lagringsstack",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  Applikation                                                │
+│       ↓                                                     │
+│  Filsystem (ext4, xfs, btrfs)                              │
+│       ↓                                                     │
+│  LVM (valfritt) - Logical Volume Manager                    │
+│       ↓                                                     │
+│  Partition (/dev/sda1, /dev/nvme0n1p1)                     │
+│       ↓                                                     │
+│  Disk (/dev/sda, /dev/nvme0n1)                             │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Diskhantering",
+                    language: "bash",
+                    code: `# Lista diskar och partitioner
+lsblk
+fdisk -l
+blkid
+
+# Partitionera (interaktivt)
+sudo fdisk /dev/sdb
+# n = ny partition
+# p = primär
+# w = skriv och avsluta
+
+# Skapa filsystem
+sudo mkfs.ext4 /dev/sdb1
+sudo mkfs.xfs /dev/sdb2`
+                },
+                {
+                    type: "code",
+                    title: "Montering",
+                    language: "bash",
+                    code: `# Manuell montering
+sudo mount /dev/sdb1 /mnt/data
+sudo mount -t ext4 /dev/sdb1 /mnt/data
+
+# Avmontera
+sudo umount /mnt/data
+
+# Visa monterade
+mount | grep sdb
+df -h
+
+# Permanent i /etc/fstab
+# <device>     <mount>   <type>  <options>  <dump> <pass>
+/dev/sdb1      /data     ext4    defaults   0      2
+UUID=xxx-xxx   /backup   xfs     defaults   0      2`
+                },
+                {
+                    type: "code",
+                    title: "LVM grunderna",
+                    language: "bash",
+                    code: `# Physical Volume
+sudo pvcreate /dev/sdb /dev/sdc
+sudo pvs
+
+# Volume Group
+sudo vgcreate vg_data /dev/sdb /dev/sdc
+sudo vgs
+
+# Logical Volume
+sudo lvcreate -L 10G -n lv_mysql vg_data
+sudo lvcreate -l 100%FREE -n lv_www vg_data
+sudo lvs
+
+# Skapa filsystem och mounta
+sudo mkfs.ext4 /dev/vg_data/lv_mysql
+sudo mount /dev/vg_data/lv_mysql /var/lib/mysql`
+                },
+                {
+                    type: "quiz",
+                    question: "Var konfigureras automatisk montering vid boot?",
+                    options: [
+                        { text: "/etc/mount", correct: false, feedback: "Nej, finns inte" },
+                        { text: "/etc/fstab", correct: true, feedback: "Rätt! fstab = file system table" },
+                        { text: "/etc/disks", correct: false, feedback: "Nej, finns inte" },
+                        { text: "/boot/mount.conf", correct: false, feedback: "Nej, finns inte" }
+                    ],
+                    hint: "fstab = file system table"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Lagring! 💾"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-7-backup",
+            title: "2.7 Backup & Återställning",
+            description: "rsync, tar och backupstrategier",
+            order_index: 20,
+            estimated_minutes: 45,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "📦 Backup & Återställning",
+                    learning_objectives: [
+                        "tar för arkivering",
+                        "rsync för synkronisering",
+                        "Backupstrategier",
+                        "Automatisering med cron"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "tar - Arkivering",
+                    language: "bash",
+                    code: `# Skapa arkiv
+tar -cvf backup.tar /path/to/dir          # Utan komprimering
+tar -czvf backup.tar.gz /path/to/dir      # gzip
+tar -cjvf backup.tar.bz2 /path/to/dir     # bzip2
+
+# Extrahera
+tar -xvf backup.tar
+tar -xzvf backup.tar.gz -C /destination
+
+# Lista innehåll
+tar -tvf backup.tar.gz
+
+# Exkludera
+tar -czvf backup.tar.gz --exclude='*.log' /path`
+                },
+                {
+                    type: "code",
+                    title: "rsync - Synkronisering",
+                    language: "bash",
+                    code: `# Lokal synk
+rsync -av /source/ /destination/
+
+# Remote via SSH
+rsync -avz /local/path/ user@server:/remote/path/
+rsync -avz user@server:/remote/ /local/
+
+# Viktiga flaggor
+# -a = archive (behåll permissions, symlinks etc)
+# -v = verbose
+# -z = komprimera under överföring
+# --delete = ta bort filer som inte finns i source
+# --dry-run = testa utan att göra ändringar
+
+rsync -avz --delete --dry-run /source/ /dest/`
+                },
+                {
+                    type: "concept",
+                    title: "Backupstrategier",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  3-2-1 REGELN:                                              │
+│  • 3 kopior av data                                         │
+│  • 2 olika mediatyper                                       │
+│  • 1 offsite (annan plats)                                  │
+├─────────────────────────────────────────────────────────────┤
+│  TYPER:                                                     │
+│  • Full     - Allt varje gång                               │
+│  • Incremental - Bara ändrat sedan förra backup             │
+│  • Differential - Ändrat sedan senaste FULLA backup         │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Automatiserad backup",
+                    language: "bash",
+                    code: `#!/bin/bash
+# backup.sh
+
+DATE=$(date +%Y%m%d)
+BACKUP_DIR="/backup"
+SOURCE="/var/www"
+
+# Skapa daterad backup
+tar -czvf "$BACKUP_DIR/www_$DATE.tar.gz" "$SOURCE"
+
+# Ta bort backups äldre än 7 dagar
+find "$BACKUP_DIR" -name "www_*.tar.gz" -mtime +7 -delete
+
+# Cron: 0 2 * * * /path/to/backup.sh`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad gör rsync --delete?",
+                    options: [
+                        { text: "Raderar källfiler", correct: false, feedback: "Nej, det vore farligt!" },
+                        { text: "Raderar filer i mål som inte finns i källa", correct: true, feedback: "Rätt! Gör målet identiskt med källan" },
+                        { text: "Raderar rsync-cachen", correct: false, feedback: "Nej, det finns ingen sådan" },
+                        { text: "Avbryter synkroniseringen", correct: false, feedback: "Nej, fel" }
+                    ],
+                    hint: "Synkroniserar = gör identiska"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Backup! 📦"
+                }
+            ]
+        },
+        {
+            id: "doe25-2-8-systemd",
+            title: "2.8 Systemd & Tjänster",
+            description: "Tjänstehantering med systemd",
+            order_index: 21,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "⚙️ Systemd & Tjänster",
+                    learning_objectives: [
+                        "systemctl kommandon",
+                        "Tjänstestatus och loggar",
+                        "Skapa egna unit-filer",
+                        "Targets och runlevels"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "systemctl grunderna",
+                    language: "bash",
+                    code: `# Starta/stoppa/restarta
+sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo systemctl restart nginx
+sudo systemctl reload nginx      # Ladda om config
+
+# Status
+systemctl status nginx
+systemctl is-active nginx
+systemctl is-enabled nginx
+
+# Aktivera/avaktivera vid boot
+sudo systemctl enable nginx
+sudo systemctl disable nginx
+sudo systemctl enable --now nginx  # Enable + start`
+                },
+                {
+                    type: "code",
+                    title: "Loggar med journalctl",
+                    language: "bash",
+                    code: `# Loggar för tjänst
+journalctl -u nginx
+journalctl -u nginx -f           # Följ (tail -f)
+journalctl -u nginx --since today
+journalctl -u nginx -n 50        # Senaste 50 rader
+
+# Systemloggar
+journalctl -b                    # Sedan boot
+journalctl -p err                # Bara errors
+journalctl --disk-usage          # Loggstorlek`
+                },
+                {
+                    type: "concept",
+                    title: "Unit-fil struktur",
+                    explanation: `Unit-filer ligger i /etc/systemd/system/:
+
+┌─────────────────────────────────────────────────────────────┐
+│  [Unit]                                                     │
+│  Description=Min Applikation                                │
+│  After=network.target                                       │
+│                                                             │
+│  [Service]                                                  │
+│  Type=simple                                                │
+│  User=www-data                                              │
+│  WorkingDirectory=/app                                      │
+│  ExecStart=/app/start.sh                                    │
+│  Restart=always                                             │
+│                                                             │
+│  [Install]                                                  │
+│  WantedBy=multi-user.target                                 │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Skapa egen tjänst",
+                    language: "bash",
+                    code: `# /etc/systemd/system/myapp.service
+[Unit]
+Description=My Node App
+After=network.target
+
+[Service]
+Type=simple
+User=node
+WorkingDirectory=/var/www/myapp
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# Aktivera
+sudo systemctl daemon-reload
+sudo systemctl enable --now myapp`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur laddar du om systemd efter ändring i unit-fil?",
+                    options: [
+                        { text: "systemctl restart", correct: false, feedback: "Nej, det startar om tjänsten" },
+                        { text: "systemctl daemon-reload", correct: true, feedback: "Rätt! Laddar om konfigurationen" },
+                        { text: "systemctl reload-config", correct: false, feedback: "Nej, finns inte" },
+                        { text: "service reload", correct: false, feedback: "Nej, gammalt system" }
+                    ],
+                    hint: "daemon-reload läser om unit-filer"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Systemd! ⚙️ MODUL 2 KLAR!"
+                }
+            ]
+        },
+        // ============================================
+        // MODUL 3: DEVOPS (4 tasks)
+        // ============================================
+        {
+            id: "doe25-3-1-docker-grunder",
+            title: "3.1 Docker Grunder",
+            description: "Containers och grundläggande Docker-kommandon",
+            order_index: 22,
+            estimated_minutes: 55,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🐳 Docker Grunder",
+                    learning_objectives: [
+                        "Containers vs VMs",
+                        "docker run och livscykel",
+                        "Hantera containers",
+                        "Volymer och nätverk"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Containers vs VMs",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  VM:                        Container:                      │
+│  ┌─────────┬─────────┐     ┌─────────┬─────────┐           │
+│  │  App A  │  App B  │     │  App A  │  App B  │           │
+│  ├─────────┼─────────┤     ├─────────┴─────────┤           │
+│  │ Guest OS│ Guest OS│     │   Container Engine │           │
+│  ├─────────┴─────────┤     ├───────────────────┤           │
+│  │    Hypervisor     │     │    Host OS         │           │
+│  ├───────────────────┤     ├───────────────────┤           │
+│  │    Hardware       │     │    Hardware        │           │
+│  └───────────────────┘     └───────────────────┘           │
+│                                                             │
+│  • Tyngre, GB-storlek       • Lättare, MB-storlek          │
+│  • Minuter att starta       • Sekunder att starta          │
+│  • Full isolering           • Delar kernel                  │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "docker run",
+                    language: "bash",
+                    code: `# Kör container
+docker run hello-world
+docker run -it ubuntu bash           # Interaktiv
+docker run -d nginx                  # Bakgrund (detached)
+docker run -d -p 8080:80 nginx       # Port mapping
+docker run -d --name web nginx       # Namnge
+
+# Med volymer
+docker run -v /host/path:/container/path nginx
+docker run -v myvolume:/data nginx
+
+# Med miljövariabler
+docker run -e MYSQL_ROOT_PASSWORD=secret mysql`
+                },
+                {
+                    type: "code",
+                    title: "Hantera containers",
+                    language: "bash",
+                    code: `# Lista
+docker ps                    # Körande
+docker ps -a                 # Alla
+
+# Starta/stoppa
+docker start container_name
+docker stop container_name
+docker restart container_name
+
+# Ta bort
+docker rm container_name
+docker rm -f container_name  # Force
+
+# Loggar
+docker logs container_name
+docker logs -f container_name  # Följ
+
+# Exec - kör kommando i container
+docker exec -it container_name bash`
+                },
+                {
+                    type: "quiz",
+                    question: "Vad gör docker run -d?",
+                    options: [
+                        { text: "Raderar containern", correct: false, feedback: "Nej, -d = detached" },
+                        { text: "Kör i bakgrunden (detached)", correct: true, feedback: "Rätt! Detached mode" },
+                        { text: "Debug mode", correct: false, feedback: "Nej, finns inte" },
+                        { text: "Duplicerar containern", correct: false, feedback: "Nej, fel" }
+                    ],
+                    hint: "d = detached = bakgrund"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Docker Grunder! 🐳"
+                }
+            ]
+        },
+        {
+            id: "doe25-3-2-docker-images",
+            title: "3.2 Docker Images",
+            description: "Bygga och hantera Docker images med Dockerfile",
+            order_index: 23,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "📦 Docker Images",
+                    learning_objectives: [
+                        "Dockerfile syntax",
+                        "Bygga images",
+                        "Lager och caching",
+                        "Registry och push/pull"
+                    ]
+                },
+                {
+                    type: "concept",
+                    title: "Dockerfile instruktioner",
+                    explanation: `┌─────────────┬───────────────────────────────────────────────┐
+│ Instruktion │ Beskrivning                                   │
+├─────────────┼───────────────────────────────────────────────┤
+│ FROM        │ Basimage                                      │
+│ RUN         │ Kör kommando vid build                        │
+│ COPY        │ Kopiera filer från host                       │
+│ ADD         │ Som COPY + URL + tar-extraktion               │
+│ WORKDIR     │ Sätt arbetskatalog                            │
+│ ENV         │ Miljövariabel                                 │
+│ EXPOSE      │ Dokumentera port                              │
+│ CMD         │ Default kommando vid run                      │
+│ ENTRYPOINT  │ Huvudkommando (CMD blir argument)             │
+└─────────────┴───────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Exempel Dockerfile",
+                    language: "dockerfile",
+                    code: `# Node.js app
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]
+
+# Python app
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["python", "app.py"]`
+                },
+                {
+                    type: "code",
+                    title: "Bygga och hantera images",
+                    language: "bash",
+                    code: `# Bygg image
+docker build -t myapp .
+docker build -t myapp:1.0 .
+docker build -f Dockerfile.prod -t myapp:prod .
+
+# Lista images
+docker images
+docker image ls
+
+# Ta bort
+docker rmi myapp
+docker image prune           # Ta bort oanvända
+
+# Push till registry
+docker tag myapp:1.0 username/myapp:1.0
+docker push username/myapp:1.0
+docker pull username/myapp:1.0`
+                },
+                {
+                    type: "quiz",
+                    question: "Vilken instruktion sätter default-kommandot?",
+                    options: [
+                        { text: "RUN", correct: false, feedback: "Nej, RUN kör vid build" },
+                        { text: "CMD", correct: true, feedback: "Rätt! CMD är default vid run" },
+                        { text: "EXEC", correct: false, feedback: "Nej, finns inte" },
+                        { text: "START", correct: false, feedback: "Nej, finns inte" }
+                    ],
+                    hint: "CMD = command"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Docker Images! 📦"
+                }
+            ]
+        },
+        {
+            id: "doe25-3-3-docker-compose",
+            title: "3.3 Docker Compose",
+            description: "Multi-container applikationer med docker-compose",
+            order_index: 24,
+            estimated_minutes: 50,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "🎼 Docker Compose",
+                    learning_objectives: [
+                        "docker-compose.yml syntax",
+                        "Services, networks, volumes",
+                        "Compose kommandon",
+                        "Miljövariabler och overrides"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "docker-compose.yml exempel",
+                    language: "yaml",
+                    code: `version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgres://db:5432/app
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_PASSWORD=secret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:`
+                },
+                {
+                    type: "code",
+                    title: "docker-compose kommandon",
+                    language: "bash",
+                    code: `# Starta alla tjänster
+docker-compose up
+docker-compose up -d            # Detached
+docker-compose up --build       # Bygg om images
+
+# Stoppa
+docker-compose down
+docker-compose down -v          # Ta bort volymer också
+
+# Status
+docker-compose ps
+docker-compose logs
+docker-compose logs -f web      # Följ specifik tjänst
+
+# Skala
+docker-compose up -d --scale web=3
+
+# Exec
+docker-compose exec web bash`
+                },
+                {
+                    type: "concept",
+                    title: "Avancerade features",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  depends_on    - Startordning                               │
+│  networks      - Isolera tjänster                           │
+│  volumes       - Persistens och delning                     │
+│  healthcheck   - Kontrollera tjänstehälsa                   │
+│  restart       - always/unless-stopped/on-failure           │
+│  profiles      - Gruppera tjänster                          │
+└─────────────────────────────────────────────────────────────┘`
+                },
+                {
+                    type: "code",
+                    title: "Med .env fil",
+                    language: "bash",
+                    code: `# .env
+POSTGRES_PASSWORD=supersecret
+APP_PORT=3000
+
+# docker-compose.yml använder automatiskt
+services:
+  web:
+    ports:
+      - "\${APP_PORT}:3000"
+  db:
+    environment:
+      - POSTGRES_PASSWORD=\${POSTGRES_PASSWORD}`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur startar du compose i bakgrunden?",
+                    options: [
+                        { text: "docker-compose start", correct: false, feedback: "Nej, start är för stoppade containers" },
+                        { text: "docker-compose up -d", correct: true, feedback: "Rätt! -d = detached" },
+                        { text: "docker-compose run", correct: false, feedback: "Nej, run kör engångskommando" },
+                        { text: "docker-compose background", correct: false, feedback: "Nej, finns inte" }
+                    ],
+                    hint: "-d fungerar som i docker run"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Docker Compose! 🎼"
+                }
+            ]
+        },
+        {
+            id: "doe25-3-4-git",
+            title: "3.4 Git Versionshantering",
+            description: "Git workflow och kommandon för DevOps",
+            order_index: 25,
+            estimated_minutes: 55,
+            content_blocks: [
+                {
+                    type: "intro",
+                    headline: "📚 Git Versionshantering",
+                    learning_objectives: [
+                        "Git grundkommandon",
+                        "Branching och merging",
+                        "Remote repositories",
+                        "Git workflow"
+                    ]
+                },
+                {
+                    type: "code",
+                    title: "Git grunderna",
+                    language: "bash",
+                    code: `# Konfigurera
+git config --global user.name "Ditt Namn"
+git config --global user.email "din@email.com"
+
+# Initiera/klona
+git init
+git clone https://github.com/user/repo.git
+
+# Status och diff
+git status
+git diff
+git diff --staged
+
+# Stage och commit
+git add file.txt
+git add .
+git commit -m "Beskrivning"
+git commit -am "Stage och commit"`
+                },
+                {
+                    type: "code",
+                    title: "Branching",
+                    language: "bash",
+                    code: `# Lista branches
+git branch
+git branch -a                    # Inkl. remote
+
+# Skapa och byta
+git branch feature-x
+git checkout feature-x
+git checkout -b feature-y        # Skapa + byta
+git switch -c feature-z          # Nyare syntax
+
+# Merge
+git checkout main
+git merge feature-x
+
+# Ta bort branch
+git branch -d feature-x
+git branch -D feature-x          # Force`
+                },
+                {
+                    type: "code",
+                    title: "Remote och sync",
+                    language: "bash",
+                    code: `# Remote
+git remote add origin git@github.com:user/repo.git
+git remote -v
+
+# Push/Pull
+git push origin main
+git push -u origin main          # Sätt upstream
+git pull origin main
+git fetch origin
+
+# Hantera konflikter
+git merge feature
+# (fixa konflikter i filer)
+git add .
+git commit -m "Resolve conflicts"`
+                },
+                {
+                    type: "concept",
+                    title: "Git workflow",
+                    explanation: `┌─────────────────────────────────────────────────────────────┐
+│  WORKING DIR  →  STAGING  →  LOCAL REPO  →  REMOTE         │
+│       │             │            │              │           │
+│    git add       git commit   git push                      │
+│       ←             ←            ←                          │
+│    git checkout  git reset   git pull/fetch                 │
+└─────────────────────────────────────────────────────────────┘
+
+Feature Branch Workflow:
+1. git checkout -b feature-x
+2. (gör ändringar, commit)
+3. git push origin feature-x
+4. (skapa Pull Request)
+5. (code review)
+6. git merge till main`
+                },
+                {
+                    type: "code",
+                    title: "Användbart",
+                    language: "bash",
+                    code: `# Ångra
+git checkout -- file.txt         # Kasta ändringar
+git reset HEAD file.txt          # Unstage
+git reset --hard HEAD~1          # Ta bort senaste commit
+
+# Stash
+git stash
+git stash pop
+git stash list
+
+# Log
+git log --oneline
+git log --graph --oneline --all
+git blame file.txt`
+                },
+                {
+                    type: "quiz",
+                    question: "Hur skapar du en ny branch och byter till den?",
+                    options: [
+                        { text: "git branch new && git checkout new", correct: false, feedback: "Fungerar men finns kortare" },
+                        { text: "git checkout -b new", correct: true, feedback: "Rätt! -b skapar och byter" },
+                        { text: "git new-branch", correct: false, feedback: "Nej, finns inte" },
+                        { text: "git create new", correct: false, feedback: "Nej, finns inte" }
+                    ],
+                    hint: "-b = branch"
+                },
+                {
+                    type: "checkpoint",
+                    message: "Du har klarat Git! 📚 MODUL 3 KLAR! 🎉 ALLA 25 TASKS AVKLARADE!"
                 }
             ]
         }
@@ -2067,5 +2786,5 @@ export const DOE25_TASKS = DOE25_MODULE.tasks;
 // Get task by ID
 export const getTaskById = (id: string) => DOE25_TASKS.find(t => t.id === id);
 
-// Get task by KM number
-export const getTaskByKM = (km: number) => DOE25_TASKS.find(t => t.order_index === km);
+// Get task by order index
+export const getTaskByOrder = (order: number) => DOE25_TASKS.find(t => t.order_index === order);

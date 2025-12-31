@@ -51,7 +51,7 @@ class FeatureAccessResponse(BaseModel):
 
 def check_quiz_access(user: UserPublic) -> bool:
     """Check if user has access to AI Quiz feature.
-    
+
     Premium = logged in. All authenticated users have access.
     """
     # All logged-in users have access (premium = inlogg)
