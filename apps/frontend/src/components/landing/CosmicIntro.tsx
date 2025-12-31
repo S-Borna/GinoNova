@@ -73,8 +73,8 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 borderColor: i % 3 === 0
                                     ? "rgba(139, 92, 246, 0.6)"  // Purple
                                     : i % 3 === 1
-                                    ? "rgba(99, 102, 241, 0.5)"  // Indigo
-                                    : "rgba(167, 139, 250, 0.4)", // Light purple
+                                        ? "rgba(99, 102, 241, 0.5)"  // Indigo
+                                        : "rgba(167, 139, 250, 0.4)", // Light purple
                             }}
                             initial={{
                                 width: 0,
@@ -103,7 +103,7 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 width: "3px",
                                 height: "0px",
                                 background: `linear-gradient(to top, transparent, ${i % 4 === 0 ? "rgba(139, 92, 246, 0.8)" :
-                                        i % 4 === 1 ? "rgba(99, 102, 241, 0.7)" :
+                                    i % 4 === 1 ? "rgba(99, 102, 241, 0.7)" :
                                         i % 4 === 2 ? "rgba(167, 139, 250, 0.6)" :
                                             "rgba(196, 181, 253, 0.5)"
                                     }, transparent)`,
@@ -298,7 +298,7 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 className="absolute w-1 h-1 rounded-full"
                                 style={{
                                     background: i % 2 === 0 ? "#a78bfa" : "#e0e7ff",
-                                    boxShadow: i % 2 === 0 
+                                    boxShadow: i % 2 === 0
                                         ? "0 0 8px rgba(167, 139, 250, 0.8)"
                                         : "0 0 6px rgba(224, 231, 255, 0.7)",
                                 }}
