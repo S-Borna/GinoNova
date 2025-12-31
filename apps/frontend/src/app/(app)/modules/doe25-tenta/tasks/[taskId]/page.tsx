@@ -138,12 +138,12 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
    QUICK NAV - Previous/Next Tasks
    ============================================================================ */
 
-function QuickNav({ 
-    prevTask, 
-    nextTask, 
-    currentIndex, 
-    totalTasks 
-}: { 
+function QuickNav({
+    prevTask,
+    nextTask,
+    currentIndex,
+    totalTasks
+}: {
     prevTask: DOE25Task | null
     nextTask: DOE25Task | null
     currentIndex: number
@@ -294,15 +294,15 @@ export default function DOE25TaskPage() {
             {/* Layout with Sidebar */}
             <div className="relative z-10 flex">
                 {/* Sidebar */}
-                <DOE25TaskSidebar 
-                    currentTaskId={taskId} 
+                <DOE25TaskSidebar
+                    currentTaskId={taskId}
                     completedTasks={completedTasks}
                 />
 
                 {/* Main Content */}
                 <main className="flex-1 min-h-screen lg:ml-0">
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                        
+
                         {/* Back button - mobile */}
                         <Link
                             href="/modules/doe25-tenta"

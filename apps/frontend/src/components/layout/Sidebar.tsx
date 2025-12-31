@@ -71,91 +71,91 @@ interface SidebarProps {
    ============================================================================ */
 
 const mainNavItems: NavItem[] = [
-    { 
-        label: "Dashboard", 
-        href: "/dashboard", 
+    {
+        label: "Dashboard",
+        href: "/dashboard",
         icon: Home,
         gradient: "from-violet-500 to-purple-600",
         glowColor: "rgba(139, 92, 246, 0.5)"
     },
-    { 
-        label: "Skillpath", 
-        href: "/skillpath-board", 
+    {
+        label: "Skillpath",
+        href: "/skillpath-board",
         icon: LayoutDashboard,
         gradient: "from-blue-500 to-indigo-600",
         glowColor: "rgba(99, 102, 241, 0.5)"
     },
-    { 
-        label: "Camp DevOps", 
-        href: "/modules", 
+    {
+        label: "Camp DevOps",
+        href: "/modules",
         icon: BookOpen,
         gradient: "from-emerald-500 to-teal-600",
         glowColor: "rgba(16, 185, 129, 0.5)"
     },
-    { 
-        label: "SkillsMaps", 
-        href: "/skillsmaps", 
+    {
+        label: "SkillsMaps",
+        href: "/skillsmaps",
         icon: Map,
         gradient: "from-amber-500 to-orange-600",
         glowColor: "rgba(245, 158, 11, 0.5)"
     },
-    { 
-        label: "FastTrack", 
-        href: "/fasttrack", 
+    {
+        label: "FastTrack",
+        href: "/fasttrack",
         icon: Zap,
         gradient: "from-yellow-400 to-amber-500",
         glowColor: "rgba(250, 204, 21, 0.5)"
     },
-    { 
-        label: "Studyroom", 
-        href: "/study", 
+    {
+        label: "Studyroom",
+        href: "/study",
         icon: Clock,
         gradient: "from-cyan-500 to-blue-600",
         glowColor: "rgba(6, 182, 212, 0.5)"
     },
-    { 
-        label: "AI Quiz", 
-        href: "/quiz", 
+    {
+        label: "AI Quiz",
+        href: "/quiz",
         icon: Brain,
         gradient: "from-pink-500 to-rose-600",
         glowColor: "rgba(236, 72, 153, 0.5)"
     },
-    { 
-        label: "Pulsmätning", 
-        href: "/pulse", 
+    {
+        label: "Pulsmätning",
+        href: "/pulse",
         icon: Heart,
         gradient: "from-red-500 to-pink-600",
         glowColor: "rgba(239, 68, 68, 0.5)"
     },
-    { 
-        label: "Profile", 
-        href: "/profile", 
-        icon: User, 
+    {
+        label: "Profile",
+        href: "/profile",
+        icon: User,
         gradient: "from-slate-400 to-zinc-500",
         glowColor: "rgba(148, 163, 184, 0.5)",
-        authRequired: true 
+        authRequired: true
     },
-    { 
-        label: "Admin", 
-        href: "/admin", 
-        icon: Shield, 
+    {
+        label: "Admin",
+        href: "/admin",
+        icon: Shield,
         gradient: "from-purple-600 to-violet-700",
         glowColor: "rgba(147, 51, 234, 0.5)",
-        adminOnly: true 
+        adminOnly: true
     },
 ]
 
 const bottomNavItems: NavItem[] = [
-    { 
-        label: "Settings", 
-        href: "/settings", 
+    {
+        label: "Settings",
+        href: "/settings",
         icon: Settings,
         gradient: "from-zinc-500 to-slate-600",
         glowColor: "rgba(113, 113, 122, 0.5)"
     },
-    { 
-        label: "Help", 
-        href: "/help", 
+    {
+        label: "Help",
+        href: "/help",
         icon: HelpCircle,
         gradient: "from-emerald-400 to-green-500",
         glowColor: "rgba(52, 211, 153, 0.5)"
@@ -254,8 +254,8 @@ function NavItemComponent({ item, isActive, collapsed, index }: NavItemProps) {
                     className={cn(
                         "relative z-10 flex items-center justify-center",
                         "w-9 h-9 rounded-lg",
-                        isActive 
-                            ? "bg-white/20 shadow-lg backdrop-blur-sm" 
+                        isActive
+                            ? "bg-white/20 shadow-lg backdrop-blur-sm"
                             : "bg-zinc-800/60 group-hover:bg-zinc-700/60",
                         "transition-all duration-300",
                         "border",
@@ -274,11 +274,11 @@ function NavItemComponent({ item, isActive, collapsed, index }: NavItemProps) {
 
                 {/* Label */}
                 {!collapsed && (
-                    <motion.span 
+                    <motion.span
                         className={cn(
                             "relative z-10 text-sm truncate transition-all duration-200",
-                            isActive 
-                                ? "text-white font-semibold" 
+                            isActive
+                                ? "text-white font-semibold"
                                 : "text-zinc-400 group-hover:text-white font-medium"
                         )}
                     >
@@ -367,7 +367,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
     })
 
     return (
-        <motion.aside 
+        <motion.aside
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -383,7 +383,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 {/* Aurora gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-purple-950/20 via-transparent to-cyan-950/10" />
                 {/* Subtle grid pattern */}
-                <div 
+                <div
                     className="absolute inset-0 opacity-[0.02]"
                     style={{
                         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -529,7 +529,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
 
             {/* Navigation Section Label */}
             {!collapsed && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -561,7 +561,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
             )}>
                 {/* Section label */}
                 {!collapsed && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         className="px-3 pb-2"
@@ -611,7 +611,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
 
             {/* Footer branding */}
             {!collapsed && (
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
@@ -619,7 +619,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 >
                     <div className="flex items-center justify-center gap-2">
                         <motion.div
-                            animate={{ 
+                            animate={{
                                 opacity: [0.5, 1, 0.5],
                             }}
                             transition={{ duration: 2, repeat: Infinity }}

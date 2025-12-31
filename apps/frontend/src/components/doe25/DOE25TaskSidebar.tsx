@@ -20,11 +20,11 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { 
-    ChevronLeft, 
-    ChevronRight, 
-    CheckCircle2, 
-    Circle, 
+import {
+    ChevronLeft,
+    ChevronRight,
+    CheckCircle2,
+    Circle,
     Play,
     BookOpen,
     Terminal,
@@ -111,10 +111,10 @@ const taskGroups = [
    MAIN COMPONENT
    ============================================================================ */
 
-export function DOE25TaskSidebar({ 
-    currentTaskId, 
+export function DOE25TaskSidebar({
+    currentTaskId,
     completedTasks = [],
-    className 
+    className
 }: DOE25TaskSidebarProps) {
     const [isOpen, setIsOpen] = useState(true)
     const [isMobile, setIsMobile] = useState(false)
@@ -137,8 +137,8 @@ export function DOE25TaskSidebar({
     }, [isMobile])
 
     const toggleGroup = (groupId: string) => {
-        setExpandedGroups(prev => 
-            prev.includes(groupId) 
+        setExpandedGroups(prev =>
+            prev.includes(groupId)
                 ? prev.filter(id => id !== groupId)
                 : [...prev, groupId]
         )
@@ -150,7 +150,7 @@ export function DOE25TaskSidebar({
         return "pending"
     }
 
-    const getTask = (taskId: string) => 
+    const getTask = (taskId: string) =>
         DOE25_MODULE.tasks.find(t => t.id === taskId)
 
     // Calculate progress
@@ -257,7 +257,7 @@ export function DOE25TaskSidebar({
                                             className={cn(
                                                 "w-full flex items-center gap-3 p-3 rounded-xl",
                                                 "text-left transition-all duration-200",
-                                                hasCurrentTask 
+                                                hasCurrentTask
                                                     ? "bg-purple-500/20 border border-purple-500/30"
                                                     : "hover:bg-white/5 border border-transparent"
                                             )}
@@ -297,7 +297,7 @@ export function DOE25TaskSidebar({
                                                     <div className="pl-4 space-y-1 py-1">
                                                         {groupTasks.map((task) => {
                                                             const status = getTaskStatus(task.id)
-                                                            
+
                                                             return (
                                                                 <Link
                                                                     key={task.id}
@@ -306,7 +306,7 @@ export function DOE25TaskSidebar({
                                                                     className={cn(
                                                                         "flex items-center gap-3 p-2.5 rounded-lg",
                                                                         "transition-all duration-200 group",
-                                                                        status === "current" 
+                                                                        status === "current"
                                                                             ? "bg-gradient-to-r from-purple-500/30 to-cyan-500/20 border border-purple-500/40"
                                                                             : "hover:bg-white/5 border border-transparent"
                                                                     )}
@@ -338,7 +338,7 @@ export function DOE25TaskSidebar({
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className={cn(
                                                                             "text-sm truncate",
-                                                                            status === "current" 
+                                                                            status === "current"
                                                                                 ? "text-white font-medium"
                                                                                 : status === "completed"
                                                                                     ? "text-zinc-400"
