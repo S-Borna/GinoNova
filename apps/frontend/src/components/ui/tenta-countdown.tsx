@@ -40,6 +40,7 @@ interface TimeLeft {
 
 interface TentaCountdownProps {
     variant?: "compact" | "full"
+    examDate?: string
     className?: string
 }
 
