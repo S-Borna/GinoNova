@@ -114,12 +114,12 @@ const taskGroups = [
    STATS CARD
    ============================================================================ */
 
-function StatCard({ 
-    icon, 
-    label, 
-    value, 
-    color 
-}: { 
+function StatCard({
+    icon,
+    label,
+    value,
+    color
+}: {
     icon: React.ReactNode
     label: string
     value: string | number
@@ -246,7 +246,7 @@ export default function DOE25ModulePage() {
                                 </p>
 
                                 {/* Countdown */}
-                                <TentaCountdown 
+                                <TentaCountdown
                                     examDate={DOE25_MODULE.exam_date}
                                     className="mb-6"
                                 />

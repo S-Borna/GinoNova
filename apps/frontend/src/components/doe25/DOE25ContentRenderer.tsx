@@ -63,7 +63,7 @@ function IntroBlock({ block, index }: { block: ContentBlock; index: number }) {
         >
             {/* Background glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
-            
+
             <div className="relative">
                 {/* Headline */}
                 {block.headline && (
@@ -180,7 +180,7 @@ function ConceptBlock({ block, index }: { block: ContentBlock; index: number }) 
                             {block.warning && (
                                 <div className={cn(
                                     "mt-4 flex items-start gap-3 p-4 rounded-xl",
-                                    block.warning_level === "danger" 
+                                    block.warning_level === "danger"
                                         ? "bg-red-500/10 border border-red-500/20"
                                         : "bg-amber-500/10 border border-amber-500/20"
                                 )}>
@@ -267,7 +267,7 @@ function CodeBlockComponent({ block, index }: { block: ContentBlock; index: numb
                         <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                         <div className="w-3 h-3 rounded-full bg-green-500/80" />
                     </div>
-                    
+
                     {/* Title & Language */}
                     <div className="flex items-center gap-2 ml-2">
                         <Terminal className="w-4 h-4 text-emerald-400" />
@@ -283,7 +283,7 @@ function CodeBlockComponent({ block, index }: { block: ContentBlock; index: numb
                     className={cn(
                         "flex items-center gap-2 px-3 py-1.5 rounded-lg",
                         "text-xs font-medium transition-all duration-200",
-                        copied 
+                        copied
                             ? "bg-emerald-500/20 text-emerald-400"
                             : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
                     )}
@@ -356,9 +356,9 @@ function QuizBlockComponent({ block, index }: { block: ContentBlock; index: numb
             className={cn(
                 "relative rounded-2xl overflow-hidden",
                 "bg-[#0d0d12] border",
-                showResult 
-                    ? isCorrect 
-                        ? "border-emerald-500/50" 
+                showResult
+                    ? isCorrect
+                        ? "border-emerald-500/50"
                         : "border-red-500/50"
                     : "border-cyan-500/30"
             )}
@@ -409,7 +409,7 @@ function QuizBlockComponent({ block, index }: { block: ContentBlock; index: numb
                 {block.options?.map((option, i) => {
                     const isSelected = selectedOption === i
                     const isCorrectOption = option.correct
-                    
+
                     let optionStyle = "border-zinc-700 hover:border-purple-500/50 hover:bg-white/5"
                     if (showResult) {
                         if (isCorrectOption) {
@@ -490,7 +490,7 @@ function QuizBlockComponent({ block, index }: { block: ContentBlock; index: numb
                     >
                         <div className={cn(
                             "mx-5 mb-5 p-4 rounded-xl",
-                            isCorrect 
+                            isCorrect
                                 ? "bg-emerald-500/10 border border-emerald-500/30"
                                 : "bg-red-500/10 border border-red-500/30"
                         )}>
