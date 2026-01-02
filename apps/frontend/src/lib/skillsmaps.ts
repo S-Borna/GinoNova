@@ -90,6 +90,8 @@ interface SkillsMapMeta {
 }
 
 const SKILLSMAP_METADATA: Record<string, SkillsMapMeta> = {
+    // DOE25 Tentaplugg - Huvudmodulen för tentan!
+    "doe25-tenta": { icon: "📝", color: "#F59E0B", tags: ["Tenta", "Linux", "Bash", "DevOps", "System Admin"] },
     // Linux 24/7 - Vår första modul!
     "linux-247": { icon: "🐧", color: "#FCC624", tags: ["Linux", "CLI", "DevOps", "System Admin"] },
     "python-devops": { icon: "🐍", color: "#3776AB", tags: ["Scripting", "Automation", "API"] },

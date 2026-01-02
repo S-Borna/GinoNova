@@ -497,14 +497,14 @@ def _update_order_index(node, index):
 
 
 MODULE = {
-    "id": "tentaplugg-linux",
-    "slug": "tentaplugg-linux",
-    "title": "Tentaplugg Linux",
-    "description": "Komplett tentaförberedelse för DOE25 Linux - 25 noder i 4 moduler: Linux Grunder, Bash, Linux System och DevOps. Allt du behöver för att klara tentan!",
-    "icon": "🎯",
+    "id": "doe25-tenta",
+    "slug": "doe25-tenta",
+    "title": "DOE25 Tentaplugg",
+    "description": "Komplett tentaplugg med 25 tasks: Linux Grunder, Bash Scripting, System Administration & DevOps. Allt du behöver för att klara tentan!",
+    "icon": "📝",
     "difficulty": "intermediate",
     "estimated_hours": 30,
-    "order_index": 2,
+    "order_index": 1,
     "tasks": [
         # =====================================================================
         # MODUL 0: LINUX GRUNDER (2 noder)
