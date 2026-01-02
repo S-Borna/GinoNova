@@ -5,6 +5,7 @@
  *
  * Test knowledge with questions and answers
  * With star/favorite functionality
+ * Uses LOCAL DATA instead of API
  */
 
 import * as React from "react"
@@ -15,7 +16,35 @@ import { cn } from "@/lib/utils"
 import { ArrowRight, CheckCircle, XCircle, RotateCcw, Lightbulb, Star, X } from "lucide-react"
 import { useFavorites } from "@/hooks/useFavorites"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Import local quiz data
+import { getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion } from "@/data/doe25-task-quiz"
+import { getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
+
+// Generic quiz question type for local data
+interface LocalQuizQuestion {
+    id: string
+    question: string
+    options: string[]
+    correctIndex: number
+    explanation: string
+    difficulty: 'G' | 'VG'
+    category: string
+}
+
+// Module configuration - maps URL slugs to data
+const MODULE_CONFIG: Record<string, {
+    getData: () => LocalQuizQuestion[]
+    title: string
+}> = {
+    'doe25-tenta': {
+        getData: getAllDOE25Quiz as () => LocalQuizQuestion[],
+        title: 'DOE25 Tentaplugg'
+    },
+    'linux-247': {
+        getData: getAllLinux247Quiz as () => LocalQuizQuestion[],
+        title: 'Linux 24/7'
+    }
+}
 
 interface QuizQuestion {
     id: string
@@ -50,33 +79,50 @@ function QuizContent() {
     const { addFavorite, removeFavorite, isFavorite, getFavoriteId } = useFavorites()
 
     useEffect(() => {
-        fetchQuiz()
+        loadQuiz()
     }, [moduleSlug])
 
-    async function fetchQuiz() {
+    function loadQuiz() {
         try {
             setLoading(true)
+            setError(null)
 
-            // Get lessons and shuffle params
-            const lessons = searchParams?.get("lessons") || ""
+            // Get module config
+            const config = MODULE_CONFIG[moduleSlug]
+            if (!config) {
+                setError(`Modul '${moduleSlug}' hittades inte. Tillgängliga: ${Object.keys(MODULE_CONFIG).join(', ')}`)
+                return
+            }
+
+            // Get local data
+            const localData = config.getData()
+            if (!localData || localData.length === 0) {
+                setError("Inga quiz-frågor tillgängliga")
+                return
+            }
+
+            // Get shuffle param
             const shuffle = searchParams?.get("shuffle") === "true"
 
-            const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/quiz`)
-            if (lessons) url.searchParams.set("lessons", lessons)
-            if (shuffle) url.searchParams.set("shuffle", "true")
+            // Transform local data to QuizQuestion format
+            let transformedQuestions: QuizQuestion[] = localData.map(q => ({
+                id: q.id,
+                question: q.question,
+                options: [...q.options],
+                correct: q.correctIndex, // Map correctIndex to correct
+                explanation: q.explanation,
+                module_slug: moduleSlug,
+                lesson_title: q.category
+            }))
 
-            const res = await fetch(url.toString())
-            if (!res.ok) throw new Error("Failed to fetch quiz")
-
-            const data = await res.json()
-            setQuestions(data.questions)
-
-            // Get module title
-            const moduleRes = await fetch(`${API_BASE_URL}/api/study/modules/${moduleSlug}`)
-            if (moduleRes.ok) {
-                const moduleData = await moduleRes.json()
-                setModuleTitle(moduleData.title)
+            // Shuffle if requested
+            if (shuffle) {
+                transformedQuestions = transformedQuestions.sort(() => Math.random() - 0.5)
             }
+
+            setQuestions(transformedQuestions)
+            setModuleTitle(config.title)
+
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error loading quiz")
         } finally {
