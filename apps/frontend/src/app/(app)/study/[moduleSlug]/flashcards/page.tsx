@@ -5,17 +5,20 @@
  *
  * Simple flip-card interface for memorization
  * With star/favorite functionality
+ * Now uses local data instead of API
  */
 
 import * as React from "react"
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, Suspense, useMemo } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
-import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle, Star, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, RotateCcw, CheckCircle, Star, X, Shuffle } from "lucide-react"
 import { useFavorites } from "@/hooks/useFavorites"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// Import local flashcard data
+import { DOE25_TASK_FLASHCARDS, getAllDOE25Flashcards, type TaskFlashcard } from "@/data/doe25-task-flashcards"
+import { LINUX247_TASK_FLASHCARDS, getAllFlashcards as getAllLinux247Flashcards } from "@/data/linux247-task-flashcards"
 
 interface Flashcard {
     id: string
@@ -23,6 +26,14 @@ interface Flashcard {
     back: string
     module_slug: string
     lesson_title: string
+    category?: string
+    difficulty?: string
+}
+
+// Module configuration
+const MODULE_CONFIG: Record<string, { title: string; data: typeof DOE25_TASK_FLASHCARDS }> = {
+    'doe25': { title: 'DOE25 Tentaplugg', data: DOE25_TASK_FLASHCARDS },
+    'linux-247': { title: 'Linux 24/7', data: LINUX247_TASK_FLASHCARDS },
 }
 
 function FlashcardsContent() {
@@ -36,6 +47,7 @@ function FlashcardsContent() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
+    const [isShuffled, setIsShuffled] = useState(false)
 
     // Star modal
     const [showStarModal, setShowStarModal] = useState(false)
@@ -44,39 +56,92 @@ function FlashcardsContent() {
     // Favorites hook
     const { addFavorite, removeFavorite, isFavorite, getFavoriteId } = useFavorites()
 
+    // Load flashcards from local data
     useEffect(() => {
-        fetchFlashcards()
+        loadLocalFlashcards()
     }, [moduleSlug])
 
-    async function fetchFlashcards() {
+    function loadLocalFlashcards() {
         try {
             setLoading(true)
+            setError(null)
 
-            // Get lessons and shuffle params
-            const lessons = searchParams?.get("lessons") || ""
-            const shuffle = searchParams?.get("shuffle") === "true"
+            // Get shuffle preference from URL
+            const shouldShuffle = searchParams?.get("shuffle") === "true"
+            const taskFilter = searchParams?.get("task") || ""
+            setIsShuffled(shouldShuffle)
 
-            const url = new URL(`${API_BASE_URL}/api/study/modules/${moduleSlug}/flashcards`)
-            if (lessons) url.searchParams.set("lessons", lessons)
-            if (shuffle) url.searchParams.set("shuffle", "true")
-
-            const res = await fetch(url.toString())
-            if (!res.ok) throw new Error("Failed to fetch flashcards")
-
-            const data = await res.json()
-            setFlashcards(data.flashcards)
-
-            // Get module title
-            const moduleRes = await fetch(`${API_BASE_URL}/api/study/modules/${moduleSlug}`)
-            if (moduleRes.ok) {
-                const moduleData = await moduleRes.json()
-                setModuleTitle(moduleData.title)
+            // Get module config
+            const config = MODULE_CONFIG[moduleSlug]
+            if (!config) {
+                setError(`Modul "${moduleSlug}" hittades inte`)
+                setLoading(false)
+                return
             }
+
+            setModuleTitle(config.title)
+
+            // Collect flashcards - either all or filtered by task
+            let allFlashcards: Flashcard[] = []
+
+            if (taskFilter) {
+                // Get flashcards for specific task
+                const taskSet = config.data.find(t => t.taskId === taskFilter)
+                if (taskSet) {
+                    allFlashcards = taskSet.flashcards.map(fc => ({
+                        id: fc.id,
+                        front: fc.front,
+                        back: fc.back,
+                        module_slug: moduleSlug,
+                        lesson_title: taskSet.taskTitle,
+                        category: fc.category,
+                        difficulty: fc.difficulty
+                    }))
+                }
+            } else {
+                // Get all flashcards for module
+                config.data.forEach(taskSet => {
+                    taskSet.flashcards.forEach(fc => {
+                        allFlashcards.push({
+                            id: fc.id,
+                            front: fc.front,
+                            back: fc.back,
+                            module_slug: moduleSlug,
+                            lesson_title: taskSet.taskTitle,
+                            category: fc.category,
+                            difficulty: fc.difficulty
+                        })
+                    })
+                })
+            }
+
+            // Shuffle if requested
+            if (shouldShuffle) {
+                allFlashcards = shuffleArray([...allFlashcards])
+            }
+
+            setFlashcards(allFlashcards)
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error loading flashcards")
         } finally {
             setLoading(false)
         }
+    }
+
+    function shuffleArray<T>(array: T[]): T[] {
+        const shuffled = [...array]
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        }
+        return shuffled
+    }
+
+    function handleShuffle() {
+        setFlashcards(prev => shuffleArray([...prev]))
+        setCurrentIndex(0)
+        setIsFlipped(false)
+        setIsShuffled(true)
     }
 
     function nextCard() {
@@ -256,13 +321,27 @@ function FlashcardsContent() {
                         Föregående
                     </button>
 
-                    <button
-                        onClick={resetCards}
-                        className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
-                        title="Börja om"
-                    >
-                        <RotateCcw className="w-5 h-5" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleShuffle}
+                            className={cn(
+                                "p-2 rounded-lg transition-colors",
+                                isShuffled 
+                                    ? "bg-purple-600/30 text-purple-400" 
+                                    : "bg-zinc-800 hover:bg-zinc-700"
+                            )}
+                            title="Blanda kort"
+                        >
+                            <Shuffle className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={resetCards}
+                            className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                            title="Börja om"
+                        >
+                            <RotateCcw className="w-5 h-5" />
+                        </button>
+                    </div>
 
                     {currentIndex < flashcards.length - 1 ? (
                         <button
