@@ -1,18 +1,21 @@
 """
 Modules Router - API endpoints for module management
 Phase 2.0: Modules Foundation
+Phase 5.0: Added full module with content endpoint
 """
 from uuid import UUID
+from typing import Optional
 
 from fastapi import APIRouter, Response, status
 
 from ..schemas.module import ModuleCreate, ModuleUpdate, ModulePublic
 from ..services.module_service import module_service
+from ..db.seeds.content import get_module_by_slug as get_content_module
 
 modules_router = APIRouter()
 
 # Phase version header
-PHASE_VERSION = "2.0"
+PHASE_VERSION = "5.0"
 
 
 def add_phase_header(response: Response) -> None:
@@ -27,8 +30,50 @@ def modules_status(response: Response):
     return {
         "modules": "configured",
         "phase": PHASE_VERSION,
-        "endpoints": ["list", "get", "create", "update", "delete"]
+        "endpoints": ["list", "get", "create", "update", "delete", "full"]
     }
+
+
+@modules_router.get("/full/{slug}")
+def get_full_module(slug: str, response: Response):
+    """
+    Get FULL module data including all tasks and content.
+
+    This is the main endpoint for frontend to get complete module data.
+    Returns module with all tasks, groups, content - everything needed to render.
+
+    Args:
+        slug: Module slug (e.g., 'doe25-tenta', 'linux-247')
+
+    Returns:
+        Full module dict with all data from content source
+
+    Raises:
+        404: If module not found
+    """
+    add_phase_header(response)
+
+    module = get_content_module(slug)
+    if not module:
+        return Response(
+            content=f'{{"detail": "Module \'{slug}\' not found"}}',
+            status_code=404,
+            media_type="application/json"
+        )
+
+    return module
+
+
+@modules_router.get("/full")
+def list_full_modules(response: Response):
+    """
+    List ALL modules with full data including tasks and content.
+
+    This is the main endpoint for frontend to get all modules for listing pages.
+    """
+    add_phase_header(response)
+    from ..db.seeds.content import get_all_modules
+    return get_all_modules()
 
 
 @modules_router.get("", response_model=list[ModulePublic])

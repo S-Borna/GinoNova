@@ -505,13 +505,78 @@ MODULE = {
     "difficulty": "intermediate",
     "estimated_hours": 30,
     "order_index": 1,
+    "exam_date": "2026-01-07",
+    "groups": [
+        {
+            "id": "modul-0",
+            "title": "Modul 0: Linux Grunder",
+            "subtitle": "Nätverk & Filsystem",
+            "icon": "Network",
+            "color": "from-cyan-500 to-blue-500",
+            "bgGlow": "rgba(6, 182, 212, 0.2)",
+            "taskIds": ["subnetting-natverk", "filsystem-navigation"]
+        },
+        {
+            "id": "modul-1",
+            "title": "Modul 1: Bash Scripting",
+            "subtitle": "Automatisering med Shell",
+            "icon": "Terminal",
+            "color": "from-green-500 to-emerald-500",
+            "bgGlow": "rgba(16, 185, 129, 0.2)",
+            "taskIds": [
+                "bash-grunder",
+                "variabler-quoting",
+                "regex-matchning",
+                "sed-streameditor",
+                "awk-processing",
+                "villkor-tester",
+                "interaktiva-skript",
+                "loopar-iteration",
+                "parametrar-arrays",
+                "funktioner",
+                "signals-traps"
+            ]
+        },
+        {
+            "id": "modul-2",
+            "title": "Modul 2: System Administration",
+            "subtitle": "Användare, Säkerhet & Tjänster",
+            "icon": "Server",
+            "color": "from-orange-500 to-amber-500",
+            "bgGlow": "rgba(245, 158, 11, 0.2)",
+            "taskIds": [
+                "users-groups",
+                "permissions",
+                "ssh-hardening",
+                "ufw-firewall",
+                "firewalld",
+                "lagring-diskar",
+                "backup-tar",
+                "systemd-services"
+            ]
+        },
+        {
+            "id": "modul-3",
+            "title": "Modul 3: DevOps",
+            "subtitle": "Docker & Git",
+            "icon": "Container",
+            "color": "from-purple-500 to-violet-500",
+            "bgGlow": "rgba(139, 92, 246, 0.2)",
+            "taskIds": [
+                "docker-grunder",
+                "docker-images",
+                "docker-compose",
+                "git-basics"
+            ]
+        }
+    ],
     "tasks": [
         # =====================================================================
         # MODUL 0: LINUX GRUNDER (2 noder)
         # =====================================================================
         _update_order_index(SUBNETTING_NODE, 1),
         _update_order_index(FILSYSTEM_NODE, 2),
-        
+
         # =====================================================================
         # MODUL 1: BASH (11 noder)
         # =====================================================================
@@ -526,7 +591,7 @@ MODULE = {
         _update_order_index(PARAMETRAR_ARRAYS_NODE, 11),
         _update_order_index(FUNKTIONER_NODE, 12),
         _update_order_index(SIGNALS_TRAPS_NODE, 13),
-        
+
         # =====================================================================
         # MODUL 2: LINUX SYSTEM (8 noder)
         # =====================================================================
@@ -538,7 +603,7 @@ MODULE = {
         _update_order_index(LAGRING_NODE, 19),
         _update_order_index(BACKUP_TAR_NODE, 20),
         _update_order_index(SYSTEMD_NODE, 21),
-        
+
         # =====================================================================
         # MODUL 3: DEVOPS (4 noder)
         # =====================================================================

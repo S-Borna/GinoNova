@@ -4664,4 +4664,84 @@ strace -p PID                   # Spåra systemanrop
             ],
         },
     ],
+    "groups": [
+        {
+            "id": "grundlaggande",
+            "title": "Grundläggande",
+            "subtitle": "Filhantering & Navigation",
+            "icon": "FileText",
+            "color": "from-emerald-500 to-teal-500",
+            "bgGlow": "rgba(16, 185, 129, 0.2)",
+            "taskIds": [
+                "file-system-essentials",
+                "text-processing-basics",
+                "pipelines-redirection"
+            ]
+        },
+        {
+            "id": "natverk",
+            "title": "Nätverk",
+            "subtitle": "Nätverkskonfiguration & Diagnostik",
+            "icon": "Network",
+            "color": "from-cyan-500 to-blue-500",
+            "bgGlow": "rgba(6, 182, 212, 0.2)",
+            "taskIds": [
+                "networking-fundamentals",
+                "network-tools",
+                "dns-resolution"
+            ]
+        },
+        {
+            "id": "sakerhet",
+            "title": "Säkerhet",
+            "subtitle": "Permissions & Brandväggar",
+            "icon": "Shield",
+            "color": "from-red-500 to-orange-500",
+            "bgGlow": "rgba(239, 68, 68, 0.2)",
+            "taskIds": [
+                "permissions-ownership",
+                "firewall-basics",
+                "ssh-security"
+            ]
+        },
+        {
+            "id": "system",
+            "title": "System",
+            "subtitle": "Processhantering & Övervakning",
+            "icon": "Settings",
+            "color": "from-purple-500 to-violet-500",
+            "bgGlow": "rgba(139, 92, 246, 0.2)",
+            "taskIds": [
+                "process-management",
+                "systemd-services",
+                "system-monitoring"
+            ]
+        },
+        {
+            "id": "automation",
+            "title": "Automation",
+            "subtitle": "Scripting & Cron Jobs",
+            "icon": "Bot",
+            "color": "from-amber-500 to-yellow-500",
+            "bgGlow": "rgba(245, 158, 11, 0.2)",
+            "taskIds": [
+                "bash-scripting-basics",
+                "cron-scheduling",
+                "automation-patterns"
+            ]
+        },
+        {
+            "id": "produktivitet",
+            "title": "Produktivitet",
+            "subtitle": "Vim, Tmux & Verktyg",
+            "icon": "Sparkles",
+            "color": "from-pink-500 to-rose-500",
+            "bgGlow": "rgba(236, 72, 153, 0.2)",
+            "taskIds": [
+                "vim-essentials",
+                "tmux-multiplexing",
+                "productivity-tools"
+            ]
+        }
+    ],
 }
