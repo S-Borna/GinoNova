@@ -21,7 +21,7 @@ ALL_MODULES = get_all_modules()
 try:
     from src.db.seeds.study_data.tentaplugg_linux_study import TENTAPLUGG_LINUX_STUDY
     MANUAL_STUDY_DATA = {
-        "tentaplugg-linux": TENTAPLUGG_LINUX_STUDY
+        "doe25-tenta": TENTAPLUGG_LINUX_STUDY
     }
 except ImportError:
     MANUAL_STUDY_DATA = {}
@@ -366,7 +366,7 @@ ICON_MAP = {
     "ansible-mastery": "Server",
     "cicd-mastery": "GitBranch",
     "aws-mastery": "Cloud",
-    "tentaplugg-linux": "GraduationCap",
+    "doe25-tenta": "GraduationCap",
 }
 
 

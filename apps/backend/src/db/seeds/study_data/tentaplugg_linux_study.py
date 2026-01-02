@@ -1889,13 +1889,13 @@ NOD_25_QUIZ = {
     ],
 }
 # =============================================================================
-# HUVUDEXPORT - Alla 25 noder för tentaplugg-linux
+# HUVUDEXPORT - Alla 25 noder för doe25-tenta
 # =============================================================================
 
 TENTAPLUGG_LINUX_STUDY = {
-    "module_slug": "tentaplugg-linux",
-    "module_title": "Tentaplugg Linux",
-    "module_description": "Komplett tentaförberedelse för DOE25 Linux - 25 noder",
+    "module_slug": "doe25-tenta",
+    "module_title": "DOE25 Tentaplugg",
+    "module_description": "Komplett tentaplugg med 25 tasks: Linux Grunder, Bash Scripting, System Administration & DevOps",
     "icon": "GraduationCap",
     "nodes": {
         "nod_01_subnetting": {
