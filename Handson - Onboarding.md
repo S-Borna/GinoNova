@@ -455,14 +455,6 @@ mv file.txt existing.txt     # Överskriver utan varning
    - Anteckna i Vim
    - Läs man pages regelbundet
 
-### Nästa Steg
-
-- Läs **Kapitel 2** i kursboken
-- Gör **vimtutor** komplett
-- Läs man pages för alla kommandon
-- (Frivilligt) Emacs tutorial
-- Installera Linux/Vim på din egen dator för daglig användning
-
 ---
 
 ## 📚 Referenser

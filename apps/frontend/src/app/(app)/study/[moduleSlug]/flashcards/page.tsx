@@ -30,9 +30,9 @@ interface Flashcard {
     difficulty?: string
 }
 
-// Module configuration
+// Module configuration - slugs match URL paths
 const MODULE_CONFIG: Record<string, { title: string; data: typeof DOE25_TASK_FLASHCARDS }> = {
-    'doe25': { title: 'DOE25 Tentaplugg', data: DOE25_TASK_FLASHCARDS },
+    'doe25-tenta': { title: 'DOE25 Tentaplugg', data: DOE25_TASK_FLASHCARDS },
     'linux-247': { title: 'Linux 24/7', data: LINUX247_TASK_FLASHCARDS },
 }
 
