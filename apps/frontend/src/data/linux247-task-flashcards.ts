@@ -1,0 +1,862 @@
+/**
+ * Linux 24/7 Tentaplugg - Task-specifika Flashcards
+ * 30 flashcards per task, pedagogiskt fokuserade
+ */
+
+export interface TaskFlashcard {
+  id: string
+  front: string
+  back: string
+  category: string
+  difficulty: 'easy' | 'medium' | 'hard'
+}
+
+export interface TaskFlashcardSet {
+  taskId: string
+  taskTitle: string
+  flashcards: TaskFlashcard[]
+}
+
+// =============================================================================
+// TASK 1: FILE SYSTEM ESSENTIALS (30 flashcards)
+// =============================================================================
+
+const TASK_1_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l1-1', front: 'Hur visar du aktuell katalog?', back: 'pwd\n(print working directory)', category: 'Navigation', difficulty: 'easy' },
+  { id: 'l1-2', front: 'Hur byter du katalog?', back: 'cd <katalog>\ncd /var/log', category: 'Navigation', difficulty: 'easy' },
+  { id: 'l1-3', front: 'Hur går du upp en katalognivå?', back: 'cd ..', category: 'Navigation', difficulty: 'easy' },
+  { id: 'l1-4', front: 'Hur går du till hemkatalogen?', back: 'cd\neller: cd ~', category: 'Navigation', difficulty: 'easy' },
+  { id: 'l1-5', front: 'Hur listar du filer?', back: 'ls\nls -la (detaljerat + dolda)', category: 'Listing', difficulty: 'easy' },
+  { id: 'l1-6', front: 'Hur kopierar du en fil?', back: 'cp källa mål\ncp fil.txt kopia.txt', category: 'Kopiering', difficulty: 'easy' },
+  { id: 'l1-7', front: 'Hur flyttar/byter namn på fil?', back: 'mv källa mål\nmv gammal.txt ny.txt', category: 'Flytta', difficulty: 'easy' },
+  { id: 'l1-8', front: 'Hur tar du bort fil?', back: 'rm fil.txt\nrm -i fil.txt (bekräftelse)', category: 'Ta bort', difficulty: 'easy' },
+  { id: 'l1-9', front: 'Hur skapar du katalog?', back: 'mkdir katalog\nmkdir -p a/b/c (med föräldrar)', category: 'Skapa', difficulty: 'easy' },
+  { id: 'l1-10', front: 'Hur tar du bort tom katalog?', back: 'rmdir katalog\nrm -r katalog (med innehåll)', category: 'Ta bort', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l1-11', front: 'Vad betyder ls -l kolumnerna?', back: 'permissions links owner group size date name\n-rw-r--r-- 1 user group 1234 Jan 1 file', category: 'Listing', difficulty: 'medium' },
+  { id: 'l1-12', front: 'Hur visar du dolda filer?', back: 'ls -a\nDolda filer börjar med .', category: 'Listing', difficulty: 'medium' },
+  { id: 'l1-13', front: 'Hur kopierar du katalog rekursivt?', back: 'cp -r källa/ mål/', category: 'Kopiering', difficulty: 'medium' },
+  { id: 'l1-14', front: 'Hur hittar du filer med find?', back: 'find /sökväg -name "*.txt"\nfind . -type f -name "config*"', category: 'Sökning', difficulty: 'medium' },
+  { id: 'l1-15', front: 'Hur hittar du var ett kommando finns?', back: 'which kommando\nwhich python', category: 'Sökning', difficulty: 'medium' },
+  { id: 'l1-16', front: 'Vad finns i /etc?', back: 'Systemkonfigurationsfiler.\n/etc/passwd, /etc/hosts, /etc/ssh/', category: 'Struktur', difficulty: 'medium' },
+  { id: 'l1-17', front: 'Vad finns i /var/log?', back: 'Loggfiler.\nsyslog, auth.log, nginx/', category: 'Struktur', difficulty: 'medium' },
+  { id: 'l1-18', front: 'Vad finns i /home?', back: 'Användarnas hemkataloger.\n/home/username/', category: 'Struktur', difficulty: 'medium' },
+  { id: 'l1-19', front: 'Vad är skillnaden på absolut och relativ sökväg?', back: 'Absolut: börjar med / (/var/log)\nRelativ: från nuvarande (./log)', category: 'Sökvägar', difficulty: 'medium' },
+  { id: 'l1-20', front: 'Hur skapar du tom fil?', back: 'touch fil.txt\neller: > fil.txt', category: 'Skapa', difficulty: 'medium' },
+  { id: 'l1-21', front: 'Hur visar du filtyp?', back: 'file filnamn\nVisar om text, binär, script etc.', category: 'Info', difficulty: 'medium' },
+  { id: 'l1-22', front: 'Hur visar du diskutrymme?', back: 'df -h\n-h = human readable', category: 'Disk', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l1-23', front: 'Hur hittar du filer större än 100MB?', back: 'find / -size +100M', category: 'Sökning', difficulty: 'hard' },
+  { id: 'l1-24', front: 'Hur hittar du filer ändrade senaste timmen?', back: 'find . -mmin -60\n-mmin = minuter, -mtime = dagar', category: 'Sökning', difficulty: 'hard' },
+  { id: 'l1-25', front: 'Hur kör du kommando på hittade filer?', back: 'find . -name "*.log" -exec rm {} \\;\neller: find . -name "*.log" | xargs rm', category: 'Sökning', difficulty: 'hard' },
+  { id: 'l1-26', front: 'Vad gör locate vs find?', back: 'locate: snabb (databas), updatedb uppdaterar\nfind: långsam men exakt', category: 'Sökning', difficulty: 'hard' },
+  { id: 'l1-27', front: 'Hur skapar du symbolisk länk?', back: 'ln -s mål länk\nln -s /var/log logs', category: 'Länkar', difficulty: 'hard' },
+  { id: 'l1-28', front: 'Skillnad hård vs symbolisk länk?', back: 'Hård: samma inode, kvarstår vid delete\nSymbolisk: pekare, bryts om mål tas bort', category: 'Länkar', difficulty: 'hard' },
+  { id: 'l1-29', front: 'Hur visar du katalogstorlek?', back: 'du -sh katalog\n-s summary, -h human', category: 'Disk', difficulty: 'hard' },
+  { id: 'l1-30', front: 'Vad finns i /proc?', back: 'Virtuellt filsystem med procesinfo.\n/proc/cpuinfo, /proc/meminfo', category: 'Struktur', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 2: TEXT PROCESSING (30 flashcards)
+// =============================================================================
+
+const TASK_2_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l2-1', front: 'Hur visar du filinnehåll?', back: 'cat fil.txt', category: 'Visa', difficulty: 'easy' },
+  { id: 'l2-2', front: 'Hur visar du första 10 raderna?', back: 'head fil.txt\nhead -n 20 fil.txt (20 rader)', category: 'Visa', difficulty: 'easy' },
+  { id: 'l2-3', front: 'Hur visar du sista 10 raderna?', back: 'tail fil.txt\ntail -n 20 fil.txt', category: 'Visa', difficulty: 'easy' },
+  { id: 'l2-4', front: 'Hur följer du loggfil live?', back: 'tail -f fil.log\n-f = follow', category: 'Visa', difficulty: 'easy' },
+  { id: 'l2-5', front: 'Hur söker du text i fil?', back: 'grep "text" fil.txt', category: 'grep', difficulty: 'easy' },
+  { id: 'l2-6', front: 'Hur räknar du rader i fil?', back: 'wc -l fil.txt\n-l = lines', category: 'Räkna', difficulty: 'easy' },
+  { id: 'l2-7', front: 'Hur sorterar du filinnehåll?', back: 'sort fil.txt', category: 'Sortera', difficulty: 'easy' },
+  { id: 'l2-8', front: 'Hur tar du bort dubbletter?', back: 'uniq fil.txt\nOBS: kräver sorterad input!', category: 'Uniq', difficulty: 'easy' },
+  { id: 'l2-9', front: 'Hur bläddrar du i stor fil?', back: 'less fil.txt\nq = quit, / = sök', category: 'Visa', difficulty: 'easy' },
+  { id: 'l2-10', front: 'Hur skriver du text till fil?', back: 'echo "text" > fil.txt (skriv över)\necho "text" >> fil.txt (lägg till)', category: 'Skriva', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l2-11', front: 'Hur söker du case-insensitive?', back: 'grep -i "text" fil.txt', category: 'grep', difficulty: 'medium' },
+  { id: 'l2-12', front: 'Hur söker du rekursivt i katalog?', back: 'grep -r "text" katalog/', category: 'grep', difficulty: 'medium' },
+  { id: 'l2-13', front: 'Hur visar du radnummer med grep?', back: 'grep -n "text" fil.txt', category: 'grep', difficulty: 'medium' },
+  { id: 'l2-14', front: 'Hur inverterar du grep (EJ matchar)?', back: 'grep -v "text" fil.txt\n-v = invert', category: 'grep', difficulty: 'medium' },
+  { id: 'l2-15', front: 'Hur plockar du ut kolumn med cut?', back: 'cut -d":" -f1 fil.txt\n-d = delimiter, -f = field', category: 'cut', difficulty: 'medium' },
+  { id: 'l2-16', front: 'Hur ersätter du text med sed?', back: 'sed "s/gammalt/nytt/g" fil.txt\ng = global (alla)', category: 'sed', difficulty: 'medium' },
+  { id: 'l2-17', front: 'Hur sorterar du numeriskt?', back: 'sort -n fil.txt', category: 'Sortera', difficulty: 'medium' },
+  { id: 'l2-18', front: 'Hur sorterar du omvänt?', back: 'sort -r fil.txt\n-r = reverse', category: 'Sortera', difficulty: 'medium' },
+  { id: 'l2-19', front: 'Hur räknar du ord?', back: 'wc -w fil.txt\n-w = words', category: 'Räkna', difficulty: 'medium' },
+  { id: 'l2-20', front: 'Hur sammanfogar du filer?', back: 'cat fil1.txt fil2.txt > combined.txt', category: 'Kombinera', difficulty: 'medium' },
+  { id: 'l2-21', front: 'Hur jämför du två filer?', back: 'diff fil1.txt fil2.txt', category: 'Jämför', difficulty: 'medium' },
+  { id: 'l2-22', front: 'Vad gör pipe |?', back: 'Skickar output till nästa kommando.\ncat fil | grep "text" | wc -l', category: 'Pipe', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l2-23', front: 'Grundläggande awk-syntax?', back: 'awk \'{print $1}\' fil.txt\nSkriver ut första kolumnen.', category: 'awk', difficulty: 'hard' },
+  { id: 'l2-24', front: 'Hur filtrerar du med awk?', back: 'awk \'$3 > 100\' fil.txt\nRader där kolumn 3 > 100', category: 'awk', difficulty: 'hard' },
+  { id: 'l2-25', front: 'Hur gör du in-place edit med sed?', back: 'sed -i "s/old/new/g" fil.txt\n-i = in-place', category: 'sed', difficulty: 'hard' },
+  { id: 'l2-26', front: 'Hur tar du bort rader med sed?', back: 'sed "/pattern/d" fil.txt\nd = delete', category: 'sed', difficulty: 'hard' },
+  { id: 'l2-27', front: 'Hur visar du kontext runt grep-match?', back: 'grep -A 3 -B 2 "text" fil.txt\n-A = after, -B = before', category: 'grep', difficulty: 'hard' },
+  { id: 'l2-28', front: 'Hur söker du med regex i grep?', back: 'grep -E "^[0-9]+" fil.txt\n-E = extended regex', category: 'grep', difficulty: 'hard' },
+  { id: 'l2-29', front: 'Hur transponerar du kolumner?', back: 'awk \'{print $2, $1}\' fil.txt\nByter ordning på kolumner.', category: 'awk', difficulty: 'hard' },
+  { id: 'l2-30', front: 'Hur summerar du kolumn med awk?', back: 'awk \'{sum+=$1} END {print sum}\' fil.txt', category: 'awk', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 3: PROCESSES (30 flashcards)
+// =============================================================================
+
+const TASK_3_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l3-1', front: 'Hur listar du körande processer?', back: 'ps\nps aux (alla processer)', category: 'Lista', difficulty: 'easy' },
+  { id: 'l3-2', front: 'Hur visar du processer interaktivt?', back: 'top\neller: htop (bättre UI)', category: 'Monitor', difficulty: 'easy' },
+  { id: 'l3-3', front: 'Hur dödar du process med PID?', back: 'kill PID\nkill 1234', category: 'Kill', difficulty: 'easy' },
+  { id: 'l3-4', front: 'Hur tvångsdödar du process?', back: 'kill -9 PID\n-9 = SIGKILL (kan ej fångas)', category: 'Kill', difficulty: 'easy' },
+  { id: 'l3-5', front: 'Hur dödar du process med namn?', back: 'pkill processnamn\npkill nginx', category: 'Kill', difficulty: 'easy' },
+  { id: 'l3-6', front: 'Hur kör du kommando i bakgrunden?', back: 'kommando &\nEx: sleep 100 &', category: 'Bakgrund', difficulty: 'easy' },
+  { id: 'l3-7', front: 'Hur listar du bakgrundsjobb?', back: 'jobs', category: 'Bakgrund', difficulty: 'easy' },
+  { id: 'l3-8', front: 'Hur tar du fram bakgrundsjobb?', back: 'fg\nfg %1 (specifikt jobb)', category: 'Bakgrund', difficulty: 'easy' },
+  { id: 'l3-9', front: 'Hur pausar du körande process?', back: 'Ctrl+Z\nSuspend till bakgrund.', category: 'Kontroll', difficulty: 'easy' },
+  { id: 'l3-10', front: 'Hur fortsätter du pausad process i bakgrund?', back: 'bg\nbg %1', category: 'Bakgrund', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l3-11', front: 'Vad betyder ps aux kolumnerna?', back: 'USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND', category: 'Lista', difficulty: 'medium' },
+  { id: 'l3-12', front: 'Hur hittar du process med grep?', back: 'ps aux | grep nginx\nOBS: grep hittar sig själv!', category: 'Söka', difficulty: 'medium' },
+  { id: 'l3-13', front: 'Hur hittar du PID för processnamn?', back: 'pgrep nginx\nReturnerar PID(s).', category: 'Söka', difficulty: 'medium' },
+  { id: 'l3-14', front: 'Skillnad SIGTERM vs SIGKILL?', back: 'SIGTERM (15): graceful, kan fångas\nSIGKILL (9): tvång, kan ej fångas', category: 'Signaler', difficulty: 'medium' },
+  { id: 'l3-15', front: 'Hur skickar du HUP-signal?', back: 'kill -HUP PID\nAnvänds ofta för reload config.', category: 'Signaler', difficulty: 'medium' },
+  { id: 'l3-16', front: 'Hur kör du kommando som fortsätter efter logout?', back: 'nohup kommando &\neller: disown', category: 'Bakgrund', difficulty: 'medium' },
+  { id: 'l3-17', front: 'Vad är en zombie-process?', back: 'Avslutad process vars förälder\nej läst exit status.\nVisas som <defunct>', category: 'Koncept', difficulty: 'medium' },
+  { id: 'l3-18', front: 'Hur sorterar du top på minne?', back: 'Tryck M i top\neller: top -o %MEM', category: 'Monitor', difficulty: 'medium' },
+  { id: 'l3-19', front: 'Hur sorterar du top på CPU?', back: 'Tryck P i top\n(default sortering)', category: 'Monitor', difficulty: 'medium' },
+  { id: 'l3-20', front: 'Vad är PID 1?', back: 'Init-processen (systemd).\nFörälder till alla processer.', category: 'Koncept', difficulty: 'medium' },
+  { id: 'l3-21', front: 'Hur visar du processträd?', back: 'pstree\npstree -p (med PID)', category: 'Lista', difficulty: 'medium' },
+  { id: 'l3-22', front: 'Hur visar du minnesanvändning?', back: 'free -h\n-h = human readable', category: 'Minne', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l3-23', front: 'Hur ändrar du process-prioritet?', back: 'nice -n 10 kommando (starta)\nrenice 10 -p PID (ändra)', category: 'Prioritet', difficulty: 'hard' },
+  { id: 'l3-24', front: 'Vad betyder nice-värden?', back: '-20 till 19\n-20 = högst prioritet\n19 = lägst prioritet', category: 'Prioritet', difficulty: 'hard' },
+  { id: 'l3-25', front: 'Hur listar du öppna filer för process?', back: 'lsof -p PID\nlsof = list open files', category: 'Filer', difficulty: 'hard' },
+  { id: 'l3-26', front: 'Hur hittar du vilken process använder port?', back: 'lsof -i :80\neller: ss -tlnp | grep :80', category: 'Nätverk', difficulty: 'hard' },
+  { id: 'l3-27', front: 'Hur kör du kommando med timeout?', back: 'timeout 10s kommando\nDödar efter 10 sekunder.', category: 'Kontroll', difficulty: 'hard' },
+  { id: 'l3-28', front: 'Hur visar du CPU-användning per kärna?', back: 'mpstat -P ALL\neller: top, tryck 1', category: 'Monitor', difficulty: 'hard' },
+  { id: 'l3-29', front: 'Vad är load average?', back: 'Antal processer i kö.\n1.0 = 100% på 1 kärna.\nVisa: uptime eller top', category: 'Koncept', difficulty: 'hard' },
+  { id: 'l3-30', front: 'Hur spårar du systemanrop?', back: 'strace -p PID\nstrace kommando', category: 'Debug', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 4: SYSTEM INFO (30 flashcards)
+// =============================================================================
+
+const TASK_4_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l4-1', front: 'Hur visar du systemets hostname?', back: 'hostname\neller: cat /etc/hostname', category: 'System', difficulty: 'easy' },
+  { id: 'l4-2', front: 'Hur visar du uptime?', back: 'uptime\nVisar hur länge systemet varit igång.', category: 'System', difficulty: 'easy' },
+  { id: 'l4-3', front: 'Hur visar du kernel-version?', back: 'uname -r\neller: uname -a (all info)', category: 'Kernel', difficulty: 'easy' },
+  { id: 'l4-4', front: 'Hur visar du OS-version?', back: 'cat /etc/os-release\neller: lsb_release -a', category: 'System', difficulty: 'easy' },
+  { id: 'l4-5', front: 'Hur visar du inloggade användare?', back: 'who\neller: w (mer detaljer)', category: 'Users', difficulty: 'easy' },
+  { id: 'l4-6', front: 'Hur visar du nuvarande användare?', back: 'whoami\neller: id', category: 'Users', difficulty: 'easy' },
+  { id: 'l4-7', front: 'Hur visar du datum och tid?', back: 'date', category: 'System', difficulty: 'easy' },
+  { id: 'l4-8', front: 'Hur visar du kalendern?', back: 'cal\ncal 2024 (hela året)', category: 'System', difficulty: 'easy' },
+  { id: 'l4-9', front: 'Hur visar du minnesanvändning?', back: 'free -h\n-h = human readable', category: 'Minne', difficulty: 'easy' },
+  { id: 'l4-10', front: 'Hur visar du diskutrymme?', back: 'df -h', category: 'Disk', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l4-11', front: 'Hur visar du CPU-info?', back: 'lscpu\neller: cat /proc/cpuinfo', category: 'CPU', difficulty: 'medium' },
+  { id: 'l4-12', front: 'Hur visar du antal CPU-kärnor?', back: 'nproc\neller: lscpu | grep "^CPU(s):"', category: 'CPU', difficulty: 'medium' },
+  { id: 'l4-13', front: 'Hur visar du minnesinfo detaljerat?', back: 'cat /proc/meminfo', category: 'Minne', difficulty: 'medium' },
+  { id: 'l4-14', front: 'Vad visar /proc/cpuinfo?', back: 'Detaljerad CPU-info:\nmodell, hastighet, cache, flaggor', category: 'CPU', difficulty: 'medium' },
+  { id: 'l4-15', front: 'Hur listar du PCI-enheter?', back: 'lspci\nVisar grafikkort, nätverkskort etc.', category: 'Hårdvara', difficulty: 'medium' },
+  { id: 'l4-16', front: 'Hur listar du USB-enheter?', back: 'lsusb', category: 'Hårdvara', difficulty: 'medium' },
+  { id: 'l4-17', front: 'Hur listar du blockenheter?', back: 'lsblk\nVisar diskar och partitioner.', category: 'Disk', difficulty: 'medium' },
+  { id: 'l4-18', front: 'Hur ändrar du hostname temporärt?', back: 'hostname nyttnamn\n(Försvinner vid omstart)', category: 'System', difficulty: 'medium' },
+  { id: 'l4-19', front: 'Hur ändrar du hostname permanent?', back: 'hostnamectl set-hostname nyttnamn', category: 'System', difficulty: 'medium' },
+  { id: 'l4-20', front: 'Hur visar du tidszon?', back: 'timedatectl\neller: cat /etc/timezone', category: 'System', difficulty: 'medium' },
+  { id: 'l4-21', front: 'Hur ändrar du tidszon?', back: 'timedatectl set-timezone Europe/Stockholm', category: 'System', difficulty: 'medium' },
+  { id: 'l4-22', front: 'Vad visar load average?', back: 'Genomsnittlig systemlast 1, 5, 15 min.\nVisa: uptime eller top', category: 'System', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l4-23', front: 'Hur visar du detaljerad hårdvaruinfo?', back: 'sudo dmidecode\neller: lshw', category: 'Hårdvara', difficulty: 'hard' },
+  { id: 'l4-24', front: 'Hur visar du kernel-moduler?', back: 'lsmod\nListar laddade kernel modules.', category: 'Kernel', difficulty: 'hard' },
+  { id: 'l4-25', front: 'Hur laddar du kernel-modul?', back: 'sudo modprobe modulnamn', category: 'Kernel', difficulty: 'hard' },
+  { id: 'l4-26', front: 'Hur tar du bort kernel-modul?', back: 'sudo modprobe -r modulnamn\neller: rmmod', category: 'Kernel', difficulty: 'hard' },
+  { id: 'l4-27', front: 'Vad är /sys-filsystemet?', back: 'Virtuellt FS med kernel/hårdvara-info.\nExporterar kernel-objekt.', category: 'Kernel', difficulty: 'hard' },
+  { id: 'l4-28', front: 'Hur visar du kernel ring buffer?', back: 'dmesg\ndmesg | tail (senaste)', category: 'Kernel', difficulty: 'hard' },
+  { id: 'l4-29', front: 'Hur visar du BIOS-info?', back: 'sudo dmidecode -t bios', category: 'Hårdvara', difficulty: 'hard' },
+  { id: 'l4-30', front: 'Hur visar du kernel-parametrar?', back: 'sysctl -a\ncat /proc/sys/...', category: 'Kernel', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 5: LOGS (30 flashcards)
+// =============================================================================
+
+const TASK_5_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l5-1', front: 'Var finns systemloggar?', back: '/var/log/\nsyslog, auth.log, kern.log etc.', category: 'Platser', difficulty: 'easy' },
+  { id: 'l5-2', front: 'Hur följer du logg i realtid?', back: 'tail -f /var/log/syslog', category: 'Visa', difficulty: 'easy' },
+  { id: 'l5-3', front: 'Vad innehåller syslog?', back: 'Allmänna systemmeddelanden.\nHuvudloggen på många system.', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l5-4', front: 'Vad innehåller auth.log?', back: 'Autentiseringsloggar.\nLogin-försök, sudo-användning.', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l5-5', front: 'Hur visar du systemd journal?', back: 'journalctl', category: 'journalctl', difficulty: 'easy' },
+  { id: 'l5-6', front: 'Hur följer du journal live?', back: 'journalctl -f\n-f = follow', category: 'journalctl', difficulty: 'easy' },
+  { id: 'l5-7', front: 'Hur visar du loggar för en tjänst?', back: 'journalctl -u nginx\n-u = unit', category: 'journalctl', difficulty: 'easy' },
+  { id: 'l5-8', front: 'Vad innehåller kern.log?', back: 'Kernel-meddelanden.\nHårdvarufel, driver-info.', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l5-9', front: 'Hur söker du i loggar?', back: 'grep "error" /var/log/syslog', category: 'Söka', difficulty: 'easy' },
+  { id: 'l5-10', front: 'Vad är dmesg?', back: 'Kernel ring buffer.\nVisar boot-meddelanden, hårdvara.', category: 'Loggar', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l5-11', front: 'Hur visar du loggar från senaste boot?', back: 'journalctl -b\n-b = current boot', category: 'journalctl', difficulty: 'medium' },
+  { id: 'l5-12', front: 'Hur visar du loggar från förra boot?', back: 'journalctl -b -1\n-1 = previous boot', category: 'journalctl', difficulty: 'medium' },
+  { id: 'l5-13', front: 'Hur filtrerar du journal på prioritet?', back: 'journalctl -p err\nerr, warning, info, debug etc.', category: 'journalctl', difficulty: 'medium' },
+  { id: 'l5-14', front: 'Hur visar du loggar för tidsperiod?', back: 'journalctl --since "1 hour ago"\njournalctl --since "2024-01-01"', category: 'journalctl', difficulty: 'medium' },
+  { id: 'l5-15', front: 'Vad hanterar logrotate?', back: 'Automatisk rotation av loggar.\nKomprimering, borttagning av gamla.', category: 'Management', difficulty: 'medium' },
+  { id: 'l5-16', front: 'Var konfigureras logrotate?', back: '/etc/logrotate.conf\n/etc/logrotate.d/', category: 'Management', difficulty: 'medium' },
+  { id: 'l5-17', front: 'Hur visar du kernel-meddelanden?', back: 'dmesg\njournalctl -k', category: 'Kernel', difficulty: 'medium' },
+  { id: 'l5-18', front: 'Vad loggas i /var/log/secure?', back: 'Security-relaterade loggar.\nSSH, sudo, PAM (RedHat/CentOS).', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l5-19', front: 'Hur visar du diskutrymme för loggar?', back: 'du -sh /var/log/\njournalctl --disk-usage', category: 'Management', difficulty: 'medium' },
+  { id: 'l5-20', front: 'Vad är rsyslog?', back: 'System logging daemon.\nKonfigureras i /etc/rsyslog.conf', category: 'Daemon', difficulty: 'medium' },
+  { id: 'l5-21', front: 'Hur skickar du meddelande till syslog?', back: 'logger "Mitt meddelande"', category: 'Skriva', difficulty: 'medium' },
+  { id: 'l5-22', front: 'Vilka är syslog-prioriteter?', back: 'emerg, alert, crit, err,\nwarning, notice, info, debug', category: 'Koncept', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l5-23', front: 'Hur begränsar du journal-storlek?', back: 'journalctl --vacuum-size=100M\njournalctl --vacuum-time=7d', category: 'Management', difficulty: 'hard' },
+  { id: 'l5-24', front: 'Var konfigureras journald?', back: '/etc/systemd/journald.conf\nSystemMaxUse, MaxRetentionSec', category: 'Konfig', difficulty: 'hard' },
+  { id: 'l5-25', front: 'Hur visar du loggar i JSON-format?', back: 'journalctl -o json\neller: -o json-pretty', category: 'journalctl', difficulty: 'hard' },
+  { id: 'l5-26', front: 'Hur exporterar du journal-loggar?', back: 'journalctl > export.log\njournalctl -o export > file', category: 'Export', difficulty: 'hard' },
+  { id: 'l5-27', front: 'Hur konfigurerar du remote logging?', back: 'rsyslog: @@remote-host:514\neller: systemd-journal-remote', category: 'Remote', difficulty: 'hard' },
+  { id: 'l5-28', front: 'Vad är facility i syslog?', back: 'Kategori: kern, user, mail, daemon,\nauth, local0-7 etc.', category: 'Koncept', difficulty: 'hard' },
+  { id: 'l5-29', front: 'Hur visar du journal för specifik PID?', back: 'journalctl _PID=1234', category: 'journalctl', difficulty: 'hard' },
+  { id: 'l5-30', front: 'Hur persistent-lagrar du journal?', back: 'mkdir -p /var/log/journal\nsystemctl restart systemd-journald', category: 'Konfig', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 6: SSH (30 flashcards)
+// =============================================================================
+
+const TASK_6_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l6-1', front: 'Hur ansluter du via SSH?', back: 'ssh user@host\nssh admin@192.168.1.10', category: 'Anslut', difficulty: 'easy' },
+  { id: 'l6-2', front: 'Vilken port använder SSH?', back: 'Port 22 (standard)', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l6-3', front: 'Hur ansluter du på annan port?', back: 'ssh -p 2222 user@host', category: 'Anslut', difficulty: 'easy' },
+  { id: 'l6-4', front: 'Hur genererar du SSH-nyckelpar?', back: 'ssh-keygen\nSkapar id_rsa och id_rsa.pub', category: 'Nycklar', difficulty: 'easy' },
+  { id: 'l6-5', front: 'Var lagras SSH-nycklar?', back: '~/.ssh/\nid_rsa (privat), id_rsa.pub (publik)', category: 'Nycklar', difficulty: 'easy' },
+  { id: 'l6-6', front: 'Hur kopierar du publik nyckel till server?', back: 'ssh-copy-id user@host', category: 'Nycklar', difficulty: 'easy' },
+  { id: 'l6-7', front: 'Hur kopierar du fil via SSH?', back: 'scp fil.txt user@host:/path/\nscp user@host:/fil.txt .', category: 'scp', difficulty: 'easy' },
+  { id: 'l6-8', front: 'Var finns SSH server config?', back: '/etc/ssh/sshd_config', category: 'Konfig', difficulty: 'easy' },
+  { id: 'l6-9', front: 'Var finns SSH client config?', back: '~/.ssh/config\neller: /etc/ssh/ssh_config', category: 'Konfig', difficulty: 'easy' },
+  { id: 'l6-10', front: 'Hur avslutar du SSH-session?', back: 'exit\neller: Ctrl+D', category: 'Anslut', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l6-11', front: 'Hur genererar du Ed25519-nyckel?', back: 'ssh-keygen -t ed25519\nMer säker och snabbare.', category: 'Nycklar', difficulty: 'medium' },
+  { id: 'l6-12', front: 'Vad är authorized_keys?', back: '~/.ssh/authorized_keys\nInnehåller tillåtna publika nycklar.', category: 'Nycklar', difficulty: 'medium' },
+  { id: 'l6-13', front: 'Hur kopierar du katalog via scp?', back: 'scp -r katalog/ user@host:/path/', category: 'scp', difficulty: 'medium' },
+  { id: 'l6-14', front: 'Hur kör du kommando via SSH?', back: 'ssh user@host "kommando"\nssh admin@srv "uptime"', category: 'Anslut', difficulty: 'medium' },
+  { id: 'l6-15', front: 'Hur inaktiverar du root-login?', back: 'PermitRootLogin no\ni /etc/ssh/sshd_config', category: 'Säkerhet', difficulty: 'medium' },
+  { id: 'l6-16', front: 'Hur inaktiverar du lösenordsinloggning?', back: 'PasswordAuthentication no\ni sshd_config', category: 'Säkerhet', difficulty: 'medium' },
+  { id: 'l6-17', front: 'Hur startar du om SSH-tjänsten?', back: 'sudo systemctl restart sshd\neller: ssh', category: 'Service', difficulty: 'medium' },
+  { id: 'l6-18', front: 'Vad är known_hosts?', back: '~/.ssh/known_hosts\nSparar fingerprints för verifiering.', category: 'Säkerhet', difficulty: 'medium' },
+  { id: 'l6-19', front: 'Hur skapar du SSH config alias?', back: 'Host myserver\n  HostName 192.168.1.10\n  User admin\ni ~/.ssh/config', category: 'Konfig', difficulty: 'medium' },
+  { id: 'l6-20', front: 'Vad är skillnad scp vs rsync?', back: 'rsync: effektivare, delta-sync\nscp: enklare, hela filen', category: 'Transfer', difficulty: 'medium' },
+  { id: 'l6-21', front: 'Hur använder du rsync över SSH?', back: 'rsync -avz -e ssh källa/ user@host:/mål/', category: 'Transfer', difficulty: 'medium' },
+  { id: 'l6-22', front: 'Hur visar du SSH-version?', back: 'ssh -V', category: 'Info', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l6-23', front: 'Hur skapar du SSH-tunnel (local)?', back: 'ssh -L 8080:localhost:80 user@host\nLokal port -> remote', category: 'Tunnel', difficulty: 'hard' },
+  { id: 'l6-24', front: 'Hur skapar du reverse tunnel?', back: 'ssh -R 8080:localhost:80 user@host\nRemote port -> lokal', category: 'Tunnel', difficulty: 'hard' },
+  { id: 'l6-25', front: 'Hur använder du SSH som SOCKS-proxy?', back: 'ssh -D 1080 user@host\nDynamic port forwarding', category: 'Tunnel', difficulty: 'hard' },
+  { id: 'l6-26', front: 'Vad är SSH agent?', back: 'Cachar privata nycklar i minne.\nssh-agent, ssh-add', category: 'Agent', difficulty: 'hard' },
+  { id: 'l6-27', front: 'Hur lägger du till nyckel i agent?', back: 'eval $(ssh-agent)\nssh-add ~/.ssh/id_rsa', category: 'Agent', difficulty: 'hard' },
+  { id: 'l6-28', front: 'Hur aktiverar du agent forwarding?', back: 'ssh -A user@host\neller: ForwardAgent yes i config', category: 'Agent', difficulty: 'hard' },
+  { id: 'l6-29', front: 'Hur begränsar du SSH till specifika IP?', back: 'AllowUsers admin@192.168.1.*\ni sshd_config', category: 'Säkerhet', difficulty: 'hard' },
+  { id: 'l6-30', front: 'Hur sätter du upp SSH key med passphrase?', back: 'ssh-keygen (ange passphrase)\nssh-agent cachar för enkelhet', category: 'Nycklar', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 7: FIREWALL (30 flashcards)
+// =============================================================================
+
+const TASK_7_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l7-1', front: 'Vilka två brandväggar finns i Linux?', back: 'UFW (Ubuntu/Debian)\nfirewalld (RHEL/CentOS)', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l7-2', front: 'Hur aktiverar du UFW?', back: 'sudo ufw enable', category: 'UFW', difficulty: 'easy' },
+  { id: 'l7-3', front: 'Hur inaktiverar du UFW?', back: 'sudo ufw disable', category: 'UFW', difficulty: 'easy' },
+  { id: 'l7-4', front: 'Hur visar du UFW-status?', back: 'sudo ufw status\nsudo ufw status verbose', category: 'UFW', difficulty: 'easy' },
+  { id: 'l7-5', front: 'Hur tillåter du port 22 i UFW?', back: 'sudo ufw allow 22\nsudo ufw allow ssh', category: 'UFW', difficulty: 'easy' },
+  { id: 'l7-6', front: 'Hur blockerar du port 80 i UFW?', back: 'sudo ufw deny 80', category: 'UFW', difficulty: 'easy' },
+  { id: 'l7-7', front: 'Hur kontrollerar du firewalld status?', back: 'sudo firewall-cmd --state\nsudo systemctl status firewalld', category: 'firewalld', difficulty: 'easy' },
+  { id: 'l7-8', front: 'Hur listar du firewalld regler?', back: 'sudo firewall-cmd --list-all', category: 'firewalld', difficulty: 'easy' },
+  { id: 'l7-9', front: 'Vad är default policy?', back: 'Vad som händer med trafik som\nej matchar någon regel.\nVanligen: deny incoming', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l7-10', front: 'Hur återställer du UFW till default?', back: 'sudo ufw reset', category: 'UFW', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l7-11', front: 'Hur tillåter du HTTP och HTTPS i UFW?', back: 'sudo ufw allow http\nsudo ufw allow https\neller: allow 80,443/tcp', category: 'UFW', difficulty: 'medium' },
+  { id: 'l7-12', front: 'Hur tillåter du IP-range i UFW?', back: 'sudo ufw allow from 192.168.1.0/24', category: 'UFW', difficulty: 'medium' },
+  { id: 'l7-13', front: 'Hur tar du bort UFW-regel?', back: 'sudo ufw delete allow 22\nsudo ufw delete 5 (nummer)', category: 'UFW', difficulty: 'medium' },
+  { id: 'l7-14', front: 'Hur tillåter du port i firewalld?', back: 'sudo firewall-cmd --add-port=80/tcp', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-15', front: 'Hur gör du firewalld-regel permanent?', back: 'sudo firewall-cmd --permanent --add-port=80/tcp\nfirewall-cmd --reload', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-16', front: 'Hur tillåter du tjänst i firewalld?', back: 'sudo firewall-cmd --add-service=http', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-17', front: 'Vad är firewalld zones?', back: 'Säkerhetsnivåer för nätverk:\npublic, trusted, internal etc.', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-18', front: 'Hur listar du firewalld zones?', back: 'sudo firewall-cmd --get-zones', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-19', front: 'Hur visar du aktiv zone?', back: 'sudo firewall-cmd --get-active-zones', category: 'firewalld', difficulty: 'medium' },
+  { id: 'l7-20', front: 'Hur tillåter du specifik IP till port i UFW?', back: 'sudo ufw allow from 10.0.0.5 to any port 22', category: 'UFW', difficulty: 'medium' },
+  { id: 'l7-21', front: 'Hur loggar du UFW-trafik?', back: 'sudo ufw logging on\nLoggar till /var/log/ufw.log', category: 'UFW', difficulty: 'medium' },
+  { id: 'l7-22', front: 'Hur visar du numrerade UFW-regler?', back: 'sudo ufw status numbered', category: 'UFW', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l7-23', front: 'Hur konfigurerar du rate limiting i UFW?', back: 'sudo ufw limit ssh\nMax 6 anslutningar/30s', category: 'UFW', difficulty: 'hard' },
+  { id: 'l7-24', front: 'Hur skapar du custom firewalld service?', back: 'Skapa XML i /etc/firewalld/services/\nfirewall-cmd --reload', category: 'firewalld', difficulty: 'hard' },
+  { id: 'l7-25', front: 'Vad är iptables?', back: 'Underliggande firewall-framework.\nUFW och firewalld är frontends.', category: 'Koncept', difficulty: 'hard' },
+  { id: 'l7-26', front: 'Hur listar du iptables-regler?', back: 'sudo iptables -L -n -v', category: 'iptables', difficulty: 'hard' },
+  { id: 'l7-27', front: 'Hur blockerar du IP med iptables?', back: 'sudo iptables -A INPUT -s 1.2.3.4 -j DROP', category: 'iptables', difficulty: 'hard' },
+  { id: 'l7-28', front: 'Hur sparar du iptables-regler?', back: 'sudo iptables-save > /etc/iptables.rules\nsudo netfilter-persistent save', category: 'iptables', difficulty: 'hard' },
+  { id: 'l7-29', front: 'Hur sätter du upp port forwarding i firewalld?', back: 'firewall-cmd --add-forward-port=\nport=80:proto=tcp:toport=8080', category: 'firewalld', difficulty: 'hard' },
+  { id: 'l7-30', front: 'Hur aktiverar du masquerading (NAT)?', back: 'firewall-cmd --add-masquerade\neller: ufw route allow', category: 'NAT', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 8: NETWORK (30 flashcards)
+// =============================================================================
+
+const TASK_8_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l8-1', front: 'Hur visar du IP-adresser?', back: 'ip addr\neller: ip a', category: 'IP', difficulty: 'easy' },
+  { id: 'l8-2', front: 'Hur visar du nätverksinterface?', back: 'ip link\neller: ip l', category: 'Interface', difficulty: 'easy' },
+  { id: 'l8-3', front: 'Hur testar du anslutning?', back: 'ping google.com\nping 8.8.8.8', category: 'Testa', difficulty: 'easy' },
+  { id: 'l8-4', front: 'Hur visar du routing-tabell?', back: 'ip route\neller: ip r', category: 'Routing', difficulty: 'easy' },
+  { id: 'l8-5', front: 'Hur visar du DNS-servers?', back: 'cat /etc/resolv.conf', category: 'DNS', difficulty: 'easy' },
+  { id: 'l8-6', front: 'Hur slår du upp DNS?', back: 'nslookup google.com\neller: dig google.com', category: 'DNS', difficulty: 'easy' },
+  { id: 'l8-7', front: 'Hur visar du hostname?', back: 'hostname', category: 'System', difficulty: 'easy' },
+  { id: 'l8-8', front: 'Var konfigureras hosts?', back: '/etc/hosts\nLokal DNS-override', category: 'DNS', difficulty: 'easy' },
+  { id: 'l8-9', front: 'Hur visar du nätverksanslutningar?', back: 'ss -tuln\neller: netstat -tuln', category: 'Anslut', difficulty: 'easy' },
+  { id: 'l8-10', front: 'Hur tracear du route till host?', back: 'traceroute google.com\neller: tracepath', category: 'Testa', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l8-11', front: 'Vad betyder ss -tuln?', back: '-t TCP, -u UDP\n-l listening, -n numeric', category: 'Anslut', difficulty: 'medium' },
+  { id: 'l8-12', front: 'Hur visar du vilken process använder port?', back: 'ss -tlnp | grep :80\nlsof -i :80', category: 'Anslut', difficulty: 'medium' },
+  { id: 'l8-13', front: 'Hur sätter du statisk IP med ip?', back: 'ip addr add 192.168.1.10/24 dev eth0\n(temporärt)', category: 'IP', difficulty: 'medium' },
+  { id: 'l8-14', front: 'Hur aktiverar du interface?', back: 'ip link set eth0 up', category: 'Interface', difficulty: 'medium' },
+  { id: 'l8-15', front: 'Hur inaktiverar du interface?', back: 'ip link set eth0 down', category: 'Interface', difficulty: 'medium' },
+  { id: 'l8-16', front: 'Hur lägger du till default gateway?', back: 'ip route add default via 192.168.1.1', category: 'Routing', difficulty: 'medium' },
+  { id: 'l8-17', front: 'Vad är NetworkManager?', back: 'Tjänst för nätverkskonfiguration.\nnmcli, nmtui för hantering.', category: 'Service', difficulty: 'medium' },
+  { id: 'l8-18', front: 'Hur visar du NetworkManager status?', back: 'nmcli general status\nnmcli device status', category: 'nmcli', difficulty: 'medium' },
+  { id: 'l8-19', front: 'Hur listar du WiFi-nätverk?', back: 'nmcli device wifi list', category: 'nmcli', difficulty: 'medium' },
+  { id: 'l8-20', front: 'Hur ansluter du till WiFi?', back: 'nmcli device wifi connect SSID password PWD', category: 'nmcli', difficulty: 'medium' },
+  { id: 'l8-21', front: 'Hur visar du alla anslutningar?', back: 'nmcli connection show', category: 'nmcli', difficulty: 'medium' },
+  { id: 'l8-22', front: 'Vad gör curl?', back: 'HTTP-klient för requests.\ncurl https://api.example.com', category: 'HTTP', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l8-23', front: 'Hur fångar du nätverkstrafik?', back: 'tcpdump -i eth0\nsudo tcpdump port 80', category: 'Debug', difficulty: 'hard' },
+  { id: 'l8-24', front: 'Hur scannar du portar?', back: 'nmap 192.168.1.1\nnmap -sV för versioner', category: 'Scan', difficulty: 'hard' },
+  { id: 'l8-25', front: 'Hur konfigurerar du permanent IP (Netplan)?', back: '/etc/netplan/*.yaml\nnetplan apply', category: 'Konfig', difficulty: 'hard' },
+  { id: 'l8-26', front: 'Hur aktiverar du IP forwarding?', back: 'sysctl net.ipv4.ip_forward=1\neller: echo 1 > /proc/sys/net/ipv4/ip_forward', category: 'Routing', difficulty: 'hard' },
+  { id: 'l8-27', front: 'Hur debuggar du DNS?', back: 'dig +trace google.com\nnslookup -debug', category: 'DNS', difficulty: 'hard' },
+  { id: 'l8-28', front: 'Hur konfigurerar du bonding/teaming?', back: 'nmcli con add type bond\neller: /etc/netplan/', category: 'Avancerat', difficulty: 'hard' },
+  { id: 'l8-29', front: 'Hur visar du ARP-cache?', back: 'ip neigh\neller: arp -a', category: 'ARP', difficulty: 'hard' },
+  { id: 'l8-30', front: 'Hur skapar du VLAN interface?', back: 'ip link add link eth0 name eth0.100 type vlan id 100', category: 'VLAN', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 9: PACKAGES (30 flashcards)
+// =============================================================================
+
+const TASK_9_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l9-1', front: 'Vilka pakethanterare finns?', back: 'apt (Debian/Ubuntu)\ndnf/yum (RHEL/Fedora)', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l9-2', front: 'Hur uppdaterar du paketlistan (apt)?', back: 'sudo apt update', category: 'apt', difficulty: 'easy' },
+  { id: 'l9-3', front: 'Hur uppgraderar du paket (apt)?', back: 'sudo apt upgrade', category: 'apt', difficulty: 'easy' },
+  { id: 'l9-4', front: 'Hur installerar du paket (apt)?', back: 'sudo apt install paketnamn', category: 'apt', difficulty: 'easy' },
+  { id: 'l9-5', front: 'Hur tar du bort paket (apt)?', back: 'sudo apt remove paketnamn\nsudo apt purge (+ config)', category: 'apt', difficulty: 'easy' },
+  { id: 'l9-6', front: 'Hur söker du paket (apt)?', back: 'apt search sökord', category: 'apt', difficulty: 'easy' },
+  { id: 'l9-7', front: 'Hur installerar du paket (dnf)?', back: 'sudo dnf install paketnamn', category: 'dnf', difficulty: 'easy' },
+  { id: 'l9-8', front: 'Hur uppdaterar du system (dnf)?', back: 'sudo dnf upgrade\neller: dnf update', category: 'dnf', difficulty: 'easy' },
+  { id: 'l9-9', front: 'Hur tar du bort paket (dnf)?', back: 'sudo dnf remove paketnamn', category: 'dnf', difficulty: 'easy' },
+  { id: 'l9-10', front: 'Hur söker du paket (dnf)?', back: 'dnf search sökord', category: 'dnf', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l9-11', front: 'Hur visar du info om paket (apt)?', back: 'apt show paketnamn', category: 'apt', difficulty: 'medium' },
+  { id: 'l9-12', front: 'Hur listar du installerade paket?', back: 'apt list --installed\ndnf list installed', category: 'Lista', difficulty: 'medium' },
+  { id: 'l9-13', front: 'Hur rensar du paket-cache (apt)?', back: 'sudo apt clean\nsudo apt autoclean', category: 'apt', difficulty: 'medium' },
+  { id: 'l9-14', front: 'Hur tar du bort oanvända beroenden?', back: 'sudo apt autoremove\nsudo dnf autoremove', category: 'Clean', difficulty: 'medium' },
+  { id: 'l9-15', front: 'Hur installerar du .deb-fil?', back: 'sudo dpkg -i paket.deb\neller: apt install ./paket.deb', category: 'dpkg', difficulty: 'medium' },
+  { id: 'l9-16', front: 'Hur installerar du .rpm-fil?', back: 'sudo rpm -i paket.rpm\neller: dnf install paket.rpm', category: 'rpm', difficulty: 'medium' },
+  { id: 'l9-17', front: 'Hur listar du filer i installerat paket?', back: 'dpkg -L paketnamn\nrpm -ql paketnamn', category: 'Info', difficulty: 'medium' },
+  { id: 'l9-18', front: 'Hur hittar du vilket paket äger fil?', back: 'dpkg -S /path/to/file\nrpm -qf /path/to/file', category: 'Info', difficulty: 'medium' },
+  { id: 'l9-19', front: 'Var konfigureras apt repositories?', back: '/etc/apt/sources.list\n/etc/apt/sources.list.d/', category: 'Repos', difficulty: 'medium' },
+  { id: 'l9-20', front: 'Hur lägger du till PPA (Ubuntu)?', back: 'sudo add-apt-repository ppa:user/repo\nsudo apt update', category: 'Repos', difficulty: 'medium' },
+  { id: 'l9-21', front: 'Hur visar du paket-changelog?', back: 'apt changelog paketnamn', category: 'Info', difficulty: 'medium' },
+  { id: 'l9-22', front: 'Hur håller du paket på specifik version?', back: 'sudo apt-mark hold paketnamn\ndnf versionlock add', category: 'Version', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l9-23', front: 'Hur lägger du till dnf repository?', back: 'dnf config-manager --add-repo URL\neller: skapa .repo-fil i /etc/yum.repos.d/', category: 'Repos', difficulty: 'hard' },
+  { id: 'l9-24', front: 'Hur importerar du GPG-nyckel för repo?', back: 'apt-key add key.gpg (deprecated)\ngpg --dearmor > /usr/share/keyrings/', category: 'Säkerhet', difficulty: 'hard' },
+  { id: 'l9-25', front: 'Hur bygger du paket från source?', back: './configure\nmake\nsudo make install', category: 'Source', difficulty: 'hard' },
+  { id: 'l9-26', front: 'Hur nedgraderar du paket?', back: 'apt install paket=version\ndnf downgrade paket', category: 'Version', difficulty: 'hard' },
+  { id: 'l9-27', front: 'Hur visar du paket-beroenden?', back: 'apt depends paketnamn\napt rdepends (reverse)', category: 'Info', difficulty: 'hard' },
+  { id: 'l9-28', front: 'Hur fixar du trasiga beroenden?', back: 'sudo apt --fix-broken install\nsudo dpkg --configure -a', category: 'Fix', difficulty: 'hard' },
+  { id: 'l9-29', front: 'Hur skapar du lokalt repository?', back: 'dpkg-scanpackages . | gzip > Packages.gz\ncreaterepo /path', category: 'Repos', difficulty: 'hard' },
+  { id: 'l9-30', front: 'Vad är snap och flatpak?', back: 'Universal paketformat.\nContainerized, sandboxed apps.', category: 'Koncept', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 10: SYSTEMD (30 flashcards)
+// =============================================================================
+
+const TASK_10_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l10f1', front: 'Vad är systemd?', back: 'Init-system och service manager i moderna Linux-distros.\nPID 1, startar alla andra processer.', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l10f2', front: 'Hur startar du en tjänst?', back: 'sudo systemctl start nginx\nStartar tjänsten direkt.', category: 'Start', difficulty: 'easy' },
+  { id: 'l10f3', front: 'Hur stoppar du en tjänst?', back: 'sudo systemctl stop nginx\nStoppar tjänsten direkt.', category: 'Stop', difficulty: 'easy' },
+  { id: 'l10f4', front: 'Hur visar du status för en tjänst?', back: 'systemctl status nginx\nVisar körande/stoppad + senaste loggar.', category: 'Status', difficulty: 'easy' },
+  { id: 'l10f5', front: 'Hur aktiverar du tjänst vid boot?', back: 'sudo systemctl enable nginx\nSkapar symlink för autostart.', category: 'Enable', difficulty: 'easy' },
+  { id: 'l10f6', front: 'Hur inaktiverar du tjänst vid boot?', back: 'sudo systemctl disable nginx\nTar bort autostart.', category: 'Disable', difficulty: 'easy' },
+  { id: 'l10f7', front: 'Hur startar du om en tjänst?', back: 'sudo systemctl restart nginx\nStop + start.', category: 'Restart', difficulty: 'easy' },
+  { id: 'l10f8', front: 'Skillnad enable vs start?', back: 'enable = autostart vid boot\nstart = startar nu\nenable --now gör båda.', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l10f9', front: 'Hur listar du alla tjänster?', back: 'systemctl list-units --type=service\neller: systemctl --type=service', category: 'Lista', difficulty: 'easy' },
+  { id: 'l10f10', front: 'Hur ser du om tjänst är aktiv?', back: 'systemctl is-active nginx\nReturnerar "active" eller "inactive".', category: 'Status', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l10f11', front: 'Hur laddar du om config utan restart?', back: 'sudo systemctl reload nginx\nFungerar om tjänsten stöder det.', category: 'Reload', difficulty: 'medium' },
+  { id: 'l10f12', front: 'Hur visar du loggar för en tjänst?', back: 'journalctl -u nginx\n-u = unit', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l10f13', front: 'Hur följer du tjänstloggar live?', back: 'journalctl -u nginx -f\n-f = follow', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l10f14', front: 'Hur listar du misslyckade tjänster?', back: 'systemctl --failed\neller: systemctl list-units --state=failed', category: 'Fel', difficulty: 'medium' },
+  { id: 'l10f15', front: 'Hur kontrollerar du om tjänst är enabled?', back: 'systemctl is-enabled nginx\nReturnerar "enabled" eller "disabled".', category: 'Status', difficulty: 'medium' },
+  { id: 'l10f16', front: 'Vad gör systemctl daemon-reload?', back: 'Läser om alla unit-filer.\nKrävs efter att ha ändrat service-filer.', category: 'Reload', difficulty: 'medium' },
+  { id: 'l10f17', front: 'Var finns systemd service-filer?', back: '/lib/systemd/system/ - paketinstallerade\n/etc/systemd/system/ - lokala/override', category: 'Filer', difficulty: 'medium' },
+  { id: 'l10f18', front: 'Hur visar du beroenden för tjänst?', back: 'systemctl list-dependencies nginx\neller: systemctl show nginx', category: 'Beroenden', difficulty: 'medium' },
+  { id: 'l10f19', front: 'Hur maskerar du en tjänst?', back: 'sudo systemctl mask nginx\nFörhindrar start helt. unmask för att ångra.', category: 'Mask', difficulty: 'medium' },
+  { id: 'l10f20', front: 'Hur startar du enable+start samtidigt?', back: 'sudo systemctl enable --now nginx\n--now startar direkt.', category: 'Enable', difficulty: 'medium' },
+  { id: 'l10f21', front: 'Hur redigerar du tjänst med override?', back: 'sudo systemctl edit nginx\nSkapar drop-in fil i /etc/systemd/system/nginx.service.d/', category: 'Edit', difficulty: 'medium' },
+  { id: 'l10f22', front: 'Hur visar du full service-fil?', back: 'systemctl cat nginx\nVisar innehållet i unit-filen.', category: 'Visa', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l10f23', front: 'Vad innehåller en service-fil?', back: '[Unit] - metadata, beroenden\n[Service] - typ, exec, restart\n[Install] - target', category: 'Unit', difficulty: 'hard' },
+  { id: 'l10f24', front: 'Vad är en systemd target?', back: 'Grupp av units (motsvarar runlevels).\nmulti-user.target = runlevel 3\ngraphical.target = runlevel 5', category: 'Target', difficulty: 'hard' },
+  { id: 'l10f25', front: 'Hur analyserar du boot-tid?', back: 'systemd-analyze\nsystemd-analyze blame (per tjänst)\nsystemd-analyze critical-chain', category: 'Analys', difficulty: 'hard' },
+  { id: 'l10f26', front: 'Hur skapar du egen service?', back: 'Skapa /etc/systemd/system/myapp.service\nsystemctl daemon-reload\nsystemctl enable --now myapp', category: 'Skapa', difficulty: 'hard' },
+  { id: 'l10f27', front: 'Vad är Type=simple vs forking?', back: 'simple = process stannar i förgrund\nforking = daemoniserar (fork+exit)', category: 'Type', difficulty: 'hard' },
+  { id: 'l10f28', front: 'Hur sätter du restart-policy?', back: 'I [Service]:\nRestart=always\nRestartSec=5', category: 'Restart', difficulty: 'hard' },
+  { id: 'l10f29', front: 'Vad är systemd timer?', back: 'Schemalagd körning (ersätter cron).\n.timer-fil + .service-fil\nsystemctl list-timers', category: 'Timer', difficulty: 'hard' },
+  { id: 'l10f30', front: 'Hur kör du kommando som annan user?', back: 'I [Service]:\nUser=www-data\nGroup=www-data', category: 'User', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 11: PERMISSIONS (30 flashcards)
+// =============================================================================
+
+const TASK_11_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l11f1', front: 'Vad betyder "r" i permissions?', back: 'Read - läsrättighet.\nFör fil: läsa innehåll\nFör katalog: lista innehåll', category: 'rwx', difficulty: 'easy' },
+  { id: 'l11f2', front: 'Vad betyder "w" i permissions?', back: 'Write - skrivrättighet.\nFör fil: ändra innehåll\nFör katalog: skapa/ta bort filer', category: 'rwx', difficulty: 'easy' },
+  { id: 'l11f3', front: 'Vad betyder "x" i permissions?', back: 'Execute - körrättighet.\nFör fil: köra som program\nFör katalog: gå in (cd)', category: 'rwx', difficulty: 'easy' },
+  { id: 'l11f4', front: 'Vad är de tre permission-grupperna?', back: 'Owner (u) - filens ägare\nGroup (g) - filens grupp\nOthers (o) - alla andra', category: 'Grupper', difficulty: 'easy' },
+  { id: 'l11f5', front: 'Vad betyder 755 oktalt?', back: 'Owner: rwx (7)\nGroup: r-x (5)\nOthers: r-x (5)', category: 'Oktalt', difficulty: 'easy' },
+  { id: 'l11f6', front: 'Vad betyder 644 oktalt?', back: 'Owner: rw- (6)\nGroup: r-- (4)\nOthers: r-- (4)', category: 'Oktalt', difficulty: 'easy' },
+  { id: 'l11f7', front: 'Hur ändrar du permissions?', back: 'chmod 755 fil\neller: chmod u+x fil', category: 'chmod', difficulty: 'easy' },
+  { id: 'l11f8', front: 'Hur ändrar du ägare?', back: 'sudo chown user fil\nsudo chown user:group fil', category: 'chown', difficulty: 'easy' },
+  { id: 'l11f9', front: 'Hur ändrar du grupp?', back: 'sudo chgrp group fil\neller: chown :group fil', category: 'chgrp', difficulty: 'easy' },
+  { id: 'l11f10', front: 'Hur visar du permissions?', back: 'ls -l\nFormatering: -rwxr-xr-x', category: 'Visa', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l11f11', front: 'Hur lägger du till execute för alla?', back: 'chmod +x fil\neller: chmod a+x fil', category: 'chmod', difficulty: 'medium' },
+  { id: 'l11f12', front: 'Hur tar du bort write för grupp och others?', back: 'chmod go-w fil', category: 'chmod', difficulty: 'medium' },
+  { id: 'l11f13', front: 'Hur ändrar du rekursivt?', back: 'chmod -R 755 katalog\nchown -R user:group katalog', category: 'Rekursiv', difficulty: 'medium' },
+  { id: 'l11f14', front: 'Vad är standardpermissions för ny fil/katalog?', back: 'Fil: 666 (minus umask)\nKatalog: 777 (minus umask)\nMed umask 022 → 644 / 755', category: 'Default', difficulty: 'medium' },
+  { id: 'l11f15', front: 'Vad är umask?', back: 'Mask som subtraheras från default permissions.\numask 022 ger 644 för filer, 755 för kataloger.', category: 'umask', difficulty: 'medium' },
+  { id: 'l11f16', front: 'Hur visar du nuvarande umask?', back: 'umask\numask -S (symbolisk)', category: 'umask', difficulty: 'medium' },
+  { id: 'l11f17', front: 'Hur sätter du endast r-x för katalog?', back: 'chmod 555 katalog\neller: chmod u-w,g-w,o-w katalog', category: 'chmod', difficulty: 'medium' },
+  { id: 'l11f18', front: 'Vad betyder första tecknet i ls -l?', back: '- = vanlig fil\nd = katalog\nl = symbolisk länk\nb/c = block/char device', category: 'Filtyp', difficulty: 'medium' },
+  { id: 'l11f19', front: 'Hur kopierar du permissions?', back: 'chmod --reference=källfil målfil\nKopierar exakt permissions.', category: 'chmod', difficulty: 'medium' },
+  { id: 'l11f20', front: 'Hur hittar du filer med specifik permission?', back: 'find / -perm 777\nfind / -perm -u+x (med x för user)', category: 'find', difficulty: 'medium' },
+  { id: 'l11f21', front: 'Vad är sticky bit?', back: 't i others execute position.\nPå katalog: endast ägare kan ta bort filer.\nEx: /tmp', category: 'Special', difficulty: 'medium' },
+  { id: 'l11f22', front: 'Hur sätter du sticky bit?', back: 'chmod +t katalog\neller: chmod 1777 katalog', category: 'Special', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l11f23', front: 'Vad är SUID bit?', back: 's i owner execute.\nFil körs med ägarens rättigheter.\nEx: /usr/bin/passwd', category: 'Special', difficulty: 'hard' },
+  { id: 'l11f24', front: 'Vad är SGID bit?', back: 's i group execute.\nFil: körs med gruppens rättigheter.\nKatalog: nya filer ärver grupp.', category: 'Special', difficulty: 'hard' },
+  { id: 'l11f25', front: 'Hur sätter du SUID/SGID?', back: 'SUID: chmod u+s fil eller chmod 4755 fil\nSGID: chmod g+s fil eller chmod 2755 fil', category: 'Special', difficulty: 'hard' },
+  { id: 'l11f26', front: 'Hur hittar du SUID-filer?', back: 'find / -perm -4000 -type f\n-4000 = SUID bit set', category: 'Säkerhet', difficulty: 'hard' },
+  { id: 'l11f27', front: 'Vad är ACL (Access Control Lists)?', back: 'Utökade permissions utöver owner/group/others.\nMöjliggör specifika permissions per user.', category: 'ACL', difficulty: 'hard' },
+  { id: 'l11f28', front: 'Hur sätter du ACL?', back: 'setfacl -m u:user:rwx fil\nsetfacl -m g:group:rx fil', category: 'ACL', difficulty: 'hard' },
+  { id: 'l11f29', front: 'Hur visar du ACL?', back: 'getfacl fil\n+ tecken i ls -l indikerar ACL.', category: 'ACL', difficulty: 'hard' },
+  { id: 'l11f30', front: 'Hur tar du bort ACL?', back: 'setfacl -b fil (alla)\nsetfacl -x u:user fil (specifik)', category: 'ACL', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 12: COMPRESSION (30 flashcards)
+// =============================================================================
+
+const TASK_12_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l12f1', front: 'Hur komprimerar du fil med gzip?', back: 'gzip fil\nSkapar fil.gz och tar bort original.', category: 'gzip', difficulty: 'easy' },
+  { id: 'l12f2', front: 'Hur dekomprimerar du .gz?', back: 'gunzip fil.gz\neller: gzip -d fil.gz', category: 'gzip', difficulty: 'easy' },
+  { id: 'l12f3', front: 'Hur skapar du tar-arkiv?', back: 'tar -cvf arkiv.tar filer/\nc=create, v=verbose, f=file', category: 'tar', difficulty: 'easy' },
+  { id: 'l12f4', front: 'Hur extraherar du tar-arkiv?', back: 'tar -xvf arkiv.tar\nx=extract', category: 'tar', difficulty: 'easy' },
+  { id: 'l12f5', front: 'Hur skapar du komprimerad .tar.gz?', back: 'tar -czvf arkiv.tar.gz filer/\nz=gzip', category: 'tar', difficulty: 'easy' },
+  { id: 'l12f6', front: 'Hur listar du innehåll i tar?', back: 'tar -tvf arkiv.tar\nt=list', category: 'tar', difficulty: 'easy' },
+  { id: 'l12f7', front: 'Hur skapar du zip-arkiv?', back: 'zip arkiv.zip filer\nzip -r arkiv.zip katalog/', category: 'zip', difficulty: 'easy' },
+  { id: 'l12f8', front: 'Hur extraherar du zip?', back: 'unzip arkiv.zip\nunzip arkiv.zip -d destination/', category: 'zip', difficulty: 'easy' },
+  { id: 'l12f9', front: 'Skillnad tar vs zip?', back: 'tar: arkiverar, komprimerar ej själv\nzip: arkiverar + komprimerar varje fil', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l12f10', front: 'Hur behåller du original vid gzip?', back: 'gzip -k fil\n-k = keep original', category: 'gzip', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l12f11', front: 'Hur använder du bzip2?', back: 'bzip2 fil → fil.bz2\nbunzip2 fil.bz2\nBättre kompression än gzip.', category: 'bzip2', difficulty: 'medium' },
+  { id: 'l12f12', front: 'Hur skapar du .tar.bz2?', back: 'tar -cjvf arkiv.tar.bz2 filer/\nj=bzip2', category: 'tar', difficulty: 'medium' },
+  { id: 'l12f13', front: 'Hur skapar du .tar.xz?', back: 'tar -cJvf arkiv.tar.xz filer/\nJ=xz (bäst kompression)', category: 'tar', difficulty: 'medium' },
+  { id: 'l12f14', front: 'Hur extraherar du till specifik katalog?', back: 'tar -xvf arkiv.tar -C /dest/\nunzip arkiv.zip -d /dest/', category: 'tar', difficulty: 'medium' },
+  { id: 'l12f15', front: 'Hur visar du innehåll i zip?', back: 'unzip -l arkiv.zip\nListar utan att extrahera.', category: 'zip', difficulty: 'medium' },
+  { id: 'l12f16', front: 'Hur komprimerar du med specifik nivå?', back: 'gzip -9 fil (max)\ngzip -1 fil (snabbast)', category: 'gzip', difficulty: 'medium' },
+  { id: 'l12f17', front: 'Hur lägger du till filer i tar?', back: 'tar -rvf arkiv.tar nyfil\nr=append', category: 'tar', difficulty: 'medium' },
+  { id: 'l12f18', front: 'Hur extraherar du specifik fil från tar?', back: 'tar -xvf arkiv.tar path/till/fil', category: 'tar', difficulty: 'medium' },
+  { id: 'l12f19', front: 'Hur skapar du lösenordsskyddad zip?', back: 'zip -e arkiv.zip filer', category: 'zip', difficulty: 'medium' },
+  { id: 'l12f20', front: 'Hur visar du kompressionsratio?', back: 'gzip -l fil.gz', category: 'Info', difficulty: 'medium' },
+  { id: 'l12f21', front: 'Hur komprimerar du med xz?', back: 'xz fil\nunxz fil.xz', category: 'xz', difficulty: 'medium' },
+  { id: 'l12f22', front: 'Hur använder du pigz (parallel gzip)?', back: 'pigz fil\nSnabbare på multi-core.', category: 'Parallell', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l12f23', front: 'Hur skapar du inkrementell backup med tar?', back: 'tar --listed-incremental=snapshot.snar -cvzf backup.tar.gz /data', category: 'Backup', difficulty: 'hard' },
+  { id: 'l12f24', front: 'Hur exkluderar du filer i tar?', back: 'tar --exclude="*.log" -cvzf arkiv.tar.gz /data', category: 'tar', difficulty: 'hard' },
+  { id: 'l12f25', front: 'Hur streamar du tar över SSH?', back: 'tar czvf - /data | ssh user@host "cat > backup.tar.gz"', category: 'Remote', difficulty: 'hard' },
+  { id: 'l12f26', front: 'Hur testar du arkivintegritet?', back: 'gzip -t fil.gz\ntar -tvf arkiv.tar', category: 'Verifiera', difficulty: 'hard' },
+  { id: 'l12f27', front: 'Hur skapar du split arkiv?', back: 'split -b 100M arkiv.tar.gz arkiv.part.\ncat arkiv.part.* > arkiv.tar.gz', category: 'Split', difficulty: 'hard' },
+  { id: 'l12f28', front: 'Vad är 7z och hur används det?', back: '7z a arkiv.7z filer\n7z x arkiv.7z\nHög kompression.', category: '7zip', difficulty: 'hard' },
+  { id: 'l12f29', front: 'Hur bevarar du rättigheter i tar?', back: 'tar --preserve-permissions -cvzf arkiv.tar.gz /data\neller: tar -p', category: 'tar', difficulty: 'hard' },
+  { id: 'l12f30', front: 'Hur skapar du tar med absolut sökväg?', back: 'tar -cvPf arkiv.tar /full/path\nP = preserve absolute path', category: 'tar', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 13: ENVIRONMENT (30 flashcards)
+// =============================================================================
+
+const TASK_13_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l13f1', front: 'Vad är en miljövariabel?', back: 'En variabel som lagrar systeminställningar och kan användas av processer och skript.', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l13f2', front: 'Hur visar du alla miljövariabler?', back: 'env eller printenv', category: 'Visa', difficulty: 'easy' },
+  { id: 'l13f3', front: 'Hur visar du en specifik variabel?', back: 'echo $VARIABELNAMN\nEx: echo $HOME', category: 'Visa', difficulty: 'easy' },
+  { id: 'l13f4', front: 'Vad innehåller $HOME?', back: 'Sökvägen till användarens hemkatalog.\nEx: /home/username', category: 'Variabler', difficulty: 'easy' },
+  { id: 'l13f5', front: 'Vad innehåller $USER?', back: 'Namnet på inloggad användare.', category: 'Variabler', difficulty: 'easy' },
+  { id: 'l13f6', front: 'Vad innehåller $PATH?', back: 'Lista med kataloger där systemet söker körbara filer.\nSeparerade med kolon (:)', category: 'Variabler', difficulty: 'easy' },
+  { id: 'l13f7', front: 'Hur sätter du en variabel tillfälligt?', back: 'VARIABEL=värde\nEx: MITT_VAR="hello"', category: 'Sätta', difficulty: 'easy' },
+  { id: 'l13f8', front: 'Skillnad export vs utan export?', back: 'export gör variabeln tillgänglig för child-processer.\nUtan export: endast i nuvarande shell.', category: 'Export', difficulty: 'easy' },
+  { id: 'l13f9', front: 'Hur exporterar du variabel?', back: 'export VARIABEL=värde\nEx: export MY_VAR="test"', category: 'Export', difficulty: 'easy' },
+  { id: 'l13f10', front: 'Vad innehåller $PWD?', back: 'Nuvarande arbetskatalog (Present Working Directory).', category: 'Variabler', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l13f11', front: 'Var sätter du permanenta variabler för en användare?', back: '~/.bashrc eller ~/.profile\n(för bash)', category: 'Permanent', difficulty: 'medium' },
+  { id: 'l13f12', front: 'Var sätter du systemvida variabler?', back: '/etc/environment\neller /etc/profile', category: 'Permanent', difficulty: 'medium' },
+  { id: 'l13f13', front: 'Hur lägger du till i $PATH?', back: 'export PATH="$PATH:/ny/sökväg"\nLägger till i slutet.', category: 'PATH', difficulty: 'medium' },
+  { id: 'l13f14', front: 'Vad gör source .bashrc?', back: 'Laddar om .bashrc utan att behöva logga ut/in.\nAlias: . .bashrc', category: 'Ladda', difficulty: 'medium' },
+  { id: 'l13f15', front: 'Vad innehåller $SHELL?', back: 'Sökväg till användarens default shell.\nEx: /bin/bash', category: 'Variabler', difficulty: 'medium' },
+  { id: 'l13f16', front: 'Hur tar du bort en miljövariabel?', back: 'unset VARIABELNAMN\nEx: unset MY_VAR', category: 'Ta bort', difficulty: 'medium' },
+  { id: 'l13f17', front: 'Vad är skillnaden på .bashrc och .bash_profile?', back: '.bash_profile: login shells\n.bashrc: interaktiva non-login shells\n.bash_profile brukar sourca .bashrc', category: 'Filer', difficulty: 'medium' },
+  { id: 'l13f18', front: 'Hur sätter du variabel för endast ett kommando?', back: 'VAR=värde kommando\nEx: LANG=C ls', category: 'Tillfällig', difficulty: 'medium' },
+  { id: 'l13f19', front: 'Vad innehåller $LANG?', back: 'Systemets språk och locale-inställning.\nEx: en_US.UTF-8', category: 'Variabler', difficulty: 'medium' },
+  { id: 'l13f20', front: 'Hur visar du bara variabelnamn (inte värden)?', back: 'env | cut -d= -f1\neller: compgen -v (bash)', category: 'Visa', difficulty: 'medium' },
+  { id: 'l13f21', front: 'Vad innehåller $TERM?', back: 'Typ av terminal som används.\nEx: xterm-256color', category: 'Variabler', difficulty: 'medium' },
+  { id: 'l13f22', front: 'Hur sätter du default editor?', back: 'export EDITOR=vim\neller export VISUAL=vim', category: 'Editor', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l13f23', front: 'Vad gör /etc/environment?', back: 'Systemvid konfiguration av miljövariabler.\nIngen shell-syntax, bara KEY=VALUE.', category: 'System', difficulty: 'hard' },
+  { id: 'l13f24', front: 'Hur visar du exporterade vs lokala variabler?', back: 'export -p: endast exporterade\nset: alla variabler (inkl lokala)', category: 'Visa', difficulty: 'hard' },
+  { id: 'l13f25', front: 'Vad är XDG Base Directory spec?', back: 'Standard för var config/data/cache ska lagras.\n$XDG_CONFIG_HOME (~/.config)\n$XDG_DATA_HOME (~/.local/share)', category: 'XDG', difficulty: 'hard' },
+  { id: 'l13f26', front: 'Hur kör du kommando i ren miljö?', back: 'env -i kommando\n-i (ignore) rensar alla miljövariabler.', category: 'env', difficulty: 'hard' },
+  { id: 'l13f27', front: 'Vad gör declare -x?', back: 'Exporterar variabel (samma som export).\ndeclare -x VAR=värde', category: 'declare', difficulty: 'hard' },
+  { id: 'l13f28', front: 'I vilken ordning läses bash-filer vid login?', back: '1. /etc/profile\n2. ~/.bash_profile eller ~/.bash_login eller ~/.profile (första som finns)', category: 'Ordning', difficulty: 'hard' },
+  { id: 'l13f29', front: 'Hur sätter du variabel som readonly?', back: 'readonly VAR=värde\neller declare -r VAR=värde', category: 'Readonly', difficulty: 'hard' },
+  { id: 'l13f30', front: 'Vad är LD_LIBRARY_PATH?', back: 'Sökvägar för dynamiska bibliotek (.so).\nUsed by dynamic linker before standard paths.', category: 'System', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 14: DISK (30 flashcards)
+// =============================================================================
+
+const TASK_14_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l14f1', front: 'Hur visar du diskutrymme?', back: 'df -h\n-h = human readable (GB/MB)', category: 'df', difficulty: 'easy' },
+  { id: 'l14f2', front: 'Hur visar du mappstorlék?', back: 'du -sh katalog\n-s = summary, -h = human readable', category: 'du', difficulty: 'easy' },
+  { id: 'l14f3', front: 'Hur listar du block devices?', back: 'lsblk\nVisar diskar och partitioner i trädformat.', category: 'lsblk', difficulty: 'easy' },
+  { id: 'l14f4', front: 'Var monteras enheter typiskt?', back: '/mnt eller /media\n/mnt = manuella mounts\n/media = automatiska mounts', category: 'Mount', difficulty: 'easy' },
+  { id: 'l14f5', front: 'Hur monterar du enhet?', back: 'sudo mount /dev/sdb1 /mnt/usb\nmount device mountpoint', category: 'Mount', difficulty: 'easy' },
+  { id: 'l14f6', front: 'Hur avmonterar du enhet?', back: 'sudo umount /mnt/usb\neller umount /dev/sdb1', category: 'Umount', difficulty: 'easy' },
+  { id: 'l14f7', front: 'Vad betyder /dev/sda?', back: 'Första SCSI/SATA-disken.\nsda = disk 1, sdb = disk 2\nsda1 = partition 1 på sda', category: 'Enheter', difficulty: 'easy' },
+  { id: 'l14f8', front: 'Hur ser du monterade filsystem?', back: 'mount (utan argument)\neller: df -h', category: 'Visa', difficulty: 'easy' },
+  { id: 'l14f9', front: 'Vad är ett filsystem?', back: 'Struktur för hur data organiseras på disk.\nEx: ext4, xfs, ntfs, btrfs', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l14f10', front: 'Hur visar du diskarna med storlek?', back: 'lsblk -o NAME,SIZE,TYPE,MOUNTPOINT\neller: fdisk -l', category: 'lsblk', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l14f11', front: 'Vad är /etc/fstab?', back: 'Konfigurationsfil för automatiska mounts vid boot.\nFile System Table.', category: 'fstab', difficulty: 'medium' },
+  { id: 'l14f12', front: 'Hur hittar du stora filer?', back: 'find / -size +100M -type f\nHittar filer större än 100MB.', category: 'find', difficulty: 'medium' },
+  { id: 'l14f13', front: 'Hur sorterar du du-output efter storlek?', back: 'du -sh * | sort -h\n-h = human numeric sort', category: 'du', difficulty: 'medium' },
+  { id: 'l14f14', front: 'Hur ser du inode-användning?', back: 'df -i\nVisar antal inodes (använda/lediga).', category: 'inode', difficulty: 'medium' },
+  { id: 'l14f15', front: 'Vad händer om inodes tar slut?', back: 'Kan inte skapa nya filer även om diskutrymme finns.\nVarje fil kräver en inode.', category: 'inode', difficulty: 'medium' },
+  { id: 'l14f16', front: 'Hur visar du filsystemtyp?', back: 'df -T\neller: lsblk -f\neller: file -s /dev/sda1', category: 'Filsystem', difficulty: 'medium' },
+  { id: 'l14f17', front: 'Hur formaterar du partition som ext4?', back: 'sudo mkfs.ext4 /dev/sdb1\nVARNING: Raderar all data!', category: 'mkfs', difficulty: 'medium' },
+  { id: 'l14f18', front: 'Hur kontrollerar du filsystemfel?', back: 'sudo fsck /dev/sdb1\nFilsystemet får inte vara monterat!', category: 'fsck', difficulty: 'medium' },
+  { id: 'l14f19', front: 'Vad är swap?', back: 'Virtuellt minne på disk.\nAnvänds när RAM är fullt.', category: 'Swap', difficulty: 'medium' },
+  { id: 'l14f20', front: 'Hur visar du swap-användning?', back: 'free -h\neller: swapon --show', category: 'Swap', difficulty: 'medium' },
+  { id: 'l14f21', front: 'Hur visar du diskens UUID?', back: 'blkid\neller: lsblk -f', category: 'UUID', difficulty: 'medium' },
+  { id: 'l14f22', front: 'Varför använda UUID i fstab?', back: 'UUID ändras inte om diskar byter ordning.\n/dev/sda kan bli /dev/sdb efter reboot.', category: 'UUID', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l14f23', front: 'Hur partitionerar du disk?', back: 'fdisk /dev/sdb (MBR)\ngdisk /dev/sdb (GPT)\nparted /dev/sdb', category: 'Partition', difficulty: 'hard' },
+  { id: 'l14f24', front: 'Skillnad MBR vs GPT?', back: 'MBR: max 4 primära partitioner, 2TB disk\nGPT: 128 partitioner, >2TB, modern', category: 'Partition', difficulty: 'hard' },
+  { id: 'l14f25', front: 'Hur skapar du swap-fil?', back: 'sudo fallocate -l 2G /swapfile\nsudo chmod 600 /swapfile\nsudo mkswap /swapfile\nsudo swapon /swapfile', category: 'Swap', difficulty: 'hard' },
+  { id: 'l14f26', front: 'Vad är LVM?', back: 'Logical Volume Manager.\nFlexibel diskhantering: resize, span, snapshot.', category: 'LVM', difficulty: 'hard' },
+  { id: 'l14f27', front: 'Hur reparerar du ext4 vid boot?', back: 'Boot till recovery/rescue mode\nfsck -y /dev/sda1\n-y = auto-yes på reparationer', category: 'fsck', difficulty: 'hard' },
+  { id: 'l14f28', front: 'Hur montar du med endast läsrättigheter?', back: 'mount -o ro /dev/sdb1 /mnt\n-o ro = read-only option', category: 'Mount', difficulty: 'hard' },
+  { id: 'l14f29', front: 'Vad gör tune2fs?', back: 'Justerar ext2/3/4 filsystemparametrar.\nEx: tune2fs -L "Backup" /dev/sdb1 (sätt label)', category: 'tune2fs', difficulty: 'hard' },
+  { id: 'l14f30', front: 'Hur visar du disk I/O i realtid?', back: 'iotop\neller: iostat -x 1', category: 'Monitor', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 15: REFERENCE (30 flashcards)
+// =============================================================================
+
+const TASK_15_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l15f1', front: 'Hur visar du manual för kommando?', back: 'man kommando\nEx: man ls', category: 'man', difficulty: 'easy' },
+  { id: 'l15f2', front: 'Hur söker du i manualen?', back: 'Tryck / och skriv sökord\nn = nästa träff, N = föregående', category: 'man', difficulty: 'easy' },
+  { id: 'l15f3', front: 'Hur avslutar du man?', back: 'Tryck q (quit)', category: 'man', difficulty: 'easy' },
+  { id: 'l15f4', front: 'Vad gör --help?', back: 'Visar kortfattad hjälp för kommandot.\nEx: ls --help', category: 'help', difficulty: 'easy' },
+  { id: 'l15f5', front: 'Vad gör whatis?', back: 'Visar en rad-beskrivning av kommando.\nEx: whatis ls', category: 'whatis', difficulty: 'easy' },
+  { id: 'l15f6', front: 'Hur hittar du kommandon relaterade till ett ämne?', back: 'apropos sökord\nEx: apropos compress', category: 'apropos', difficulty: 'easy' },
+  { id: 'l15f7', front: 'Vad gör which?', back: 'Visar sökvägen till körbar fil.\nEx: which python → /usr/bin/python', category: 'which', difficulty: 'easy' },
+  { id: 'l15f8', front: 'Vad gör type?', back: 'Visar hur kommando tolkas (alias, builtin, fil).\nEx: type ls', category: 'type', difficulty: 'easy' },
+  { id: 'l15f9', front: 'Hur navigerar du i man-sidor?', back: 'Piltangenter eller j/k (vim-style)\nSpace = nästa sida\nb = föregående sida', category: 'man', difficulty: 'easy' },
+  { id: 'l15f10', front: 'Hur visar du help för bash builtins?', back: 'help kommando\nEx: help cd', category: 'help', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l15f11', front: 'Vad är man-sektioner?', back: '1: User commands\n2: System calls\n3: Library functions\n5: File formats\n8: Admin commands', category: 'man', difficulty: 'medium' },
+  { id: 'l15f12', front: 'Hur öppnar du specifik man-sektion?', back: 'man sektion kommando\nEx: man 5 passwd (filformat, inte kommando)', category: 'man', difficulty: 'medium' },
+  { id: 'l15f13', front: 'Vad gör whereis?', back: 'Visar binary, source och man-sidor för kommando.\nMer info än which.', category: 'whereis', difficulty: 'medium' },
+  { id: 'l15f14', front: 'Hur uppdaterar du apropos-databasen?', back: 'sudo mandb\neller: sudo makewhatis', category: 'apropos', difficulty: 'medium' },
+  { id: 'l15f15', front: 'Vad gör info?', back: 'GNU info-dokumentation, mer detaljerad än man.\nEx: info coreutils', category: 'info', difficulty: 'medium' },
+  { id: 'l15f16', front: 'Var finns lokala docs för installerade program?', back: '/usr/share/doc/\nKan innehålla README, examples, etc.', category: 'Docs', difficulty: 'medium' },
+  { id: 'l15f17', front: 'Hur söker du på alla man-sektioner?', back: 'man -k sökord\nSamma som apropos.', category: 'man', difficulty: 'medium' },
+  { id: 'l15f18', front: 'Hur visar du man som text (utan pager)?', back: 'man kommando | cat\neller: man -P cat kommando', category: 'man', difficulty: 'medium' },
+  { id: 'l15f19', front: 'Vad är tldr?', back: 'Community-driven simplified man pages.\nInstallera: npm install -g tldr\ntldr tar', category: 'tldr', difficulty: 'medium' },
+  { id: 'l15f20', front: 'Hur visar du alla tillgängliga man-sidor för ett namn?', back: 'man -f namn\neller: whatis namn', category: 'man', difficulty: 'medium' },
+  { id: 'l15f21', front: 'Vad gör command -v?', back: 'POSIX-kompatibel which.\nAnvänds i skript för portabilitet.', category: 'command', difficulty: 'medium' },
+  { id: 'l15f22', front: 'Hur exporterar du man till fil?', back: 'man kommando > fil.txt\neller: man -t kommando | ps2pdf - fil.pdf', category: 'man', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l15f23', front: 'Hur läser du man-sid i annan editor?', back: 'MANPAGER=less man kommando\neller: export MANPAGER="vim -c \'set ft=man\' -"', category: 'Pager', difficulty: 'hard' },
+  { id: 'l15f24', front: 'Var finns man-sidorna på systemet?', back: '/usr/share/man/\nman1/, man2/, etc per sektion', category: 'Sökväg', difficulty: 'hard' },
+  { id: 'l15f25', front: 'Hur skapar du egen man-sida?', back: 'Skriv i groff/troff-format\nPlacera i /usr/local/share/man/man1/\nKör mandb', category: 'Skapa', difficulty: 'hard' },
+  { id: 'l15f26', front: 'Vad är MANPATH?', back: 'Miljövariabel med sökvägar för man-sidor.\nSom PATH men för dokumentation.', category: 'Config', difficulty: 'hard' },
+  { id: 'l15f27', front: 'Hur visar du man-sida för config-fil?', back: 'man 5 filnamn\nEx: man 5 fstab, man 5 sshd_config', category: 'man', difficulty: 'hard' },
+  { id: 'l15f28', front: 'Vad gör man -K?', back: 'Fulltextsökning i alla man-sidor (långsamt).\nman -K sökord', category: 'man', difficulty: 'hard' },
+  { id: 'l15f29', front: 'Hur installerar du extra man-sidor?', back: 'Paket: manpages-dev, manpages-posix\nInkluderar system calls & POSIX docs.', category: 'Install', difficulty: 'hard' },
+  { id: 'l15f30', front: 'Skillnad man vs info-sidor?', back: 'man: Unix-tradition, en fil per kommando\ninfo: GNU, hyperlänkade, hierarkisk', category: 'Koncept', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 16: PRODUCTIVITY (30 flashcards)
+// =============================================================================
+
+const TASK_16_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l16f1', front: 'Hur skapar du alias?', back: 'alias namn="kommando"\nEx: alias ll="ls -la"', category: 'Alias', difficulty: 'easy' },
+  { id: 'l16f2', front: 'Hur listar du alla alias?', back: 'alias (utan argument)\nVisar alla definierade alias.', category: 'Alias', difficulty: 'easy' },
+  { id: 'l16f3', front: 'Hur tar du bort alias?', back: 'unalias namn\nEx: unalias ll', category: 'Alias', difficulty: 'easy' },
+  { id: 'l16f4', front: 'Vad gör history?', back: 'Visar tidigare körda kommandon.\nNummer visas för varje kommando.', category: 'History', difficulty: 'easy' },
+  { id: 'l16f5', front: 'Hur kör du om senaste kommando?', back: '!!\nKör senaste kommandot igen.', category: 'History', difficulty: 'easy' },
+  { id: 'l16f6', front: 'Hur kör du kommando nummer 42 från history?', back: '!42\n! följt av numret.', category: 'History', difficulty: 'easy' },
+  { id: 'l16f7', front: 'Hur söker du bakåt i history?', back: 'Ctrl+R och skriv söktermen.\nTryck Ctrl+R igen för fler träffar.', category: 'History', difficulty: 'easy' },
+  { id: 'l16f8', front: 'Vad är Tab-completion?', back: 'Tryck Tab för att autokomplettera filnamn och kommandon.\nDubbel-Tab visar alla alternativ.', category: 'Tab', difficulty: 'easy' },
+  { id: 'l16f9', front: 'Hur avbryter du ett kommando?', back: 'Ctrl+C\nSkickar SIGINT (interrupt).', category: 'Ctrl', difficulty: 'easy' },
+  { id: 'l16f10', front: 'Hur rensar du terminal?', back: 'clear\neller: Ctrl+L', category: 'Terminal', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l16f11', front: 'Var sparar du permanenta alias?', back: '~/.bashrc\nLäggs till i filen för att finnas vid nästa session.', category: 'Alias', difficulty: 'medium' },
+  { id: 'l16f12', front: 'Hur kör du senaste kommando som började med "cd"?', back: '!cd\n!sträng kör senaste som börjar med strängen.', category: 'History', difficulty: 'medium' },
+  { id: 'l16f13', front: 'Vad gör Ctrl+A?', back: 'Flyttar cursor till början av raden.\n(Ctrl+E = slutet)', category: 'Ctrl', difficulty: 'medium' },
+  { id: 'l16f14', front: 'Vad gör Ctrl+U?', back: 'Tar bort allt från cursor till radens början.\n(Ctrl+K = till slutet)', category: 'Ctrl', difficulty: 'medium' },
+  { id: 'l16f15', front: 'Vad gör Ctrl+W?', back: 'Tar bort ordet före cursor.\nUse: radera argument.', category: 'Ctrl', difficulty: 'medium' },
+  { id: 'l16f16', front: 'Hur pausar du process i terminal?', back: 'Ctrl+Z\nPausar och lägger i bakgrund.\nbg för att fortsätta.', category: 'Ctrl', difficulty: 'medium' },
+  { id: 'l16f17', front: 'Hur kör du senaste kommandot med sudo?', back: 'sudo !!\nMycket användbart om du glömt sudo.', category: 'History', difficulty: 'medium' },
+  { id: 'l16f18', front: 'Hur begränsar du history-output?', back: 'history 20\nVisar senaste 20 kommandon.', category: 'History', difficulty: 'medium' },
+  { id: 'l16f19', front: 'Vad gör Alt+. (Alt-punkt)?', back: 'Infogar sista argumentet från föregående kommando.\nKan upprepas för äldre kommandon.', category: 'Alt', difficulty: 'medium' },
+  { id: 'l16f20', front: 'Hur tömmer du history?', back: 'history -c\nTömmer nuvarande history.\n-w skriver till fil.', category: 'History', difficulty: 'medium' },
+  { id: 'l16f21', front: 'Hur byter du senaste kommandots argument?', back: '^old^new\nEx: om du skrev "cat flie", ^flie^file', category: 'History', difficulty: 'medium' },
+  { id: 'l16f22', front: 'Vad gör Ctrl+D?', back: 'Skickar EOF (End Of File).\nAvslutar shell om raden är tom.', category: 'Ctrl', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l16f23', front: 'Hur skapar du funktion i bash?', back: 'myfunc() { kommandon; }\neller: function myfunc { kommandon; }', category: 'Funktion', difficulty: 'hard' },
+  { id: 'l16f24', front: 'Vad gör HISTCONTROL=ignoredups?', back: 'Sparar inte duplicerade kommandon i rad.\nignoreboth = ignorerar även space-prefix.', category: 'History', difficulty: 'hard' },
+  { id: 'l16f25', front: 'Hur kör du kommando utan att spara i history?', back: 'Börja med space (om HISTCONTROL=ignorespace).\neller: history -d NUMMER', category: 'History', difficulty: 'hard' },
+  { id: 'l16f26', front: 'Vad gör shopt -s cdspell?', back: 'Automatisk rättning av små fel i cd-argument.\nEx: cd /ect → /etc', category: 'shopt', difficulty: 'hard' },
+  { id: 'l16f27', front: 'Hur kör du alias med samma namn som kommando?', back: '\\kommando eller command kommando\nBypassa alias.', category: 'Alias', difficulty: 'hard' },
+  { id: 'l16f28', front: 'Vad är ~/.inputrc?', back: 'Konfiguration för readline (input).\nKan anpassa tangentbindningar.', category: 'Config', difficulty: 'hard' },
+  { id: 'l16f29', front: 'Hur sätter du vi-mode i bash?', back: 'set -o vi\nVikommando-stil navigering.', category: 'Mode', difficulty: 'hard' },
+  { id: 'l16f30', front: 'Vad gör CDPATH?', back: 'Sökvägar för cd att söka i.\nSom PATH men för kataloger.', category: 'CDPATH', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 17: USERS (30 flashcards)
+// =============================================================================
+
+const TASK_17_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l17f1', front: 'Hur skapar du ny användare?', back: 'sudo useradd username\neller: sudo adduser username (interaktiv)', category: 'Skapa', difficulty: 'easy' },
+  { id: 'l17f2', front: 'Hur sätter du lösenord för användare?', back: 'sudo passwd username\nPrompar för nytt lösenord.', category: 'passwd', difficulty: 'easy' },
+  { id: 'l17f3', front: 'Hur tar du bort användare?', back: 'sudo userdel username\n-r tar även bort hemkatalog.', category: 'Ta bort', difficulty: 'easy' },
+  { id: 'l17f4', front: 'Hur visar du nuvarande användare?', back: 'whoami\neller: echo $USER', category: 'Visa', difficulty: 'easy' },
+  { id: 'l17f5', front: 'Hur byter du till annan användare?', back: 'su username\nsu - username för login shell.', category: 'su', difficulty: 'easy' },
+  { id: 'l17f6', front: 'Hur byter du till root?', back: 'su -\neller: sudo -i\neller: sudo su', category: 'root', difficulty: 'easy' },
+  { id: 'l17f7', front: 'Hur visar du vilka grupper du tillhör?', back: 'groups\neller: id', category: 'groups', difficulty: 'easy' },
+  { id: 'l17f8', front: 'Hur skapar du ny grupp?', back: 'sudo groupadd gruppnamn', category: 'Grupp', difficulty: 'easy' },
+  { id: 'l17f9', front: 'Hur lägger du till användare i grupp?', back: 'sudo usermod -aG gruppnamn username\n-a = append, -G = supplementary groups', category: 'Grupp', difficulty: 'easy' },
+  { id: 'l17f10', front: 'Hur listar du alla användare?', back: 'cat /etc/passwd\neller: getent passwd', category: 'Lista', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l17f11', front: 'Vad innehåller /etc/passwd?', back: 'Användarinformation:\nusername:x:UID:GID:info:home:shell', category: 'Filer', difficulty: 'medium' },
+  { id: 'l17f12', front: 'Vad innehåller /etc/shadow?', back: 'Krypterade lösenord och lösenordspolicy.\nEndast läsbar av root.', category: 'Filer', difficulty: 'medium' },
+  { id: 'l17f13', front: 'Vad innehåller /etc/group?', back: 'Gruppinformation:\ngroupname:x:GID:members', category: 'Filer', difficulty: 'medium' },
+  { id: 'l17f14', front: 'Hur ändrar du default shell för användare?', back: 'chsh -s /bin/zsh username\neller: usermod -s /bin/zsh username', category: 'Shell', difficulty: 'medium' },
+  { id: 'l17f15', front: 'Hur låser du användarkonto?', back: 'sudo passwd -l username\neller: usermod -L username', category: 'Lås', difficulty: 'medium' },
+  { id: 'l17f16', front: 'Hur låser du upp användarkonto?', back: 'sudo passwd -u username\neller: usermod -U username', category: 'Lås', difficulty: 'medium' },
+  { id: 'l17f17', front: 'Vad är UID och GID?', back: 'UID = User ID (unikt nummer per användare)\nGID = Group ID\nroot har UID/GID 0.', category: 'ID', difficulty: 'medium' },
+  { id: 'l17f18', front: 'Hur visar du senaste inloggningar?', back: 'last\neller: lastlog', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l17f19', front: 'Hur visar du inloggade användare nu?', back: 'who\neller: w (mer detaljer)', category: 'Visa', difficulty: 'medium' },
+  { id: 'l17f20', front: 'Hur tar du bort användare från grupp?', back: 'sudo gpasswd -d username gruppnamn\neller: deluser username gruppnamn', category: 'Grupp', difficulty: 'medium' },
+  { id: 'l17f21', front: 'Hur visar du all info om användare?', back: 'id username\nVisar UID, GID och grupper.', category: 'id', difficulty: 'medium' },
+  { id: 'l17f22', front: 'Hur sätter du utgångsdatum på konto?', back: 'sudo chage -E 2024-12-31 username\neller: usermod -e YYYY-MM-DD', category: 'Expiry', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l17f23', front: 'Hur skapar du system-användare?', back: 'sudo useradd -r systemuser\n-r = system account, ingen hemkatalog.', category: 'System', difficulty: 'hard' },
+  { id: 'l17f24', front: 'Hur konfigurerar du sudoers säkert?', back: 'sudo visudo\nRedigerar /etc/sudoers med syntaxkontroll.', category: 'sudo', difficulty: 'hard' },
+  { id: 'l17f25', front: 'Syntax för sudoers-rad?', back: 'user HOST=(RUNAS) COMMANDS\nEx: john ALL=(ALL) ALL', category: 'sudo', difficulty: 'hard' },
+  { id: 'l17f26', front: 'Hur ger du sudo utan lösenord?', back: 'I sudoers:\nusername ALL=(ALL) NOPASSWD: ALL', category: 'sudo', difficulty: 'hard' },
+  { id: 'l17f27', front: 'Var finns user skeleton-filer?', back: '/etc/skel/\nKopieras till nya användares hemkatalog.', category: 'skel', difficulty: 'hard' },
+  { id: 'l17f28', front: 'Vad är PAM?', back: 'Pluggable Authentication Modules.\nFlexibelt autentiseringsramverk.', category: 'PAM', difficulty: 'hard' },
+  { id: 'l17f29', front: 'Hur tvingar du lösenordsbyte vid nästa login?', back: 'sudo chage -d 0 username\nSätter lösenordsålder till 0.', category: 'chage', difficulty: 'hard' },
+  { id: 'l17f30', front: 'Hur begränsar du vilka som får SSH:a?', back: 'I /etc/ssh/sshd_config:\nAllowUsers user1 user2\neller: AllowGroups sshusers', category: 'SSH', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 18: CRON (30 flashcards)
+// =============================================================================
+
+const TASK_18_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l18f1', front: 'Vad är cron?', back: 'Schemaläggare för återkommande jobb.\nKör kommandon vid specifika tider.', category: 'Koncept', difficulty: 'easy' },
+  { id: 'l18f2', front: 'Hur redigerar du din crontab?', back: 'crontab -e\nÖppnar i default editor.', category: 'crontab', difficulty: 'easy' },
+  { id: 'l18f3', front: 'Hur visar du dina cronjobb?', back: 'crontab -l\nListar nuvarande crontab.', category: 'crontab', difficulty: 'easy' },
+  { id: 'l18f4', front: 'Hur tar du bort crontab?', back: 'crontab -r\nRaderar alla cronjobb.', category: 'crontab', difficulty: 'easy' },
+  { id: 'l18f5', front: 'Cron-format: vilka 5 fält finns?', back: 'minut timme dag månad veckodag\n* * * * * kommando', category: 'Format', difficulty: 'easy' },
+  { id: 'l18f6', front: 'Vad betyder * i cron?', back: 'Alla värden.\n* i minutfältet = varje minut.', category: 'Format', difficulty: 'easy' },
+  { id: 'l18f7', front: 'Hur kör du jobb varje dag kl 09:00?', back: '0 9 * * * kommando\nminut=0, timme=9, alla dagar.', category: 'Exempel', difficulty: 'easy' },
+  { id: 'l18f8', front: 'Vad gör @daily?', back: 'Kör en gång per dag (vid midnatt).\nSamma som: 0 0 * * *', category: 'Shortcut', difficulty: 'easy' },
+  { id: 'l18f9', front: 'Vad gör @reboot?', back: 'Kör kommandot vid varje systemstart.', category: 'Shortcut', difficulty: 'easy' },
+  { id: 'l18f10', front: 'Hur kör du jobb varje timme?', back: '0 * * * * kommando\neller: @hourly kommando', category: 'Exempel', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l18f11', front: 'Hur kör du jobb var 5:e minut?', back: '*/5 * * * * kommando\n/N = var N:te enhet.', category: 'Intervall', difficulty: 'medium' },
+  { id: 'l18f12', front: 'Hur kör du jobb måndag-fredag?', back: '0 9 * * 1-5 kommando\n1-5 = mån-fre (0=sön eller 7).', category: 'Range', difficulty: 'medium' },
+  { id: 'l18f13', front: 'Hur kör du jobb på flera tider?', back: '0 9,12,18 * * * kommando\nKomma separerar värden.', category: 'Lista', difficulty: 'medium' },
+  { id: 'l18f14', front: 'Var finns systemets crontabs?', back: '/etc/crontab\noch /etc/cron.d/\n+ /etc/cron.{daily,weekly,monthly}/', category: 'Sökväg', difficulty: 'medium' },
+  { id: 'l18f15', front: 'Skillnad user vs system crontab?', back: 'User: crontab -e (5 fält)\nSystem: /etc/crontab (6 fält, inkl user)', category: 'Koncept', difficulty: 'medium' },
+  { id: 'l18f16', front: 'Hur loggar du cron-output?', back: '* * * * * kommando >> /var/log/myjob.log 2>&1\nStderr+stdout till fil.', category: 'Logg', difficulty: 'medium' },
+  { id: 'l18f17', front: 'Hur tystar du cron-output?', back: '* * * * * kommando > /dev/null 2>&1\nSkickar all output till /dev/null.', category: 'Tyst', difficulty: 'medium' },
+  { id: 'l18f18', front: 'Vad är anacron?', back: 'Cron för system som inte är alltid igång.\nKör missade jobb vid uppstart.', category: 'anacron', difficulty: 'medium' },
+  { id: 'l18f19', front: 'Hur redigerar du annan användares crontab?', back: 'sudo crontab -u username -e\n-u anger användare.', category: 'crontab', difficulty: 'medium' },
+  { id: 'l18f20', front: 'Var ser du cron-loggar?', back: '/var/log/syslog (grep CRON)\neller: journalctl -u cron', category: 'Logg', difficulty: 'medium' },
+  { id: 'l18f21', front: 'Vad gör @weekly?', back: 'Kör en gång i veckan (söndag midnatt).\nSamma som: 0 0 * * 0', category: 'Shortcut', difficulty: 'medium' },
+  { id: 'l18f22', front: 'Hur kör du första dagen varje månad?', back: '0 0 1 * * kommando\ndag=1, alla månader.', category: 'Exempel', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l18f23', front: 'Hur förhindrar du att användare har crontab?', back: '/etc/cron.deny\nLista användare som ej får använda cron.', category: 'Säkerhet', difficulty: 'hard' },
+  { id: 'l18f24', front: 'Hur tillåter du endast vissa användare?', back: '/etc/cron.allow\nEndast listade användare får använda cron.', category: 'Säkerhet', difficulty: 'hard' },
+  { id: 'l18f25', front: 'Vad är miljön i cron?', back: 'Minimal miljö! Ange PATH i crontab.\nPATH=/usr/local/bin:/usr/bin:/bin', category: 'Miljö', difficulty: 'hard' },
+  { id: 'l18f26', front: 'Hur kör du jobb sista dagen i månaden?', back: '0 0 28-31 * * [ $(date +%d -d tomorrow) = 01 ] && kommando\nKontrollerar om imorgon är 1:a.', category: 'Avancerat', difficulty: 'hard' },
+  { id: 'l18f27', front: 'Vad är systemd timer vs cron?', back: 'systemd timers: modernare, mer flexibelt.\n.timer-filer, loggning via journal.', category: 'systemd', difficulty: 'hard' },
+  { id: 'l18f28', front: 'Hur skapar du systemd timer?', back: '1. myservice.service\n2. myservice.timer\nsudo systemctl enable myservice.timer', category: 'systemd', difficulty: 'hard' },
+  { id: 'l18f29', front: 'Hur listar du systemd timers?', back: 'systemctl list-timers\nVisar alla aktiva timers.', category: 'systemd', difficulty: 'hard' },
+  { id: 'l18f30', front: 'Hur testar du cron-kommando manuellt?', back: 'Kör kommandot med samma miljö:\nenv -i /bin/sh -c "kommando"', category: 'Test', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 19: SCRIPTING (30 flashcards)
+// =============================================================================
+
+const TASK_19_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l19f1', front: 'Hur börjar ett bash-skript?', back: '#!/bin/bash\n(shebang)', category: 'Grunderna', difficulty: 'easy' },
+  { id: 'l19f2', front: 'Hur gör du ett skript körbart?', back: 'chmod +x script.sh\nSedan: ./script.sh', category: 'Grunderna', difficulty: 'easy' },
+  { id: 'l19f3', front: 'Hur skapar du variabel?', back: 'variabel="värde"\nInget mellanslag runt =', category: 'Variabler', difficulty: 'easy' },
+  { id: 'l19f4', front: 'Hur använder du variabel?', back: '$variabel\neller: ${variabel}', category: 'Variabler', difficulty: 'easy' },
+  { id: 'l19f5', front: 'Hur skriver du ut text?', back: 'echo "Hello World"', category: 'Output', difficulty: 'easy' },
+  { id: 'l19f6', front: 'Hur kommenterar du i bash?', back: '# Detta är en kommentar', category: 'Grunderna', difficulty: 'easy' },
+  { id: 'l19f7', front: 'Hur kör du skript utan chmod?', back: 'bash script.sh\neller: source script.sh', category: 'Köra', difficulty: 'easy' },
+  { id: 'l19f8', front: 'Vad är $1, $2, $3?', back: 'Positionella argument.\n$1 = första argumentet\n$0 = skriptnamnet', category: 'Argument', difficulty: 'easy' },
+  { id: 'l19f9', front: 'Vad är $#?', back: 'Antal argument skickat till skriptet.', category: 'Argument', difficulty: 'easy' },
+  { id: 'l19f10', front: 'Hur gör du en enkel if-sats?', back: 'if [ villkor ]; then\n  kommandon\nfi', category: 'if', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l19f11', front: 'Hur gör du if-else?', back: 'if [ villkor ]; then\n  kommando1\nelse\n  kommando2\nfi', category: 'if', difficulty: 'medium' },
+  { id: 'l19f12', front: 'Hur jämför du strängar?', back: '[ "$a" = "$b" ] - lika\n[ "$a" != "$b" ] - olika', category: 'Test', difficulty: 'medium' },
+  { id: 'l19f13', front: 'Hur jämför du tal?', back: '[ $a -eq $b ] - equal\n[ $a -lt $b ] - less than\n[ $a -gt $b ] - greater than', category: 'Test', difficulty: 'medium' },
+  { id: 'l19f14', front: 'Hur gör du en for-loop?', back: 'for i in 1 2 3; do\n  echo $i\ndone', category: 'Loop', difficulty: 'medium' },
+  { id: 'l19f15', front: 'Hur loopar du över filer?', back: 'for fil in *.txt; do\n  echo $fil\ndone', category: 'Loop', difficulty: 'medium' },
+  { id: 'l19f16', front: 'Hur gör du while-loop?', back: 'while [ villkor ]; do\n  kommandon\ndone', category: 'Loop', difficulty: 'medium' },
+  { id: 'l19f17', front: 'Hur läser du fil rad för rad?', back: 'while read line; do\n  echo $line\ndone < fil.txt', category: 'Loop', difficulty: 'medium' },
+  { id: 'l19f18', front: 'Hur läser du input?', back: 'read variabel\neller: read -p "Prompt: " variabel', category: 'read', difficulty: 'medium' },
+  { id: 'l19f19', front: 'Hur kontrollerar du om fil finns?', back: '[ -f fil ] - vanlig fil\n[ -d dir ] - katalog\n[ -e path ] - existerar', category: 'Test', difficulty: 'medium' },
+  { id: 'l19f20', front: 'Vad är $??', back: 'Exit status från senaste kommandot.\n0 = success, annat = fel.', category: 'Exit', difficulty: 'medium' },
+  { id: 'l19f21', front: 'Hur avslutar du skript med status?', back: 'exit 0 - success\nexit 1 - error', category: 'Exit', difficulty: 'medium' },
+  { id: 'l19f22', front: 'Vad är $@?', back: 'Alla argument som separata strängar.\nAnvänds i loopar.', category: 'Argument', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l19f23', front: 'Hur fångar du kommandoutput?', back: 'result=$(kommando)\neller: result=`kommando`', category: 'Substitution', difficulty: 'hard' },
+  { id: 'l19f24', front: 'Skillnad [ ] vs [[ ]]?', back: '[[ ]] är bash-utökning:\n- pattern matching\n- && och || inuti\n- säkrare med variabler', category: 'Test', difficulty: 'hard' },
+  { id: 'l19f25', front: 'Hur definierar du funktion?', back: 'function namn() {\n  kommandon\n  return 0\n}', category: 'Funktion', difficulty: 'hard' },
+  { id: 'l19f26', front: 'Hur använder du arrays?', back: 'arr=(a b c)\necho ${arr[0]} # första\necho ${arr[@]} # alla', category: 'Array', difficulty: 'hard' },
+  { id: 'l19f27', front: 'Vad gör set -e?', back: 'Avbryter skript vid första fel.\nset -e i början för strikt mode.', category: 'set', difficulty: 'hard' },
+  { id: 'l19f28', front: 'Vad gör set -x?', back: 'Skriver ut varje kommando före körning.\nBra för debugging.', category: 'set', difficulty: 'hard' },
+  { id: 'l19f29', front: 'Hur gör du arithmetic?', back: '((result = 5 + 3))\neller: $((5 + 3))', category: 'Math', difficulty: 'hard' },
+  { id: 'l19f30', front: 'Hur gör du case-sats?', back: 'case $var in\n  pattern1) cmd ;;\n  pattern2) cmd ;;\n  *) default ;;\nesac', category: 'case', difficulty: 'hard' }
+]
+
+// =============================================================================
+// TASK 20: TROUBLESHOOTING (30 flashcards)
+// =============================================================================
+
+const TASK_20_FLASHCARDS: TaskFlashcard[] = [
+  // Easy (10)
+  { id: 'l20f1', front: 'Hur visar du systemloggar?', back: 'journalctl\neller: less /var/log/syslog', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l20f2', front: 'Hur visar du senaste loggar?', back: 'journalctl -n 50\nVisar senaste 50 rader.', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l20f3', front: 'Hur följer du loggar i realtid?', back: 'journalctl -f\neller: tail -f /var/log/syslog', category: 'Loggar', difficulty: 'easy' },
+  { id: 'l20f4', front: 'Hur visar du diskstatus?', back: 'df -h\nVisar diskutrymme per partition.', category: 'Disk', difficulty: 'easy' },
+  { id: 'l20f5', front: 'Hur visar du minnesanvändning?', back: 'free -h\nVisar RAM och swap.', category: 'Minne', difficulty: 'easy' },
+  { id: 'l20f6', front: 'Hur visar du CPU-last?', back: 'top eller htop\nuptime visar load average.', category: 'CPU', difficulty: 'easy' },
+  { id: 'l20f7', front: 'Hur testar du nätverksanslutning?', back: 'ping google.com\nTestar om host svarar.', category: 'Nätverk', difficulty: 'easy' },
+  { id: 'l20f8', front: 'Hur ser du vilka processer använder mest minne?', back: 'ps aux --sort=-%mem | head\neller: top, sortera på %MEM', category: 'Process', difficulty: 'easy' },
+  { id: 'l20f9', front: 'Hur dödar du process?', back: 'kill PID\neller: kill -9 PID (force)', category: 'Process', difficulty: 'easy' },
+  { id: 'l20f10', front: 'Hur hittar du process på port?', back: 'sudo lsof -i :80\neller: netstat -tlnp', category: 'Port', difficulty: 'easy' },
+  // Medium (12)
+  { id: 'l20f11', front: 'Hur visar du kernel-loggar?', back: 'dmesg\neller: journalctl -k', category: 'Kernel', difficulty: 'medium' },
+  { id: 'l20f12', front: 'Hur söker du i loggar?', back: 'journalctl | grep "error"\neller: grep -i error /var/log/syslog', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l20f13', front: 'Hur visar du loggar för specifik tjänst?', back: 'journalctl -u nginx\n-u = unit (tjänst).', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l20f14', front: 'Hur visar du loggar från senaste boot?', back: 'journalctl -b\n-b -1 = förra boot.', category: 'Loggar', difficulty: 'medium' },
+  { id: 'l20f15', front: 'Hur hittar du stora filer?', back: 'find / -size +100M -type f 2>/dev/null\neller: du -sh /* | sort -h', category: 'Disk', difficulty: 'medium' },
+  { id: 'l20f16', front: 'Hur testar du DNS-upplösning?', back: 'nslookup domain.com\neller: dig domain.com', category: 'DNS', difficulty: 'medium' },
+  { id: 'l20f17', front: 'Hur tracear du nätverksväg?', back: 'traceroute google.com\nVisar varje hopp.', category: 'Nätverk', difficulty: 'medium' },
+  { id: 'l20f18', front: 'Hur visar du öppna filer per process?', back: 'lsof -p PID\neller: ls /proc/PID/fd/', category: 'Process', difficulty: 'medium' },
+  { id: 'l20f19', front: 'Hur visar du systemuppetid?', back: 'uptime\nVisar hur länge systemet varit igång.', category: 'System', difficulty: 'medium' },
+  { id: 'l20f20', front: 'Hur startar du om tjänst?', back: 'sudo systemctl restart tjänst\nFörst stop, sedan start.', category: 'Tjänst', difficulty: 'medium' },
+  { id: 'l20f21', front: 'Hur kontrollerar du tjänststatus?', back: 'systemctl status tjänst\nVisar körande/stoppad + senaste loggar.', category: 'Tjänst', difficulty: 'medium' },
+  { id: 'l20f22', front: 'Hur visar du misslyckade tjänster?', back: 'systemctl --failed\nListar tjänster som ej startat.', category: 'Tjänst', difficulty: 'medium' },
+  // Hard (8)
+  { id: 'l20f23', front: 'Hur analyserar du boot-tid?', back: 'systemd-analyze\nsystemd-analyze blame', category: 'Boot', difficulty: 'hard' },
+  { id: 'l20f24', front: 'Hur fångar du nätverkstrafik?', back: 'sudo tcpdump -i eth0\neller: wireshark', category: 'Nätverk', difficulty: 'hard' },
+  { id: 'l20f25', front: 'Hur ser du disk I/O per process?', back: 'iotop\nVisar läs/skriv-hastighet per process.', category: 'Disk', difficulty: 'hard' },
+  { id: 'l20f26', front: 'Hur kör du filsystemkontroll?', back: 'sudo fsck /dev/sda1\nKör på avmonterat filsystem!', category: 'Disk', difficulty: 'hard' },
+  { id: 'l20f27', front: 'Hur debugar du strace?', back: 'strace -p PID\neller: strace kommando\nVisar system calls.', category: 'Debug', difficulty: 'hard' },
+  { id: 'l20f28', front: 'Hur kollar du om port är öppen remote?', back: 'nc -zv host port\neller: telnet host port', category: 'Port', difficulty: 'hard' },
+  { id: 'l20f29', front: 'Hur ser du systemresurser i detalj?', back: 'vmstat 1\nsar -u 1 5\nnmon', category: 'Monitor', difficulty: 'hard' },
+  { id: 'l20f30', front: 'Hur bootar du i rescue mode?', back: 'Boot-meny → Recovery/Rescue\neller: systemctl rescue', category: 'Boot', difficulty: 'hard' }
+]
+
+// =============================================================================
+// EXPORT: All Task Flashcard Sets
+// =============================================================================
+
+export const LINUX247_TASK_FLASHCARDS: TaskFlashcardSet[] = [
+  { taskId: 'linux247-1-filesystem', taskTitle: 'Task 1: File System Essentials', flashcards: TASK_1_FLASHCARDS },
+  { taskId: 'linux247-2-text', taskTitle: 'Task 2: Text Processing', flashcards: TASK_2_FLASHCARDS },
+  { taskId: 'linux247-3-processes', taskTitle: 'Task 3: Processes', flashcards: TASK_3_FLASHCARDS },
+  { taskId: 'linux247-4-sysinfo', taskTitle: 'Task 4: System Info', flashcards: TASK_4_FLASHCARDS },
+  { taskId: 'linux247-5-logs', taskTitle: 'Task 5: Logs', flashcards: TASK_5_FLASHCARDS },
+  { taskId: 'linux247-6-ssh', taskTitle: 'Task 6: SSH', flashcards: TASK_6_FLASHCARDS },
+  { taskId: 'linux247-7-firewall', taskTitle: 'Task 7: Firewall', flashcards: TASK_7_FLASHCARDS },
+  { taskId: 'linux247-8-network', taskTitle: 'Task 8: Network', flashcards: TASK_8_FLASHCARDS },
+  { taskId: 'linux247-9-packages', taskTitle: 'Task 9: Packages', flashcards: TASK_9_FLASHCARDS },
+  { taskId: 'linux247-10-systemd', taskTitle: 'Task 10: Systemd', flashcards: TASK_10_FLASHCARDS },
+  { taskId: 'linux247-11-permissions', taskTitle: 'Task 11: Permissions', flashcards: TASK_11_FLASHCARDS },
+  { taskId: 'linux247-12-compression', taskTitle: 'Task 12: Compression', flashcards: TASK_12_FLASHCARDS },
+  { taskId: 'linux247-13-environment', taskTitle: 'Task 13: Environment', flashcards: TASK_13_FLASHCARDS },
+  { taskId: 'linux247-14-disk', taskTitle: 'Task 14: Disk', flashcards: TASK_14_FLASHCARDS },
+  { taskId: 'linux247-15-reference', taskTitle: 'Task 15: Reference', flashcards: TASK_15_FLASHCARDS },
+  { taskId: 'linux247-16-productivity', taskTitle: 'Task 16: Productivity', flashcards: TASK_16_FLASHCARDS },
+  { taskId: 'linux247-17-users', taskTitle: 'Task 17: Users', flashcards: TASK_17_FLASHCARDS },
+  { taskId: 'linux247-18-cron', taskTitle: 'Task 18: Cron', flashcards: TASK_18_FLASHCARDS },
+  { taskId: 'linux247-19-scripting', taskTitle: 'Task 19: Scripting', flashcards: TASK_19_FLASHCARDS },
+  { taskId: 'linux247-20-troubleshooting', taskTitle: 'Task 20: Troubleshooting', flashcards: TASK_20_FLASHCARDS }
+]
+
+// =============================================================================
+// Helper Functions
+// =============================================================================
+
+export function getTaskFlashcards(taskId: string): TaskFlashcard[] {
+  const taskSet = LINUX247_TASK_FLASHCARDS.find(set => set.taskId === taskId)
+  return taskSet?.flashcards || []
+}
+
+export function getAllFlashcards(): TaskFlashcard[] {
+  return LINUX247_TASK_FLASHCARDS.flatMap(set => set.flashcards)
+}
+
+export function getFlashcardsByDifficulty(difficulty: 'easy' | 'medium' | 'hard'): TaskFlashcard[] {
+  return getAllFlashcards().filter(card => card.difficulty === difficulty)
+}

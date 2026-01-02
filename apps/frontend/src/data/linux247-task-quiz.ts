@@ -1,0 +1,636 @@
+/**
+ * Linux 24/7 Tentaplugg - Task-specifika Quiz
+ * 20 quiz per task, varierad correctIndex (0-3)
+ */
+
+export interface TaskQuizQuestion {
+    id: string
+    question: string
+    options: string[]
+    correctIndex: number
+    explanation: string
+    difficulty: 'G' | 'VG'
+    category: string
+}
+
+export interface TaskQuizSet {
+    taskId: string
+    taskTitle: string
+    questions: TaskQuizQuestion[]
+}
+
+// =============================================================================
+// TASK 1: FILE SYSTEM ESSENTIALS (20 quiz)
+// =============================================================================
+
+const TASK_1_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l1q1', question: 'Vilket kommando visar aktuell katalog?', options: ['cd', 'pwd', 'ls', 'dir'], correctIndex: 1, explanation: 'pwd (print working directory) visar vilken katalog du befinner dig i.', difficulty: 'G', category: 'Navigation' },
+    { id: 'l1q2', question: 'Hur byter du till hemkatalogen?', options: ['cd /home', 'cd ~', 'cd home', 'cd usr'], correctIndex: 1, explanation: 'cd ~ eller bara cd byter till din hemkatalog.', difficulty: 'G', category: 'Navigation' },
+    { id: 'l1q3', question: 'Vad gör kommandot "ls -a"?', options: ['Listar alla filer inkl dolda', 'Listar filer alfabetiskt', 'Listar endast mappar', 'Listar arkiverade filer'], correctIndex: 0, explanation: '-a visar alla filer, inklusive dolda som börjar med punkt.', difficulty: 'G', category: 'Listing' },
+    { id: 'l1q4', question: 'Hur skapar du en katalog?', options: ['create dir', 'newdir', 'mkdir', 'md'], correctIndex: 2, explanation: 'mkdir (make directory) skapar nya kataloger.', difficulty: 'G', category: 'Skapa' },
+    { id: 'l1q5', question: 'Vad gör "rm -r"?', options: ['Tar bort skrivskyddade filer', 'Tar bort filer rekursivt', 'Återställer borttagna filer', 'Döper om filer'], correctIndex: 1, explanation: '-r (recursive) tar bort kataloger och allt innehåll.', difficulty: 'G', category: 'Ta bort' },
+    { id: 'l1q6', question: 'Hur kopierar du en fil?', options: ['copy fil1 fil2', 'cp fil1 fil2', 'mv fil1 fil2', 'dup fil1 fil2'], correctIndex: 1, explanation: 'cp (copy) kopierar filer.', difficulty: 'G', category: 'Kopiering' },
+    { id: 'l1q7', question: 'Var finns systemkonfigurationsfiler?', options: ['/home', '/etc', '/var', '/usr'], correctIndex: 1, explanation: '/etc innehåller systemkonfigurationsfiler.', difficulty: 'G', category: 'Struktur' },
+    { id: 'l1q8', question: 'Vad är skillnaden mellan absolut och relativ sökväg?', options: ['Absolut börjar med ~', 'Absolut börjar med .', 'Absolut börjar med /', 'Ingen skillnad'], correctIndex: 2, explanation: 'Absolut sökväg börjar alltid med / (root).', difficulty: 'G', category: 'Sökvägar' },
+    { id: 'l1q9', question: 'Hur går du upp en katalognivå?', options: ['cd .', 'cd ..', 'cd -', 'cd ^'], correctIndex: 1, explanation: '.. representerar föräldrakatalogen.', difficulty: 'G', category: 'Navigation' },
+    { id: 'l1q10', question: 'Vad gör "touch fil.txt"?', options: ['Visar filinnehåll', 'Tar bort fil', 'Skapar tom fil/uppdaterar timestamp', 'Kopierar fil'], correctIndex: 2, explanation: 'touch skapar tom fil eller uppdaterar timestamp.', difficulty: 'G', category: 'Skapa' },
+    { id: 'l1q11', question: 'Vad gör "ls -l"?', options: ['Listar dolda filer', 'Listar i långt format', 'Listar senast ändrade', 'Listar länkar'], correctIndex: 1, explanation: '-l visar detaljerad information: permissions, ägare, storlek etc.', difficulty: 'G', category: 'Listing' },
+    { id: 'l1q12', question: 'Var finns loggfiler vanligtvis?', options: ['/etc/log', '/var/log', '/log', '/tmp/log'], correctIndex: 1, explanation: '/var/log är standardplatsen för systemloggar.', difficulty: 'G', category: 'Struktur' },
+    // VG-nivå (8)
+    { id: 'l1q13', question: 'Hur hittar du filer större än 100MB?', options: ['find -size 100M', 'find -size +100M', 'ls -size 100M', 'locate +100M'], correctIndex: 1, explanation: 'find -size +100M hittar filer större än 100MB (+).', difficulty: 'VG', category: 'Sökning' },
+    { id: 'l1q14', question: 'Vad skapar "ln -s mål länk"?', options: ['Hård länk', 'Symbolisk länk', 'Kopia', 'Backup'], correctIndex: 1, explanation: '-s skapar symbolisk länk (mjuk länk).', difficulty: 'VG', category: 'Länkar' },
+    { id: 'l1q15', question: 'Vilken typ av filsystem är /proc?', options: ['ext4', 'ntfs', 'Virtuellt filsystem', 'swap'], correctIndex: 2, explanation: '/proc är ett virtuellt filsystem med processinformation.', difficulty: 'VG', category: 'Struktur' },
+    { id: 'l1q16', question: 'Hur kör du kommando på alla hittade filer?', options: ['find -run', 'find -exec', 'find -do', 'find -apply'], correctIndex: 1, explanation: '-exec kör kommando på varje hittad fil.', difficulty: 'VG', category: 'Sökning' },
+    { id: 'l1q17', question: 'Skillnad mellan hård och symbolisk länk?', options: ['Samma sak', 'Hård = samma inode, Sym = pekare', 'Sym = samma inode', 'Hård kräver root'], correctIndex: 1, explanation: 'Hård länk delar inode, symbolisk är en pekare.', difficulty: 'VG', category: 'Länkar' },
+    { id: 'l1q18', question: 'Vad visar "du -sh katalog"?', options: ['Disk usage för katalog', 'Disk partitions', 'Dolda filer', 'Uppetime'], correctIndex: 0, explanation: 'du (disk usage) -s (summary) -h (human readable) visar total storlek.', difficulty: 'VG', category: 'Disk' },
+    { id: 'l1q19', question: 'Hur hittar du filer ändrade senaste 24h?', options: ['find -mtime 1', 'find -mtime -1', 'find -ctime 1', 'find -atime 24'], correctIndex: 1, explanation: '-mtime -1 hittar filer modifierade inom 1 dag.', difficulty: 'VG', category: 'Sökning' },
+    { id: 'l1q20', question: 'Vad gör locate vs find?', options: ['Identiska', 'locate = databas (snabb), find = direktsök', 'find = databas', 'locate söker i /etc'], correctIndex: 1, explanation: 'locate använder databas (snabbt), find söker direkt (exakt men långsamt).', difficulty: 'VG', category: 'Sökning' }
+]
+
+// =============================================================================
+// TASK 2: TEXT PROCESSING (20 quiz)
+// =============================================================================
+
+const TASK_2_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l2q1', question: 'Vilket kommando visar filinnehåll?', options: ['show', 'cat', 'view', 'print'], correctIndex: 1, explanation: 'cat (concatenate) visar och sammanfogar filer.', difficulty: 'G', category: 'Visa' },
+    { id: 'l2q2', question: 'Hur visar du sista 20 raderna?', options: ['tail -20', 'tail -n 20', 'end -20', 'last 20'], correctIndex: 1, explanation: 'tail -n 20 visar de sista 20 raderna.', difficulty: 'G', category: 'Visa' },
+    { id: 'l2q3', question: 'Vad gör "tail -f"?', options: ['Visar första rader', 'Följer fil i realtid', 'Filtrerar rader', 'Formaterar output'], correctIndex: 1, explanation: '-f (follow) visar nya rader kontinuerligt.', difficulty: 'G', category: 'Visa' },
+    { id: 'l2q4', question: 'Hur söker du text case-insensitive?', options: ['grep -c', 'grep -i', 'grep -n', 'grep -v'], correctIndex: 1, explanation: '-i (ignore case) gör sökning case-insensitive.', difficulty: 'G', category: 'grep' },
+    { id: 'l2q5', question: 'Vad gör "wc -l"?', options: ['Räknar ord', 'Räknar tecken', 'Räknar rader', 'Räknar filer'], correctIndex: 2, explanation: '-l (lines) räknar antal rader.', difficulty: 'G', category: 'Räkna' },
+    { id: 'l2q6', question: 'Hur sorterar du en fil?', options: ['order fil', 'arrange fil', 'sort fil', 'rank fil'], correctIndex: 2, explanation: 'sort sorterar filers innehåll.', difficulty: 'G', category: 'Sortera' },
+    { id: 'l2q7', question: 'Vad gör pipe (|)?', options: ['Skriver till fil', 'Läser från fil', 'Skickar output till nästa kommando', 'Kör parallellt'], correctIndex: 2, explanation: 'Pipe skickar stdout från ett kommando till stdin för nästa.', difficulty: 'G', category: 'Pipe' },
+    { id: 'l2q8', question: 'Hur bläddrar du i stor fil?', options: ['cat', 'more/less', 'read', 'scroll'], correctIndex: 1, explanation: 'less/more låter dig bläddra sida för sida.', difficulty: 'G', category: 'Visa' },
+    { id: 'l2q9', question: 'Hur skriver du text till fil (överskriver)?', options: ['echo text >> fil', 'echo text > fil', 'echo text | fil', 'echo text < fil'], correctIndex: 1, explanation: '> omdirigerar och överskriver filen.', difficulty: 'G', category: 'Skriva' },
+    { id: 'l2q10', question: 'Hur lägger du till text till fil?', options: ['echo text > fil', 'echo text >> fil', 'echo text +> fil', 'echo text => fil'], correctIndex: 1, explanation: '>> appends (lägger till) till slutet av filen.', difficulty: 'G', category: 'Skriva' },
+    { id: 'l2q11', question: 'Vad gör "grep -v"?', options: ['Visar versionsinfo', 'Visar rader som EJ matchar', 'Verbose output', 'Validerar regex'], correctIndex: 1, explanation: '-v (invert) visar rader som inte matchar.', difficulty: 'G', category: 'grep' },
+    { id: 'l2q12', question: 'Hur söker du rekursivt med grep?', options: ['grep -r', 'grep -R', 'Båda fungerar', 'grep -d'], correctIndex: 2, explanation: 'Både -r och -R fungerar för rekursiv sökning.', difficulty: 'G', category: 'grep' },
+    // VG-nivå (8)
+    { id: 'l2q13', question: 'Vad gör "sed s/old/new/g"?', options: ['Tar bort old', 'Ersätter old med new (alla)', 'Ersätter endast första', 'Söker efter old'], correctIndex: 1, explanation: 's = substitute, g = global (alla förekomster).', difficulty: 'VG', category: 'sed' },
+    { id: 'l2q14', question: 'Hur gör du in-place edit med sed?', options: ['sed -e', 'sed -i', 'sed -p', 'sed -w'], correctIndex: 1, explanation: '-i (in-place) modifierar filen direkt.', difficulty: 'VG', category: 'sed' },
+    { id: 'l2q15', question: 'Vad skriver "awk \'{print $1}\'" ut?', options: ['Hela raden', 'Första kolumnen', 'Första raden', 'Radnummer'], correctIndex: 1, explanation: '$1 refererar till första fältet/kolumnen.', difficulty: 'VG', category: 'awk' },
+    { id: 'l2q16', question: 'Hur plockar du ut kolumn 2 med cut?', options: ['cut -c2', 'cut -f2', 'cut -d2', 'cut -k2'], correctIndex: 1, explanation: '-f (field) anger vilken kolumn, behöver -d för delimiter.', difficulty: 'VG', category: 'cut' },
+    { id: 'l2q17', question: 'Vad krävs för att uniq ska fungera?', options: ['Sorterad input', 'Unik fil', 'Root-access', 'Inga krav'], correctIndex: 0, explanation: 'uniq tar bara bort INTILLIGGANDE dubbletter, kräver sort först.', difficulty: 'VG', category: 'Uniq' },
+    { id: 'l2q18', question: 'Hur visar du 3 rader EFTER match i grep?', options: ['grep -B 3', 'grep -A 3', 'grep -C 3', 'grep -L 3'], correctIndex: 1, explanation: '-A (After) visar rader efter matchen.', difficulty: 'VG', category: 'grep' },
+    { id: 'l2q19', question: 'Hur summerar du kolumn 1 med awk?', options: ['awk \'{$1+sum}\'', 'awk \'{sum+=$1} END {print sum}\'', 'awk \'sum($1)\'', 'awk -sum $1'], correctIndex: 1, explanation: 'Summa i loop, END-blocket skriver ut resultatet.', difficulty: 'VG', category: 'awk' },
+    { id: 'l2q20', question: 'Vad gör "grep -E"?', options: ['Exkluderar matches', 'Extended regex', 'Exact match', 'Error mode'], correctIndex: 1, explanation: '-E (extended) aktiverar utökad regex (samma som egrep).', difficulty: 'VG', category: 'grep' }
+]
+
+// =============================================================================
+// TASK 3: PROCESSES (20 quiz)
+// =============================================================================
+
+const TASK_3_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l3q1', question: 'Vilket kommando visar alla körande processer?', options: ['proc', 'ps aux', 'list', 'show proc'], correctIndex: 1, explanation: 'ps aux visar alla processer för alla användare.', difficulty: 'G', category: 'Lista' },
+    { id: 'l3q2', question: 'Hur dödar du process med PID 1234?', options: ['stop 1234', 'kill 1234', 'end 1234', 'terminate 1234'], correctIndex: 1, explanation: 'kill skickar signal till process (default SIGTERM).', difficulty: 'G', category: 'Kill' },
+    { id: 'l3q3', question: 'Vad gör "kill -9"?', options: ['Startar om process', 'Skickar SIGKILL (tvångsdödar)', 'Pausar process', 'Skickar 9 signaler'], correctIndex: 1, explanation: '-9 är SIGKILL som inte kan fångas.', difficulty: 'G', category: 'Kill' },
+    { id: 'l3q4', question: 'Hur kör du kommando i bakgrunden?', options: ['bg kommando', 'kommando &', 'run -bg kommando', 'kommando -b'], correctIndex: 1, explanation: '& i slutet startar processen i bakgrunden.', difficulty: 'G', category: 'Bakgrund' },
+    { id: 'l3q5', question: 'Vad gör Ctrl+Z?', options: ['Dödar processen', 'Pausar/suspenderar processen', 'Startar om', 'Ångrar'], correctIndex: 1, explanation: 'Ctrl+Z suspenderar processen (SIGTSTP).', difficulty: 'G', category: 'Kontroll' },
+    { id: 'l3q6', question: 'Hur listar du bakgrundsjobb?', options: ['bg -l', 'jobs', 'list bg', 'ps bg'], correctIndex: 1, explanation: 'jobs visar alla bakgrundsjobb i current shell.', difficulty: 'G', category: 'Bakgrund' },
+    { id: 'l3q7', question: 'Hur tar du fram bakgrundsjobb?', options: ['bg', 'fg', 'front', 'bring'], correctIndex: 1, explanation: 'fg (foreground) tar fram jobb till förgrunden.', difficulty: 'G', category: 'Bakgrund' },
+    { id: 'l3q8', question: 'Vad visar top?', options: ['Nätverkstrafik', 'Filsystem', 'Processer interaktivt', 'Loggfiler'], correctIndex: 2, explanation: 'top visar processer med CPU/minnesanvändning i realtid.', difficulty: 'G', category: 'Monitor' },
+    { id: 'l3q9', question: 'Hur dödar du process med namn?', options: ['kill nginx', 'pkill nginx', 'stop nginx', 'killall nginx'], correctIndex: 1, explanation: 'pkill dödar processer baserat på namn.', difficulty: 'G', category: 'Kill' },
+    { id: 'l3q10', question: 'Vad visar "free -h"?', options: ['Diskutrymme', 'Minnesanvändning', 'Lediga portar', 'Processer'], correctIndex: 1, explanation: 'free visar RAM och swap-användning.', difficulty: 'G', category: 'Minne' },
+    { id: 'l3q11', question: 'Hur visar du processträd?', options: ['ps tree', 'pstree', 'tree proc', 'proctree'], correctIndex: 1, explanation: 'pstree visar processer i hierarkisk trädstruktur.', difficulty: 'G', category: 'Lista' },
+    { id: 'l3q12', question: 'Vad är PID 1?', options: ['Kernel', 'Init/systemd', 'Root shell', 'Boot process'], correctIndex: 1, explanation: 'PID 1 är init-processen (systemd på moderna system).', difficulty: 'G', category: 'Koncept' },
+    // VG-nivå (8)
+    { id: 'l3q13', question: 'Skillnad SIGTERM vs SIGKILL?', options: ['Samma sak', 'TERM kan fångas, KILL kan ej', 'KILL kan fångas', 'TERM är hårdare'], correctIndex: 1, explanation: 'SIGTERM (15) kan fångas för cleanup, SIGKILL (9) är omedelbar.', difficulty: 'VG', category: 'Signaler' },
+    { id: 'l3q14', question: 'Vad är en zombie-process?', options: ['Suspenderad process', 'Avslutad men ej rensad', 'Process utan ägare', 'Background process'], correctIndex: 1, explanation: 'Zombie har avslutats men förälder har ej läst exit status.', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l3q15', question: 'Hur ändrar du prioritet på körande process?', options: ['nice -p PID', 'renice PID', 'renice 10 -p PID', 'priority PID'], correctIndex: 2, explanation: 'renice VÄRDE -p PID ändrar nice-värde.', difficulty: 'VG', category: 'Prioritet' },
+    { id: 'l3q16', question: 'Nice-värde -20 betyder?', options: ['Lägst prioritet', 'Högst prioritet', 'Normal prioritet', 'Pausad'], correctIndex: 1, explanation: '-20 är högst prioritet, 19 är lägst.', difficulty: 'VG', category: 'Prioritet' },
+    { id: 'l3q17', question: 'Hur hittar du vilken process använder port 80?', options: ['ps :80', 'netstat 80', 'lsof -i :80', 'port 80'], correctIndex: 2, explanation: 'lsof -i :PORT visar process som använder porten.', difficulty: 'VG', category: 'Nätverk' },
+    { id: 'l3q18', question: 'Vad gör nohup?', options: ['Stoppar process', 'Kör utan hangup-signal', 'Nice output', 'No operation'], correctIndex: 1, explanation: 'nohup gör att process fortsätter även efter logout.', difficulty: 'VG', category: 'Bakgrund' },
+    { id: 'l3q19', question: 'Vad betyder load average 2.0 på 2-kärnig CPU?', options: ['50% last', '100% last', '200% överlastad', '20% last'], correctIndex: 1, explanation: 'Load average 2.0 på 2 kärnor = 100% kapacitet.', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l3q20', question: 'Vad gör strace?', options: ['Spårar nätverkstrafik', 'Spårar systemanrop', 'Stackspårning', 'Streamar loggar'], correctIndex: 1, explanation: 'strace spårar systemanrop för debugging.', difficulty: 'VG', category: 'Debug' }
+]
+
+// =============================================================================
+// TASK 4: SYSTEM INFO (20 quiz)
+// =============================================================================
+
+const TASK_4_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l4q1', question: 'Vilket kommando visar hostname?', options: ['host', 'hostname', 'name', 'uname'], correctIndex: 1, explanation: 'hostname visar eller ändrar systemets namn.', difficulty: 'G', category: 'System' },
+    { id: 'l4q2', question: 'Hur visar du hur länge systemet varit igång?', options: ['runtime', 'uptime', 'time', 'boot'], correctIndex: 1, explanation: 'uptime visar tid sedan senaste boot.', difficulty: 'G', category: 'System' },
+    { id: 'l4q3', question: 'Vad visar "uname -r"?', options: ['RAM-storlek', 'Root-user', 'Kernel-version', 'Release notes'], correctIndex: 2, explanation: '-r visar kernel release/version.', difficulty: 'G', category: 'Kernel' },
+    { id: 'l4q4', question: 'Var hittar du OS-information?', options: ['/etc/os-release', '/var/os', '/sys/os', '/boot/os'], correctIndex: 0, explanation: '/etc/os-release innehåller distribution och version.', difficulty: 'G', category: 'System' },
+    { id: 'l4q5', question: 'Vad visar "who"?', options: ['Vem äger filer', 'Inloggade användare', 'Användargrupper', 'Root-status'], correctIndex: 1, explanation: 'who visar vilka användare som är inloggade.', difficulty: 'G', category: 'Users' },
+    { id: 'l4q6', question: 'Hur visar du nuvarande användarnamn?', options: ['user', 'whoami', 'me', 'id -n'], correctIndex: 1, explanation: 'whoami visar aktuell användare.', difficulty: 'G', category: 'Users' },
+    { id: 'l4q7', question: 'Vad visar "free -h"?', options: ['Ledigt diskutrymme', 'Minnesanvändning', 'Fria portar', 'Lediga processer'], correctIndex: 1, explanation: 'free visar RAM och swap-användning.', difficulty: 'G', category: 'Minne' },
+    { id: 'l4q8', question: 'Vad visar "df -h"?', options: ['Minne', 'Diskutrymme', 'Directory files', 'Data flow'], correctIndex: 1, explanation: 'df (disk free) visar filsystemutrymme.', difficulty: 'G', category: 'Disk' },
+    { id: 'l4q9', question: 'Vad visar lscpu?', options: ['CPU-processer', 'CPU-information', 'Alla processer', 'Load average'], correctIndex: 1, explanation: 'lscpu visar CPU-arkitektur och info.', difficulty: 'G', category: 'CPU' },
+    { id: 'l4q10', question: 'Hur listar du USB-enheter?', options: ['lsusb', 'usb -l', 'show usb', 'usblist'], correctIndex: 0, explanation: 'lsusb listar anslutna USB-enheter.', difficulty: 'G', category: 'Hårdvara' },
+    { id: 'l4q11', question: 'Vad visar lsblk?', options: ['Block processes', 'Blockenheter/diskar', 'Blocked users', 'Boot log'], correctIndex: 1, explanation: 'lsblk (list block devices) visar diskar och partitioner.', difficulty: 'G', category: 'Disk' },
+    { id: 'l4q12', question: 'Hur visar du aktuellt datum?', options: ['time', 'date', 'now', 'clock'], correctIndex: 1, explanation: 'date visar eller ändrar systemdatum.', difficulty: 'G', category: 'System' },
+    // VG-nivå (8)
+    { id: 'l4q13', question: 'Hur ändrar du hostname permanent?', options: ['hostname set', 'hostnamectl set-hostname', 'sethostname', 'hostname -p'], correctIndex: 1, explanation: 'hostnamectl är systemd-verktyget för hostname.', difficulty: 'VG', category: 'System' },
+    { id: 'l4q14', question: 'Vad visar dmesg?', options: ['Disk messages', 'Kernel ring buffer', 'Debug messages', 'Device messages'], correctIndex: 1, explanation: 'dmesg visar kernel-meddelanden från boot och drift.', difficulty: 'VG', category: 'Kernel' },
+    { id: 'l4q15', question: 'Hur listar du laddade kernel-moduler?', options: ['modules', 'lsmod', 'kmod list', 'modlist'], correctIndex: 1, explanation: 'lsmod listar alla laddade kernel modules.', difficulty: 'VG', category: 'Kernel' },
+    { id: 'l4q16', question: 'Vad är /proc-filsystemet?', options: ['Backup-katalog', 'Virtuellt FS med procesinfo', 'Programkatalog', 'Protokoll-loggar'], correctIndex: 1, explanation: '/proc är virtuellt och visar kernel/process-info.', difficulty: 'VG', category: 'Kernel' },
+    { id: 'l4q17', question: 'Hur ändrar du tidszon?', options: ['timezone set', 'timedatectl set-timezone', 'settz', 'tz -s'], correctIndex: 1, explanation: 'timedatectl hanterar tid och tidszon.', difficulty: 'VG', category: 'System' },
+    { id: 'l4q18', question: 'Vad visar "nproc"?', options: ['Network processes', 'Antal CPU-kärnor', 'Nya processer', 'Node processes'], correctIndex: 1, explanation: 'nproc visar antal tillgängliga processorer.', difficulty: 'VG', category: 'CPU' },
+    { id: 'l4q19', question: 'Hur laddar du en kernel-modul?', options: ['loadmod', 'modprobe', 'insmod -l', 'kmod load'], correctIndex: 1, explanation: 'modprobe laddar modul med beroenden.', difficulty: 'VG', category: 'Kernel' },
+    { id: 'l4q20', question: 'Vad visar /sys-filsystemet?', options: ['System files', 'Kernel/device objekt', 'Sync status', 'System logs'], correctIndex: 1, explanation: '/sys exporterar kernel-objekt och enhetsinfo.', difficulty: 'VG', category: 'Kernel' }
+]
+
+// =============================================================================
+// TASK 5: LOGS (20 quiz)
+// =============================================================================
+
+const TASK_5_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l5q1', question: 'Var finns systemloggar?', options: ['/etc/log', '/var/log', '/log', '/sys/log'], correctIndex: 1, explanation: '/var/log är standardkatalogen för loggar.', difficulty: 'G', category: 'Platser' },
+    { id: 'l5q2', question: 'Hur följer du en loggfil live?', options: ['cat -f', 'tail -f', 'follow', 'watch'], correctIndex: 1, explanation: 'tail -f följer filen och visar nya rader.', difficulty: 'G', category: 'Visa' },
+    { id: 'l5q3', question: 'Vilket kommando visar systemd journal?', options: ['syslog', 'journalctl', 'logshow', 'dmesg'], correctIndex: 1, explanation: 'journalctl är verktyget för systemd journal.', difficulty: 'G', category: 'journalctl' },
+    { id: 'l5q4', question: 'Hur visar du loggar för nginx-tjänsten?', options: ['journalctl nginx', 'journalctl -u nginx', 'log nginx', 'syslog nginx'], correctIndex: 1, explanation: '-u (unit) filtrerar på systemd-tjänst.', difficulty: 'G', category: 'journalctl' },
+    { id: 'l5q5', question: 'Vad innehåller auth.log?', options: ['Authorization policies', 'Autentiserings-loggar', 'Auto-start logs', 'Audit logs'], correctIndex: 1, explanation: 'auth.log loggar login-försök och sudo-användning.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l5q6', question: 'Hur följer du journal live?', options: ['journalctl -l', 'journalctl -f', 'journalctl -w', 'journalctl --live'], correctIndex: 1, explanation: '-f (follow) visar nya poster kontinuerligt.', difficulty: 'G', category: 'journalctl' },
+    { id: 'l5q7', question: 'Vad visar dmesg?', options: ['Disk messages', 'Kernel ring buffer', 'Debug mode', 'Device manager'], correctIndex: 1, explanation: 'dmesg visar kernel-meddelanden.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l5q8', question: 'Hur söker du efter "error" i syslog?', options: ['find error syslog', 'grep error /var/log/syslog', 'search error', 'cat syslog | error'], correctIndex: 1, explanation: 'grep söker textmönster i filer.', difficulty: 'G', category: 'Söka' },
+    { id: 'l5q9', question: 'Vad hanterar logrotate?', options: ['Loggvisning', 'Automatisk rotation av loggar', 'Loggfiltrering', 'Remote logging'], correctIndex: 1, explanation: 'logrotate roterar, komprimerar och tar bort gamla loggar.', difficulty: 'G', category: 'Management' },
+    { id: 'l5q10', question: 'Hur visar du loggar från nuvarande boot?', options: ['journalctl -b', 'journalctl --boot', 'Båda fungerar', 'journalctl -c'], correctIndex: 2, explanation: '-b eller --boot visar loggar från current boot.', difficulty: 'G', category: 'journalctl' },
+    { id: 'l5q11', question: 'Vad innehåller kern.log?', options: ['Kernel-meddelanden', 'Kernel config', 'Keyring logs', 'Kerberos logs'], correctIndex: 0, explanation: 'kern.log innehåller kernel-relaterade meddelanden.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l5q12', question: 'Hur skickar du meddelande till syslog?', options: ['syslog "msg"', 'logger "msg"', 'log "msg"', 'write syslog'], correctIndex: 1, explanation: 'logger skriver meddelanden till system logger.', difficulty: 'G', category: 'Skriva' },
+    // VG-nivå (8)
+    { id: 'l5q13', question: 'Hur filtrerar du journal på error-nivå?', options: ['journalctl -e', 'journalctl -p err', 'journalctl --error', 'journalctl -l error'], correctIndex: 1, explanation: '-p (priority) filtrerar på logg-nivå.', difficulty: 'VG', category: 'journalctl' },
+    { id: 'l5q14', question: 'Hur visar du loggar från senaste timmen?', options: ['journalctl -t 1h', 'journalctl --since "1 hour ago"', 'journalctl -h 1', 'journalctl --last 1h'], correctIndex: 1, explanation: '--since accepterar relativa och absoluta tider.', difficulty: 'VG', category: 'journalctl' },
+    { id: 'l5q15', question: 'Var konfigureras journald?', options: ['/etc/journal.conf', '/etc/systemd/journald.conf', '/var/log/journald.conf', '/etc/log/journal'], correctIndex: 1, explanation: 'journald.conf i /etc/systemd/ styr journald.', difficulty: 'VG', category: 'Konfig' },
+    { id: 'l5q16', question: 'Hur begränsar du journal till 100MB?', options: ['journalctl --size=100M', 'journalctl --vacuum-size=100M', 'journalctl -s 100M', 'journalctl --limit 100M'], correctIndex: 1, explanation: '--vacuum-size rensar journal till angiven storlek.', difficulty: 'VG', category: 'Management' },
+    { id: 'l5q17', question: 'Vad är syslog facility?', options: ['Logg-nivå', 'Logg-kategori', 'Logg-facility', 'Logg-format'], correctIndex: 1, explanation: 'Facility kategoriserar logg-källa (kern, auth, mail etc).', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l5q18', question: 'Hur visar du journal i JSON-format?', options: ['journalctl --json', 'journalctl -o json', 'journalctl -f json', 'journalctl --format=json'], correctIndex: 1, explanation: '-o (output) anger format: json, json-pretty, etc.', difficulty: 'VG', category: 'journalctl' },
+    { id: 'l5q19', question: 'Var konfigureras logrotate?', options: ['/etc/logrotate.conf', '/var/logrotate', '/etc/log/rotate', '/etc/rsyslog/rotate'], correctIndex: 0, explanation: '/etc/logrotate.conf och /etc/logrotate.d/', difficulty: 'VG', category: 'Konfig' },
+    { id: 'l5q20', question: 'Hur visar du kernel-loggar med journalctl?', options: ['journalctl -k', 'journalctl --kernel', 'Båda fungerar', 'journalctl -d'], correctIndex: 2, explanation: '-k eller --kernel visar endast kernel-meddelanden.', difficulty: 'VG', category: 'journalctl' }
+]
+
+// =============================================================================
+// TASK 6: SSH (20 quiz)
+// =============================================================================
+
+const TASK_6_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l6q1', question: 'Vilken port använder SSH som standard?', options: ['21', '22', '23', '80'], correctIndex: 1, explanation: 'SSH använder port 22 som standard.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l6q2', question: 'Hur ansluter du till server som user admin?', options: ['ssh admin server', 'ssh admin@server', 'connect admin server', 'ssh -u admin server'], correctIndex: 1, explanation: 'Syntaxen är ssh user@host.', difficulty: 'G', category: 'Anslut' },
+    { id: 'l6q3', question: 'Hur genererar du SSH-nyckelpar?', options: ['ssh-genkey', 'ssh-keygen', 'sshkey -g', 'keygen ssh'], correctIndex: 1, explanation: 'ssh-keygen skapar nyckelpar.', difficulty: 'G', category: 'Nycklar' },
+    { id: 'l6q4', question: 'Var lagras din privata SSH-nyckel?', options: ['/etc/ssh/id_rsa', '~/.ssh/id_rsa', '/var/ssh/key', '~/keys/ssh'], correctIndex: 1, explanation: 'SSH-nycklar lagras i ~/.ssh/', difficulty: 'G', category: 'Nycklar' },
+    { id: 'l6q5', question: 'Hur kopierar du publik nyckel till server?', options: ['scp-key', 'ssh-copy-id user@host', 'ssh-send-key', 'copy-ssh-key'], correctIndex: 1, explanation: 'ssh-copy-id kopierar publik nyckel till authorized_keys.', difficulty: 'G', category: 'Nycklar' },
+    { id: 'l6q6', question: 'Hur kopierar du fil till server via SSH?', options: ['ssh-cp fil server', 'scp fil user@host:/path', 'copy fil ssh', 'ssh fil server'], correctIndex: 1, explanation: 'scp (secure copy) använder SSH för filöverföring.', difficulty: 'G', category: 'scp' },
+    { id: 'l6q7', question: 'Var finns SSH server-konfiguration?', options: ['/etc/ssh/ssh_config', '/etc/ssh/sshd_config', '~/.ssh/config', '/var/ssh/config'], correctIndex: 1, explanation: 'sshd_config är serverns konfigurationsfil.', difficulty: 'G', category: 'Konfig' },
+    { id: 'l6q8', question: 'Hur ansluter du på port 2222?', options: ['ssh -port 2222', 'ssh -p 2222 user@host', 'ssh user@host 2222', 'ssh --port=2222'], correctIndex: 1, explanation: '-p anger port att ansluta till.', difficulty: 'G', category: 'Anslut' },
+    { id: 'l6q9', question: 'Vad är authorized_keys?', options: ['Lista över tillåtna servrar', 'Lista över tillåtna publika nycklar', 'SSH-konfiguration', 'Privata nycklar'], correctIndex: 1, explanation: 'authorized_keys innehåller publika nycklar som får logga in.', difficulty: 'G', category: 'Nycklar' },
+    { id: 'l6q10', question: 'Hur avslutar du SSH-session?', options: ['quit', 'exit', 'close', 'disconnect'], correctIndex: 1, explanation: 'exit eller Ctrl+D avslutar sessionen.', difficulty: 'G', category: 'Anslut' },
+    { id: 'l6q11', question: 'Vad gör "scp -r"?', options: ['Kopierar omvänt', 'Kopierar rekursivt', 'Kopierar read-only', 'Remote copy'], correctIndex: 1, explanation: '-r kopierar kataloger rekursivt.', difficulty: 'G', category: 'scp' },
+    { id: 'l6q12', question: 'Hur kör du kommando på remote server?', options: ['ssh user@host exec cmd', 'ssh user@host "cmd"', 'ssh -c cmd user@host', 'remote cmd user@host'], correctIndex: 1, explanation: 'Kommando i quotes körs på remote och returnerar.', difficulty: 'G', category: 'Anslut' },
+    // VG-nivå (8)
+    { id: 'l6q13', question: 'Hur inaktiverar du root-login via SSH?', options: ['RootLogin no', 'PermitRootLogin no', 'DisableRoot yes', 'NoRootLogin'], correctIndex: 1, explanation: 'PermitRootLogin no i sshd_config.', difficulty: 'VG', category: 'Säkerhet' },
+    { id: 'l6q14', question: 'Vad gör "ssh -L 8080:localhost:80"?', options: ['Lyssnar på port 8080', 'Skapar local port forward', 'Loggar på port 8080', 'Listar port 8080'], correctIndex: 1, explanation: '-L skapar tunnel: lokal port -> remote destination.', difficulty: 'VG', category: 'Tunnel' },
+    { id: 'l6q15', question: 'Vad är SSH agent?', options: ['SSH server daemon', 'Cachar privata nycklar', 'SSH client', 'Remote agent'], correctIndex: 1, explanation: 'SSH agent håller dekrypterade nycklar i minne.', difficulty: 'VG', category: 'Agent' },
+    { id: 'l6q16', question: 'Hur genererar du Ed25519-nyckel?', options: ['ssh-keygen -t ed25519', 'ssh-keygen -e', 'ssh-keygen --ed25519', 'keygen -ed25519'], correctIndex: 0, explanation: '-t anger nyckeltyp: rsa, ed25519, ecdsa.', difficulty: 'VG', category: 'Nycklar' },
+    { id: 'l6q17', question: 'Vad är known_hosts?', options: ['Kända användare', 'Servrar med sparade fingerprints', 'Hostnames', 'Known networks'], correctIndex: 1, explanation: 'known_hosts verifierar att servern är rätt.', difficulty: 'VG', category: 'Säkerhet' },
+    { id: 'l6q18', question: 'Hur skapar du reverse tunnel?', options: ['ssh -L', 'ssh -R', 'ssh -T', 'ssh -D'], correctIndex: 1, explanation: '-R (remote) skapar reverse tunnel.', difficulty: 'VG', category: 'Tunnel' },
+    { id: 'l6q19', question: 'Hur aktiverar du agent forwarding?', options: ['ssh -F', 'ssh -A', 'ssh -a', 'ssh --forward'], correctIndex: 1, explanation: '-A aktiverar agent forwarding till remote.', difficulty: 'VG', category: 'Agent' },
+    { id: 'l6q20', question: 'Hur inaktiverar du password authentication?', options: ['NoPassword yes', 'PasswordAuthentication no', 'DisablePassword', 'AuthPassword no'], correctIndex: 1, explanation: 'PasswordAuthentication no i sshd_config.', difficulty: 'VG', category: 'Säkerhet' }
+]
+
+// =============================================================================
+// TASK 7: FIREWALL (20 quiz)
+// =============================================================================
+
+const TASK_7_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l7q1', question: 'Vilken brandvägg är standard på Ubuntu?', options: ['firewalld', 'UFW', 'iptables', 'nftables'], correctIndex: 1, explanation: 'UFW (Uncomplicated Firewall) är standard på Ubuntu/Debian.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l7q2', question: 'Hur aktiverar du UFW?', options: ['ufw start', 'sudo ufw enable', 'ufw on', 'systemctl start ufw'], correctIndex: 1, explanation: 'sudo ufw enable aktiverar brandväggen.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q3', question: 'Hur tillåter du SSH i UFW?', options: ['ufw add ssh', 'sudo ufw allow ssh', 'ufw open 22', 'ufw permit ssh'], correctIndex: 1, explanation: 'allow tillåter trafik, kan använda tjänstnamn eller port.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q4', question: 'Hur blockerar du port 80?', options: ['ufw block 80', 'sudo ufw deny 80', 'ufw reject 80', 'ufw close 80'], correctIndex: 1, explanation: 'deny blockerar trafik till angiven port.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q5', question: 'Hur visar du UFW-status?', options: ['ufw show', 'sudo ufw status', 'ufw list', 'ufw info'], correctIndex: 1, explanation: 'status visar aktiv/inaktiv och regler.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q6', question: 'Vilken brandvägg är standard på RHEL/CentOS?', options: ['UFW', 'firewalld', 'iptables', 'shorewall'], correctIndex: 1, explanation: 'firewalld är standard på Red Hat-baserade system.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l7q7', question: 'Hur kontrollerar du firewalld status?', options: ['firewalld status', 'firewall-cmd --state', 'firewall --status', 'systemctl firewalld'], correctIndex: 1, explanation: 'firewall-cmd --state visar om tjänsten körs.', difficulty: 'G', category: 'firewalld' },
+    { id: 'l7q8', question: 'Hur listar du alla firewalld-regler?', options: ['firewall-cmd --show', 'firewall-cmd --list-all', 'firewall-cmd --rules', 'firewalld -l'], correctIndex: 1, explanation: '--list-all visar alla regler för aktiv zone.', difficulty: 'G', category: 'firewalld' },
+    { id: 'l7q9', question: 'Hur återställer du UFW till default?', options: ['ufw default', 'sudo ufw reset', 'ufw restore', 'ufw clear'], correctIndex: 1, explanation: 'reset tar bort alla regler och inaktiverar UFW.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q10', question: 'Hur tillåter du HTTP i firewalld?', options: ['firewall-cmd --allow http', 'firewall-cmd --add-service=http', 'firewall-cmd --open http', 'firewall-cmd --permit http'], correctIndex: 1, explanation: '--add-service lägger till fördefinierad tjänst.', difficulty: 'G', category: 'firewalld' },
+    { id: 'l7q11', question: 'Hur inaktiverar du UFW?', options: ['ufw stop', 'sudo ufw disable', 'ufw off', 'systemctl stop ufw'], correctIndex: 1, explanation: 'disable stänger av brandväggen.', difficulty: 'G', category: 'UFW' },
+    { id: 'l7q12', question: 'Vad är default policy?', options: ['Första regeln', 'Vad som händer om ingen regel matchar', 'Admin-regel', 'Standard port'], correctIndex: 1, explanation: 'Default policy bestämmer vad som händer med omatchad trafik.', difficulty: 'G', category: 'Koncept' },
+    // VG-nivå (8)
+    { id: 'l7q13', question: 'Hur gör du firewalld-regel permanent?', options: ['--save', '--permanent', '--persist', '--store'], correctIndex: 1, explanation: '--permanent gör att regeln överlever omstart.', difficulty: 'VG', category: 'firewalld' },
+    { id: 'l7q14', question: 'Vad är firewalld zones?', options: ['Geografiska områden', 'Säkerhetsnivåer för nätverk', 'Tidsbaserade regler', 'Användargrupper'], correctIndex: 1, explanation: 'Zones definierar trust-nivå för nätverksanslutningar.', difficulty: 'VG', category: 'firewalld' },
+    { id: 'l7q15', question: 'Hur aktiverar du rate limiting i UFW?', options: ['ufw rate ssh', 'sudo ufw limit ssh', 'ufw throttle ssh', 'ufw slow ssh'], correctIndex: 1, explanation: 'limit begränsar anslutningar (6/30s) för brute-force-skydd.', difficulty: 'VG', category: 'UFW' },
+    { id: 'l7q16', question: 'Vad är iptables?', options: ['Firewall frontend', 'Underliggande firewall-framework', 'Nätverksmonitor', 'Routing daemon'], correctIndex: 1, explanation: 'iptables är kernel-nivå firewall som UFW/firewalld använder.', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l7q17', question: 'Hur tillåter du IP-range i UFW?', options: ['ufw allow ip 192.168.1.0/24', 'sudo ufw allow from 192.168.1.0/24', 'ufw permit range', 'ufw allow --network'], correctIndex: 1, explanation: 'allow from CIDR tillåter hela nätverket.', difficulty: 'VG', category: 'UFW' },
+    { id: 'l7q18', question: 'Hur visar du numrerade UFW-regler?', options: ['ufw status --numbered', 'sudo ufw status numbered', 'ufw list -n', 'ufw show numbers'], correctIndex: 1, explanation: 'status numbered visar regler med nummer för enkel borttagning.', difficulty: 'VG', category: 'UFW' },
+    { id: 'l7q19', question: 'Hur laddar du om firewalld efter permanenta ändringar?', options: ['firewall-cmd --apply', 'firewall-cmd --reload', 'systemctl reload firewalld', 'Båda B och C'], correctIndex: 3, explanation: 'Både --reload och systemctl reload fungerar.', difficulty: 'VG', category: 'firewalld' },
+    { id: 'l7q20', question: 'Hur listar du iptables-regler?', options: ['iptables --list', 'iptables -L', 'iptables -show', 'iptables --rules'], correctIndex: 1, explanation: '-L (list) visar alla chains och regler.', difficulty: 'VG', category: 'iptables' }
+]
+
+// =============================================================================
+// TASK 8: NETWORK (20 quiz)
+// =============================================================================
+
+const TASK_8_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l8q1', question: 'Hur visar du IP-adresser?', options: ['ifconfig', 'ip addr', 'ipconfig', 'netstat -ip'], correctIndex: 1, explanation: 'ip addr (eller ip a) är moderna sättet att visa IP.', difficulty: 'G', category: 'IP' },
+    { id: 'l8q2', question: 'Hur testar du nätverksanslutning?', options: ['test host', 'connect host', 'ping host', 'check host'], correctIndex: 2, explanation: 'ping skickar ICMP echo och väntar på svar.', difficulty: 'G', category: 'Testa' },
+    { id: 'l8q3', question: 'Hur visar du routing-tabell?', options: ['route show', 'ip route', 'netstat -r', 'Både B och C'], correctIndex: 3, explanation: 'ip route och netstat -r visar båda routing-tabellen.', difficulty: 'G', category: 'Routing' },
+    { id: 'l8q4', question: 'Var konfigureras DNS-servers?', options: ['/etc/dns', '/etc/resolv.conf', '/etc/nameserver', '/var/dns'], correctIndex: 1, explanation: '/etc/resolv.conf innehåller nameserver-konfiguration.', difficulty: 'G', category: 'DNS' },
+    { id: 'l8q5', question: 'Hur slår du upp DNS?', options: ['dns lookup', 'nslookup domain', 'lookup dns', 'resolve domain'], correctIndex: 1, explanation: 'nslookup eller dig gör DNS-uppslag.', difficulty: 'G', category: 'DNS' },
+    { id: 'l8q6', question: 'Var finns lokal DNS-override?', options: ['/etc/dns', '/etc/hosts', '/etc/resolv.conf', '/etc/hostname'], correctIndex: 1, explanation: '/etc/hosts mappar hostnames till IP lokalt.', difficulty: 'G', category: 'DNS' },
+    { id: 'l8q7', question: 'Hur visar du lyssnade portar?', options: ['ports -l', 'ss -tuln', 'netstat ports', 'listen -p'], correctIndex: 1, explanation: 'ss -tuln visar TCP/UDP listening sockets numeriskt.', difficulty: 'G', category: 'Anslut' },
+    { id: 'l8q8', question: 'Hur tracear du route till host?', options: ['route host', 'traceroute host', 'path host', 'trace host'], correctIndex: 1, explanation: 'traceroute visar alla hopp till destinationen.', difficulty: 'G', category: 'Testa' },
+    { id: 'l8q9', question: 'Vad gör curl?', options: ['Visar nätverksinterface', 'HTTP-klient', 'DNS-lookup', 'Port scanner'], correctIndex: 1, explanation: 'curl gör HTTP/HTTPS requests från terminalen.', difficulty: 'G', category: 'HTTP' },
+    { id: 'l8q10', question: 'Hur visar du nätverksinterface?', options: ['ip link', 'ip interface', 'netstat -i', 'Både A och C'], correctIndex: 3, explanation: 'ip link och netstat -i visar båda interface.', difficulty: 'G', category: 'Interface' },
+    { id: 'l8q11', question: 'Hur visar du hostname?', options: ['name', 'hostname', 'host', 'sysname'], correctIndex: 1, explanation: 'hostname visar eller ändrar systemets namn.', difficulty: 'G', category: 'System' },
+    { id: 'l8q12', question: 'Vad betyder -n i ss -tuln?', options: ['Network mode', 'Numerisk output (inga DNS-uppslag)', 'New connections', 'No headers'], correctIndex: 1, explanation: '-n visar portnummer istället för tjänstnamn.', difficulty: 'G', category: 'Anslut' },
+    // VG-nivå (8)
+    { id: 'l8q13', question: 'Hur sätter du temporär statisk IP?', options: ['ip set 192.168.1.10', 'ip addr add 192.168.1.10/24 dev eth0', 'ifconfig eth0 192.168.1.10', 'Både B och C'], correctIndex: 3, explanation: 'Båda fungerar men ip addr är modernare.', difficulty: 'VG', category: 'IP' },
+    { id: 'l8q14', question: 'Vad är NetworkManager?', options: ['Nätverksmonitor', 'Tjänst för nätverkskonfiguration', 'Firewall', 'DNS server'], correctIndex: 1, explanation: 'NetworkManager hanterar nätverksanslutningar dynamiskt.', difficulty: 'VG', category: 'Service' },
+    { id: 'l8q15', question: 'Hur fångar du nätverkstrafik?', options: ['netcap', 'tcpdump', 'capture', 'sniff'], correctIndex: 1, explanation: 'tcpdump är CLI-verktyg för packet capture.', difficulty: 'VG', category: 'Debug' },
+    { id: 'l8q16', question: 'Hur scannar du öppna portar?', options: ['portscan', 'nmap host', 'scan host', 'netstat host'], correctIndex: 1, explanation: 'nmap är det vanligaste verktyget för portscanning.', difficulty: 'VG', category: 'Scan' },
+    { id: 'l8q17', question: 'Var konfigureras permanent IP med Netplan?', options: ['/etc/network/', '/etc/netplan/*.yaml', '/etc/ip/', '/etc/nm/'], correctIndex: 1, explanation: 'Netplan använder YAML-filer i /etc/netplan/.', difficulty: 'VG', category: 'Konfig' },
+    { id: 'l8q18', question: 'Hur aktiverar du IP forwarding?', options: ['ip forward on', 'sysctl net.ipv4.ip_forward=1', 'route forward', 'forward enable'], correctIndex: 1, explanation: 'sysctl ändrar kernel-parameter för routing.', difficulty: 'VG', category: 'Routing' },
+    { id: 'l8q19', question: 'Hur ansluter du till WiFi med nmcli?', options: ['nmcli wifi connect', 'nmcli device wifi connect SSID password PWD', 'nmcli connect wifi', 'nmcli wlan join'], correctIndex: 1, explanation: 'nmcli device wifi connect med SSID och password.', difficulty: 'VG', category: 'nmcli' },
+    { id: 'l8q20', question: 'Hur visar du ARP-cache?', options: ['arp list', 'ip neigh', 'arp -a', 'Både B och C'], correctIndex: 3, explanation: 'ip neigh och arp -a visar båda ARP-tabellen.', difficulty: 'VG', category: 'ARP' }
+]
+
+// =============================================================================
+// TASK 9: PACKAGES (20 quiz)
+// =============================================================================
+
+const TASK_9_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l9q1', question: 'Vilken pakethanterare används på Ubuntu?', options: ['yum', 'dnf', 'apt', 'pacman'], correctIndex: 2, explanation: 'apt (Advanced Package Tool) används på Debian/Ubuntu.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l9q2', question: 'Hur uppdaterar du paketlistan?', options: ['apt refresh', 'sudo apt update', 'apt sync', 'apt fetch'], correctIndex: 1, explanation: 'update hämtar senaste paketinformation från repos.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q3', question: 'Hur uppgraderar du installerade paket?', options: ['apt update', 'sudo apt upgrade', 'apt install --all', 'apt refresh'], correctIndex: 1, explanation: 'upgrade installerar nya versioner av alla paket.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q4', question: 'Hur installerar du ett paket?', options: ['apt get nginx', 'sudo apt install nginx', 'apt add nginx', 'apt setup nginx'], correctIndex: 1, explanation: 'install hämtar och installerar paket med beroenden.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q5', question: 'Hur tar du bort ett paket?', options: ['apt delete', 'sudo apt remove paket', 'apt uninstall', 'apt drop'], correctIndex: 1, explanation: 'remove tar bort paket men behåller config.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q6', question: 'Hur söker du efter paket?', options: ['apt find', 'apt search sökord', 'apt lookup', 'apt query'], correctIndex: 1, explanation: 'search söker i paketnamn och beskrivningar.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q7', question: 'Vilken pakethanterare används på RHEL/Fedora?', options: ['apt', 'dnf', 'pacman', 'zypper'], correctIndex: 1, explanation: 'dnf (tidigare yum) används på Red Hat-baserade system.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l9q8', question: 'Hur installerar du paket med dnf?', options: ['dnf get', 'sudo dnf install paket', 'dnf add', 'dnf setup'], correctIndex: 1, explanation: 'dnf install fungerar som apt install.', difficulty: 'G', category: 'dnf' },
+    { id: 'l9q9', question: 'Skillnad mellan remove och purge?', options: ['Samma sak', 'purge tar även bort config', 'remove är snabbare', 'purge behåller data'], correctIndex: 1, explanation: 'purge tar bort allt inklusive konfigurationsfiler.', difficulty: 'G', category: 'apt' },
+    { id: 'l9q10', question: 'Hur listar du installerade paket?', options: ['apt installed', 'apt list --installed', 'apt show all', 'apt packages'], correctIndex: 1, explanation: 'list --installed visar alla installerade paket.', difficulty: 'G', category: 'Lista' },
+    { id: 'l9q11', question: 'Hur tar du bort oanvända beroenden?', options: ['apt clean', 'sudo apt autoremove', 'apt prune', 'apt orphan'], correctIndex: 1, explanation: 'autoremove tar bort paket som inte längre behövs.', difficulty: 'G', category: 'Clean' },
+    { id: 'l9q12', question: 'Hur visar du info om ett paket?', options: ['apt info', 'apt show paket', 'apt describe', 'apt details'], correctIndex: 1, explanation: 'show visar detaljerad information om paket.', difficulty: 'G', category: 'apt' },
+    // VG-nivå (8)
+    { id: 'l9q13', question: 'Hur installerar du .deb-fil?', options: ['apt install file.deb', 'sudo dpkg -i file.deb', 'deb install', 'Både A och B'], correctIndex: 3, explanation: 'Både apt install ./file.deb och dpkg -i fungerar.', difficulty: 'VG', category: 'dpkg' },
+    { id: 'l9q14', question: 'Hur hittar du vilket paket äger en fil?', options: ['apt owner /path', 'dpkg -S /path', 'apt which /path', 'dpkg -f /path'], correctIndex: 1, explanation: 'dpkg -S söker efter vilken fil som äger filen.', difficulty: 'VG', category: 'Info' },
+    { id: 'l9q15', question: 'Var konfigureras apt repositories?', options: ['/etc/apt/repos', '/etc/apt/sources.list', '/var/apt/sources', '/etc/repos.d'], correctIndex: 1, explanation: 'sources.list och sources.list.d/ innehåller repo-konfiguration.', difficulty: 'VG', category: 'Repos' },
+    { id: 'l9q16', question: 'Hur lägger du till PPA?', options: ['apt add-repo', 'sudo add-apt-repository ppa:user/repo', 'apt-repo add', 'ppa-add'], correctIndex: 1, explanation: 'add-apt-repository lägger till Personal Package Archive.', difficulty: 'VG', category: 'Repos' },
+    { id: 'l9q17', question: 'Hur håller du ett paket på specifik version?', options: ['apt lock', 'sudo apt-mark hold paket', 'apt freeze', 'apt pin'], correctIndex: 1, explanation: 'apt-mark hold förhindrar uppgradering av paketet.', difficulty: 'VG', category: 'Version' },
+    { id: 'l9q18', question: 'Hur fixar du trasiga beroenden?', options: ['apt repair', 'sudo apt --fix-broken install', 'apt fix', 'apt heal'], correctIndex: 1, explanation: '--fix-broken försöker lösa beroendeproblem.', difficulty: 'VG', category: 'Fix' },
+    { id: 'l9q19', question: 'Hur nedgraderar du ett paket?', options: ['apt downgrade', 'apt install paket=version', 'apt rollback', 'apt revert'], correctIndex: 1, explanation: 'Ange specifik version med = för att installera äldre.', difficulty: 'VG', category: 'Version' },
+    { id: 'l9q20', question: 'Vad är snap och flatpak?', options: ['Paketformat för specifika distros', 'Universal containerized paketformat', 'Komprimeringsformat', 'Backup-verktyg'], correctIndex: 1, explanation: 'Snap och Flatpak är distro-agnostiska, sandboxade paket.', difficulty: 'VG', category: 'Koncept' }
+]
+
+// =============================================================================
+// TASK 10: SYSTEMD (20 quiz)
+// =============================================================================
+
+const TASK_10_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l10q1', question: 'Hur startar du en tjänst?', options: ['service start nginx', 'sudo systemctl start nginx', 'start nginx', 'nginx start'], correctIndex: 1, explanation: 'systemctl start startar tjänsten.', difficulty: 'G', category: 'Hantera' },
+    { id: 'l10q2', question: 'Hur stoppar du en tjänst?', options: ['systemctl halt nginx', 'sudo systemctl stop nginx', 'nginx stop', 'service nginx stop'], correctIndex: 1, explanation: 'systemctl stop stoppar tjänsten.', difficulty: 'G', category: 'Hantera' },
+    { id: 'l10q3', question: 'Hur visar du status för en tjänst?', options: ['systemctl info nginx', 'systemctl status nginx', 'systemctl show nginx', 'nginx status'], correctIndex: 1, explanation: 'status visar körande/stoppad och senaste loggar.', difficulty: 'G', category: 'Status' },
+    { id: 'l10q4', question: 'Hur aktiverar du tjänst vid boot?', options: ['systemctl autostart nginx', 'sudo systemctl enable nginx', 'systemctl boot nginx', 'nginx enable'], correctIndex: 1, explanation: 'enable skapar symlinks för autostart.', difficulty: 'G', category: 'Boot' },
+    { id: 'l10q5', question: 'Hur startar du om en tjänst?', options: ['systemctl reload nginx', 'sudo systemctl restart nginx', 'systemctl reboot nginx', 'nginx restart'], correctIndex: 1, explanation: 'restart stoppar och startar om tjänsten.', difficulty: 'G', category: 'Hantera' },
+    { id: 'l10q6', question: 'Skillnad mellan enable och start?', options: ['Samma sak', 'enable=vid boot, start=nu', 'start=vid boot', 'enable startar snabbare'], correctIndex: 1, explanation: 'enable aktiverar vid boot, start startar direkt.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l10q7', question: 'Hur kontrollerar du om tjänst är aktiv?', options: ['systemctl active nginx', 'systemctl is-active nginx', 'systemctl check nginx', 'nginx is-active'], correctIndex: 1, explanation: 'is-active returnerar active/inactive.', difficulty: 'G', category: 'Status' },
+    { id: 'l10q8', question: 'Hur listar du alla tjänster?', options: ['systemctl services', 'systemctl list-units --type=service', 'systemctl --all', 'list-services'], correctIndex: 1, explanation: 'list-units med type-filter visar tjänster.', difficulty: 'G', category: 'Lista' },
+    { id: 'l10q9', question: 'Hur inaktiverar du tjänst vid boot?', options: ['systemctl remove nginx', 'sudo systemctl disable nginx', 'systemctl uninstall nginx', 'nginx disable'], correctIndex: 1, explanation: 'disable tar bort autostart vid boot.', difficulty: 'G', category: 'Boot' },
+    { id: 'l10q10', question: 'Hur laddar du om config utan restart?', options: ['systemctl refresh', 'sudo systemctl reload nginx', 'systemctl config nginx', 'nginx reload'], correctIndex: 1, explanation: 'reload laddar om config om tjänsten stöder det.', difficulty: 'G', category: 'Hantera' },
+    { id: 'l10q11', question: 'Hur visar du loggar för en tjänst?', options: ['systemctl log nginx', 'journalctl -u nginx', 'nginx --log', 'syslog nginx'], correctIndex: 1, explanation: '-u (unit) filtrerar journalctl på tjänst.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l10q12', question: 'Hur listar du misslyckade tjänster?', options: ['systemctl errors', 'systemctl --failed', 'systemctl broken', 'systemctl failures'], correctIndex: 1, explanation: '--failed visar tjänster som inte startat korrekt.', difficulty: 'G', category: 'Status' },
+    // VG-nivå (8)
+    { id: 'l10q13', question: 'Var finns custom systemd unit-filer?', options: ['/var/systemd/', '/etc/systemd/system/', '/lib/systemd/', '/usr/systemd/'], correctIndex: 1, explanation: '/etc/systemd/system/ för admin-skapade units.', difficulty: 'VG', category: 'Filer' },
+    { id: 'l10q14', question: 'Vad måste du köra efter att ha ändrat unit-fil?', options: ['systemctl refresh', 'sudo systemctl daemon-reload', 'systemctl update', 'systemctl apply'], correctIndex: 1, explanation: 'daemon-reload läser om unit-filer.', difficulty: 'VG', category: 'Hantera' },
+    { id: 'l10q15', question: 'Vad gör systemctl mask?', options: ['Döljer tjänst', 'Förhindrar all start av tjänst', 'Maskerar loggar', 'Ändrar namn'], correctIndex: 1, explanation: 'mask länkar till /dev/null, förhindrar start.', difficulty: 'VG', category: 'Hantera' },
+    { id: 'l10q16', question: 'Vad är en systemd target?', options: ['Mål-server', 'Grupp av units (som runlevel)', 'Targetfil', 'Boot-parameter'], correctIndex: 1, explanation: 'Target grupperar units, motsvarar traditionella runlevels.', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l10q17', question: 'Hur visar du boot-tid per tjänst?', options: ['systemctl boot-time', 'systemd-analyze blame', 'systemctl analyze', 'boot-analyze'], correctIndex: 1, explanation: 'systemd-analyze blame visar tid per unit.', difficulty: 'VG', category: 'Analys' },
+    { id: 'l10q18', question: 'Hur redigerar du override för befintlig unit?', options: ['systemctl modify', 'sudo systemctl edit nginx', 'systemctl override', 'vi /etc/systemd/system/nginx'], correctIndex: 1, explanation: 'edit skapar drop-in fil för override.', difficulty: 'VG', category: 'Anpassa' },
+    { id: 'l10q19', question: 'Vilka sektioner finns i en unit-fil?', options: ['[Config] [Run]', '[Unit] [Service] [Install]', '[Start] [Stop]', '[Main] [Options]'], correctIndex: 1, explanation: 'Unit, Service och Install är standardsektioner.', difficulty: 'VG', category: 'Unit' },
+    { id: 'l10q20', question: 'Hur listar du aktiva timers?', options: ['systemctl timers', 'systemctl list-timers', 'systemctl --timers', 'timer-list'], correctIndex: 1, explanation: 'list-timers visar alla schemalagda timers.', difficulty: 'VG', category: 'Timer' }
+]
+
+// =============================================================================
+// TASK 11: PERMISSIONS (20 quiz)
+// =============================================================================
+
+const TASK_11_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l11q1', question: 'Vad betyder "r" i permissions?', options: ['Run', 'Read', 'Remove', 'Root'], correctIndex: 1, explanation: 'r = read, möjlighet att läsa fil/lista katalog.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l11q2', question: 'Vad är numeriska värdet för rwx?', options: ['3', '6', '7', '9'], correctIndex: 2, explanation: 'r=4, w=2, x=1, totalt 7.', difficulty: 'G', category: 'Oktalt' },
+    { id: 'l11q3', question: 'Hur ändrar du permissions?', options: ['perm 755 fil', 'chmod 755 fil', 'rights 755 fil', 'mod 755 fil'], correctIndex: 1, explanation: 'chmod (change mode) ändrar rättigheter.', difficulty: 'G', category: 'chmod' },
+    { id: 'l11q4', question: 'Vad betyder 644?', options: ['rw-r--r--', 'rwxr--r--', 'rw-rw-r--', 'rwxrwxr--'], correctIndex: 0, explanation: '6=rw-, 4=r--, 4=r--.', difficulty: 'G', category: 'Oktalt' },
+    { id: 'l11q5', question: 'Hur ändrar du ägare av fil?', options: ['owner user fil', 'sudo chown user fil', 'chmod user fil', 'change user fil'], correctIndex: 1, explanation: 'chown (change owner) ändrar ägare.', difficulty: 'G', category: 'chown' },
+    { id: 'l11q6', question: 'Vad är de tre permission-grupperna?', options: ['admin, user, guest', 'user, group, others', 'read, write, execute', 'owner, member, public'], correctIndex: 1, explanation: 'u=user (ägare), g=group, o=others.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l11q7', question: 'Hur gör du en fil körbar?', options: ['chmod run fil', 'chmod +x fil', 'chmod exec fil', 'execute fil'], correctIndex: 1, explanation: '+x lägger till execute permission.', difficulty: 'G', category: 'chmod' },
+    { id: 'l11q8', question: 'Vad betyder 755?', options: ['rwxr-xr-x', 'rwxrwxrwx', 'rw-r--r--', 'rwxr--r--'], correctIndex: 0, explanation: '7=rwx, 5=r-x, 5=r-x.', difficulty: 'G', category: 'Oktalt' },
+    { id: 'l11q9', question: 'Hur ändrar du grupp för fil?', options: ['group fil grp', 'sudo chgrp grp fil', 'chmod grp fil', 'setgroup grp fil'], correctIndex: 1, explanation: 'chgrp (change group) ändrar grupp.', difficulty: 'G', category: 'chgrp' },
+    { id: 'l11q10', question: 'Hur tar du bort write för others?', options: ['chmod o=r fil', 'chmod o-w fil', 'chmod -o write fil', 'chmod others-w'], correctIndex: 1, explanation: 'o-w tar bort write från others.', difficulty: 'G', category: 'chmod' },
+    { id: 'l11q11', question: 'Vad betyder första tecknet "d" i ls -l?', options: ['Device', 'Directory', 'Data', 'Default'], correctIndex: 1, explanation: 'd = directory, - = vanlig fil.', difficulty: 'G', category: 'Visa' },
+    { id: 'l11q12', question: 'Hur ändrar du rekursivt?', options: ['chmod all 755 dir', 'chmod -R 755 dir', 'chmod --recursive dir', 'chmod -r dir'], correctIndex: 1, explanation: '-R (recursive) ändrar alla filer i katalog.', difficulty: 'G', category: 'Rekursiv' },
+    // VG-nivå (8)
+    { id: 'l11q13', question: 'Vad är SUID bit?', options: ['Super User ID', 'Kör som filens ägare', 'Secure User ID', 'System UID'], correctIndex: 1, explanation: 'SUID gör att programmet körs som filens ägare.', difficulty: 'VG', category: 'Special' },
+    { id: 'l11q14', question: 'Hur sätter du SUID oktalt?', options: ['1755', '2755', '4755', '8755'], correctIndex: 2, explanation: '4 = SUID, 2 = SGID, 1 = sticky.', difficulty: 'VG', category: 'Special' },
+    { id: 'l11q15', question: 'Vad är sticky bit på katalog?', options: ['Klistrar filer', 'Endast ägare kan ta bort filer', 'Filer blir dolda', 'Katalog blir read-only'], correctIndex: 1, explanation: 'Sticky bit förhindrar borttagning av andras filer.', difficulty: 'VG', category: 'Special' },
+    { id: 'l11q16', question: 'Vad är umask?', options: ['User mask för lösenord', 'Default permission mask', 'Unix mask', 'Upload mask'], correctIndex: 1, explanation: 'umask bestämmer default permissions för nya filer.', difficulty: 'VG', category: 'umask' },
+    { id: 'l11q17', question: 'Hur visar du ACL för fil?', options: ['ls -acl fil', 'getfacl fil', 'acl fil', 'showacl fil'], correctIndex: 1, explanation: 'getfacl visar Access Control Lists.', difficulty: 'VG', category: 'ACL' },
+    { id: 'l11q18', question: 'Hur hittar du SUID-filer?', options: ['find / -suid', 'find / -perm -4000', 'ls -suid /', 'locate suid'], correctIndex: 1, explanation: '-perm -4000 hittar filer med SUID satt.', difficulty: 'VG', category: 'Söka' },
+    { id: 'l11q19', question: 'Vad gör chattr +i?', options: ['Gör fil immutable', 'Ändrar inode', 'Sätter index', 'Installerar fil'], correctIndex: 0, explanation: '+i gör filen oföränderlig, även för root.', difficulty: 'VG', category: 'Attribut' },
+    { id: 'l11q20', question: 'Hur sätter du ACL för användare?', options: ['acl -u user:rw fil', 'setfacl -m u:user:rw fil', 'chmod acl user fil', 'addacl user fil'], correctIndex: 1, explanation: 'setfacl -m modifierar ACL för användare.', difficulty: 'VG', category: 'ACL' }
+]
+
+// =============================================================================
+// TASK 12: COMPRESSION (20 quiz)
+// =============================================================================
+
+const TASK_12_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l12q1', question: 'Hur skapar du tar-arkiv?', options: ['tar -xvf arkiv.tar', 'tar -cvf arkiv.tar filer', 'tar -tvf arkiv.tar', 'tar -avf arkiv.tar'], correctIndex: 1, explanation: 'c=create, v=verbose, f=file.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q2', question: 'Hur extraherar du tar-arkiv?', options: ['tar -cvf arkiv.tar', 'tar -xvf arkiv.tar', 'tar -tvf arkiv.tar', 'tar -uvf arkiv.tar'], correctIndex: 1, explanation: 'x=extract packar upp arkivet.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q3', question: 'Vad gör "z" i tar -czvf?', options: ['Zero compression', 'gzip-komprimering', 'Zip-format', 'zstd-komprimering'], correctIndex: 1, explanation: 'z använder gzip för komprimering.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q4', question: 'Hur skapar du .tar.gz?', options: ['tar -cvf arkiv.tar.gz', 'tar -czvf arkiv.tar.gz filer', 'gzip -tar arkiv', 'tar -gz arkiv'], correctIndex: 1, explanation: 'z-flaggan aktiverar gzip-komprimering.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q5', question: 'Hur komprimerar du fil med gzip?', options: ['compress fil', 'gzip fil', 'zip fil', 'gz fil'], correctIndex: 1, explanation: 'gzip komprimerar och ersätter filen med .gz.', difficulty: 'G', category: 'gzip' },
+    { id: 'l12q6', question: 'Hur dekomprimerar du .gz?', options: ['ungzip fil.gz', 'gunzip fil.gz', 'gzip -u fil.gz', 'decompress fil.gz'], correctIndex: 1, explanation: 'gunzip eller gzip -d dekomprimerar.', difficulty: 'G', category: 'gzip' },
+    { id: 'l12q7', question: 'Hur listar du innehåll i tar?', options: ['tar -lvf arkiv.tar', 'tar -tvf arkiv.tar', 'tar -ivf arkiv.tar', 'tar -svf arkiv.tar'], correctIndex: 1, explanation: 't=list visar innehåll utan att packa upp.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q8', question: 'Hur skapar du zip-arkiv?', options: ['zip filer arkiv.zip', 'zip arkiv.zip filer', 'create zip arkiv', 'mkzip arkiv filer'], correctIndex: 1, explanation: 'zip arkiv.zip filer skapar arkiv.', difficulty: 'G', category: 'zip' },
+    { id: 'l12q9', question: 'Hur extraherar du zip?', options: ['zip -x arkiv.zip', 'unzip arkiv.zip', 'extract arkiv.zip', 'zip -e arkiv.zip'], correctIndex: 1, explanation: 'unzip packar upp zip-arkiv.', difficulty: 'G', category: 'zip' },
+    { id: 'l12q10', question: 'Hur listar du innehåll i zip?', options: ['zip -l arkiv.zip', 'unzip -l arkiv.zip', 'ziplist arkiv.zip', 'list arkiv.zip'], correctIndex: 1, explanation: 'unzip -l listar utan att packa upp.', difficulty: 'G', category: 'zip' },
+    { id: 'l12q11', question: 'Vad gör "j" i tar -cjvf?', options: ['Just compress', 'bzip2-komprimering', 'Join files', 'Jump mode'], correctIndex: 1, explanation: 'j använder bzip2 för komprimering.', difficulty: 'G', category: 'tar' },
+    { id: 'l12q12', question: 'Hur zipar du en katalog rekursivt?', options: ['zip arkiv.zip katalog', 'zip -r arkiv.zip katalog', 'zip -d arkiv.zip katalog', 'zipdir arkiv katalog'], correctIndex: 1, explanation: '-r (recursive) inkluderar underkataloger.', difficulty: 'G', category: 'zip' },
+    // VG-nivå (8)
+    { id: 'l12q13', question: 'Vilken ger bäst kompression?', options: ['gzip', 'bzip2', 'xz', 'zip'], correctIndex: 2, explanation: 'xz ger bäst kompression men är långsammast.', difficulty: 'VG', category: 'Koncept' },
+    { id: 'l12q14', question: 'Hur extraherar du till specifik katalog?', options: ['tar -xvf arkiv.tar /dest', 'tar -xvf arkiv.tar -C /dest', 'tar -xvf arkiv.tar --to=/dest', 'tar -xvf arkiv.tar -d /dest'], correctIndex: 1, explanation: '-C (change directory) anger destination.', difficulty: 'VG', category: 'tar' },
+    { id: 'l12q15', question: 'Hur behåller du original vid gzip?', options: ['gzip -o fil', 'gzip -k fil', 'gzip -p fil', 'gzip -b fil'], correctIndex: 1, explanation: '-k (keep) behåller originalfilen.', difficulty: 'VG', category: 'gzip' },
+    { id: 'l12q16', question: 'Vad gör "J" i tar (stort J)?', options: ['Join arkiv', 'Java mode', 'xz-komprimering', 'Jump directories'], correctIndex: 2, explanation: 'J (stort) använder xz för komprimering.', difficulty: 'VG', category: 'tar' },
+    { id: 'l12q17', question: 'Hur skapar du lösenordsskyddad zip?', options: ['zip -p arkiv.zip', 'zip -e arkiv.zip filer', 'zip --password arkiv.zip', 'zip -s arkiv.zip'], correctIndex: 1, explanation: '-e (encrypt) frågar efter lösenord.', difficulty: 'VG', category: 'zip' },
+    { id: 'l12q18', question: 'Hur exkluderar du filer i tar?', options: ['tar --skip="*.log"', 'tar --exclude="*.log"', 'tar -x "*.log"', 'tar --ignore="*.log"'], correctIndex: 1, explanation: '--exclude hoppar över matchande filer.', difficulty: 'VG', category: 'tar' },
+    { id: 'l12q19', question: 'Hur testar du gzip-integritet?', options: ['gzip -c fil.gz', 'gzip -t fil.gz', 'gzip -v fil.gz', 'gzip -i fil.gz'], correctIndex: 1, explanation: '-t (test) verifierar arkivets integritet.', difficulty: 'VG', category: 'Verifiera' },
+    { id: 'l12q20', question: 'Vad är pigz?', options: ['Pig zip format', 'Parallel gzip', 'Protected gzip', 'Piped gzip'], correctIndex: 1, explanation: 'pigz är parallel gzip, snabbare på multi-core.', difficulty: 'VG', category: 'Parallell' }
+]
+
+// =============================================================================
+// TASK 13: ENVIRONMENT (20 quiz)
+// =============================================================================
+
+const TASK_13_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l13q1', question: 'Hur visar du alla miljövariabler?', options: ['vars', 'env', 'show vars', 'list env'], correctIndex: 1, explanation: 'env eller printenv visar miljövariabler.', difficulty: 'G', category: 'Visa' },
+    { id: 'l13q2', question: 'Hur visar du värdet av $HOME?', options: ['home', 'echo $HOME', 'print HOME', 'show $HOME'], correctIndex: 1, explanation: 'echo $VARIABEL visar variabelns värde.', difficulty: 'G', category: 'Visa' },
+    { id: 'l13q3', question: 'Vad innehåller $PATH?', options: ['Filnamn', 'Sökvägar för körbara filer', 'Användarnamn', 'Hemkatalog'], correctIndex: 1, explanation: '$PATH listar kataloger där systemet söker kommandon.', difficulty: 'G', category: 'Variabler' },
+    { id: 'l13q4', question: 'Hur sätter du variabel tillfälligt?', options: ['set VAR value', 'VAR=värde', 'var VAR=värde', 'define VAR'], correctIndex: 1, explanation: 'VAR=värde sätter variabel i nuvarande shell.', difficulty: 'G', category: 'Sätta' },
+    { id: 'l13q5', question: 'Vad gör export?', options: ['Exporterar fil', 'Gör variabel tillgänglig för child-processer', 'Tar bort variabel', 'Visar variabler'], correctIndex: 1, explanation: 'export gör variabeln tillgänglig för subprocesser.', difficulty: 'G', category: 'Export' },
+    { id: 'l13q6', question: 'Hur lägger du till sökväg i $PATH?', options: ['PATH+=/ny', 'export PATH="$PATH:/ny"', 'add PATH /ny', 'PATH=/ny'], correctIndex: 1, explanation: 'Lägg till ny sökväg med $PATH: för att behålla gamla.', difficulty: 'G', category: 'PATH' },
+    { id: 'l13q7', question: 'Var definieras permanenta variabler för användare?', options: ['/etc/vars', '~/.bashrc', '/var/env', '/tmp/env'], correctIndex: 1, explanation: '~/.bashrc laddas vid interaktiva bash-shells.', difficulty: 'G', category: 'Permanent' },
+    { id: 'l13q8', question: 'Vad gör source .bashrc?', options: ['Skapar fil', 'Laddar om .bashrc utan logout', 'Tar bort .bashrc', 'Visar .bashrc'], correctIndex: 1, explanation: 'source kör filen i nuvarande shell och laddar ändringar.', difficulty: 'G', category: 'source' },
+    { id: 'l13q9', question: 'Hur tar du bort miljövariabel?', options: ['rm $VAR', 'unset VAR', 'delete VAR', 'remove VAR'], correctIndex: 1, explanation: 'unset VARIABELNAMN tar bort variabeln.', difficulty: 'G', category: 'Ta bort' },
+    { id: 'l13q10', question: 'Vad innehåller $USER?', options: ['User ID', 'Nuvarande användarnamn', 'Alla användare', 'Hemkatalog'], correctIndex: 1, explanation: '$USER innehåller inloggad användares namn.', difficulty: 'G', category: 'Variabler' },
+    { id: 'l13q11', question: 'Vad innehåller $PWD?', options: ['Password', 'Nuvarande katalog', 'Print Working Data', 'Process ID'], correctIndex: 1, explanation: '$PWD = Present Working Directory.', difficulty: 'G', category: 'Variabler' },
+    { id: 'l13q12', question: 'Hur exporterar du variabel MY_VAR?', options: ['MY_VAR export', 'export MY_VAR=värde', 'set export MY_VAR', 'declare MY_VAR'], correctIndex: 1, explanation: 'export VAR=värde sätter och exporterar.', difficulty: 'G', category: 'Export' },
+    // VG-nivå (8)
+    { id: 'l13q13', question: 'Var sätter du systemvida variabler?', options: ['~/.bashrc', '/etc/environment', '/home/env', '/usr/vars'], correctIndex: 1, explanation: '/etc/environment för systemvida variabler.', difficulty: 'VG', category: 'System' },
+    { id: 'l13q14', question: 'Skillnad .bashrc vs .bash_profile?', options: ['Samma', '.bashrc=login', '.bash_profile=login shells', 'Ingen'], correctIndex: 2, explanation: '.bash_profile körs vid login, .bashrc vid interaktiv.', difficulty: 'VG', category: 'Filer' },
+    { id: 'l13q15', question: 'Hur kör du kommando med tom miljö?', options: ['empty cmd', 'env -i cmd', 'cmd --clean', 'clear; cmd'], correctIndex: 1, explanation: 'env -i rensar alla miljövariabler innan körning.', difficulty: 'VG', category: 'env' },
+    { id: 'l13q16', question: 'Vad är XDG_CONFIG_HOME?', options: ['Config server', 'Standard sökväg för config (~/.config)', 'Kernel config', 'Network config'], correctIndex: 1, explanation: 'XDG spec definierar var config ska lagras.', difficulty: 'VG', category: 'XDG' },
+    { id: 'l13q17', question: 'Hur sätter du readonly variabel?', options: ['lock VAR', 'readonly VAR=värde', 'const VAR', 'static VAR'], correctIndex: 1, explanation: 'readonly gör att variabeln inte kan ändras.', difficulty: 'VG', category: 'Readonly' },
+    { id: 'l13q18', question: 'Hur visar du endast exporterade variabler?', options: ['env -e', 'export -p', 'printenv -x', 'set -e'], correctIndex: 1, explanation: 'export -p listar alla exporterade variabler.', difficulty: 'VG', category: 'Visa' },
+    { id: 'l13q19', question: 'Vad gör LD_LIBRARY_PATH?', options: ['Sökväg för libraries vid länkning', 'Library docs', 'Loader path', 'Linux dir'], correctIndex: 0, explanation: 'LD_LIBRARY_PATH anger var linker söker .so-filer.', difficulty: 'VG', category: 'System' },
+    { id: 'l13q20', question: 'Hur sätter du variabel för endast ett kommando?', options: ['VAR=val; cmd', 'VAR=val cmd', 'with VAR=val cmd', 'env VAR cmd'], correctIndex: 1, explanation: 'VAR=val cmd sätter variabeln endast för det kommandot.', difficulty: 'VG', category: 'Tillfällig' }
+]
+
+// =============================================================================
+// TASK 14: DISK (20 quiz)
+// =============================================================================
+
+const TASK_14_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l14q1', question: 'Hur visar du diskutrymme?', options: ['disk', 'df -h', 'space', 'du'], correctIndex: 1, explanation: 'df -h visar diskutrymme i human readable format.', difficulty: 'G', category: 'df' },
+    { id: 'l14q2', question: 'Hur visar du katalogstorlek?', options: ['size dir', 'du -sh dir', 'ls -s dir', 'df dir'], correctIndex: 1, explanation: 'du -sh ger summary i human readable.', difficulty: 'G', category: 'du' },
+    { id: 'l14q3', question: 'Hur listar du diskar och partitioner?', options: ['disks', 'lsblk', 'fdisk', 'showdisk'], correctIndex: 1, explanation: 'lsblk listar block devices i trädformat.', difficulty: 'G', category: 'lsblk' },
+    { id: 'l14q4', question: 'Hur monterar du USB?', options: ['usb mount', 'sudo mount /dev/sdb1 /mnt', 'plug /dev/sdb1', 'attach sdb1'], correctIndex: 1, explanation: 'mount device mountpoint monterar enheten.', difficulty: 'G', category: 'Mount' },
+    { id: 'l14q5', question: 'Hur avmonterar du enhet?', options: ['unmount /mnt', 'sudo umount /mnt', 'eject /mnt', 'remove /mnt'], correctIndex: 1, explanation: 'umount (inte unmount) avmonterar.', difficulty: 'G', category: 'Umount' },
+    { id: 'l14q6', question: 'Vad betyder /dev/sda1?', options: ['Första disken', 'Första partitionen på första disken', 'System disk', 'SATA disk A'], correctIndex: 1, explanation: 'sda = första disk, 1 = första partition.', difficulty: 'G', category: 'Enheter' },
+    { id: 'l14q7', question: 'Var monteras USB automatiskt?', options: ['/dev', '/media', '/usb', '/home'], correctIndex: 1, explanation: '/media används för automatiska mounts.', difficulty: 'G', category: 'Mount' },
+    { id: 'l14q8', question: 'Vad är ett filsystem?', options: ['Filhanterare', 'Struktur för dataorganisation på disk', 'Mappstruktur', 'Operativsystem'], correctIndex: 1, explanation: 'Filsystem definierar hur data lagras och organiseras.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l14q9', question: 'Hur ser du monterade filsystem?', options: ['mounts', 'mount eller df', 'fstab', 'show mounts'], correctIndex: 1, explanation: 'mount utan argument visar alla mounts.', difficulty: 'G', category: 'Visa' },
+    { id: 'l14q10', question: 'Hur sorterar du filer efter storlek i du?', options: ['du -s | sort', 'du -sh * | sort -h', 'du --sort', 'du -S'], correctIndex: 1, explanation: 'sort -h sorterar human readable numbers.', difficulty: 'G', category: 'du' },
+    { id: 'l14q11', question: 'Hur hittar du filer större än 100MB?', options: ['find -big 100M', 'find / -size +100M', 'ls -size 100M', 'locate +100M'], correctIndex: 1, explanation: '-size +100M hittar filer över 100MB.', difficulty: 'G', category: 'find' },
+    { id: 'l14q12', question: 'Hur visar du disktyp (ext4, xfs)?', options: ['type /dev/sda', 'df -T', 'disk -type', 'mount -t'], correctIndex: 1, explanation: 'df -T visar filsystemtyp per partition.', difficulty: 'G', category: 'Filsystem' },
+    // VG-nivå (8)
+    { id: 'l14q13', question: 'Vad är /etc/fstab?', options: ['Filsystemtabell', 'Konfiguration för automatiska mounts', 'Fast storage', 'System table'], correctIndex: 1, explanation: 'fstab definierar mounts som sker vid boot.', difficulty: 'VG', category: 'fstab' },
+    { id: 'l14q14', question: 'Hur visar du diskens UUID?', options: ['uuid /dev/sda', 'blkid', 'disk --uuid', 'id /dev/sda'], correctIndex: 1, explanation: 'blkid visar UUID för block devices.', difficulty: 'VG', category: 'UUID' },
+    { id: 'l14q15', question: 'Hur formaterar du partition som ext4?', options: ['format ext4 /dev/sdb1', 'sudo mkfs.ext4 /dev/sdb1', 'ext4 /dev/sdb1', 'create ext4'], correctIndex: 1, explanation: 'mkfs.ext4 skapar ext4-filsystem.', difficulty: 'VG', category: 'mkfs' },
+    { id: 'l14q16', question: 'Hur kontrollerar du filsystemfel?', options: ['check /dev/sda1', 'sudo fsck /dev/sda1', 'repair disk', 'fix /dev/sda1'], correctIndex: 1, explanation: 'fsck (file system check) reparerar filsystem.', difficulty: 'VG', category: 'fsck' },
+    { id: 'l14q17', question: 'Vad är swap?', options: ['Byta disk', 'Virtuellt minne på disk', 'Backup partition', 'Cache'], correctIndex: 1, explanation: 'Swap används som virtuellt minne när RAM är fullt.', difficulty: 'VG', category: 'Swap' },
+    { id: 'l14q18', question: 'Skillnad MBR vs GPT?', options: ['Samma', 'GPT: större diskar, fler partitioner', 'MBR är nyare', 'GPT är äldre'], correctIndex: 1, explanation: 'GPT stödjer >2TB och 128 partitioner.', difficulty: 'VG', category: 'Partition' },
+    { id: 'l14q19', question: 'Hur visar du inode-användning?', options: ['ls -i', 'df -i', 'inode -l', 'stat -i'], correctIndex: 1, explanation: 'df -i visar inode usage per filsystem.', difficulty: 'VG', category: 'inode' },
+    { id: 'l14q20', question: 'Hur monterar du read-only?', options: ['mount -r /dev/sdb1 /mnt', 'mount -o ro /dev/sdb1 /mnt', 'mount --readonly', 'ro mount'], correctIndex: 1, explanation: '-o ro (read-only) förhindrar skrivning.', difficulty: 'VG', category: 'Mount' }
+]
+
+// =============================================================================
+// TASK 15: REFERENCE (20 quiz)
+// =============================================================================
+
+const TASK_15_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l15q1', question: 'Hur visar du manual för kommando?', options: ['help cmd', 'man cmd', 'manual cmd', 'doc cmd'], correctIndex: 1, explanation: 'man (manual) visar dokumentation.', difficulty: 'G', category: 'man' },
+    { id: 'l15q2', question: 'Hur söker du i manualen?', options: ['search', '/', 'find', 's'], correctIndex: 1, explanation: '/ startar sökning, n/N navigerar träffar.', difficulty: 'G', category: 'man' },
+    { id: 'l15q3', question: 'Hur avslutar du man?', options: ['exit', 'q', 'close', 'esc'], correctIndex: 1, explanation: 'q (quit) avslutar man-sidan.', difficulty: 'G', category: 'man' },
+    { id: 'l15q4', question: 'Vad gör --help?', options: ['Installerar hjälp', 'Visar kortfattad hjälp', 'Öppnar manual', 'Kontaktar support'], correctIndex: 1, explanation: '--help visar snabb hjälptext för kommandot.', difficulty: 'G', category: 'help' },
+    { id: 'l15q5', question: 'Vad gör whatis?', options: ['Frågar vad filen är', 'Visar en rad beskrivning', 'What is this file', 'Kollar filtyp'], correctIndex: 1, explanation: 'whatis ger kort beskrivning från man-databasen.', difficulty: 'G', category: 'whatis' },
+    { id: 'l15q6', question: 'Hur söker du kommandon om ett ämne?', options: ['search topic', 'apropos topic', 'find topic', 'locate cmd'], correctIndex: 1, explanation: 'apropos söker i man-beskrivningar.', difficulty: 'G', category: 'apropos' },
+    { id: 'l15q7', question: 'Vad gör which?', options: ['Vilken användare', 'Visar sökväg till kommando', 'Vilket system', 'Which file'], correctIndex: 1, explanation: 'which visar var körbar fil finns.', difficulty: 'G', category: 'which' },
+    { id: 'l15q8', question: 'Hur navigerar du i man?', options: ['Piltangenter', 'Piltangenter eller j/k, space', 'Endast mus', 'Tab'], correctIndex: 1, explanation: 'Vim-style navigation fungerar i man.', difficulty: 'G', category: 'man' },
+    { id: 'l15q9', question: 'Vad gör type?', options: ['Visar filtyp', 'Visar hur kommando tolkas', 'Skriver text', 'Ändrar typ'], correctIndex: 1, explanation: 'type visar om kommando är alias, builtin eller fil.', difficulty: 'G', category: 'type' },
+    { id: 'l15q10', question: 'Hur får du hjälp om bash builtins?', options: ['man builtin', 'help cd', 'builtin --help', 'bash help'], correctIndex: 1, explanation: 'help fungerar för bash builtins som cd.', difficulty: 'G', category: 'help' },
+    { id: 'l15q11', question: 'Vad är tldr?', options: ['Too Long Didnt Read', 'Simplified man pages', 'Terminal docs', 'Linux docs'], correctIndex: 1, explanation: 'tldr ger förenklade exempel-baserade manualer.', difficulty: 'G', category: 'tldr' },
+    { id: 'l15q12', question: 'Vad gör whereis?', options: ['Var är användare', 'Visar binary, source och man', 'Where is file', 'Sökväg till hem'], correctIndex: 1, explanation: 'whereis ger mer info än which.', difficulty: 'G', category: 'whereis' },
+    // VG-nivå (8)
+    { id: 'l15q13', question: 'Vad är man-sektion 5?', options: ['User commands', 'File formats', 'System calls', 'Games'], correctIndex: 1, explanation: 'Sektion 5 = file formats och conventions.', difficulty: 'VG', category: 'man' },
+    { id: 'l15q14', question: 'Hur öppnar du specifik sektion?', options: ['man -s 5 passwd', 'man 5 passwd', 'man --section 5', 'man passwd -5'], correctIndex: 1, explanation: 'man SEKTION NAMN öppnar specifik sektion.', difficulty: 'VG', category: 'man' },
+    { id: 'l15q15', question: 'Var finns man-sidorna på disk?', options: ['/etc/man', '/usr/share/man/', '/var/man', '/man'], correctIndex: 1, explanation: '/usr/share/man/ innehåller man-sidorna.', difficulty: 'VG', category: 'Sökväg' },
+    { id: 'l15q16', question: 'Hur uppdaterar du man-databasen?', options: ['update man', 'sudo mandb', 'man --update', 'refresh man'], correctIndex: 1, explanation: 'mandb bygger om apropos-databasen.', difficulty: 'VG', category: 'mandb' },
+    { id: 'l15q17', question: 'Vad är MANPATH?', options: ['Manual sökväg', 'Miljövariabel för man-sökvägar', 'Man program path', 'Path to manual'], correctIndex: 1, explanation: 'MANPATH definierar var man söker dokumentation.', difficulty: 'VG', category: 'Config' },
+    { id: 'l15q18', question: 'Vad gör man -k?', options: ['Kill man', 'Samma som apropos', 'Keyboard shortcuts', 'Keep running'], correctIndex: 1, explanation: 'man -k söker i beskrivningar (= apropos).', difficulty: 'VG', category: 'man' },
+    { id: 'l15q19', question: 'Var finns extra docs för program?', options: ['/etc/docs', '/usr/share/doc/', '/var/doc', '/docs'], correctIndex: 1, explanation: '/usr/share/doc/ har README, examples etc.', difficulty: 'VG', category: 'Docs' },
+    { id: 'l15q20', question: 'Vad gör man -K (stort K)?', options: ['Kill search', 'Fulltextsökning alla manualer', 'Keyword highlight', 'Keep page'], correctIndex: 1, explanation: 'man -K söker i all text, inte bara titlar.', difficulty: 'VG', category: 'man' }
+]
+
+// =============================================================================
+// TASK 16: PRODUCTIVITY (20 quiz)
+// =============================================================================
+
+const TASK_16_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l16q1', question: 'Hur skapar du alias?', options: ['set alias ll=ls', 'alias ll="ls -la"', 'define ll ls', 'create alias ll'], correctIndex: 1, explanation: 'alias namn="kommando" skapar alias.', difficulty: 'G', category: 'Alias' },
+    { id: 'l16q2', question: 'Hur listar du alias?', options: ['list alias', 'alias', 'show alias', 'aliases'], correctIndex: 1, explanation: 'alias utan argument visar alla alias.', difficulty: 'G', category: 'Alias' },
+    { id: 'l16q3', question: 'Hur visar du tidigare kommandon?', options: ['commands', 'history', 'log', 'past'], correctIndex: 1, explanation: 'history visar kommandohistorik.', difficulty: 'G', category: 'History' },
+    { id: 'l16q4', question: 'Hur kör du senaste kommando igen?', options: ['last', '!!', 'repeat', 'again'], correctIndex: 1, explanation: '!! kör om senaste kommandot.', difficulty: 'G', category: 'History' },
+    { id: 'l16q5', question: 'Hur söker du bakåt i history?', options: ['Ctrl+H', 'Ctrl+R', 'Ctrl+S', 'Ctrl+F'], correctIndex: 1, explanation: 'Ctrl+R = reverse search i history.', difficulty: 'G', category: 'History' },
+    { id: 'l16q6', question: 'Hur autokompletterar du filnamn?', options: ['Enter', 'Tab', 'Space', 'Shift'], correctIndex: 1, explanation: 'Tab autocomplete är fundamental i bash.', difficulty: 'G', category: 'Tab' },
+    { id: 'l16q7', question: 'Hur avbryter du kommando?', options: ['Ctrl+X', 'Ctrl+C', 'Ctrl+Q', 'Esc'], correctIndex: 1, explanation: 'Ctrl+C skickar SIGINT och avbryter.', difficulty: 'G', category: 'Ctrl' },
+    { id: 'l16q8', question: 'Hur rensar du terminal?', options: ['cls', 'clear', 'clean', 'reset'], correctIndex: 1, explanation: 'clear eller Ctrl+L rensar skärmen.', difficulty: 'G', category: 'Terminal' },
+    { id: 'l16q9', question: 'Hur tar du bort alias?', options: ['remove ll', 'unalias ll', 'delete ll', 'alias -d ll'], correctIndex: 1, explanation: 'unalias tar bort definitionen.', difficulty: 'G', category: 'Alias' },
+    { id: 'l16q10', question: 'Hur kör du kommando 42 från history?', options: ['run 42', '!42', 'history 42', 'exec 42'], correctIndex: 1, explanation: '!N kör kommando med det numret.', difficulty: 'G', category: 'History' },
+    { id: 'l16q11', question: 'Hur pausar du pågående process?', options: ['Ctrl+P', 'Ctrl+Z', 'Ctrl+S', 'Ctrl+Q'], correctIndex: 1, explanation: 'Ctrl+Z pausar och lägger i bakgrund.', difficulty: 'G', category: 'Ctrl' },
+    { id: 'l16q12', question: 'Var sparar du permanenta alias?', options: ['/etc/alias', '~/.bashrc', '/home/alias', '~/.alias'], correctIndex: 1, explanation: '~/.bashrc laddas vid varje bash-session.', difficulty: 'G', category: 'Alias' },
+    // VG-nivå (8)
+    { id: 'l16q13', question: 'Hur kör du senaste kommandot med sudo?', options: ['sudo last', 'sudo !!', 'sudo history', 'sudo -l'], correctIndex: 1, explanation: 'sudo !! är mycket användbart vid glömt sudo.', difficulty: 'VG', category: 'History' },
+    { id: 'l16q14', question: 'Vad gör Ctrl+A?', options: ['Avbryt', 'Cursor till radens början', 'Välj allt', 'Abort'], correctIndex: 1, explanation: 'Ctrl+A flyttar till början, Ctrl+E till slutet.', difficulty: 'VG', category: 'Ctrl' },
+    { id: 'l16q15', question: 'Vad gör Ctrl+U?', options: ['Undo', 'Tar bort till radens början', 'Upper case', 'Up history'], correctIndex: 1, explanation: 'Ctrl+U raderar från cursor till början.', difficulty: 'VG', category: 'Ctrl' },
+    { id: 'l16q16', question: 'Vad gör Alt+. (punkt)?', options: ['Slutar rad', 'Infogar sista arg från förra cmd', 'Punktnotation', 'End of file'], correctIndex: 1, explanation: 'Alt+. är en stor produktivitetsboost.', difficulty: 'VG', category: 'Alt' },
+    { id: 'l16q17', question: 'Hur tömmer du history?', options: ['clear history', 'history -c', 'rm ~/.history', 'history --clear'], correctIndex: 1, explanation: 'history -c rensar sessionshistory.', difficulty: 'VG', category: 'History' },
+    { id: 'l16q18', question: 'Vad gör HISTCONTROL=ignoredups?', options: ['Ignorerar alla', 'Sparar ej duplikat i rad', 'Dubbel history', 'Duplicerar history'], correctIndex: 1, explanation: 'ignoredups undviker samma kommando i rad.', difficulty: 'VG', category: 'History' },
+    { id: 'l16q19', question: 'Hur kör du original kommando trots alias?', options: ['real ls', '\\ls', 'no-alias ls', 'ls!'], correctIndex: 1, explanation: 'Backslash bypass:ar alias.', difficulty: 'VG', category: 'Alias' },
+    { id: 'l16q20', question: 'Vad gör Ctrl+D på tom rad?', options: ['Delete', 'Avslutar shell (EOF)', 'Down', 'Debug'], correctIndex: 1, explanation: 'Ctrl+D skickar EOF och avslutar shell.', difficulty: 'VG', category: 'Ctrl' }
+]
+
+// =============================================================================
+// TASK 17: USERS (20 quiz)
+// =============================================================================
+
+const TASK_17_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l17q1', question: 'Hur skapar du användare?', options: ['newuser john', 'sudo useradd john', 'create user john', 'user add john'], correctIndex: 1, explanation: 'useradd eller adduser skapar användare.', difficulty: 'G', category: 'Skapa' },
+    { id: 'l17q2', question: 'Hur sätter du lösenord?', options: ['password john', 'sudo passwd john', 'setpw john', 'pw john'], correctIndex: 1, explanation: 'passwd ändrar lösenord för användare.', difficulty: 'G', category: 'passwd' },
+    { id: 'l17q3', question: 'Hur tar du bort användare?', options: ['remove john', 'sudo userdel john', 'delete john', 'user remove john'], correctIndex: 1, explanation: 'userdel tar bort, -r tar även hemkatalog.', difficulty: 'G', category: 'Ta bort' },
+    { id: 'l17q4', question: 'Hur visar du nuvarande användare?', options: ['user', 'whoami', 'currentuser', 'me'], correctIndex: 1, explanation: 'whoami visar inloggat användarnamn.', difficulty: 'G', category: 'Visa' },
+    { id: 'l17q5', question: 'Hur byter du användare?', options: ['change john', 'su john', 'switch john', 'user john'], correctIndex: 1, explanation: 'su (switch user) byter till annan användare.', difficulty: 'G', category: 'su' },
+    { id: 'l17q6', question: 'Hur blir du root?', options: ['root', 'sudo su eller su -', 'admin', 'become root'], correctIndex: 1, explanation: 'su - eller sudo -i ger root shell.', difficulty: 'G', category: 'root' },
+    { id: 'l17q7', question: 'Hur visar du dina grupper?', options: ['mygroups', 'groups', 'showgroups', 'list groups'], correctIndex: 1, explanation: 'groups visar vilka grupper du tillhör.', difficulty: 'G', category: 'groups' },
+    { id: 'l17q8', question: 'Hur skapar du grupp?', options: ['newgroup devs', 'sudo groupadd devs', 'create group devs', 'addgroup devs'], correctIndex: 1, explanation: 'groupadd skapar ny grupp.', difficulty: 'G', category: 'Grupp' },
+    { id: 'l17q9', question: 'Hur lägger du till user i grupp?', options: ['addto group john devs', 'sudo usermod -aG devs john', 'group add john devs', 'join john devs'], correctIndex: 1, explanation: '-aG = append to supplementary groups.', difficulty: 'G', category: 'Grupp' },
+    { id: 'l17q10', question: 'Var finns användarlista?', options: ['/etc/users', '/etc/passwd', '/var/users', '/home/users'], correctIndex: 1, explanation: '/etc/passwd innehåller alla användare.', difficulty: 'G', category: 'Filer' },
+    { id: 'l17q11', question: 'Hur visar du inloggade användare?', options: ['logged', 'who', 'online', 'users now'], correctIndex: 1, explanation: 'who eller w visar inloggade användare.', difficulty: 'G', category: 'Visa' },
+    { id: 'l17q12', question: 'Hur visar du UID och grupper för user?', options: ['userinfo john', 'id john', 'info john', 'user id john'], correctIndex: 1, explanation: 'id visar UID, GID och alla grupper.', difficulty: 'G', category: 'id' },
+    // VG-nivå (8)
+    { id: 'l17q13', question: 'Vad innehåller /etc/shadow?', options: ['Skuggor', 'Krypterade lösenord', 'Backup', 'Dolda filer'], correctIndex: 1, explanation: '/etc/shadow har krypterade lösenord.', difficulty: 'VG', category: 'Filer' },
+    { id: 'l17q14', question: 'Hur ändrar du shell för användare?', options: ['setshell /bin/zsh', 'chsh -s /bin/zsh john', 'shell john /bin/zsh', 'usershell'], correctIndex: 1, explanation: 'chsh (change shell) ändrar default shell.', difficulty: 'VG', category: 'Shell' },
+    { id: 'l17q15', question: 'Hur låser du användarkonto?', options: ['lock john', 'sudo passwd -l john', 'disable john', 'block john'], correctIndex: 1, explanation: 'passwd -l (lock) låser kontot.', difficulty: 'VG', category: 'Lås' },
+    { id: 'l17q16', question: 'Hur redigerar du sudoers säkert?', options: ['sudo nano /etc/sudoers', 'sudo visudo', 'edit sudoers', 'vi /etc/sudoers'], correctIndex: 1, explanation: 'visudo validerar syntax innan sparning.', difficulty: 'VG', category: 'sudo' },
+    { id: 'l17q17', question: 'Vad har root för UID?', options: ['1', '0', '1000', '999'], correctIndex: 1, explanation: 'root har alltid UID 0.', difficulty: 'VG', category: 'ID' },
+    { id: 'l17q18', question: 'Var finns skeleton-filer?', options: ['/etc/user/', '/etc/skel/', '/home/skel/', '/skeleton/'], correctIndex: 1, explanation: '/etc/skel/ kopieras till nya användares hem.', difficulty: 'VG', category: 'skel' },
+    { id: 'l17q19', question: 'Hur tvingar du lösenordsbyte vid nästa login?', options: ['passwd -f john', 'sudo chage -d 0 john', 'force passwd john', 'expire john'], correctIndex: 1, explanation: 'chage -d 0 sätter lösenordsålder till 0.', difficulty: 'VG', category: 'chage' },
+    { id: 'l17q20', question: 'Vad är PAM?', options: ['Password Manager', 'Pluggable Authentication Modules', 'User Admin', 'Permission Module'], correctIndex: 1, explanation: 'PAM är flexibelt autentiseringsramverk.', difficulty: 'VG', category: 'PAM' }
+]
+
+// =============================================================================
+// TASK 18: CRON (20 quiz)
+// =============================================================================
+
+const TASK_18_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l18q1', question: 'Vad är cron?', options: ['Tidszon', 'Schemaläggare för jobb', 'Kronologi', 'Backup'], correctIndex: 1, explanation: 'cron kör schemalagda kommandon.', difficulty: 'G', category: 'Koncept' },
+    { id: 'l18q2', question: 'Hur redigerar du crontab?', options: ['edit cron', 'crontab -e', 'cron edit', 'vi crontab'], correctIndex: 1, explanation: 'crontab -e öppnar i editor.', difficulty: 'G', category: 'crontab' },
+    { id: 'l18q3', question: 'Hur visar du dina cronjobb?', options: ['cron list', 'crontab -l', 'show cron', 'cron --list'], correctIndex: 1, explanation: 'crontab -l listar jobb.', difficulty: 'G', category: 'crontab' },
+    { id: 'l18q4', question: 'Hur tar du bort crontab?', options: ['crontab -d', 'crontab -r', 'cron remove', 'del crontab'], correctIndex: 1, explanation: 'crontab -r raderar crontab.', difficulty: 'G', category: 'crontab' },
+    { id: 'l18q5', question: 'Vilka 5 fält finns i cron-format?', options: ['sek min tim dag mån', 'min tim dag mån veckodag', 'tim dag mån år vecka', 'min tim dag vecka mån'], correctIndex: 1, explanation: 'minut timme dag månad veckodag kommando.', difficulty: 'G', category: 'Format' },
+    { id: 'l18q6', question: 'Vad betyder * i cron?', options: ['Noll', 'Alla värden', 'En gång', 'Slumpmässigt'], correctIndex: 1, explanation: '* matchar alla möjliga värden.', difficulty: 'G', category: 'Format' },
+    { id: 'l18q7', question: 'Cronjobb kl 09:00 varje dag?', options: ['9 0 * * *', '0 9 * * *', '* 9 * * *', '9 * * * *'], correctIndex: 1, explanation: 'minut=0, timme=9, alla dagar.', difficulty: 'G', category: 'Exempel' },
+    { id: 'l18q8', question: 'Vad gör @daily?', options: ['Varje sekund', 'En gång per dag', 'Daglig backup', 'Daily log'], correctIndex: 1, explanation: '@daily = 0 0 * * * (midnatt).', difficulty: 'G', category: 'Shortcut' },
+    { id: 'l18q9', question: 'Vad gör @reboot?', options: ['Startar om', 'Kör vid systemstart', 'Reboot system', 'Boot log'], correctIndex: 1, explanation: '@reboot kör kommandot vid varje boot.', difficulty: 'G', category: 'Shortcut' },
+    { id: 'l18q10', question: 'Cronjobb varje timme?', options: ['* * * * *', '0 * * * *', '60 * * * *', '0 0 * * *'], correctIndex: 1, explanation: 'minut=0, alla timmar.', difficulty: 'G', category: 'Exempel' },
+    { id: 'l18q11', question: 'Cronjobb var 5:e minut?', options: ['5 * * * *', '*/5 * * * *', '0/5 * * * *', '*5 * * * *'], correctIndex: 1, explanation: '*/N = var N:te enhet.', difficulty: 'G', category: 'Intervall' },
+    { id: 'l18q12', question: 'Cronjobb måndag-fredag?', options: ['* * * * 1,5', '0 9 * * 1-5', '* * * * mon-fri', '0 9 1-5 * *'], correctIndex: 1, explanation: '1-5 = mån-fre i veckodagsfältet.', difficulty: 'G', category: 'Range' },
+    // VG-nivå (8)
+    { id: 'l18q13', question: 'Var finns systemets crontab?', options: ['/cron/system', '/etc/crontab', '/var/cron', '/sys/cron'], correctIndex: 1, explanation: '/etc/crontab är systemets crontab.', difficulty: 'VG', category: 'Sökväg' },
+    { id: 'l18q14', question: 'Hur tystar du cron-output?', options: ['cron -q', '> /dev/null 2>&1', '--silent', '-quiet'], correctIndex: 1, explanation: 'Redirect stdout och stderr till /dev/null.', difficulty: 'VG', category: 'Tyst' },
+    { id: 'l18q15', question: 'Hur ser du cron-loggar?', options: ['/var/log/cron.log', 'journalctl -u cron', 'cron --log', 'cat /cron.log'], correctIndex: 1, explanation: 'journalctl -u cron eller syslog.', difficulty: 'VG', category: 'Logg' },
+    { id: 'l18q16', question: 'Hur redigerar du annan users crontab?', options: ['crontab username -e', 'sudo crontab -u username -e', 'edit cron username', 'cron -user'], correctIndex: 1, explanation: '-u anger vilken användares crontab.', difficulty: 'VG', category: 'crontab' },
+    { id: 'l18q17', question: 'Vad är anacron?', options: ['Analog cron', 'Cron för ej alltid-på system', 'Async cron', 'Another cron'], correctIndex: 1, explanation: 'anacron kör missade jobb vid uppstart.', difficulty: 'VG', category: 'anacron' },
+    { id: 'l18q18', question: 'Var blockerar du users från cron?', options: ['/etc/cron.block', '/etc/cron.deny', '/etc/nocron', '/var/cron/deny'], correctIndex: 1, explanation: '/etc/cron.deny listar blockerade användare.', difficulty: 'VG', category: 'Säkerhet' },
+    { id: 'l18q19', question: 'Varför misslyckas ofta cron-jobb?', options: ['För snabbt', 'Miljö/PATH saknas', 'För långsamt', 'Fel tid'], correctIndex: 1, explanation: 'Cron har minimal miljö, ange PATH!', difficulty: 'VG', category: 'Felsök' },
+    { id: 'l18q20', question: 'Hur listar du systemd timers?', options: ['systemctl timers', 'systemctl list-timers', 'timer --list', 'show timers'], correctIndex: 1, explanation: 'systemctl list-timers visar aktiva timers.', difficulty: 'VG', category: 'systemd' }
+]
+
+// =============================================================================
+// TASK 19: SCRIPTING (20 quiz)
+// =============================================================================
+
+const TASK_19_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l19q1', question: 'Vad heter första raden i bash-skript?', options: ['Header', 'Shebang (#!/bin/bash)', 'Import', 'Init'], correctIndex: 1, explanation: 'Shebang anger vilken tolk som kör skriptet.', difficulty: 'G', category: 'Shebang' },
+    { id: 'l19q2', question: 'Hur gör du skript körbart?', options: ['run script.sh', 'chmod +x script.sh', 'execute script.sh', 'make script.sh'], correctIndex: 1, explanation: '+x lägger till execute permission.', difficulty: 'G', category: 'Körbar' },
+    { id: 'l19q3', question: 'Hur definierar du variabel?', options: ['let VAR = 5', 'VAR=5', 'var VAR = 5', 'set VAR 5'], correctIndex: 1, explanation: 'INGEN space runt = i bash.', difficulty: 'G', category: 'Variabler' },
+    { id: 'l19q4', question: 'Hur använder du variabel?', options: ['VAR', '$VAR', '%VAR%', '&VAR'], correctIndex: 1, explanation: 'Dollar-tecken före variabelnamn.', difficulty: 'G', category: 'Variabler' },
+    { id: 'l19q5', question: 'Hur skriver du ut text?', options: ['print "text"', 'echo "text"', 'write "text"', 'out "text"'], correctIndex: 1, explanation: 'echo är standard för output.', difficulty: 'G', category: 'Output' },
+    { id: 'l19q6', question: 'Vad är $1 i skript?', options: ['Rad 1', 'Första argumentet', 'Exit kod 1', 'Version'], correctIndex: 1, explanation: '$1, $2, $3... är positionella argument.', difficulty: 'G', category: 'Argument' },
+    { id: 'l19q7', question: 'Vad är $#?', options: ['Kommentar', 'Antal argument', 'Hash', 'Version'], correctIndex: 1, explanation: '$# = antal argument till skriptet.', difficulty: 'G', category: 'Argument' },
+    { id: 'l19q8', question: 'Hur börjar if-sats?', options: ['if (cond)', 'if [ cond ]; then', 'if cond:', 'if {cond}'], correctIndex: 1, explanation: 'if [ villkor ]; then ... fi', difficulty: 'G', category: 'if' },
+    { id: 'l19q9', question: 'Hur avslutas if-sats?', options: ['end', 'fi', 'endif', '}'], correctIndex: 1, explanation: 'fi (if baklänges) avslutar.', difficulty: 'G', category: 'if' },
+    { id: 'l19q10', question: 'Hur börjar for-loop?', options: ['for i in list do', 'for i in list; do', 'for (i in list)', 'foreach i list'], correctIndex: 1, explanation: 'for i in lista; do ... done', difficulty: 'G', category: 'for' },
+    { id: 'l19q11', question: 'Vad är $?', options: ['Sist kommando', 'Exit status från senaste cmd', 'Frågetecken', 'Help'], correctIndex: 1, explanation: '$? = 0 betyder success.', difficulty: 'G', category: 'Exit' },
+    { id: 'l19q12', question: 'Hur läser du input från user?', options: ['input var', 'read var', 'get var', 'stdin var'], correctIndex: 1, explanation: 'read läser från stdin till variabel.', difficulty: 'G', category: 'read' },
+    // VG-nivå (8)
+    { id: 'l19q13', question: 'Hur jämför du tal i bash?', options: ['== och !=', '-eq och -ne', '= och <>', 'eq() och ne()'], correctIndex: 1, explanation: '-eq, -ne, -lt, -gt, -le, -ge.', difficulty: 'VG', category: 'Jämför' },
+    { id: 'l19q14', question: 'Hur kollar du om fil finns?', options: ['[ exists fil ]', '[ -f fil ]', '[ file fil ]', '[ fil? ]'], correctIndex: 1, explanation: '-f testar vanlig fil, -d katalog.', difficulty: 'VG', category: 'Test' },
+    { id: 'l19q15', question: 'Hur fångar du kommandoutput?', options: ['out=$(cmd)', 'result=$(cmd)', 'cmd > result', 'result=cmd'], correctIndex: 1, explanation: '$(kommando) fångar output i variabel.', difficulty: 'VG', category: 'Substitution' },
+    { id: 'l19q16', question: 'Vad gör set -e?', options: ['Enable debug', 'Avbryt vid fel', 'Export all', 'Echo mode'], correctIndex: 1, explanation: 'set -e stoppar vid första fel.', difficulty: 'VG', category: 'set' },
+    { id: 'l19q17', question: 'Vad gör set -x?', options: ['Exit mode', 'Skriver ut varje kommando', 'X11 mode', 'Extra verbose'], correctIndex: 1, explanation: 'set -x är bra för debugging.', difficulty: 'VG', category: 'set' },
+    { id: 'l19q18', question: 'Hur gör du arithmetic?', options: ['5 + 3', '$((5 + 3))', 'math(5+3)', 'calc 5+3'], correctIndex: 1, explanation: '$((...)) eller ((...)) för matematik.', difficulty: 'VG', category: 'Math' },
+    { id: 'l19q19', question: 'Skillnad [ ] vs [[ ]]?', options: ['Samma', '[[ ]] är bash-utökning, säkrare', '[ ] är nyare', '[[ ]] är POSIX'], correctIndex: 1, explanation: '[[ ]] tillåter && och || inuti, safer.', difficulty: 'VG', category: 'Test' },
+    { id: 'l19q20', question: 'Hur definierar du funktion?', options: ['def func()', 'function func() { }', 'func := { }', 'sub func'], correctIndex: 1, explanation: 'function namn() { kommandon }', difficulty: 'VG', category: 'Funktion' }
+]
+
+// =============================================================================
+// TASK 20: TROUBLESHOOTING (20 quiz)
+// =============================================================================
+
+const TASK_20_QUIZ: TaskQuizQuestion[] = [
+    // G-nivå (12)
+    { id: 'l20q1', question: 'Hur visar du systemloggar?', options: ['syslog', 'journalctl', 'logs', 'viewlog'], correctIndex: 1, explanation: 'journalctl är standard på systemd.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l20q2', question: 'Hur följer du loggar live?', options: ['journalctl -l', 'journalctl -f', 'journalctl -w', 'journalctl -r'], correctIndex: 1, explanation: '-f = follow, som tail -f.', difficulty: 'G', category: 'Loggar' },
+    { id: 'l20q3', question: 'Hur visar du diskutrymme?', options: ['disk', 'df -h', 'space', 'du'], correctIndex: 1, explanation: 'df (disk free) visar ledigt utrymme.', difficulty: 'G', category: 'Disk' },
+    { id: 'l20q4', question: 'Hur visar du minnesanvändning?', options: ['mem', 'free -h', 'ram', 'memory'], correctIndex: 1, explanation: 'free visar RAM och swap.', difficulty: 'G', category: 'Minne' },
+    { id: 'l20q5', question: 'Hur testar du nätverksanslutning?', options: ['test google.com', 'ping google.com', 'connect google.com', 'check google.com'], correctIndex: 1, explanation: 'ping testar om host svarar.', difficulty: 'G', category: 'Nätverk' },
+    { id: 'l20q6', question: 'Hur dödar du process?', options: ['stop PID', 'kill PID', 'end PID', 'terminate PID'], correctIndex: 1, explanation: 'kill skickar signal till process.', difficulty: 'G', category: 'Process' },
+    { id: 'l20q7', question: 'Hur visar du CPU-last?', options: ['cpu', 'top eller htop', 'load', 'processor'], correctIndex: 1, explanation: 'top/htop visar processer och last.', difficulty: 'G', category: 'CPU' },
+    { id: 'l20q8', question: 'Hur hittar du process på port 80?', options: ['port 80', 'sudo lsof -i :80', 'find port 80', 'ps port 80'], correctIndex: 1, explanation: 'lsof -i visar processer på portar.', difficulty: 'G', category: 'Port' },
+    { id: 'l20q9', question: 'Hur visar du systemets uppetid?', options: ['uptime', 'runtime', 'boottime', 'online'], correctIndex: 0, explanation: 'uptime visar hur länge systemet kört.', difficulty: 'G', category: 'System' },
+    { id: 'l20q10', question: 'Hur startar du om tjänst?', options: ['service restart nginx', 'sudo systemctl restart nginx', 'nginx restart', 'reboot nginx'], correctIndex: 1, explanation: 'systemctl restart stoppar och startar.', difficulty: 'G', category: 'Tjänst' },
+    { id: 'l20q11', question: 'Hur kollar du tjänststatus?', options: ['service status', 'systemctl status nginx', 'nginx status', 'check nginx'], correctIndex: 1, explanation: 'status visar körande/stoppad + loggar.', difficulty: 'G', category: 'Tjänst' },
+    { id: 'l20q12', question: 'Hur visar du misslyckade tjänster?', options: ['systemctl errors', 'systemctl --failed', 'service failures', 'failed services'], correctIndex: 1, explanation: '--failed listar tjänster med fel.', difficulty: 'G', category: 'Tjänst' },
+    // VG-nivå (8)
+    { id: 'l20q13', question: 'Hur visar du kernel-loggar?', options: ['kernel-log', 'dmesg', 'klog', 'syskernel'], correctIndex: 1, explanation: 'dmesg visar kernel ring buffer.', difficulty: 'VG', category: 'Kernel' },
+    { id: 'l20q14', question: 'Hur visar du loggar för specifik tjänst?', options: ['journalctl nginx', 'journalctl -u nginx', 'logs nginx', 'service logs nginx'], correctIndex: 1, explanation: '-u (unit) filtrerar på tjänst.', difficulty: 'VG', category: 'Loggar' },
+    { id: 'l20q15', question: 'Hur testar du DNS?', options: ['dns google.com', 'nslookup google.com', 'resolve google.com', 'lookup google.com'], correctIndex: 1, explanation: 'nslookup eller dig testar DNS.', difficulty: 'VG', category: 'DNS' },
+    { id: 'l20q16', question: 'Hur tracear du nätverksväg?', options: ['route google.com', 'traceroute google.com', 'path google.com', 'trace google.com'], correctIndex: 1, explanation: 'traceroute visar varje hopp.', difficulty: 'VG', category: 'Nätverk' },
+    { id: 'l20q17', question: 'Hur analyserar du boot-tid?', options: ['boot-time', 'systemd-analyze', 'bootlog', 'startup-time'], correctIndex: 1, explanation: 'systemd-analyze blame visar tid per tjänst.', difficulty: 'VG', category: 'Boot' },
+    { id: 'l20q18', question: 'Hur ser du disk I/O per process?', options: ['diskio', 'iotop', 'iops', 'diskstat'], correctIndex: 1, explanation: 'iotop visar I/O per process.', difficulty: 'VG', category: 'Disk' },
+    { id: 'l20q19', question: 'Hur debugar du med system calls?', options: ['debug cmd', 'strace cmd', 'trace cmd', 'syscall cmd'], correctIndex: 1, explanation: 'strace visar alla system calls.', difficulty: 'VG', category: 'Debug' },
+    { id: 'l20q20', question: 'Hur kollar du om port är öppen remote?', options: ['test host:port', 'nc -zv host port', 'port-check host', 'open host port'], correctIndex: 1, explanation: 'nc (netcat) testar nätverksanslutning.', difficulty: 'VG', category: 'Port' }
+]
+
+// =============================================================================
+// EXPORT & HELPERS
+// =============================================================================
+
+export const LINUX247_TASK_QUIZ: TaskQuizSet[] = [
+    { taskId: 'linux247-1-filesystem', taskTitle: '1. File System Essentials', questions: TASK_1_QUIZ },
+    { taskId: 'linux247-2-text', taskTitle: '2. Text Processing', questions: TASK_2_QUIZ },
+    { taskId: 'linux247-3-processes', taskTitle: '3. Processes', questions: TASK_3_QUIZ },
+    { taskId: 'linux247-4-sysinfo', taskTitle: '4. System Info', questions: TASK_4_QUIZ },
+    { taskId: 'linux247-5-logs', taskTitle: '5. Logs', questions: TASK_5_QUIZ },
+    { taskId: 'linux247-6-ssh', taskTitle: '6. SSH', questions: TASK_6_QUIZ },
+    { taskId: 'linux247-7-firewall', taskTitle: '7. Firewall', questions: TASK_7_QUIZ },
+    { taskId: 'linux247-8-network', taskTitle: '8. Network', questions: TASK_8_QUIZ },
+    { taskId: 'linux247-9-packages', taskTitle: '9. Packages', questions: TASK_9_QUIZ },
+    { taskId: 'linux247-10-systemd', taskTitle: '10. Systemd', questions: TASK_10_QUIZ },
+    { taskId: 'linux247-11-permissions', taskTitle: '11. Permissions', questions: TASK_11_QUIZ },
+    { taskId: 'linux247-12-compression', taskTitle: '12. Compression', questions: TASK_12_QUIZ },
+    { taskId: 'linux247-13-environment', taskTitle: '13. Environment', questions: TASK_13_QUIZ },
+    { taskId: 'linux247-14-disk', taskTitle: '14. Disk', questions: TASK_14_QUIZ },
+    { taskId: 'linux247-15-reference', taskTitle: '15. Reference', questions: TASK_15_QUIZ },
+    { taskId: 'linux247-16-productivity', taskTitle: '16. Productivity', questions: TASK_16_QUIZ },
+    { taskId: 'linux247-17-users', taskTitle: '17. Users', questions: TASK_17_QUIZ },
+    { taskId: 'linux247-18-cron', taskTitle: '18. Cron', questions: TASK_18_QUIZ },
+    { taskId: 'linux247-19-scripting', taskTitle: '19. Scripting', questions: TASK_19_QUIZ },
+    { taskId: 'linux247-20-troubleshooting', taskTitle: '20. Troubleshooting', questions: TASK_20_QUIZ }
+]
+
+export function getLinux247QuizForTask(taskId: string): TaskQuizQuestion[] {
+    const set = LINUX247_TASK_QUIZ.find(s => s.taskId === taskId)
+    return set?.questions || []
+}
+
+export function getAllLinux247Quiz(): TaskQuizQuestion[] {
+    return LINUX247_TASK_QUIZ.flatMap(s => s.questions)
+}
