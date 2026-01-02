@@ -2,34 +2,30 @@
 
 /**
  * ============================================================================
- * SKILLSMAP DETAIL PAGE — REDIRECTS TO CAMP DEVOPS
+ * SKILLSMAP DETAIL PAGE — USES SHARED MODULE COMPONENT
  * ============================================================================
  *
- * SkillsMaps and Camp DevOps share the SAME modules with SAME design.
- * This page redirects to the Camp DevOps module page.
+ * All module pages use the SAME SharedModulePage component.
+ * Data is fetched from backend API: /api/modules/full/{slug}
  *
- * @phase DESIGN-UNIFICATION
+ * Single source of truth: Backend
+ * Single design: SharedModulePage
+ *
+ * @phase ARCHITECTURE-UNIFICATION
  */
 
-import { useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
+import { SharedModulePage } from "@/components/modules/SharedModulePage"
 
 export default function SkillsMapDetailPage() {
     const params = useParams()
-    const router = useRouter()
     const slug = params?.slug as string
 
-    useEffect(() => {
-        if (slug) {
-            // Redirect to Camp DevOps module page - same content, same design
-            router.replace(`/modules/${slug}`)
-        }
-    }, [slug, router])
-
-    // Loading state while redirecting
     return (
-        <div className="min-h-screen bg-[#05050a] flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-purple-500" />
-        </div>
+        <SharedModulePage
+            slug={slug}
+            backHref="/skillsmaps"
+            backLabel="Tillbaka till SkillsMaps"
+        />
     )
 }
