@@ -2,19 +2,19 @@
 
 /**
  * ============================================================================
- * AI QUIZ GENERATOR — COSMIC EDITION 🌌
+ * AI QUIZ GENERATOR — DOE25 PREMIUM DESIGN
  * ============================================================================
  *
- * COSMIC DESIGN:
- * - Deep space background (#05050a)
- * - Multi-layered aurora orbs
- * - Pulsating icon glows
- * - Netflix-smooth animations
+ * Premium Quiz page with DOE25 Tenta-style design:
+ * - COSMIC background with aurora effects
+ * - Hero header with stats grid
+ * - Premium progress tracking
  *
- * @phase MILESTONE-2.0-COSMIC
+ * @phase DOE25-REDESIGN
  */
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Brain,
@@ -29,6 +29,10 @@ import {
   Zap,
   Target,
   GraduationCap,
+  ArrowLeft,
+  Trophy,
+  Clock,
+  Play,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,55 +52,48 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { getToken } from "@/lib/auth";
+import { CosmicAurora } from "@/components/ui/cosmic-aurora";
+import { cn } from "@/lib/utils";
+
+const API_BASE_URL = "https://saas-project-production-31f8.up.railway.app";
 
 /* ============================================================================
-   COSMIC AURORA BACKGROUND
+   STATS CARD — Same as DOE25 Tenta
    ============================================================================ */
 
-function CosmicAurora() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      <div className="absolute inset-0 bg-[#05050a]" />
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-                        linear-gradient(rgba(168, 85, 247, 0.3) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(168, 85, 247, 0.3) 1px, transparent 1px)
-                    `,
-          backgroundSize: '60px 60px'
-        }}
-      />
-      <motion.div
-        className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.05) 40%, transparent 70%)',
-        }}
-        animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0.7, 0.5] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-60 -left-60 w-[600px] h-[600px] rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 60%)',
-        }}
-        animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-      <motion.div
-        className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full"
-        style={{
-          background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 60%)',
-        }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-      />
-    </div>
-  )
+function StatCard({
+    icon,
+    label,
+    value,
+    color
+}: {
+    icon: React.ReactNode
+    label: string
+    value: string | number
+    color: string
+}) {
+    return (
+        <motion.div
+            whileHover={{ scale: 1.02 }}
+            className={cn(
+                "flex items-center gap-4 p-4 rounded-xl",
+                "bg-white/5 border border-white/10",
+                "hover:border-white/20 transition-colors"
+            )}
+        >
+            <div className={cn(
+                "w-12 h-12 rounded-xl flex items-center justify-center",
+                `bg-gradient-to-br ${color}`
+            )}>
+                {icon}
+            </div>
+            <div>
+                <p className="text-2xl font-bold text-white">{value}</p>
+                <p className="text-sm text-zinc-400">{label}</p>
+            </div>
+        </motion.div>
+    )
 }
-
-// Hardcode API URL to ensure it works
-const API_BASE_URL = "https://saas-project-production-31f8.up.railway.app";
 
 interface Module {
   slug: string;
@@ -291,81 +288,114 @@ export default function QuizPage() {
     setSelectedModule("");
   };
 
-  // No access view - Cosmic styled
+  // No access view - DOE25 Premium styled
   if (hasAccess === false) {
     return (
       <div className="min-h-screen bg-[#05050a] relative">
         <CosmicAurora />
-        <div className="relative z-10 p-8">
-          <div className="max-w-2xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Card className="bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f] border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.1)]">
-                <CardHeader className="text-center">
-                  <motion.div
-                    className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-full flex items-center justify-center mb-4 border border-purple-500/40"
-                    animate={{
-                      boxShadow: [
-                        '0 0 20px rgba(168,85,247,0.3)',
-                        '0 0 35px rgba(168,85,247,0.5)',
-                        '0 0 20px rgba(168,85,247,0.3)'
-                      ]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
-                  >
-                    <Lock className="w-8 h-8 text-purple-400" />
-                  </motion.div>
-                  <CardTitle className="text-2xl text-white">Premium Feature</CardTitle>
-                  <CardDescription className="text-purple-200/60">
-                    {accessMessage}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="space-y-4">
-                    <motion.div
-                      className="flex items-center justify-center gap-2 text-zinc-300"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <Sparkles className="w-5 h-5 text-yellow-500" />
-                      <span>AI-powered quiz generation</span>
-                    </motion.div>
-                    <motion.div
-                      className="flex items-center justify-center gap-2 text-zinc-300"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Brain className="w-5 h-5 text-purple-500" />
-                      <span>Adaptive difficulty levels</span>
-                    </motion.div>
-                    <motion.div
-                      className="flex items-center justify-center gap-2 text-zinc-300"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      <Target className="w-5 h-5 text-green-500" />
-                      <span>Module-specific questions</span>
-                    </motion.div>
-                  </div>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <Badge className="mt-6 bg-gradient-to-r from-purple-600 to-pink-600 shadow-[0_0_15px_rgba(168,85,247,0.4)]">
-                      Coming Soon
-                    </Badge>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Back */}
+          <Link
+            href="/learn"
+            className={cn(
+              "inline-flex items-center gap-2 text-sm mb-8 px-4 py-2 rounded-xl",
+              "text-zinc-400 hover:text-white",
+              "bg-white/5 hover:bg-white/10 border border-white/10",
+              "transition-all duration-300"
+            )}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Tillbaka till Learning
+          </Link>
+
+          {/* Hero Header — Locked */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={cn(
+              "relative overflow-hidden rounded-3xl mb-8",
+              "bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-zinc-500/10",
+              "border border-purple-500/20",
+              "p-8 md:p-12"
+            )}
+          >
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" />
+
+            <div className="relative text-center">
+              <motion.div
+                className={cn(
+                  "w-24 h-24 mx-auto mb-6 rounded-3xl flex items-center justify-center",
+                  "bg-gradient-to-br from-purple-500/30 to-pink-500/30",
+                  "border border-purple-500/40 shadow-lg shadow-purple-500/20"
+                )}
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(168,85,247,0.3)',
+                    '0 0 35px rgba(168,85,247,0.5)',
+                    '0 0 20px rgba(168,85,247,0.3)'
+                  ]
+                }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              >
+                <Lock className="w-12 h-12 text-purple-400" />
+              </motion.div>
+
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-400 text-xs font-bold uppercase tracking-wider">
+                  Premium
+                </span>
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-black text-white mb-4">
+                AI Quiz Generator
+              </h1>
+
+              <p className="text-lg text-zinc-300 max-w-2xl mx-auto mb-8">
+                {accessMessage}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <Sparkles className="w-6 h-6 text-yellow-500" />
+                  <span className="text-zinc-300">AI-genererade frågor</span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <Brain className="w-6 h-6 text-purple-500" />
+                  <span className="text-zinc-300">Adaptiv svårighet</span>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+                >
+                  <Target className="w-6 h-6 text-green-500" />
+                  <span className="text-zinc-300">Modul-specifikt</span>
+                </motion.div>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Badge className="mt-8 bg-gradient-to-r from-purple-600 to-pink-600 shadow-[0_0_15px_rgba(168,85,247,0.4)] text-lg px-6 py-2">
+                  Kommer snart
+                </Badge>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
     );
@@ -386,65 +416,127 @@ export default function QuizPage() {
     );
   }
 
-  // Quiz results view - Cosmic celebration
+  // Quiz results view - DOE25 Premium celebration
   if (quiz?.showResult) {
     const percentage = Math.round((quiz.score / quiz.questions.length) * 100);
 
     return (
       <div className="min-h-screen bg-[#05050a] relative">
         <CosmicAurora />
-        <div className="relative z-10 p-8">
-          <div className="max-w-2xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Card className="bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f] border-emerald-500/30 shadow-[0_0_50px_rgba(52,211,153,0.15)]">
-                <CardHeader className="text-center">
-                  <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-green-500/30 to-emerald-500/30 rounded-full flex items-center justify-center mb-4 border border-emerald-500/40"
-                    animate={{
-                      boxShadow: [
-                        '0 0 25px rgba(52,211,153,0.3)',
-                        '0 0 45px rgba(52,211,153,0.5)',
-                        '0 0 25px rgba(52,211,153,0.3)'
-                      ],
-                      scale: [1, 1.05, 1]
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity }}
-                  >
-                    <GraduationCap className="w-10 h-10 text-green-400" />
-                  </motion.div>
-                  <CardTitle className="text-3xl text-white">Quiz Complete!</CardTitle>
-                  <CardDescription className="text-emerald-200/60">
-                    You scored {quiz.score} out of {quiz.questions.length}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="text-center">
-                    <motion.div
-                      className="text-6xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      {percentage}%
-                    </motion.div>
-                    <Progress value={percentage} className="mt-4 h-3 bg-zinc-800" />
-                  </div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Hero Header — Results */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={cn(
+              "relative overflow-hidden rounded-3xl",
+              "bg-gradient-to-br from-emerald-500/10 via-purple-500/10 to-cyan-500/10",
+              "border border-emerald-500/20",
+              "p-8 md:p-12"
+            )}
+          >
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 rounded-full blur-[100px]" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px]" />
 
-                  <div className="flex justify-center gap-4">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button onClick={resetQuiz} variant="outline" className="border-emerald-500/40 hover:bg-emerald-500/10">
-                        <RotateCcw className="w-4 h-4 mr-2" />
-                        New Quiz
-                      </Button>
-                    </motion.div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
+            <div className="relative text-center">
+              <motion.div
+                className={cn(
+                  "w-24 h-24 mx-auto mb-6 rounded-3xl flex items-center justify-center",
+                  "bg-gradient-to-br from-emerald-500/30 to-green-500/30",
+                  "border border-emerald-500/40 shadow-lg shadow-emerald-500/20"
+                )}
+                animate={{
+                  boxShadow: [
+                    '0 0 25px rgba(52,211,153,0.3)',
+                    '0 0 45px rgba(52,211,153,0.5)',
+                    '0 0 25px rgba(52,211,153,0.3)'
+                  ],
+                  scale: [1, 1.05, 1]
+                }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+              >
+                <GraduationCap className="w-12 h-12 text-emerald-400" />
+              </motion.div>
+
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                  Quiz Klar!
+                </span>
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-black text-white mb-4">
+                Bra jobbat!
+              </h1>
+
+              <p className="text-lg text-zinc-300 mb-6">
+                Du fick {quiz.score} av {quiz.questions.length} rätt
+              </p>
+
+              <motion.div
+                className="text-7xl font-black bg-gradient-to-r from-emerald-400 via-green-400 to-cyan-400 bg-clip-text text-transparent mb-8"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                {percentage}%
+              </motion.div>
+
+              {/* Stats Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <StatCard
+                  icon={<CheckCircle2 className="w-6 h-6 text-white" />}
+                  label="Rätt svar"
+                  value={quiz.score}
+                  color="from-emerald-500 to-green-500"
+                />
+                <StatCard
+                  icon={<XCircle className="w-6 h-6 text-white" />}
+                  label="Fel svar"
+                  value={quiz.questions.length - quiz.score}
+                  color="from-red-500 to-orange-500"
+                />
+                <StatCard
+                  icon={<Target className="w-6 h-6 text-white" />}
+                  label="Totalt"
+                  value={quiz.questions.length}
+                  color="from-purple-500 to-pink-500"
+                />
+                <StatCard
+                  icon={<Trophy className="w-6 h-6 text-white" />}
+                  label="Procent"
+                  value={`${percentage}%`}
+                  color="from-amber-500 to-yellow-500"
+                />
+              </div>
+
+              {/* Progress Bar */}
+              <div className="max-w-md mx-auto mb-8">
+                <div className="h-4 bg-zinc-800 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className="h-full bg-gradient-to-r from-emerald-500 via-green-500 to-cyan-500 rounded-full"
+                  />
+                </div>
+              </div>
+
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button 
+                  onClick={resetQuiz} 
+                  className={cn(
+                    "px-8 py-6 rounded-xl text-lg font-semibold",
+                    "bg-gradient-to-r from-purple-600 to-cyan-600",
+                    "hover:from-purple-500 hover:to-cyan-500",
+                    "shadow-lg shadow-purple-500/30"
+                  )}
+                >
+                  <RotateCcw className="w-5 h-5 mr-2" />
+                  Nytt Quiz
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
     );
@@ -633,150 +725,225 @@ export default function QuizPage() {
     );
   }
 
-  // Quiz setup view - Cosmic styled
+  // Quiz setup view - DOE25 Premium styled
   return (
     <div className="min-h-screen bg-[#05050a] relative">
       <CosmicAurora />
-      <div className="relative z-10 p-8">
-        <div className="max-w-2xl mx-auto">
-          {/* Cosmic Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-center mb-8"
-          >
-            <motion.div
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 px-4 py-2 rounded-full mb-4 border border-purple-500/30"
-              animate={{ boxShadow: ['0 0 15px rgba(168,85,247,0.2)', '0 0 25px rgba(168,85,247,0.4)', '0 0 15px rgba(168,85,247,0.2)'] }}
-              transition={{ duration: 2.5, repeat: Infinity }}
-            >
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Back */}
+        <Link
+          href="/learn"
+          className={cn(
+            "inline-flex items-center gap-2 text-sm mb-8 px-4 py-2 rounded-xl",
+            "text-zinc-400 hover:text-white",
+            "bg-white/5 hover:bg-white/10 border border-white/10",
+            "transition-all duration-300"
+          )}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Tillbaka till Learning
+        </Link>
+
+        {/* Hero Header — DOE25 Style */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={cn(
+            "relative overflow-hidden rounded-3xl mb-8",
+            "bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-cyan-500/10",
+            "border border-purple-500/20",
+            "p-8 md:p-12"
+          )}
+        >
+          {/* Background Glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/10 rounded-full blur-[80px]" />
+
+          <div className="relative">
+            <div className="flex flex-col md:flex-row md:items-start gap-6 mb-8">
+              {/* Icon */}
               <motion.div
-                animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <Sparkles className="w-4 h-4 text-purple-400" />
-              </motion.div>
-              <span className="text-purple-300 text-sm">AI-Powered</span>
-            </motion.div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-2">Quiz Generator</h1>
-            <p className="text-purple-200/60">
-              Test your knowledge with AI-generated questions
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Card className="bg-gradient-to-br from-[#0d0d14] to-[#0a0a0f] border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.1)]">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2">
-                  <motion.div
-                    animate={{
-                      boxShadow: ['0 0 10px rgba(168,85,247,0.3)', '0 0 20px rgba(168,85,247,0.5)', '0 0 10px rgba(168,85,247,0.3)']
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="p-1 rounded-lg"
-                  >
-                    <Brain className="w-5 h-5 text-purple-400" />
-                  </motion.div>
-                  Configure Your Quiz
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {error && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="p-4 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400"
-                  >
-                    {error}
-                  </motion.div>
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                className={cn(
+                  "w-24 h-24 rounded-3xl flex items-center justify-center shrink-0",
+                  "bg-gradient-to-br from-purple-500/30 to-pink-500/30",
+                  "border border-purple-500/40 shadow-lg shadow-purple-500/20"
                 )}
+              >
+                <span className="text-6xl">🧠</span>
+              </motion.div>
 
-                <div className="space-y-2">
-                  <label className="text-sm text-purple-200/60">Select Module ({modules.length} available)</label>
-                  <Select value={selectedModule} onValueChange={setSelectedModule}>
-                    <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60 focus:ring-purple-500/20">
-                      <SelectValue placeholder="Choose a module..." />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d0d14] border-purple-500/30">
-                      {modules.map((module) => (
-                        <SelectItem key={module.slug} value={module.slug} className="text-white hover:bg-purple-500/20">
-                          {module.title}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-400 text-xs font-bold uppercase tracking-wider">
+                    AI-Powered
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/30 text-pink-400 text-xs font-bold">
+                    {modules.length} Moduler
+                  </span>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm text-purple-200/60">Quiz Type</label>
-                  <Select value={quizType} onValueChange={(v: string) => setQuizType(v as "mcq" | "flashcard")}>
-                    <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d0d14] border-purple-500/30">
-                      <SelectItem value="mcq" className="text-white hover:bg-purple-500/20">Multiple Choice</SelectItem>
-                      <SelectItem value="flashcard" className="text-white hover:bg-purple-500/20">Flashcards</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <h1 className="text-3xl md:text-5xl font-black text-white mb-4">
+                  AI Quiz Generator
+                </h1>
 
-                <div className="space-y-2">
-                  <label className="text-sm text-purple-200/60">Difficulty</label>
-                  <Select value={difficulty} onValueChange={(v: string) => setDifficulty(v as typeof difficulty)}>
-                    <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d0d14] border-purple-500/30">
-                      <SelectItem value="beginner" className="text-white hover:bg-purple-500/20">Beginner</SelectItem>
-                      <SelectItem value="intermediate" className="text-white hover:bg-purple-500/20">Intermediate</SelectItem>
-                      <SelectItem value="advanced" className="text-white hover:bg-purple-500/20">Advanced</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <p className="text-lg text-zinc-300 max-w-2xl mb-6">
+                  Testa dina kunskaper med AI-genererade frågor. Välj modul, 
+                  svårighetsgrad och antal frågor för att skapa ett personligt quiz.
+                </p>
+              </div>
+            </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm text-purple-200/60">Number of Questions</label>
-                  <Select value={String(questionCount)} onValueChange={(v: string) => setQuestionCount(Number(v))}>
-                    <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#0d0d14] border-purple-500/30">
-                      <SelectItem value="5" className="text-white hover:bg-purple-500/20">5 Questions</SelectItem>
-                      <SelectItem value="10" className="text-white hover:bg-purple-500/20">10 Questions</SelectItem>
-                      <SelectItem value="15" className="text-white hover:bg-purple-500/20">15 Questions</SelectItem>
-                      <SelectItem value="20" className="text-white hover:bg-purple-500/20">20 Questions</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <StatCard
+                icon={<BookOpen className="w-6 h-6 text-white" />}
+                label="Moduler"
+                value={modules.length}
+                color="from-purple-500 to-pink-500"
+              />
+              <StatCard
+                icon={<Target className="w-6 h-6 text-white" />}
+                label="Svårighetsgrader"
+                value="3"
+                color="from-emerald-500 to-green-500"
+              />
+              <StatCard
+                icon={<Zap className="w-6 h-6 text-white" />}
+                label="Quiz-typer"
+                value="2"
+                color="from-amber-500 to-orange-500"
+              />
+              <StatCard
+                icon={<Brain className="w-6 h-6 text-white" />}
+                label="AI-driven"
+                value="✓"
+                color="from-cyan-500 to-blue-500"
+              />
+            </div>
+          </div>
+        </motion.div>
 
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button
-                    onClick={generateQuiz}
-                    disabled={!selectedModule || loading}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 shadow-[0_0_25px_rgba(168,85,247,0.4)] disabled:opacity-50 disabled:shadow-none"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Generating Quiz...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-4 h-4 mr-2" />
-                        Generate Quiz
-                      </>
-                    )}
-                  </Button>
+        {/* Quiz Configuration Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Card className="bg-[#0a0a0f] border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.1)]">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <motion.div
+                  animate={{
+                    boxShadow: ['0 0 10px rgba(168,85,247,0.3)', '0 0 20px rgba(168,85,247,0.5)', '0 0 10px rgba(168,85,247,0.3)']
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="p-1 rounded-lg"
+                >
+                  <Brain className="w-5 h-5 text-purple-400" />
                 </motion.div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+                Konfigurera ditt Quiz
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="p-4 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-sm text-purple-200/60">Välj Modul ({modules.length} tillgängliga)</label>
+                <Select value={selectedModule} onValueChange={setSelectedModule}>
+                  <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60 focus:ring-purple-500/20">
+                    <SelectValue placeholder="Välj en modul..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0d0d14] border-purple-500/30">
+                    {modules.map((module) => (
+                      <SelectItem key={module.slug} value={module.slug} className="text-white hover:bg-purple-500/20">
+                        {module.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm text-purple-200/60">Quiz-typ</label>
+                <Select value={quizType} onValueChange={(v: string) => setQuizType(v as "mcq" | "flashcard")}>
+                  <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0d0d14] border-purple-500/30">
+                    <SelectItem value="mcq" className="text-white hover:bg-purple-500/20">Flervalsfrågor</SelectItem>
+                    <SelectItem value="flashcard" className="text-white hover:bg-purple-500/20">Flashcards</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm text-purple-200/60">Svårighetsgrad</label>
+                <Select value={difficulty} onValueChange={(v: string) => setDifficulty(v as typeof difficulty)}>
+                  <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0d0d14] border-purple-500/30">
+                    <SelectItem value="beginner" className="text-white hover:bg-purple-500/20">Nybörjare</SelectItem>
+                    <SelectItem value="intermediate" className="text-white hover:bg-purple-500/20">Mellanliggande</SelectItem>
+                    <SelectItem value="advanced" className="text-white hover:bg-purple-500/20">Avancerad</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm text-purple-200/60">Antal frågor</label>
+                <Select value={String(questionCount)} onValueChange={(v: string) => setQuestionCount(Number(v))}>
+                  <SelectTrigger className="bg-[#0a0a0f] border-purple-500/30 text-white focus:border-purple-500/60">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#0d0d14] border-purple-500/30">
+                    <SelectItem value="5" className="text-white hover:bg-purple-500/20">5 frågor</SelectItem>
+                    <SelectItem value="10" className="text-white hover:bg-purple-500/20">10 frågor</SelectItem>
+                    <SelectItem value="15" className="text-white hover:bg-purple-500/20">15 frågor</SelectItem>
+                    <SelectItem value="20" className="text-white hover:bg-purple-500/20">20 frågor</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button
+                  onClick={generateQuiz}
+                  disabled={!selectedModule || loading}
+                  className={cn(
+                    "w-full py-6 rounded-xl",
+                    "bg-gradient-to-r from-purple-600 to-pink-600",
+                    "hover:from-purple-500 hover:to-pink-500",
+                    "shadow-[0_0_25px_rgba(168,85,247,0.4)]",
+                    "disabled:opacity-50 disabled:shadow-none",
+                    "text-lg font-semibold"
+                  )}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Genererar Quiz...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-5 h-5 mr-2 fill-white" />
+                      Starta Quiz
+                      <ChevronRight className="w-5 h-5 ml-2" />
+                    </>
+                  )}
+                </Button>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
