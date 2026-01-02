@@ -249,8 +249,8 @@ export default function SkillsMapsPage() {
     const progressPercent = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0
 
     // Find first in-progress or not-started map
-    const continueMap = skillsmaps.find(sm => sm.status === "in_progress") || 
-                        skillsmaps.find(sm => sm.status === "not_started")
+    const continueMap = skillsmaps.find(sm => sm.status === "in_progress") ||
+        skillsmaps.find(sm => sm.status === "not_started")
 
     return (
         <div className="min-h-screen bg-[#05050a] relative">
@@ -315,7 +315,7 @@ export default function SkillsMapsPage() {
                                 </h1>
 
                                 <p className="text-lg text-zinc-300 max-w-2xl mb-6">
-                                    Interaktiva kunskapsstigar för att bemästra DevOps, Cloud, AI och mer. 
+                                    Interaktiva kunskapsstigar för att bemästra DevOps, Cloud, AI och mer.
                                     Följ dina framsteg och lås upp nya kunskaper.
                                 </p>
 
