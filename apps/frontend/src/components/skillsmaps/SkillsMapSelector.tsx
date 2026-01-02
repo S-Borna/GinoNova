@@ -504,14 +504,6 @@ export function SkillsMapSelector({
         <div className={cn("relative", className)}>
             <FloatingParticles />
 
-            <SelectorHeader
-                totalMaps={skillsmaps.length}
-                completedMaps={completedMaps}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onCreatePath={handleCreatePath}
-            />
-
             {/* Custom Paths Section */}
             <CustomPathsSection
                 paths={customPaths}

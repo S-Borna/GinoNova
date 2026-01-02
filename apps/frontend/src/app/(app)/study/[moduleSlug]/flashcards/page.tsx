@@ -326,8 +326,8 @@ function FlashcardsContent() {
                             onClick={handleShuffle}
                             className={cn(
                                 "p-2 rounded-lg transition-colors",
-                                isShuffled 
-                                    ? "bg-purple-600/30 text-purple-400" 
+                                isShuffled
+                                    ? "bg-purple-600/30 text-purple-400"
                                     : "bg-zinc-800 hover:bg-zinc-700"
                             )}
                             title="Blanda kort"

@@ -62,37 +62,37 @@ const API_BASE_URL = "https://saas-project-production-31f8.up.railway.app";
    ============================================================================ */
 
 function StatCard({
-    icon,
-    label,
-    value,
-    color
+  icon,
+  label,
+  value,
+  color
 }: {
-    icon: React.ReactNode
-    label: string
-    value: string | number
-    color: string
+  icon: React.ReactNode
+  label: string
+  value: string | number
+  color: string
 }) {
-    return (
-        <motion.div
-            whileHover={{ scale: 1.02 }}
-            className={cn(
-                "flex items-center gap-4 p-4 rounded-xl",
-                "bg-white/5 border border-white/10",
-                "hover:border-white/20 transition-colors"
-            )}
-        >
-            <div className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center",
-                `bg-gradient-to-br ${color}`
-            )}>
-                {icon}
-            </div>
-            <div>
-                <p className="text-2xl font-bold text-white">{value}</p>
-                <p className="text-sm text-zinc-400">{label}</p>
-            </div>
-        </motion.div>
-    )
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className={cn(
+        "flex items-center gap-4 p-4 rounded-xl",
+        "bg-white/5 border border-white/10",
+        "hover:border-white/20 transition-colors"
+      )}
+    >
+      <div className={cn(
+        "w-12 h-12 rounded-xl flex items-center justify-center",
+        `bg-gradient-to-br ${color}`
+      )}>
+        {icon}
+      </div>
+      <div>
+        <p className="text-2xl font-bold text-white">{value}</p>
+        <p className="text-sm text-zinc-400">{label}</p>
+      </div>
+    </motion.div>
+  )
 }
 
 interface Module {
@@ -522,8 +522,8 @@ export default function QuizPage() {
               </div>
 
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button 
-                  onClick={resetQuiz} 
+                <Button
+                  onClick={resetQuiz}
                   className={cn(
                     "px-8 py-6 rounded-xl text-lg font-semibold",
                     "bg-gradient-to-r from-purple-600 to-cyan-600",
@@ -788,7 +788,7 @@ export default function QuizPage() {
                 </h1>
 
                 <p className="text-lg text-zinc-300 max-w-2xl mb-6">
-                  Testa dina kunskaper med AI-genererade frågor. Välj modul, 
+                  Testa dina kunskaper med AI-genererade frågor. Välj modul,
                   svårighetsgrad och antal frågor för att skapa ett personligt quiz.
                 </p>
               </div>
