@@ -11,7 +11,7 @@ BASH_GRUNDER_NODE = {
     "difficulty": "easy",
     "estimated_minutes": 30,
     "xp_reward": 80,
-    "order_index": 0,  # Först av alla!
+    "order_index": 1,  # Först av alla!
     "content": r"""# Bash-grunder & Shebang
 
 > **TL;DR:** Bash är tolken som förstår dina kommandon. Shebang (#!/bin/bash) berättar för systemet vilken tolk som ska användas. Utan shebang vet datorn inte hur den ska köra ditt skript.
