@@ -118,7 +118,7 @@ function getLocalModuleData(): HandsOnModule {
             estimated_minutes: task.estimated_minutes,
             difficulty: 'medium' as TaskDifficulty, // Local data doesn't have difficulty per task
             xp_reward: 100,
-            content: undefined,
+            content: task.content,  // Use markdown content from local data
             content_blocks: task.content_blocks as ContentBlock[],
         })),
         total_tasks: HANDSON_MODULE.tasks.length,
@@ -144,7 +144,7 @@ function getLocalTaskData(taskId: string): (HandsOnTask & { module_slug?: string
         estimated_minutes: task.estimated_minutes,
         difficulty: 'medium' as TaskDifficulty,
         xp_reward: 100,
-        content: undefined,
+        content: task.content,  // Use markdown content from local data
         content_blocks: task.content_blocks as ContentBlock[],
         module_slug: HANDSON_MODULE.slug,
         prev_task_id: prevTask?.id,
