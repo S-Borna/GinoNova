@@ -45,6 +45,8 @@ import {
 import { DOE25_MODULE, DOE25Task, getTaskById } from "@/data/doe25-module"
 import { DOE25TaskSidebar } from "@/components/doe25/DOE25TaskSidebar"
 import { DOE25ContentRenderer } from "@/components/doe25/DOE25ContentRenderer"
+import { ConfidenceMeter, QuickConfidenceCheck } from "@/components/exam-mode/ExamModeTaskFeatures"
+import { useExamMode } from "@/contexts/ExamModeContext"
 
 /* ============================================================================
    MODULE COLORS
@@ -424,6 +426,17 @@ export default function DOE25TaskPage() {
                                     transition={{ delay: 0.1 }}
                                 >
                                     <DOE25ContentRenderer blocks={task.content_blocks} />
+                                </motion.div>
+
+                                {/* Exam Mode Features */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="grid md:grid-cols-2 gap-4"
+                                >
+                                    <ConfidenceMeter taskId={taskId} />
+                                    <QuickConfidenceCheck taskId={taskId} />
                                 </motion.div>
 
                                 {/* Task Footer */}

@@ -10,6 +10,7 @@ import type { ReactNode } from "react"
 import { ThemeProvider } from "next-themes"
 import { AuthProvider, NextAuthProvider } from "@/components/auth"
 import { QueryProvider } from "@/providers/QueryProvider"
+import { ExamModeProvider } from "@/contexts/ExamModeContext"
 import { Toaster } from "@/components/ui/sonner"
 import { AppInitializer } from "@/components/AppInitializer"
 
@@ -28,7 +29,11 @@ export function Providers({ children }: ProvidersProps) {
             <AppInitializer />
             <NextAuthProvider>
                 <QueryProvider>
-                    <AuthProvider>{children}</AuthProvider>
+                    <AuthProvider>
+                        <ExamModeProvider>
+                            {children}
+                        </ExamModeProvider>
+                    </AuthProvider>
                 </QueryProvider>
             </NextAuthProvider>
             <Toaster position="top-right" richColors closeButton />
