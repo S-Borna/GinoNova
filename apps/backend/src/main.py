@@ -106,45 +106,95 @@ def seed_content():
         logger.info("📭 No content to seed — content/ is empty (this is fine!)")
         return
 
-    existing_modules = list_modules()
-    existing_tracks = list_tracks()
+    # Kolla om PostgreSQL är tillgängligt
+    from .db.database import is_db_configured, get_db_context
+    use_postgres = is_db_configured()
+    
+    # Hämta befintliga moduler (använd PostgreSQL om tillgängligt)
+    if use_postgres:
+        from .db import models
+        with get_db_context() as db:
+            existing_modules = db.query(models.Module).all()
+            existing_tracks = db.query(models.Track).all()
+    else:
+        existing_modules = list_modules()
+        existing_tracks = list_tracks()
 
     # Skapa/uppdatera tracks först
     track_id_map: dict[str, any] = {}
     for track_data in get_tracks():
-        existing_track = get_track_by_slug(track_data["slug"]) if existing_tracks else None
+        # Hitta befintlig track (använd PostgreSQL om tillgängligt)
+        existing_track = None
+        if use_postgres:
+            with get_db_context() as db:
+                existing_track = db.query(models.Track).filter(
+                    models.Track.slug == track_data["slug"]
+                ).first()
+        elif existing_tracks:
+            existing_track = get_track_by_slug(track_data["slug"])
+        
         if existing_track:
             track_id_map[track_data["slug"]] = existing_track.id
         else:
-            track = create_track(
-                TrackCreate(
-                    name=track_data["name"],
-                    slug=track_data["slug"],
-                    description=track_data["description"],
-                    color=track_data["color"],
-                    icon=track_data["icon"],
-                    order_index=track_data["order_index"],
+            # Skapa ny track (använd PostgreSQL om tillgängligt)
+            if use_postgres:
+                with get_db_context() as db:
+                    new_track = models.Track(
+                        name=track_data["name"],
+                        slug=track_data["slug"],
+                        description=track_data.get("description"),
+                        color=track_data.get("color", "#6366f1"),
+                        icon=track_data.get("icon", "📚"),
+                        order_index=track_data.get("order_index", 1),
+                    )
+                    db.add(new_track)
+                    db.commit()
+                    db.refresh(new_track)
+                    track_id_map[track_data["slug"]] = new_track.id
+            else:
+                track = create_track(
+                    TrackCreate(
+                        name=track_data["name"],
+                        slug=track_data["slug"],
+                        description=track_data["description"],
+                        color=track_data["color"],
+                        icon=track_data["icon"],
+                        order_index=track_data["order_index"],
+                    )
                 )
-            )
-            track_id_map[track_data["slug"]] = track.id
+                track_id_map[track_data["slug"]] = track.id
 
     # Om data redan finns, uppdatera bara hands-on modulen
     if existing_modules:
         logger.info(f"📝 Content exists: {len(existing_modules)} modules - checking for updates...")
 
-        # Hitta hands-on modulen specifikt
-        hands_on_module = get_module_by_slug("hands-on-lab")
-        if hands_on_module:
+        # Hitta hands-on modulen specifikt (använd PostgreSQL om tillgängligt)
+        hands_on_module = None
+        hands_on_module_id = None
+        
+        if use_postgres:
+            # Hämta från PostgreSQL
+            from .db import models
+            with get_db_context() as db:
+                db_module = db.query(models.Module).filter(
+                    models.Module.slug == "hands-on-lab"
+                ).first()
+                if db_module:
+                    hands_on_module_id = db_module.id
+                    logger.info(f"✅ Found Hands-On Lab module in PostgreSQL: {db_module.id}")
+        else:
+            # Fallback till in-memory
+            hands_on_module = get_module_by_slug("hands-on-lab")
+            if hands_on_module:
+                hands_on_module_id = hands_on_module.id
+        
+        if hands_on_module_id:
             # Hitta hands-on modulen i content
             hands_on_data = next((m for m in modules_to_seed if m.get("slug") == "hands-on-lab"), None)
             if hands_on_data:
                 logger.info("🔄 Updating Hands-On Lab module tasks...")
                 tasks_updated = 0
                 tasks_created = 0
-
-                # Kolla om PostgreSQL är tillgängligt
-                from .db.database import is_db_configured, get_db_context
-                use_postgres = is_db_configured()
                 
                 if use_postgres:
                     # Använd PostgreSQL direkt
@@ -153,7 +203,7 @@ def seed_content():
                         for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
                             # Hitta befintlig task i databasen
                             existing_task = db.query(models.Task).filter(
-                                models.Task.module_id == hands_on_module.id,
+                                models.Task.module_id == hands_on_module_id,
                                 models.Task.title.ilike(task_data["title"])
                             ).first()
 
@@ -193,7 +243,7 @@ def seed_content():
                             else:
                                 # Skapa ny task i databasen
                                 new_task = models.Task(
-                                    module_id=hands_on_module.id,
+                                    module_id=hands_on_module_id,
                                     title=task_data["title"],
                                     description=task_data.get("description"),
                                     content=task_data.get("content"),  # VIKTIGT: Sätt content!
@@ -212,7 +262,7 @@ def seed_content():
                     # Fallback till in-memory storage
                     for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
                         # Hitta befintlig task
-                        existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module.id)
+                        existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module_id)
 
                         # Normalisera difficulty
                         task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
@@ -254,7 +304,7 @@ def seed_content():
                             # Skapa ny task
                             create_task(
                                 TaskCreate(
-                                    module_id=hands_on_module.id,
+                                    module_id=hands_on_module_id,
                                     title=task_data["title"],
                                     description=task_data.get("description"),
                                     content=task_data.get("content"),
