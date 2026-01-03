@@ -25,7 +25,7 @@ ONBOARDING_NODE = {
     "difficulty": "easy",
     "estimated_minutes": 45,
     "xp_reward": 100,
-    "order_index": 0,
+    "order_index": 1,
     "content": r"""# Hands-On 1 – Onboarding 🎯
 
 > **Mål:** Navigera i filsystemet, skapa och hantera filer, bekanta dig med Nano och Vim

@@ -150,6 +150,11 @@ def seed_content():
                 "hard": 150,
             }.get(difficulty, 100)
 
+            # Ensure order_index is always >= 1
+            task_order_index = task_data.get("order_index")
+            if task_order_index is None or task_order_index < 1:
+                task_order_index = idx + 1
+            
             create_task(
                 TaskCreate(
                     module_id=module.id,
@@ -158,7 +163,7 @@ def seed_content():
                     content=task_data.get("content"),
                     content_blocks=task_data.get("content_blocks"),
                     requirements=task_data.get("requirements"),
-                    order_index=task_data.get("order_index", idx + 1),
+                    order_index=task_order_index,
                     difficulty=difficulty,
                     estimated_minutes=estimated_minutes,
                     xp_reward=xp_reward,
