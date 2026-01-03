@@ -27,24 +27,49 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 
-def _normalize_difficulty(difficulty: str) -> str:
+def _normalize_task_difficulty(difficulty: str) -> str:
     """
-    Normalize difficulty values to valid Pydantic enum values.
-    Maps invalid values like 'mixed' to valid ones.
+    Normalize difficulty values for TaskCreate schema.
+    TaskCreate uses: 'easy', 'medium', 'hard'
+    Maps legacy values like 'beginner', 'intermediate', 'advanced', 'expert', 'mixed' to valid ones.
     """
-    valid_difficulties = ["beginner", "intermediate", "advanced", "expert"]
+    difficulty_lower = difficulty.lower() if difficulty else "medium"
+
+    # Map to valid TaskCreate difficulty values: easy, medium, hard
+    mapping = {
+        "beginner": "easy",
+        "easy": "easy",
+        "intermediate": "medium",
+        "medium": "medium",
+        "mixed": "medium",
+        "advanced": "hard",
+        "hard": "hard",
+        "expert": "hard",
+    }
+
+    return mapping.get(difficulty_lower, "medium")
+
+
+def _normalize_module_difficulty(difficulty: str) -> str:
+    """
+    Normalize difficulty values for ModuleCreate schema.
+    ModuleCreate uses: 'beginner', 'intermediate', 'advanced', 'expert'
+    """
     difficulty_lower = difficulty.lower() if difficulty else "intermediate"
-    
-    # Map invalid values
-    if difficulty_lower == "mixed":
-        return "intermediate"
-    if difficulty_lower == "easy":
-        return "beginner"
-    if difficulty_lower == "hard":
-        return "advanced"
-    
-    # Return if valid, otherwise default to intermediate
-    return difficulty_lower if difficulty_lower in valid_difficulties else "intermediate"
+
+    valid_difficulties = ["beginner", "intermediate", "advanced", "expert"]
+
+    # Map task-style difficulties to module-style
+    mapping = {
+        "easy": "beginner",
+        "medium": "intermediate",
+        "hard": "advanced",
+        "mixed": "intermediate",
+    }
+
+    if difficulty_lower in valid_difficulties:
+        return difficulty_lower
+    return mapping.get(difficulty_lower, "intermediate")
 
 
 def seed_content():
@@ -106,7 +131,7 @@ def seed_content():
     # Om data redan finns, uppdatera bara hands-on modulen
     if existing_modules:
         logger.info(f"📝 Content exists: {len(existing_modules)} modules - checking for updates...")
-        
+
         # Hitta hands-on modulen specifikt
         hands_on_module = get_module_by_slug("hands-on-lab")
         if hands_on_module:
@@ -116,33 +141,31 @@ def seed_content():
                 logger.info("🔄 Updating Hands-On Lab module tasks...")
                 tasks_updated = 0
                 tasks_created = 0
-                
+
                 # Uppdatera eller skapa tasks
                 for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
                     # Hitta befintlig task
                     existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module.id)
-                    
+
                     # Normalisera difficulty
-                    task_difficulty = _normalize_difficulty(task_data.get("difficulty", "medium"))
-                    
+                    task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
+
                     # Ensure order_index is always >= 1
                     task_order_index = task_data.get("order_index")
                     if task_order_index is None or task_order_index < 1:
                         task_order_index = idx + 1
-                    
+
                     estimated_minutes = task_data.get("estimated_minutes") or {
-                        "beginner": 15,
-                        "intermediate": 30,
-                        "advanced": 45,
-                        "expert": 60,
+                        "easy": 15,
+                        "medium": 30,
+                        "hard": 45,
                     }.get(task_difficulty, 30)
                     xp_reward = task_data.get("xp_reward") or {
-                        "beginner": 50,
-                        "intermediate": 100,
-                        "advanced": 150,
-                        "expert": 200,
+                        "easy": 50,
+                        "medium": 100,
+                        "hard": 150,
                     }.get(task_difficulty, 100)
-                    
+
                     if existing_task:
                         # Uppdatera befintlig task
                         update_task(
@@ -177,7 +200,7 @@ def seed_content():
                             )
                         )
                         tasks_created += 1
-                
+
                 logger.info(f"✅ Updated Hands-On Lab: {tasks_updated} tasks updated, {tasks_created} tasks created")
                 return
             else:
@@ -211,7 +234,7 @@ def seed_content():
                 slug=module_data["slug"],
                 description=module_data.get("description"),
                 order_index=module_data.get("order_index", modules_created + 1),
-                difficulty=_normalize_difficulty(module_data.get("difficulty", "intermediate")),
+                difficulty=_normalize_module_difficulty(module_data.get("difficulty", "intermediate")),
                 estimated_hours=module_data.get("estimated_hours", 10.0),
                 prerequisites=module_data.get("prerequisites", []),
             )
@@ -220,26 +243,24 @@ def seed_content():
 
         # Skapa tasks
         for idx, task_data in enumerate(module_data.get("tasks", [])):
-            task_difficulty = _normalize_difficulty(task_data.get("difficulty", "medium"))
+            task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
 
             estimated_minutes = task_data.get("estimated_minutes") or {
-                "beginner": 15,
-                "intermediate": 30,
-                "advanced": 45,
-                "expert": 60,
+                "easy": 15,
+                "medium": 30,
+                "hard": 45,
             }.get(task_difficulty, 30)
             xp_reward = task_data.get("xp_reward") or {
-                "beginner": 50,
-                "intermediate": 100,
-                "advanced": 150,
-                "expert": 200,
+                "easy": 50,
+                "medium": 100,
+                "hard": 150,
             }.get(task_difficulty, 100)
 
             # Ensure order_index is always >= 1
             task_order_index = task_data.get("order_index")
             if task_order_index is None or task_order_index < 1:
                 task_order_index = idx + 1
-            
+
             create_task(
                 TaskCreate(
                     module_id=module.id,

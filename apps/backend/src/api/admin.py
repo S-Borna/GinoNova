@@ -2611,3 +2611,104 @@ def dev_seed_related_tasks(response: Response) -> SeedRelatedResponse:
     add_phase_header(response)
     return _create_sample_related_tasks()
 
+
+# =============================================================================
+# QUIZ CACHE MANAGEMENT
+# =============================================================================
+
+class CacheClearResponse(BaseModel):
+    """Response for cache clear operations"""
+    success: bool
+    message: str
+    keys_deleted: int
+
+
+@admin_router.post("/quiz/cache/clear", response_model=CacheClearResponse)
+def clear_quiz_cache(
+    response: Response,
+    current_user: CurrentUser,
+    module_slug: Optional[str] = None
+) -> CacheClearResponse:
+    """
+    Clear quiz generation cache.
+    
+    - **module_slug**: Optional. If provided, clears cache only for this module.
+                      If None, clears all quiz cache.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+    
+    try:
+        from ..services.quiz_service import clear_quiz_cache
+        deleted = clear_quiz_cache(module_slug)
+        
+        if module_slug:
+            message = f"Cleared {deleted} cache entries for module '{module_slug}'"
+        else:
+            message = f"Cleared {deleted} quiz cache entries"
+        
+        return CacheClearResponse(
+            success=True,
+            message=message,
+            keys_deleted=deleted
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to clear cache: {str(e)}"
+        )
+
+
+@admin_router.get("/quiz/cache/stats")
+def get_quiz_cache_stats(
+    response: Response,
+    current_user: CurrentUser
+):
+    """
+    Get statistics about quiz cache usage.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+    
+    from ..db.redis_client import get_redis_client
+    
+    client = get_redis_client()
+    if not client:
+        return {
+            "redis_available": False,
+            "message": "Redis not configured"
+        }
+    
+    try:
+        # Get all quiz cache keys
+        keys = client.keys("quiz:*")
+        
+        # Get TTL for each key
+        cache_info = []
+        total_size = 0
+        for key in keys[:100]:  # Limit to first 100 for performance
+            ttl = client.ttl(key)
+            value = client.get(key)
+            size = len(value) if value else 0
+            total_size += size
+            
+            cache_info.append({
+                "key": key,
+                "ttl_seconds": ttl,
+                "size_bytes": size
+            })
+        
+        return {
+            "redis_available": True,
+            "total_keys": len(keys),
+            "sampled_keys": len(cache_info),
+            "total_size_bytes": total_size,
+            "total_size_mb": round(total_size / 1024 / 1024, 2),
+            "sample": cache_info[:10]  # Return first 10 as sample
+        }
+    except Exception as e:
+        return {
+            "redis_available": True,
+            "error": str(e)
+        }
+
