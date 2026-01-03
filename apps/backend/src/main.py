@@ -54,15 +54,16 @@ def seed_content():
     Denna funktion:
     1. Kollar om data redan finns
     2. Om inte, skapar tracks och moduler från content/
-    3. Loggar vad som hände
+    3. Om data finns, uppdaterar tasks för hands-on modulen (idempotent update)
+    4. Loggar vad som hände
     """
-    from .db.module_repository import create_module, list_modules
-    from .db.task_repository import create_task
-    from .db.track_repository import create_track, list_tracks
+    from .db.module_repository import create_module, list_modules, get_module_by_slug
+    from .db.task_repository import create_task, get_task_by_title_and_module, update_task, list_tasks_by_module
+    from .db.track_repository import create_track, list_tracks, get_track_by_slug
     from .db.lab_repository import create_lab
     from .db.project_repository import create_project
-    from .schemas.module import ModuleCreate
-    from .schemas.task import TaskCreate
+    from .schemas.module import ModuleCreate, ModuleUpdate
+    from .schemas.task import TaskCreate, TaskUpdate
     from .schemas.track import TrackCreate
     from .schemas.lab import LabCreate
     from .schemas.project import ProjectCreate
@@ -74,36 +75,120 @@ def seed_content():
         get_bootcamp_summary,
     )
 
-    # Kolla om vi redan har data
-    existing_modules = list_modules()
-    summary = get_bootcamp_summary()
-
-    if existing_modules:
-        logger.info(f"✅ Content already loaded: {len(existing_modules)} modules")
-        return
-
     # Kolla om det finns content att seeda
     modules_to_seed = get_all_modules()
     if not modules_to_seed:
         logger.info("📭 No content to seed — content/ is empty (this is fine!)")
         return
 
-    logger.info(f"🌱 Seeding content: {len(modules_to_seed)} modules...")
+    existing_modules = list_modules()
+    existing_tracks = list_tracks()
 
-    # Skapa tracks först
+    # Skapa/uppdatera tracks först
     track_id_map: dict[str, any] = {}
     for track_data in get_tracks():
-        track = create_track(
-            TrackCreate(
-                name=track_data["name"],
-                slug=track_data["slug"],
-                description=track_data["description"],
-                color=track_data["color"],
-                icon=track_data["icon"],
-                order_index=track_data["order_index"],
+        existing_track = get_track_by_slug(track_data["slug"]) if existing_tracks else None
+        if existing_track:
+            track_id_map[track_data["slug"]] = existing_track.id
+        else:
+            track = create_track(
+                TrackCreate(
+                    name=track_data["name"],
+                    slug=track_data["slug"],
+                    description=track_data["description"],
+                    color=track_data["color"],
+                    icon=track_data["icon"],
+                    order_index=track_data["order_index"],
+                )
             )
-        )
-        track_id_map[track_data["slug"]] = track.id
+            track_id_map[track_data["slug"]] = track.id
+
+    # Om data redan finns, uppdatera bara hands-on modulen
+    if existing_modules:
+        logger.info(f"📝 Content exists: {len(existing_modules)} modules - checking for updates...")
+        
+        # Hitta hands-on modulen specifikt
+        hands_on_module = get_module_by_slug("hands-on-lab")
+        if hands_on_module:
+            # Hitta hands-on modulen i content
+            hands_on_data = next((m for m in modules_to_seed if m.get("slug") == "hands-on-lab"), None)
+            if hands_on_data:
+                logger.info("🔄 Updating Hands-On Lab module tasks...")
+                tasks_updated = 0
+                tasks_created = 0
+                
+                # Uppdatera eller skapa tasks
+                for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
+                    # Hitta befintlig task
+                    existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module.id)
+                    
+                    # Normalisera difficulty
+                    task_difficulty = _normalize_difficulty(task_data.get("difficulty", "medium"))
+                    
+                    # Ensure order_index is always >= 1
+                    task_order_index = task_data.get("order_index")
+                    if task_order_index is None or task_order_index < 1:
+                        task_order_index = idx + 1
+                    
+                    estimated_minutes = task_data.get("estimated_minutes") or {
+                        "beginner": 15,
+                        "intermediate": 30,
+                        "advanced": 45,
+                        "expert": 60,
+                    }.get(task_difficulty, 30)
+                    xp_reward = task_data.get("xp_reward") or {
+                        "beginner": 50,
+                        "intermediate": 100,
+                        "advanced": 150,
+                        "expert": 200,
+                    }.get(task_difficulty, 100)
+                    
+                    if existing_task:
+                        # Uppdatera befintlig task
+                        update_task(
+                            existing_task.id,
+                            TaskUpdate(
+                                title=task_data["title"],
+                                description=task_data.get("description"),
+                                content=task_data.get("content"),
+                                content_blocks=task_data.get("content_blocks"),
+                                requirements=task_data.get("requirements"),
+                                order_index=task_order_index,
+                                difficulty=task_difficulty,
+                                estimated_minutes=estimated_minutes,
+                                xp_reward=xp_reward,
+                            )
+                        )
+                        tasks_updated += 1
+                    else:
+                        # Skapa ny task
+                        create_task(
+                            TaskCreate(
+                                module_id=hands_on_module.id,
+                                title=task_data["title"],
+                                description=task_data.get("description"),
+                                content=task_data.get("content"),
+                                content_blocks=task_data.get("content_blocks"),
+                                requirements=task_data.get("requirements"),
+                                order_index=task_order_index,
+                                difficulty=task_difficulty,
+                                estimated_minutes=estimated_minutes,
+                                xp_reward=xp_reward,
+                            )
+                        )
+                        tasks_created += 1
+                
+                logger.info(f"✅ Updated Hands-On Lab: {tasks_updated} tasks updated, {tasks_created} tasks created")
+                return
+            else:
+                logger.info("⚠️  Hands-On Lab module not found in content - skipping update")
+                return
+        else:
+            logger.info("⚠️  Hands-On Lab module not found in database - will create on next full seed")
+            return
+
+    # Initial seeding - skapa allt från början
+    logger.info(f"🌱 Seeding content: {len(modules_to_seed)} modules...")
 
     # Skapa moduler och tasks
     modules_created = 0
@@ -135,20 +220,20 @@ def seed_content():
 
         # Skapa tasks
         for idx, task_data in enumerate(module_data.get("tasks", [])):
-            difficulty = task_data.get("difficulty", "medium")
-            if difficulty not in ("easy", "medium", "hard"):
-                difficulty = "medium"
+            task_difficulty = _normalize_difficulty(task_data.get("difficulty", "medium"))
 
             estimated_minutes = task_data.get("estimated_minutes") or {
-                "easy": 15,
-                "medium": 30,
-                "hard": 45,
-            }.get(difficulty, 30)
+                "beginner": 15,
+                "intermediate": 30,
+                "advanced": 45,
+                "expert": 60,
+            }.get(task_difficulty, 30)
             xp_reward = task_data.get("xp_reward") or {
-                "easy": 50,
-                "medium": 100,
-                "hard": 150,
-            }.get(difficulty, 100)
+                "beginner": 50,
+                "intermediate": 100,
+                "advanced": 150,
+                "expert": 200,
+            }.get(task_difficulty, 100)
 
             # Ensure order_index is always >= 1
             task_order_index = task_data.get("order_index")
@@ -164,7 +249,7 @@ def seed_content():
                     content_blocks=task_data.get("content_blocks"),
                     requirements=task_data.get("requirements"),
                     order_index=task_order_index,
-                    difficulty=difficulty,
+                    difficulty=task_difficulty,
                     estimated_minutes=estimated_minutes,
                     xp_reward=xp_reward,
                 )
