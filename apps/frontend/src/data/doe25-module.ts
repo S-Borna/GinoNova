@@ -2812,13 +2812,13 @@ export const getTaskById = (idOrSlug: string) => {
     // First try direct ID match
     let task = DOE25_TASKS.find(t => t.id === idOrSlug);
     if (task) return task;
-    
+
     // Try slug lookup
     const mappedId = SLUG_TO_ID[idOrSlug];
     if (mappedId) {
         return DOE25_TASKS.find(t => t.id === mappedId);
     }
-    
+
     return undefined;
 };
 

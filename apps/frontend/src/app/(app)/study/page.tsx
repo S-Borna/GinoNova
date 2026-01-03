@@ -3,7 +3,7 @@
 /**
  * Studyroom - Premium Cosmic Design
  * Flashcards & Quiz för DOE25 + Linux 24/7
- * 
+ *
  * Now with task selection for targeted study sessions
  */
 
@@ -33,8 +33,10 @@ import {
 // Import module data
 import { DOE25_MODULE } from "@/data/doe25-module"
 import { LINUX247_MODULE } from "@/data/linux247-module"
+import { HANDSON_MODULE } from "@/data/handson-module"
 import { DOE25_TASK_FLASHCARDS } from "@/data/doe25-task-flashcards"
 import { LINUX247_TASK_FLASHCARDS } from "@/data/linux247-task-flashcards"
+import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 
 /* ============================================================================
    TYPES
@@ -90,6 +92,22 @@ const STUDY_MODULES: StudyModule[] = [
             title: t.taskTitle,
             flashcardCount: t.flashcards.length
         }))
+    },
+    {
+        id: 'hands-on-lab',
+        slug: 'hands-on-lab',
+        title: 'Hands-On Lab',
+        description: 'Praktiska labbar - filsystem, SSH, Docker, LVM och mer',
+        icon: '🔬',
+        taskCount: HANDSON_MODULE.tasks.length,
+        flashcardCount: HANDSON_MODULE.tasks.length * 30,
+        quizCount: HANDSON_MODULE.tasks.length * 20,
+        color: 'purple',
+        tasks: HANDSON_TASK_FLASHCARDS.map(t => ({
+            id: t.taskId,
+            title: t.taskTitle,
+            flashcardCount: t.flashcards.length
+        }))
     }
 ]
 
@@ -106,7 +124,7 @@ export default function StudyPage() {
     const [progress, setProgress] = useState<Record<string, number>>({})
 
     // Get current module
-    const currentModule = useMemo(() => 
+    const currentModule = useMemo(() =>
         STUDY_MODULES.find(m => m.slug === selectedModule),
         [selectedModule]
     )
@@ -140,7 +158,7 @@ export default function StudyPage() {
     }
 
     const handleToggleTask = (taskId: string) => {
-        setSelectedTasks(prev => 
+        setSelectedTasks(prev =>
             prev.includes(taskId)
                 ? prev.filter(id => id !== taskId)
                 : [...prev, taskId]

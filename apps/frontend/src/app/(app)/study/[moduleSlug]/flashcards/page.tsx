@@ -19,6 +19,7 @@ import { useFavorites } from "@/hooks/useFavorites"
 // Import local flashcard data
 import { DOE25_TASK_FLASHCARDS, getAllDOE25Flashcards, type TaskFlashcard } from "@/data/doe25-task-flashcards"
 import { LINUX247_TASK_FLASHCARDS, getAllFlashcards as getAllLinux247Flashcards } from "@/data/linux247-task-flashcards"
+import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 
 interface Flashcard {
     id: string
@@ -34,6 +35,7 @@ interface Flashcard {
 const MODULE_CONFIG: Record<string, { title: string; data: typeof DOE25_TASK_FLASHCARDS }> = {
     'doe25-tenta': { title: 'DOE25 Tentaplugg', data: DOE25_TASK_FLASHCARDS },
     'linux-247': { title: 'Linux 24/7', data: LINUX247_TASK_FLASHCARDS },
+    'hands-on-lab': { title: 'Hands-On Lab', data: HANDSON_TASK_FLASHCARDS },
 }
 
 function FlashcardsContent() {
