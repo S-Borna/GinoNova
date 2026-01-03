@@ -142,66 +142,132 @@ def seed_content():
                 tasks_updated = 0
                 tasks_created = 0
 
-                # Uppdatera eller skapa tasks
-                for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
-                    # Hitta befintlig task
-                    existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module.id)
+                # Kolla om PostgreSQL är tillgängligt
+                from .db.database import is_db_configured, get_db_context
+                use_postgres = is_db_configured()
+                
+                if use_postgres:
+                    # Använd PostgreSQL direkt
+                    from .db import models
+                    with get_db_context() as db:
+                        for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
+                            # Hitta befintlig task i databasen
+                            existing_task = db.query(models.Task).filter(
+                                models.Task.module_id == hands_on_module.id,
+                                models.Task.title.ilike(task_data["title"])
+                            ).first()
 
-                    # Normalisera difficulty
-                    task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
+                            # Normalisera difficulty
+                            task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
 
-                    # Ensure order_index is always >= 1
-                    task_order_index = task_data.get("order_index")
-                    if task_order_index is None or task_order_index < 1:
-                        task_order_index = idx + 1
+                            # Ensure order_index is always >= 1
+                            task_order_index = task_data.get("order_index")
+                            if task_order_index is None or task_order_index < 1:
+                                task_order_index = idx + 1
 
-                    estimated_minutes = task_data.get("estimated_minutes") or {
-                        "easy": 15,
-                        "medium": 30,
-                        "hard": 45,
-                    }.get(task_difficulty, 30)
-                    xp_reward = task_data.get("xp_reward") or {
-                        "easy": 50,
-                        "medium": 100,
-                        "hard": 150,
-                    }.get(task_difficulty, 100)
+                            estimated_minutes = task_data.get("estimated_minutes") or {
+                                "easy": 15,
+                                "medium": 30,
+                                "hard": 45,
+                            }.get(task_difficulty, 30)
+                            xp_reward = task_data.get("xp_reward") or {
+                                "easy": 50,
+                                "medium": 100,
+                                "hard": 150,
+                            }.get(task_difficulty, 100)
 
-                    if existing_task:
-                        # Uppdatera befintlig task
-                        update_task(
-                            existing_task.id,
-                            TaskUpdate(
-                                title=task_data["title"],
-                                description=task_data.get("description"),
-                                content=task_data.get("content"),
-                                content_blocks=task_data.get("content_blocks"),
-                                requirements=task_data.get("requirements"),
-                                order_index=task_order_index,
-                                difficulty=task_difficulty,
-                                estimated_minutes=estimated_minutes,
-                                xp_reward=xp_reward,
+                            if existing_task:
+                                # Uppdatera befintlig task i databasen
+                                existing_task.title = task_data["title"]
+                                existing_task.description = task_data.get("description")
+                                existing_task.content = task_data.get("content")  # VIKTIGT: Uppdatera content!
+                                existing_task.content_blocks = task_data.get("content_blocks")
+                                existing_task.requirements = task_data.get("requirements")
+                                existing_task.order_index = task_order_index
+                                existing_task.difficulty = task_difficulty
+                                existing_task.estimated_minutes = estimated_minutes
+                                existing_task.xp_reward = xp_reward
+                                from datetime import datetime
+                                existing_task.updated_at = datetime.utcnow()
+                                tasks_updated += 1
+                            else:
+                                # Skapa ny task i databasen
+                                new_task = models.Task(
+                                    module_id=hands_on_module.id,
+                                    title=task_data["title"],
+                                    description=task_data.get("description"),
+                                    content=task_data.get("content"),  # VIKTIGT: Sätt content!
+                                    content_blocks=task_data.get("content_blocks"),
+                                    requirements=task_data.get("requirements"),
+                                    order_index=task_order_index,
+                                    difficulty=task_difficulty,
+                                    estimated_minutes=estimated_minutes,
+                                    xp_reward=xp_reward,
+                                )
+                                db.add(new_task)
+                                tasks_created += 1
+                        db.commit()
+                        logger.info(f"✅ Updated Hands-On Lab in PostgreSQL: {tasks_updated} tasks updated, {tasks_created} tasks created")
+                else:
+                    # Fallback till in-memory storage
+                    for idx, task_data in enumerate(hands_on_data.get("tasks", [])):
+                        # Hitta befintlig task
+                        existing_task = get_task_by_title_and_module(task_data["title"], hands_on_module.id)
+
+                        # Normalisera difficulty
+                        task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
+
+                        # Ensure order_index is always >= 1
+                        task_order_index = task_data.get("order_index")
+                        if task_order_index is None or task_order_index < 1:
+                            task_order_index = idx + 1
+
+                        estimated_minutes = task_data.get("estimated_minutes") or {
+                            "easy": 15,
+                            "medium": 30,
+                            "hard": 45,
+                        }.get(task_difficulty, 30)
+                        xp_reward = task_data.get("xp_reward") or {
+                            "easy": 50,
+                            "medium": 100,
+                            "hard": 150,
+                        }.get(task_difficulty, 100)
+
+                        if existing_task:
+                            # Uppdatera befintlig task
+                            update_task(
+                                existing_task.id,
+                                TaskUpdate(
+                                    title=task_data["title"],
+                                    description=task_data.get("description"),
+                                    content=task_data.get("content"),
+                                    content_blocks=task_data.get("content_blocks"),
+                                    requirements=task_data.get("requirements"),
+                                    order_index=task_order_index,
+                                    difficulty=task_difficulty,
+                                    estimated_minutes=estimated_minutes,
+                                    xp_reward=xp_reward,
+                                )
                             )
-                        )
-                        tasks_updated += 1
-                    else:
-                        # Skapa ny task
-                        create_task(
-                            TaskCreate(
-                                module_id=hands_on_module.id,
-                                title=task_data["title"],
-                                description=task_data.get("description"),
-                                content=task_data.get("content"),
-                                content_blocks=task_data.get("content_blocks"),
-                                requirements=task_data.get("requirements"),
-                                order_index=task_order_index,
-                                difficulty=task_difficulty,
-                                estimated_minutes=estimated_minutes,
-                                xp_reward=xp_reward,
+                            tasks_updated += 1
+                        else:
+                            # Skapa ny task
+                            create_task(
+                                TaskCreate(
+                                    module_id=hands_on_module.id,
+                                    title=task_data["title"],
+                                    description=task_data.get("description"),
+                                    content=task_data.get("content"),
+                                    content_blocks=task_data.get("content_blocks"),
+                                    requirements=task_data.get("requirements"),
+                                    order_index=task_order_index,
+                                    difficulty=task_difficulty,
+                                    estimated_minutes=estimated_minutes,
+                                    xp_reward=xp_reward,
+                                )
                             )
-                        )
-                        tasks_created += 1
-
-                logger.info(f"✅ Updated Hands-On Lab: {tasks_updated} tasks updated, {tasks_created} tasks created")
+                            tasks_created += 1
+                    logger.info(f"✅ Updated Hands-On Lab (in-memory): {tasks_updated} tasks updated, {tasks_created} tasks created")
                 return
             else:
                 logger.info("⚠️  Hands-On Lab module not found in content - skipping update")
