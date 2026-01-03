@@ -60,6 +60,8 @@ export interface CompareItem {
     use_case?: string
 }
 
+export type TaskDifficulty = 'easy' | 'medium' | 'hard'
+
 export interface HandsOnTask {
     id: string
     title: string
@@ -67,7 +69,7 @@ export interface HandsOnTask {
     description: string
     order_index: number
     estimated_minutes: number
-    difficulty: string
+    difficulty: TaskDifficulty
     xp_reward: number
     content?: string  // Markdown content from backend
     content_blocks?: ContentBlock[]  // Interactive blocks
@@ -121,7 +123,7 @@ async function fetchHandsOnModule(): Promise<HandsOnModule> {
             description: task.description as string || "",
             order_index: (task.order_index as number) ?? index,
             estimated_minutes: (task.estimated_minutes as number) || 30,
-            difficulty: task.difficulty as string || "medium",
+            difficulty: mapDifficulty(task.difficulty as string),
             xp_reward: (task.xp_reward as number) || 50,
             content: task.content as string || undefined,
             content_blocks: task.content_blocks as ContentBlock[] || undefined,
@@ -147,7 +149,7 @@ async function fetchHandsOnTask(taskId: string): Promise<HandsOnTask & { module_
         description: data.description || "",
         order_index: data.order_index || 0,
         estimated_minutes: data.estimated_minutes || 30,
-        difficulty: data.difficulty || "medium",
+        difficulty: mapDifficulty(data.difficulty),
         xp_reward: data.xp_reward || 50,
         content: data.content || undefined,
         content_blocks: data.content_blocks || undefined,
@@ -168,6 +170,16 @@ function generateSlug(title: string): string {
         .replace(/ö/g, 'o')
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '')
+}
+
+/**
+ * Map backend difficulty string to TaskDifficulty type
+ */
+function mapDifficulty(difficulty: string | undefined): TaskDifficulty {
+    const normalized = difficulty?.toLowerCase()
+    if (normalized === 'easy' || normalized === 'beginner') return 'easy'
+    if (normalized === 'hard' || normalized === 'advanced' || normalized === 'expert') return 'hard'
+    return 'medium' // Default for 'medium', 'intermediate', or unknown values
 }
 
 /**

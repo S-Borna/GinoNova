@@ -620,7 +620,7 @@ export default function HandsOnTaskPage() {
                                     nextTaskUrl={nextTask ? `/modules/hands-on-lab/tasks/${nextTask.id}` : undefined}
                                     onComplete={handleMarkComplete}
                                     xp={task.xp_reward || 100}
-                                    difficulty={task.difficulty || "medium"}
+                                    difficulty={task.difficulty}
                                     isCompleted={isCompleted}
                                     isLoading={completing}
                                 />
