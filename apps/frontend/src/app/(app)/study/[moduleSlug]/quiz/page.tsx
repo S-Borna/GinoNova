@@ -17,8 +17,8 @@ import { ArrowRight, CheckCircle, XCircle, RotateCcw, Lightbulb, Star, X } from 
 import { useFavorites } from "@/hooks/useFavorites"
 
 // Import local quiz data
-import { getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion } from "@/data/doe25-task-quiz"
-import { getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
+import { DOE25_TASK_QUIZ, getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion, TaskQuizSet } from "@/data/doe25-task-quiz"
+import { LINUX247_TASK_QUIZ, getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
 
 // Generic quiz question type for local data
 interface LocalQuizQuestion {
@@ -34,14 +34,17 @@ interface LocalQuizQuestion {
 // Module configuration - maps URL slugs to data
 const MODULE_CONFIG: Record<string, {
     getData: () => LocalQuizQuestion[]
+    getTaskData: () => TaskQuizSet[]
     title: string
 }> = {
     'doe25-tenta': {
         getData: getAllDOE25Quiz as () => LocalQuizQuestion[],
+        getTaskData: () => DOE25_TASK_QUIZ as TaskQuizSet[],
         title: 'DOE25 Tentaplugg'
     },
     'linux-247': {
         getData: getAllLinux247Quiz as () => LocalQuizQuestion[],
+        getTaskData: () => LINUX247_TASK_QUIZ as TaskQuizSet[],
         title: 'Linux 24/7'
     }
 }
@@ -94,10 +97,28 @@ function QuizContent() {
                 return
             }
 
-            // Get local data
-            const localData = config.getData()
+            // Get task filter from URL (comma-separated task IDs)
+            const tasksFilter = searchParams?.get("tasks") || ""
+            const selectedTaskIds = tasksFilter ? tasksFilter.split(',') : []
+
+            // Get local data - filtered by tasks or all
+            let localData: LocalQuizQuestion[] = []
+            
+            if (selectedTaskIds.length > 0) {
+                // Get quiz for selected tasks only
+                const taskData = config.getTaskData()
+                taskData.forEach(taskSet => {
+                    if (selectedTaskIds.includes(taskSet.taskId)) {
+                        localData.push(...(taskSet.questions as LocalQuizQuestion[]))
+                    }
+                })
+            } else {
+                // Get all quiz questions
+                localData = config.getData()
+            }
+
             if (!localData || localData.length === 0) {
-                setError("Inga quiz-frågor tillgängliga")
+                setError("Inga quiz-frågor tillgängliga för valda tasks")
                 return
             }
 

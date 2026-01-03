@@ -68,7 +68,7 @@ function FlashcardsContent() {
 
             // Get shuffle preference from URL
             const shouldShuffle = searchParams?.get("shuffle") === "true"
-            const taskFilter = searchParams?.get("task") || ""
+            const tasksFilter = searchParams?.get("tasks") || "" // Comma-separated task IDs
             setIsShuffled(shouldShuffle)
 
             // Get module config
@@ -81,23 +81,27 @@ function FlashcardsContent() {
 
             setModuleTitle(config.title)
 
-            // Collect flashcards - either all or filtered by task
+            // Collect flashcards - either all or filtered by tasks
             let allFlashcards: Flashcard[] = []
+            const selectedTaskIds = tasksFilter ? tasksFilter.split(',') : []
 
-            if (taskFilter) {
-                // Get flashcards for specific task
-                const taskSet = config.data.find(t => t.taskId === taskFilter)
-                if (taskSet) {
-                    allFlashcards = taskSet.flashcards.map(fc => ({
-                        id: fc.id,
-                        front: fc.front,
-                        back: fc.back,
-                        module_slug: moduleSlug,
-                        lesson_title: taskSet.taskTitle,
-                        category: fc.category,
-                        difficulty: fc.difficulty
-                    }))
-                }
+            if (selectedTaskIds.length > 0) {
+                // Get flashcards for selected tasks only
+                config.data.forEach(taskSet => {
+                    if (selectedTaskIds.includes(taskSet.taskId)) {
+                        taskSet.flashcards.forEach(fc => {
+                            allFlashcards.push({
+                                id: fc.id,
+                                front: fc.front,
+                                back: fc.back,
+                                module_slug: moduleSlug,
+                                lesson_title: taskSet.taskTitle,
+                                category: fc.category,
+                                difficulty: fc.difficulty
+                            })
+                        })
+                    }
+                })
             } else {
                 // Get all flashcards for module
                 config.data.forEach(taskSet => {
