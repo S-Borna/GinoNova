@@ -28,23 +28,28 @@ if [ -n "$DATABASE_URL" ]; then
     # =========================================================================
     echo "🌱 Running V3 SkillsMaps seed (idempotent - safe to run multiple times)..."
     python -c "
-from src.db.database import get_db
-from src.api.admin import seed_skillsmaps_v3_internal
-from src.db.seeds.modules_v3 import get_total_tasks
-
-# Check if seeding is needed by counting tasks in V3 data
-total_v3_tasks = get_total_tasks()
-print(f'📊 V3 SkillsMaps contains {total_v3_tasks} tasks')
-
-# Run idempotent seed
-db = next(get_db())
 try:
-    result = seed_skillsmaps_v3_internal(db)
-    print(f'✅ Seed result: {result}')
+    from src.db.database import get_db
+    from src.api.admin import seed_skillsmaps_v3_internal
+    from src.db.seeds.modules_v3 import get_total_tasks
+    
+    # Check if seeding is needed by counting tasks in V3 data
+    total_v3_tasks = get_total_tasks()
+    print(f'📊 V3 SkillsMaps contains {total_v3_tasks} tasks')
+    
+    # Run idempotent seed
+    db = next(get_db())
+    try:
+        result = seed_skillsmaps_v3_internal(db)
+        print(f'✅ Seed result: {result}')
+    except Exception as e:
+        print(f'⚠️  Seed warning: {e}')
+    finally:
+        db.close()
+except ImportError as e:
+    print(f'⚠️  V3 Seeding skipped - modules_v3 not available: {e}')
 except Exception as e:
-    print(f'⚠️  Seed warning: {e}')
-finally:
-    db.close()
+    print(f'⚠️  V3 Seeding skipped (non-critical): {e}')
 " || echo "⚠️  V3 Seeding skipped (non-critical)"
 
     echo "✅ Database setup complete!"
