@@ -39,6 +39,7 @@ export type ModuleStatus = "locked" | "not_started" | "in_progress" | "complete"
 
 export interface ModuleCardProps {
     id: string
+    slug: string // Used for URL navigation - ALWAYS use slug, not id
     orderIndex: number
     title: string
     description: string
@@ -135,6 +136,7 @@ const difficultyConfig: Record<string, { label: string; color: string }> = {
 
 export function ModuleCard({
     id,
+    slug,
     orderIndex,
     title,
     description,
@@ -374,7 +376,7 @@ export function ModuleCard({
     }
 
     return (
-        <Link prefetch={false} href={`/modules/${id}`} className="block">
+        <Link prefetch={false} href={`/modules/${slug}`} className="block">
             {cardContent}
         </Link>
     )
