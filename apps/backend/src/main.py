@@ -124,17 +124,21 @@ def seed_content():
     track_id_map: dict[str, any] = {}
     for track_data in get_tracks():
         # Hitta befintlig track (använd PostgreSQL om tillgängligt)
-        existing_track = None
+        existing_track_id = None
         if use_postgres:
             with get_db_context() as db:
                 existing_track = db.query(models.Track).filter(
                     models.Track.slug == track_data["slug"]
                 ).first()
+                if existing_track:
+                    existing_track_id = existing_track.id  # Hämta ID inuti context
         elif existing_tracks:
             existing_track = get_track_by_slug(track_data["slug"])
+            if existing_track:
+                existing_track_id = existing_track.id
         
-        if existing_track:
-            track_id_map[track_data["slug"]] = existing_track.id
+        if existing_track_id:
+            track_id_map[track_data["slug"]] = existing_track_id
         else:
             # Skapa ny track (använd PostgreSQL om tillgängligt)
             if use_postgres:
