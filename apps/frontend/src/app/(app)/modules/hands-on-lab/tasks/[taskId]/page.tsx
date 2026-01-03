@@ -2,15 +2,15 @@
 
 /**
  * ============================================================================
- * HANDS-ON LAB TASK PAGE — Premium Interactive Learning Experience
+ * HANDS-ON LAB TASK PAGE — Fetches Data from Backend API
  * ============================================================================
  *
- * Complete redesign with:
- * - Collapsible sidebar for task navigation
- * - Interactive content blocks (not markdown)
- * - Beautiful animations and transitions
- * - Progress tracking
- * - Mobile-responsive design
+ * Data source: Backend API (/api/content/task/{taskId})
+ * Content comes from: apps/backend/src/db/seeds/content/hands_on.py
+ *
+ * Supports both:
+ * - Markdown content (from backend hands_on.py)
+ * - Interactive content_blocks (if present)
  *
  * @phase HANDS-ON-LAB
  */
@@ -23,28 +23,24 @@ import { cn } from "@/lib/utils"
 import { TaskFooter } from "@saas/ui"
 import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import { useAuth } from "@/components/auth"
-import { getToken } from "@/lib/auth"
 import {
     ArrowLeft,
     CheckCircle2,
     Clock,
-    BookOpen,
     RefreshCw,
     AlertCircle,
     Zap,
-    Play,
-    Sparkles,
     ChevronLeft,
     ChevronRight,
-    Target,
     Trophy,
     Menu,
+    Loader2,
 } from "lucide-react"
 
-// Hands-On Components & Data
-import { HANDSON_MODULE, HandsOnTask } from "@/data/handson-module"
-import { DOE25TaskSidebar } from "@/components/doe25/DOE25TaskSidebar"
+// Backend API hooks
+import { useHandsOnModule, useHandsOnTask, HandsOnTask } from "@/hooks/useHandsOn"
 import { DOE25ContentRenderer } from "@/components/doe25/DOE25ContentRenderer"
+import { MarkdownRenderer } from "@/components/content/MarkdownRenderer"
 
 /* ============================================================================
    MODULE COLORS
@@ -94,6 +90,26 @@ function TaskDetailSkeleton() {
         <div className="space-y-6 animate-pulse">
             <div className="h-48 rounded-3xl bg-zinc-800/50" />
             <div className="h-96 rounded-2xl bg-zinc-800/50" />
+        </div>
+    )
+}
+
+/* ============================================================================
+   LOADING STATE
+   ============================================================================ */
+
+function LoadingState() {
+    return (
+        <div className="min-h-screen bg-[#05050a] relative">
+            <CosmicAurora />
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex items-center justify-center min-h-[60vh]">
+                    <div className="text-center">
+                        <Loader2 className="w-12 h-12 text-emerald-400 animate-spin mx-auto mb-4" />
+                        <p className="text-zinc-400">Laddar labb...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
@@ -206,18 +222,21 @@ function QuickNav({
 }
 
 /* ============================================================================
-   HANDS-ON TASK SIDEBAR
+   HANDS-ON TASK SIDEBAR - Uses API data
    ============================================================================ */
 
 function HandsOnTaskSidebar({
+    tasks,
     currentTaskId,
-    completedTasks
+    completedTasks,
+    isLoading
 }: {
+    tasks: HandsOnTask[]
     currentTaskId: string
     completedTasks: string[]
+    isLoading: boolean
 }) {
     const [isOpen, setIsOpen] = useState(true)
-    const tasks = HANDSON_MODULE.tasks
 
     return (
         <>
@@ -264,57 +283,67 @@ function HandsOnTaskSidebar({
 
                         {/* Task list */}
                         <nav className="p-4 space-y-2">
-                            {tasks.map((task, index) => {
-                                const isActive = task.id === currentTaskId
-                                const isCompleted = completedTasks.includes(task.id)
+                            {isLoading ? (
+                                <div className="space-y-2">
+                                    {Array.from({ length: 7 }).map((_, i) => (
+                                        <div key={i} className="h-12 bg-zinc-800/50 rounded-xl animate-pulse" />
+                                    ))}
+                                </div>
+                            ) : (
+                                tasks.map((task, index) => {
+                                    const isActive = task.id === currentTaskId
+                                    const isCompleted = completedTasks.includes(task.id)
 
-                                return (
-                                    <Link
-                                        key={task.id}
-                                        href={`/modules/hands-on-lab/tasks/${task.id}`}
-                                        className={cn(
-                                            "flex items-center gap-3 p-3 rounded-xl transition-all",
-                                            isActive
-                                                ? "bg-emerald-500/20 border border-emerald-500/30 text-white"
-                                                : "hover:bg-white/5 text-zinc-400 hover:text-white"
-                                        )}
-                                    >
-                                        {/* Number/Check */}
-                                        <div className={cn(
-                                            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold",
-                                            isCompleted
-                                                ? "bg-emerald-500/30 text-emerald-300"
-                                                : isActive
-                                                    ? "bg-emerald-500/20 text-emerald-300"
-                                                    : "bg-zinc-800 text-zinc-500"
-                                        )}>
-                                            {isCompleted ? (
-                                                <CheckCircle2 className="w-4 h-4" />
-                                            ) : (
-                                                index + 1
+                                    return (
+                                        <Link
+                                            key={task.id}
+                                            href={`/modules/hands-on-lab/tasks/${task.id}`}
+                                            className={cn(
+                                                "flex items-center gap-3 p-3 rounded-xl transition-all",
+                                                isActive
+                                                    ? "bg-emerald-500/20 border border-emerald-500/30 text-white"
+                                                    : "hover:bg-white/5 text-zinc-400 hover:text-white"
                                             )}
-                                        </div>
+                                        >
+                                            {/* Number/Check */}
+                                            <div className={cn(
+                                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold",
+                                                isCompleted
+                                                    ? "bg-emerald-500/30 text-emerald-300"
+                                                    : isActive
+                                                        ? "bg-emerald-500/20 text-emerald-300"
+                                                        : "bg-zinc-800 text-zinc-500"
+                                            )}>
+                                                {isCompleted ? (
+                                                    <CheckCircle2 className="w-4 h-4" />
+                                                ) : (
+                                                    index + 1
+                                                )}
+                                            </div>
 
-                                        {/* Title */}
-                                        <span className="text-sm truncate">{task.title}</span>
-                                    </Link>
-                                )
-                            })}
+                                            {/* Title */}
+                                            <span className="text-sm truncate">{task.title}</span>
+                                        </Link>
+                                    )
+                                })
+                            )}
                         </nav>
 
                         {/* Progress */}
-                        <div className="p-4 border-t border-emerald-500/10">
-                            <div className="flex items-center justify-between text-xs text-zinc-500 mb-2">
-                                <span>Progress</span>
-                                <span>{completedTasks.length}/{tasks.length}</span>
+                        {tasks.length > 0 && (
+                            <div className="p-4 border-t border-emerald-500/10">
+                                <div className="flex items-center justify-between text-xs text-zinc-500 mb-2">
+                                    <span>Progress</span>
+                                    <span>{completedTasks.length}/{tasks.length}</span>
+                                </div>
+                                <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all"
+                                        style={{ width: `${(completedTasks.length / tasks.length) * 100}%` }}
+                                    />
+                                </div>
                             </div>
-                            <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all"
-                                    style={{ width: `${(completedTasks.length / tasks.length) * 100}%` }}
-                                />
-                            </div>
-                        </div>
+                        )}
                     </motion.aside>
                 )}
             </AnimatePresence>
@@ -331,6 +360,46 @@ function HandsOnTaskSidebar({
 }
 
 /* ============================================================================
+   CONTENT RENDERER - Handles both markdown and content_blocks
+   ============================================================================ */
+
+function TaskContent({ task }: { task: HandsOnTask }) {
+    // If task has content_blocks, use the interactive renderer
+    if (task.content_blocks && task.content_blocks.length > 0) {
+        return <DOE25ContentRenderer blocks={task.content_blocks} />
+    }
+    
+    // Otherwise, render markdown content
+    if (task.content) {
+        return (
+            <div className={cn(
+                "rounded-2xl bg-[#0a0a0f] border border-emerald-500/10 p-6 md:p-8",
+                "prose prose-invert prose-emerald max-w-none",
+                "prose-headings:text-white prose-headings:font-bold",
+                "prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg",
+                "prose-p:text-zinc-300 prose-strong:text-white",
+                "prose-code:text-emerald-300 prose-code:bg-zinc-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded",
+                "prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-800",
+                "prose-a:text-emerald-400 prose-a:no-underline hover:prose-a:underline",
+                "prose-li:text-zinc-300",
+                "prose-table:border-collapse",
+                "prose-th:bg-zinc-800/50 prose-th:text-white prose-th:border prose-th:border-zinc-700 prose-th:p-2",
+                "prose-td:border prose-td:border-zinc-800 prose-td:p-2"
+            )}>
+                <MarkdownRenderer content={task.content} />
+            </div>
+        )
+    }
+    
+    // No content available
+    return (
+        <div className="rounded-2xl bg-zinc-900/50 border border-zinc-800 p-8 text-center">
+            <p className="text-zinc-400">Inget innehåll tillgängligt för denna labb.</p>
+        </div>
+    )
+}
+
+/* ============================================================================
    MAIN PAGE COMPONENT
    ============================================================================ */
 
@@ -340,34 +409,18 @@ export default function HandsOnTaskPage() {
     const { user } = useAuth()
     const taskId = params?.taskId as string
 
-    const [task, setTask] = useState<HandsOnTask | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+    // Fetch module data (for sidebar and navigation)
+    const { data: module, isLoading: moduleLoading } = useHandsOnModule()
+    
+    // Fetch specific task data
+    const { data: task, isLoading: taskLoading, error: taskError, refetch } = useHandsOnTask(taskId)
+    
     const [isCompleted, setIsCompleted] = useState(false)
     const [completing, setCompleting] = useState(false)
     const [completedTasks, setCompletedTasks] = useState<string[]>([])
 
-    // Helper to get task by ID
-    const getTaskById = (id: string): HandsOnTask | undefined => {
-        return HANDSON_MODULE.tasks.find(t => t.id === id)
-    }
-
-    // Load task
-    const loadTask = useCallback(() => {
-        setLoading(true)
-        setError(null)
-
-        const handsonTask = getTaskById(taskId)
-        if (!handsonTask) {
-            setError("Task hittades inte")
-            setLoading(false)
-            return
-        }
-
-        setTask(handsonTask)
-        setLoading(false)
-
-        // Load completed tasks from localStorage
+    // Load completed tasks from localStorage
+    useEffect(() => {
         try {
             const saved = localStorage.getItem("handson-completed-tasks")
             if (saved) {
@@ -379,10 +432,6 @@ export default function HandsOnTaskPage() {
             console.log("Could not load progress from localStorage")
         }
     }, [taskId])
-
-    useEffect(() => {
-        loadTask()
-    }, [loadTask])
 
     // Mark task as complete
     const handleMarkComplete = async () => {
@@ -397,11 +446,11 @@ export default function HandsOnTaskPage() {
         setCompleting(false)
     }
 
-    // Navigation
-    const allTasks = HANDSON_MODULE.tasks
+    // Navigation using module tasks
+    const allTasks = module?.tasks || []
     const currentIndex = allTasks.findIndex(t => t.id === taskId)
     const prevTask = currentIndex > 0 ? allTasks[currentIndex - 1] : null
-    const nextTask = currentIndex < allTasks.length - 1 ? allTasks[currentIndex + 1] : null
+    const nextTask = currentIndex >= 0 && currentIndex < allTasks.length - 1 ? allTasks[currentIndex + 1] : null
 
     const handleContinue = () => {
         if (nextTask) {
@@ -413,6 +462,13 @@ export default function HandsOnTaskPage() {
 
     const moduleConfig = moduleColors["hands-on-lab"]
 
+    // Loading state
+    const isLoading = moduleLoading || taskLoading
+
+    if (isLoading && !task) {
+        return <LoadingState />
+    }
+
     return (
         <div className="min-h-screen bg-[#05050a] relative">
             {/* Cosmic Aurora Background */}
@@ -422,8 +478,10 @@ export default function HandsOnTaskPage() {
             <div className="relative z-10 flex">
                 {/* Sidebar */}
                 <HandsOnTaskSidebar
+                    tasks={allTasks}
                     currentTaskId={taskId}
                     completedTasks={completedTasks}
+                    isLoading={moduleLoading}
                 />
 
                 {/* Main Content */}
@@ -444,10 +502,13 @@ export default function HandsOnTaskPage() {
                             Hands-On Lab
                         </Link>
 
-                        {loading ? (
+                        {taskLoading ? (
                             <TaskDetailSkeleton />
-                        ) : error ? (
-                            <ErrorState error={error} onRetry={loadTask} />
+                        ) : taskError ? (
+                            <ErrorState 
+                                error={(taskError as Error).message || "Task hittades inte"} 
+                                onRetry={() => refetch()} 
+                            />
                         ) : task ? (
                             <motion.div
                                 className="space-y-6"
@@ -458,8 +519,8 @@ export default function HandsOnTaskPage() {
                                 <QuickNav
                                     prevTask={prevTask}
                                     nextTask={nextTask}
-                                    currentIndex={currentIndex}
-                                    totalTasks={allTasks.length}
+                                    currentIndex={currentIndex >= 0 ? currentIndex : 0}
+                                    totalTasks={allTasks.length || 1}
                                 />
 
                                 {/* Task Header */}
@@ -512,7 +573,7 @@ export default function HandsOnTaskPage() {
                                         {/* Task Number */}
                                         <div className="flex items-center gap-3 mb-4">
                                             <span className="text-xs font-bold text-emerald-400/60 uppercase tracking-[0.15em]">
-                                                Labb {task.order_index + 1} av {allTasks.length}
+                                                Labb {(currentIndex >= 0 ? currentIndex : 0) + 1} av {allTasks.length || 1}
                                             </span>
                                         </div>
 
@@ -537,20 +598,20 @@ export default function HandsOnTaskPage() {
                                             </span>
                                             <span className="flex items-center gap-2 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/30">
                                                 <Zap className="w-4 h-4 text-amber-400" />
-                                                <span className="font-black text-amber-400">+100 XP</span>
+                                                <span className="font-black text-amber-400">+{task.xp_reward || 100} XP</span>
                                             </span>
-                                            <DifficultyDots difficulty="medium" />
+                                            <DifficultyDots difficulty={task.difficulty || "medium"} />
                                         </div>
                                     </div>
                                 </motion.div>
 
-                                {/* Content Blocks */}
+                                {/* Content - Markdown or Content Blocks */}
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1 }}
                                 >
-                                    <DOE25ContentRenderer blocks={task.content_blocks} />
+                                    <TaskContent task={task} />
                                 </motion.div>
 
                                 {/* Task Footer */}
@@ -558,8 +619,8 @@ export default function HandsOnTaskPage() {
                                     prevTaskUrl={prevTask ? `/modules/hands-on-lab/tasks/${prevTask.id}` : undefined}
                                     nextTaskUrl={nextTask ? `/modules/hands-on-lab/tasks/${nextTask.id}` : undefined}
                                     onComplete={handleMarkComplete}
-                                    xp={100}
-                                    difficulty="medium"
+                                    xp={task.xp_reward || 100}
+                                    difficulty={task.difficulty || "medium"}
                                     isCompleted={isCompleted}
                                     isLoading={completing}
                                 />
@@ -568,8 +629,8 @@ export default function HandsOnTaskPage() {
                                 <QuickNav
                                     prevTask={prevTask}
                                     nextTask={nextTask}
-                                    currentIndex={currentIndex}
-                                    totalTasks={allTasks.length}
+                                    currentIndex={currentIndex >= 0 ? currentIndex : 0}
+                                    totalTasks={allTasks.length || 1}
                                 />
                             </motion.div>
                         ) : null}
