@@ -2783,8 +2783,44 @@ git blame file.txt`
 // Export individual tasks for easy access
 export const DOE25_TASKS = DOE25_MODULE.tasks;
 
-// Get task by ID
-export const getTaskById = (id: string) => DOE25_TASKS.find(t => t.id === id);
+// Slug to ID mapping (backend slugs -> frontend IDs)
+const SLUG_TO_ID: Record<string, string> = {
+    "subnetting-natverk": "doe25-0-1-subnetting",
+    "filsystem-navigation": "doe25-0-2-filesystem",
+    "anvandare-grupper": "doe25-1-1-users-groups",
+    "filratigheter": "doe25-1-2-permissions",
+    "ssh-hardening": "doe25-1-3-ssh-hardening",
+    "ufw-brandvagg": "doe25-1-4-ufw",
+    "firewalld": "doe25-1-5-firewalld",
+    "lagring-lvm": "doe25-1-6-storage",
+    "backup-tar": "doe25-1-7-backup",
+    "systemd-services": "doe25-1-8-systemd",
+    "bash-grunder": "doe25-2-1-bash-basics",
+    "variabler-input": "doe25-2-2-variables",
+    "kontrollstrukturer": "doe25-2-3-control",
+    "funktioner-felhantering": "doe25-2-4-functions",
+    "textbearbetning": "doe25-2-5-text-processing",
+    "automation-cron": "doe25-2-6-automation",
+    "docker-grunder": "doe25-3-1-docker-basics",
+    "docker-images": "doe25-3-2-docker-images",
+    "docker-compose": "doe25-3-3-docker-compose",
+    "git-basics": "doe25-3-4-git-basics",
+};
+
+// Get task by ID or slug
+export const getTaskById = (idOrSlug: string) => {
+    // First try direct ID match
+    let task = DOE25_TASKS.find(t => t.id === idOrSlug);
+    if (task) return task;
+    
+    // Try slug lookup
+    const mappedId = SLUG_TO_ID[idOrSlug];
+    if (mappedId) {
+        return DOE25_TASKS.find(t => t.id === mappedId);
+    }
+    
+    return undefined;
+};
 
 // Get task by order index
 export const getTaskByOrder = (order: number) => DOE25_TASKS.find(t => t.order_index === order);
