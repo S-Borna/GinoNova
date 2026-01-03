@@ -2,36 +2,29 @@
 
 /**
  * ============================================================================
- * MODULES LIST PAGE — Design System v2.0 + Platform Selection
+ * MODULES LIST PAGE — Single Source of Truth Architecture
  * ============================================================================
  *
- * Updated with @saas/ui design system components:
- * - PageLayout for consistent layout
- * - Headline for typography
- * - Section/Block for content organization
- * - PlatformSelector for OS/distro selection with wave animation
+ * Fetches modules from backend content source: /api/modules/full
+ * This ensures Camp DevOps uses the SAME data as SkillsMaps.
  *
- * @phase DS.2 - Design System Application Layer
- * @phase FAS-3.1 - OS-Adaptive Content System
+ * @phase ARCHITECTURE-UNIFICATION
  */
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { getModules, ModulePublic } from "@/lib/modules"
-import { getTasksForModule, TaskPublic } from "@/lib/tasks"
-import { getUserProgress, ProgressPublic } from "@/lib/progress"
 import { useAuth } from "@/components/auth"
-import { usePlatform, LINUX_DISTROS } from "@/hooks/useOperatingSystem"
+import { usePlatform } from "@/hooks/useOperatingSystem"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
 import { PlatformBadge } from "@/components/onboarding"
-import { BookOpen, Trophy, RefreshCw, AlertCircle, Settings2, Sparkles } from "lucide-react"
+import { BookOpen, Trophy, RefreshCw, AlertCircle, Sparkles } from "lucide-react"
 
 // @saas/ui Design System
-import { PageLayout, Section, Block, Headline, Subtext } from "@saas/ui"
+import { Section } from "@saas/ui"
 
 // Cosmic Design System
 import { CosmicAurora } from "@/components/ui/cosmic-aurora"
@@ -40,14 +33,26 @@ import { CosmicAurora } from "@/components/ui/cosmic-aurora"
    TYPES
    ============================================================================ */
 
-interface EnhancedModule extends ModulePublic {
+interface EnhancedModule {
+    id: string
+    name: string
+    slug: string
+    description: string | null
+    order_index: number
     orderIndex: number
+    difficulty: string
+    estimated_hours: number
+    estimatedHours: number
+    prerequisites: string[]
+    is_active: boolean
+    track_id: string | null
+    created_at: string
+    updated_at: string
     icon: string
     progress: number
     tasksCompleted: number
     totalTasks: number
     status: ModuleStatus
-    estimatedHours: number
     prerequisiteModule?: string
     tags?: string[]
     xp?: number
@@ -581,6 +586,8 @@ export default function ModulesPage() {
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+
     const fetchModules = async (isRefresh = false) => {
         if (isRefresh) {
             setRefreshing(true)
@@ -590,106 +597,86 @@ export default function ModulesPage() {
         setError(null)
 
         try {
-            const result = await getModules()
-            if (result.ok && result.data.length > 0) {
-                // Fetch user progress if logged in
-                let userProgress: ProgressPublic[] = []
-                if (user?.id) {
-                    const progressResult = await getUserProgress(user.id)
-                    if (progressResult.ok) {
-                        userProgress = progressResult.data
-                    }
-                }
+            // ================================================================
+            // FETCH FROM BACKEND CONTENT SOURCE (Single Source of Truth)
+            // ================================================================
+            const res = await fetch(`${API_BASE_URL}/api/modules/full`)
 
-                // Create a map of module_id -> progress
-                const progressMap = new Map<string, ProgressPublic>()
-                userProgress.forEach(p => {
-                    if (p.module_id) {
-                        progressMap.set(p.module_id, p)
+            if (!res.ok) {
+                throw new Error("Backend unavailable")
+            }
+
+            const contentModules = await res.json()
+
+            if (contentModules && contentModules.length > 0) {
+                // Transform backend content modules to EnhancedModule format
+                const enhancedModules: EnhancedModule[] = contentModules.map((mod: {
+                    id: string
+                    slug: string
+                    title?: string
+                    name?: string
+                    description: string
+                    icon?: string
+                    difficulty?: string
+                    estimated_hours?: number
+                    tasks?: Array<{ slug?: string; title: string }>
+                    order_index?: number
+                    exam_date?: string
+                }, index: number) => {
+                    const totalTasks = mod.tasks?.length || 0
+                    const moduleSlug = mod.slug || mod.id
+
+                    // Load completed tasks from localStorage
+                    let completedTasks = 0
+                    try {
+                        const saved = localStorage.getItem(`${moduleSlug}-completed-tasks`)
+                        if (saved) {
+                            completedTasks = JSON.parse(saved).length
+                        }
+                    } catch {
+                        // Ignore localStorage errors
                     }
+
+                    const progressPercent = totalTasks > 0
+                        ? Math.round((completedTasks / totalTasks) * 100)
+                        : 0
+
+                    let status: ModuleStatus = "not_started"
+                    if (progressPercent === 100) {
+                        status = "complete"
+                    } else if (progressPercent > 0) {
+                        status = "in_progress"
+                    }
+
+                    // Map icon from backend or generate from name
+                    const moduleIcon = mod.icon || getModuleIcon(mod.title || mod.name || "")
+
+                    return {
+                        id: mod.id,
+                        name: mod.title || mod.name || moduleSlug,
+                        slug: moduleSlug,
+                        description: mod.description,
+                        order_index: mod.order_index || index + 1,
+                        orderIndex: mod.order_index || index + 1,
+                        difficulty: mod.difficulty || "intermediate",
+                        estimated_hours: mod.estimated_hours || 10,
+                        estimatedHours: mod.estimated_hours || 10,
+                        prerequisites: [],
+                        is_active: true,
+                        track_id: null,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                        icon: moduleIcon,
+                        progress: progressPercent,
+                        tasksCompleted: completedTasks,
+                        totalTasks,
+                        status,
+                        tags: mod.exam_date ? ["Tenta", "Linux", "Bash"] : ["Linux", "DevOps"],
+                        xp: totalTasks * 100,
+                    } as EnhancedModule
                 })
 
-                // Create a map of task progress by task_id
-                const taskProgressMap = new Map<string, ProgressPublic>()
-                userProgress.forEach(p => {
-                    if (p.task_id) {
-                        taskProgressMap.set(p.task_id, p)
-                    }
-                })
-
-                // Fetch tasks for each module to get accurate counts
-                const modulesWithTasks = await Promise.all(
-                    result.data
-                        // FILTER: Camp DevOps only shows hardcore DevOps modules
-                        .filter(mod => {
-                            const slug = mod.slug?.toLowerCase() || ""
-                            const name = mod.name?.toLowerCase() || ""
-
-                            // Exclude old Docker modules (replaced by docker-mastery)
-                            const excludedSlugs = ["docker-fundamentals", "docker-advanced-production"]
-                            if (excludedSlugs.includes(slug)) return false
-
-                            // Exclude backend tenta/tentaplugg modules - we use DOE25 instead
-                            if (name.includes("tenta") || name.includes("tentaplugg") ||
-                                slug.includes("tenta") || slug.includes("tentaplugg")) {
-                                return false
-                            }
-
-                            const devopsKeywords = [
-                                "linux", "docker", "kubernetes", "k8s", "cicd", "ci-cd", "ci/cd",
-                                "terraform", "ansible", "aws", "cloud", "git", "shell", "bash",
-                                "monitoring", "observability", "security", "networking", "iac",
-                                "infrastructure", "devops", "container", "orchestration"
-                            ]
-                            return devopsKeywords.some(kw => slug.includes(kw) || name.includes(kw))
-                        })
-                        .map(async (mod, index) => {
-                            // Get tasks for this module
-                            const tasksResult = await getTasksForModule(mod.id)
-                            const tasks: TaskPublic[] = tasksResult.ok ? tasksResult.data : []
-                            const totalTasks = tasks.length
-
-                            // Count completed tasks from progress data
-                            const completedTasks = tasks.filter(t => {
-                                const taskProgress = taskProgressMap.get(t.id)
-                                return taskProgress?.status === "completed"
-                            }).length
-
-                            // Calculate progress percentage
-                            const progressPercent = totalTasks > 0
-                                ? Math.round((completedTasks / totalTasks) * 100)
-                                : 0
-
-                            // Determine status - NO LOCKING, all modules open!
-                            let status: ModuleStatus = "not_started"
-                            if (progressPercent === 100) {
-                                status = "complete"
-                            } else if (progressPercent > 0) {
-                                status = "in_progress"
-                            }
-                            // All modules are accessible - no prerequisites blocking
-
-                            return {
-                                ...mod,
-                                orderIndex: mod.order_index || index + 1,
-                                icon: getModuleIcon(mod.name),
-                                progress: progressPercent,
-                                tasksCompleted: completedTasks,
-                                totalTasks,
-                                status,
-                                estimatedHours: mod.estimated_hours || 4 + index * 2,
-                                prerequisiteModule: mod.prerequisites?.[0],
-                            } as EnhancedModule
-                        })
-                )
-
-                // ALWAYS prepend DOE25 Tenta as first module
-                const doe25Module = MOCK_MODULES.find(m => m.id === "doe25-tenta")
-                if (doe25Module) {
-                    setModules([doe25Module, ...modulesWithTasks])
-                } else {
-                    setModules(modulesWithTasks)
-                }
+                setModules(enhancedModules)
             } else {
                 // Fallback to mock data when backend unavailable
                 console.log("[Modules] Using mock data - backend unavailable or empty")
@@ -731,9 +718,12 @@ export default function ModulesPage() {
     // Platform selection loading or redirecting
     if (platformLoading || !hasSelected) {
         return (
-            <PageLayout maxWidth="wide" background="gray">
-                <PageSkeleton />
-            </PageLayout>
+            <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
+                <CosmicAurora />
+                <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    <PageSkeleton />
+                </div>
+            </div>
         )
     }
 
@@ -815,6 +805,7 @@ export default function ModulesPage() {
                                     >
                                         <ModuleCard
                                             id={module.id}
+                                            slug={module.slug || module.id}
                                             orderIndex={module.orderIndex}
                                             title={module.name}
                                             description={module.description || "No description available"}
