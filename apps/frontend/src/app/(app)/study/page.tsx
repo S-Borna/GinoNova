@@ -3,10 +3,12 @@
 /**
  * Studyroom - Premium Cosmic Design
  * Flashcards & Quiz för DOE25 + Linux 24/7
+ * 
+ * Now with task selection for targeted study sessions
  */
 
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -22,12 +24,17 @@ import {
     Trophy,
     GraduationCap,
     Layers,
-    ChevronRight
+    ChevronRight,
+    ChevronDown,
+    Check,
+    Square
 } from "lucide-react"
 
 // Import module data
 import { DOE25_MODULE } from "@/data/doe25-module"
 import { LINUX247_MODULE } from "@/data/linux247-module"
+import { DOE25_TASK_FLASHCARDS } from "@/data/doe25-task-flashcards"
+import { LINUX247_TASK_FLASHCARDS } from "@/data/linux247-task-flashcards"
 
 /* ============================================================================
    TYPES
@@ -44,6 +51,7 @@ interface StudyModule {
     quizCount: number
     color: 'purple' | 'emerald'
     progress?: number
+    tasks: { id: string; title: string; flashcardCount: number }[]
 }
 
 /* ============================================================================
@@ -60,7 +68,12 @@ const STUDY_MODULES: StudyModule[] = [
         taskCount: DOE25_MODULE.tasks.length,
         flashcardCount: DOE25_MODULE.tasks.length * 30,
         quizCount: DOE25_MODULE.tasks.length * 20,
-        color: 'purple'
+        color: 'purple',
+        tasks: DOE25_TASK_FLASHCARDS.map(t => ({
+            id: t.taskId,
+            title: t.taskTitle,
+            flashcardCount: t.flashcards.length
+        }))
     },
     {
         id: 'linux-247',
@@ -71,7 +84,12 @@ const STUDY_MODULES: StudyModule[] = [
         taskCount: LINUX247_MODULE.tasks.length,
         flashcardCount: LINUX247_MODULE.tasks.length * 30,
         quizCount: LINUX247_MODULE.tasks.length * 20,
-        color: 'emerald'
+        color: 'emerald',
+        tasks: LINUX247_TASK_FLASHCARDS.map(t => ({
+            id: t.taskId,
+            title: t.taskTitle,
+            flashcardCount: t.flashcards.length
+        }))
     }
 ]
 
@@ -82,8 +100,24 @@ const STUDY_MODULES: StudyModule[] = [
 export default function StudyPage() {
     const router = useRouter()
     const [selectedModule, setSelectedModule] = useState<string | null>(null)
+    const [selectedTasks, setSelectedTasks] = useState<string[]>([])
+    const [showTaskSelector, setShowTaskSelector] = useState(false)
     const [studyMode, setStudyMode] = useState<'flashcards' | 'quiz' | null>(null)
     const [progress, setProgress] = useState<Record<string, number>>({})
+
+    // Get current module
+    const currentModule = useMemo(() => 
+        STUDY_MODULES.find(m => m.slug === selectedModule),
+        [selectedModule]
+    )
+
+    // Calculate selected flashcard count
+    const selectedFlashcardCount = useMemo(() => {
+        if (!currentModule || selectedTasks.length === 0) return 0
+        return currentModule.tasks
+            .filter(t => selectedTasks.includes(t.id))
+            .reduce((sum, t) => sum + t.flashcardCount, 0)
+    }, [currentModule, selectedTasks])
 
     useEffect(() => {
         const doe25Progress = localStorage.getItem('doe25-progress')
@@ -101,11 +135,32 @@ export default function StudyPage() {
     const handleModuleSelect = (moduleSlug: string) => {
         setSelectedModule(moduleSlug)
         setStudyMode(null)
+        setSelectedTasks([]) // Reset task selection
+        setShowTaskSelector(false)
+    }
+
+    const handleToggleTask = (taskId: string) => {
+        setSelectedTasks(prev => 
+            prev.includes(taskId)
+                ? prev.filter(id => id !== taskId)
+                : [...prev, taskId]
+        )
+    }
+
+    const handleSelectAllTasks = () => {
+        if (currentModule) {
+            setSelectedTasks(currentModule.tasks.map(t => t.id))
+        }
+    }
+
+    const handleDeselectAllTasks = () => {
+        setSelectedTasks([])
     }
 
     const handleStartStudy = () => {
-        if (selectedModule && studyMode) {
-            router.push(`/study/${selectedModule}/${studyMode}`)
+        if (selectedModule && studyMode && selectedTasks.length > 0) {
+            const tasksParam = selectedTasks.join(',')
+            router.push(`/study/${selectedModule}/${studyMode}?tasks=${tasksParam}`)
         }
     }
 
@@ -319,9 +374,145 @@ export default function StudyPage() {
                     </div>
                 </motion.div>
 
+                {/* Task Selection */}
+                <AnimatePresence>
+                    {selectedModule && currentModule && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="mb-8"
+                        >
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                                    <Layers className="w-6 h-6 text-blue-400" />
+                                    Välj tasks
+                                    <span className="text-sm font-normal text-zinc-500">
+                                        ({selectedTasks.length}/{currentModule.tasks.length} valda)
+                                    </span>
+                                </h2>
+                                <button
+                                    onClick={() => setShowTaskSelector(!showTaskSelector)}
+                                    className={cn(
+                                        "flex items-center gap-2 px-4 py-2 rounded-xl text-sm",
+                                        "bg-zinc-800/50 border border-zinc-700/50",
+                                        "hover:bg-zinc-800 transition-colors"
+                                    )}
+                                >
+                                    {showTaskSelector ? 'Dölj' : 'Visa tasks'}
+                                    <ChevronDown className={cn(
+                                        "w-4 h-4 transition-transform",
+                                        showTaskSelector && "rotate-180"
+                                    )} />
+                                </button>
+                            </div>
+
+                            {/* Quick select buttons */}
+                            <div className="flex gap-3 mb-4">
+                                <button
+                                    onClick={handleSelectAllTasks}
+                                    className={cn(
+                                        "px-4 py-2 rounded-xl text-sm font-medium",
+                                        "bg-zinc-800/50 border border-zinc-700/50",
+                                        "hover:bg-zinc-800 hover:border-zinc-600 transition-colors",
+                                        "text-zinc-300"
+                                    )}
+                                >
+                                    Välj alla
+                                </button>
+                                <button
+                                    onClick={handleDeselectAllTasks}
+                                    className={cn(
+                                        "px-4 py-2 rounded-xl text-sm font-medium",
+                                        "bg-zinc-800/50 border border-zinc-700/50",
+                                        "hover:bg-zinc-800 hover:border-zinc-600 transition-colors",
+                                        "text-zinc-300"
+                                    )}
+                                >
+                                    Avmarkera alla
+                                </button>
+                                {selectedTasks.length > 0 && (
+                                    <span className={cn(
+                                        "ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-sm",
+                                        currentModule.color === 'purple'
+                                            ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                                            : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                                    )}>
+                                        <BookOpen className="w-4 h-4" />
+                                        {selectedFlashcardCount} flashcards
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Task list */}
+                            <AnimatePresence>
+                                {showTaskSelector && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className={cn(
+                                            "rounded-2xl border p-4 max-h-80 overflow-y-auto",
+                                            "bg-zinc-900/50 border-zinc-800/50"
+                                        )}>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                {currentModule.tasks.map((task, index) => {
+                                                    const isTaskSelected = selectedTasks.includes(task.id)
+                                                    return (
+                                                        <motion.button
+                                                            key={task.id}
+                                                            initial={{ opacity: 0, x: -10 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            transition={{ delay: index * 0.02 }}
+                                                            onClick={() => handleToggleTask(task.id)}
+                                                            className={cn(
+                                                                "flex items-center gap-3 p-3 rounded-xl text-left transition-all",
+                                                                "border",
+                                                                isTaskSelected
+                                                                    ? currentModule.color === 'purple'
+                                                                        ? "bg-purple-500/10 border-purple-500/40"
+                                                                        : "bg-emerald-500/10 border-emerald-500/40"
+                                                                    : "bg-zinc-800/30 border-zinc-700/30 hover:border-zinc-600"
+                                                            )}
+                                                        >
+                                                            <div className={cn(
+                                                                "w-5 h-5 rounded flex items-center justify-center shrink-0",
+                                                                isTaskSelected
+                                                                    ? currentModule.color === 'purple'
+                                                                        ? "bg-purple-500"
+                                                                        : "bg-emerald-500"
+                                                                    : "bg-zinc-700"
+                                                            )}>
+                                                                {isTaskSelected && <Check className="w-3 h-3 text-white" />}
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className={cn(
+                                                                    "text-sm font-medium truncate",
+                                                                    isTaskSelected ? "text-white" : "text-zinc-300"
+                                                                )}>
+                                                                    {task.title}
+                                                                </p>
+                                                                <p className="text-xs text-zinc-500">
+                                                                    {task.flashcardCount} flashcards
+                                                                </p>
+                                                            </div>
+                                                        </motion.button>
+                                                    )
+                                                })}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {/* Study Mode Selection */}
                 <AnimatePresence>
-                    {selectedModule && (
+                    {selectedModule && selectedTasks.length > 0 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -436,7 +627,7 @@ export default function StudyPage() {
 
                 {/* Start Button */}
                 <AnimatePresence>
-                    {selectedModule && studyMode && (
+                    {selectedModule && studyMode && selectedTasks.length > 0 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -462,10 +653,10 @@ export default function StudyPage() {
                             </motion.button>
 
                             <p className="mt-4 text-sm text-zinc-500">
-                                {STUDY_MODULES.find(m => m.slug === selectedModule)?.title} • {' '}
+                                {selectedTasks.length} task{selectedTasks.length !== 1 ? 's' : ''} valda • {' '}
                                 {studyMode === 'flashcards'
-                                    ? `${STUDY_MODULES.find(m => m.slug === selectedModule)?.flashcardCount} kort`
-                                    : `${STUDY_MODULES.find(m => m.slug === selectedModule)?.quizCount} frågor`
+                                    ? `${selectedFlashcardCount} flashcards`
+                                    : `~${Math.round(selectedFlashcardCount * 0.66)} quiz-frågor`
                                 }
                             </p>
                         </motion.div>
