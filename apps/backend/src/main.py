@@ -27,6 +27,26 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 
+def _normalize_difficulty(difficulty: str) -> str:
+    """
+    Normalize difficulty values to valid Pydantic enum values.
+    Maps invalid values like 'mixed' to valid ones.
+    """
+    valid_difficulties = ["beginner", "intermediate", "advanced", "expert"]
+    difficulty_lower = difficulty.lower() if difficulty else "intermediate"
+    
+    # Map invalid values
+    if difficulty_lower == "mixed":
+        return "intermediate"
+    if difficulty_lower == "easy":
+        return "beginner"
+    if difficulty_lower == "hard":
+        return "advanced"
+    
+    # Return if valid, otherwise default to intermediate
+    return difficulty_lower if difficulty_lower in valid_difficulties else "intermediate"
+
+
 def seed_content():
     """
     Seed content från content/ — ENDA källan till moduler/tasks.
@@ -106,7 +126,7 @@ def seed_content():
                 slug=module_data["slug"],
                 description=module_data.get("description"),
                 order_index=module_data.get("order_index", modules_created + 1),
-                difficulty=module_data.get("difficulty", "intermediate"),
+                difficulty=_normalize_difficulty(module_data.get("difficulty", "intermediate")),
                 estimated_hours=module_data.get("estimated_hours", 10.0),
                 prerequisites=module_data.get("prerequisites", []),
             )

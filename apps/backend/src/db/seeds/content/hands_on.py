@@ -1619,7 +1619,7 @@ MODULE = {
     "icon": "🔬",
     "order_index": 2,
     "category": "practical",
-    "difficulty": "mixed",
+    "difficulty": "intermediate",
     "estimated_hours": 6,
     "tasks": [
         ONBOARDING_NODE,
