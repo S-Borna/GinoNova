@@ -2784,27 +2784,41 @@ git blame file.txt`
 export const DOE25_TASKS = DOE25_MODULE.tasks;
 
 // Slug to ID mapping (backend slugs -> frontend IDs)
+// Updated to match backend doe25_tentaplugg.py groups.taskIds
 const SLUG_TO_ID: Record<string, string> = {
+    // Modul 0: Linux Grunder
     "subnetting-natverk": "doe25-0-1-subnetting",
-    "filsystem-navigation": "doe25-0-2-filesystem",
-    "anvandare-grupper": "doe25-1-1-users-groups",
-    "filratigheter": "doe25-1-2-permissions",
-    "ssh-hardening": "doe25-1-3-ssh-hardening",
-    "ufw-brandvagg": "doe25-1-4-ufw",
-    "firewalld": "doe25-1-5-firewalld",
-    "lagring-lvm": "doe25-1-6-storage",
-    "backup-tar": "doe25-1-7-backup",
-    "systemd-services": "doe25-1-8-systemd",
-    "bash-grunder": "doe25-2-1-bash-basics",
-    "variabler-input": "doe25-2-2-variables",
-    "kontrollstrukturer": "doe25-2-3-control",
-    "funktioner-felhantering": "doe25-2-4-functions",
-    "textbearbetning": "doe25-2-5-text-processing",
-    "automation-cron": "doe25-2-6-automation",
-    "docker-grunder": "doe25-3-1-docker-basics",
+    "filsystem-navigation": "doe25-0-2-filsystem",
+    "filsystem-grundkommandon": "doe25-0-2-filsystem",
+    
+    // Modul 1: Bash Scripting
+    "bash-grunder": "doe25-1-1-bash-grunder",
+    "variabler-quoting": "doe25-1-2-variabler",
+    "regex-matchning": "doe25-1-3-regex",
+    "sed-streameditor": "doe25-1-4-sed",
+    "awk-processing": "doe25-1-5-awk",
+    "villkor-tester": "doe25-1-6-villkor",
+    "interaktiva-skript": "doe25-1-7-interaktiva",
+    "loopar-iteration": "doe25-1-8-loopar",
+    "parametrar-arrays": "doe25-1-9-parametrar",
+    "funktioner": "doe25-1-10-funktioner",
+    "signals-traps": "doe25-1-11-signals",
+    
+    // Modul 2: System Administration
+    "users-groups": "doe25-2-1-users",
+    "permissions": "doe25-2-2-permissions",
+    "ssh-hardening": "doe25-2-3-ssh",
+    "ufw-firewall": "doe25-2-4-ufw",
+    "firewalld": "doe25-2-5-firewalld",
+    "lagring-diskar": "doe25-2-6-lagring",
+    "backup-tar": "doe25-2-7-backup",
+    "systemd-services": "doe25-2-8-systemd",
+    
+    // Modul 3: DevOps
+    "docker-grunder": "doe25-3-1-docker-grunder",
     "docker-images": "doe25-3-2-docker-images",
     "docker-compose": "doe25-3-3-docker-compose",
-    "git-basics": "doe25-3-4-git-basics",
+    "git-basics": "doe25-3-4-git",
 };
 
 // Get task by ID or slug

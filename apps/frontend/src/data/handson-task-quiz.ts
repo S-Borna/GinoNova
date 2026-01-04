@@ -1,15 +1,19 @@
 // Hands-On Lab Task Quiz - 20 frågor per task = 140 totalt
 
+export interface TaskQuizQuestion {
+    id: string;
+    question: string;
+    options: string[];
+    correctIndex: number;
+    explanation: string;
+    category?: string;
+    difficulty?: 'G' | 'VG';
+}
+
 export interface TaskQuizSet {
     taskId: string;
     taskTitle: string;
-    questions: {
-        id: string;
-        question: string;
-        options: string[];
-        correctIndex: number;
-        explanation: string;
-    }[];
+    questions: TaskQuizQuestion[];
 }
 
 export const HANDSON_TASK_QUIZ: TaskQuizSet[] = [
@@ -1063,7 +1067,13 @@ export function getHandsOnQuizByTaskId(taskId: string): TaskQuizSet | undefined 
     return HANDSON_TASK_QUIZ.find(set => set.taskId === taskId);
 }
 
-export function getAllHandsOnQuiz(): TaskQuizSet[] {
+// Returns individual questions (flattened) - same format as DOE25
+export function getAllHandsOnQuiz(): TaskQuizQuestion[] {
+    return HANDSON_TASK_QUIZ.flatMap(set => set.questions);
+}
+
+// Returns quiz sets grouped by task
+export function getAllHandsOnQuizSets(): TaskQuizSet[] {
     return HANDSON_TASK_QUIZ;
 }
 

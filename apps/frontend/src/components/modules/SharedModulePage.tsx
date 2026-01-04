@@ -109,6 +109,11 @@ function getIcon(iconName: string): React.ReactNode {
     return iconMap[iconName] || <BookOpen className="w-6 h-6" />
 }
 
+// Remove "Modul X:" prefix from group titles to show cleaner names
+function cleanGroupTitle(title: string): string {
+    return title.replace(/^Modul \d+:\s*/i, '')
+}
+
 // ============================================================================
 // MODULE CONFIG - Colors and display settings
 // ============================================================================
@@ -516,7 +521,7 @@ export function SharedModulePage({
                                             {getIcon(group.icon)}
                                         </div>
                                         <div className="flex-1">
-                                            <h2 className="text-xl font-bold text-white">{group.title}</h2>
+                                            <h2 className="text-xl font-bold text-white">{cleanGroupTitle(group.title)}</h2>
                                             <p className="text-sm text-zinc-400">{group.subtitle}</p>
                                         </div>
                                         <div className="text-right">

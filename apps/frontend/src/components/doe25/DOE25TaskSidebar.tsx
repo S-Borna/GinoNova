@@ -50,17 +50,22 @@ interface DOE25TaskSidebarProps {
    TASK GROUPS CONFIG
    ============================================================================ */
 
+// Remove "Modul X:" prefix from group titles
+function cleanGroupTitle(title: string): string {
+    return title.replace(/^Modul \d+:\s*/i, '')
+}
+
 const taskGroups = [
     {
         id: "modul-0",
-        title: "Modul 0: Linux Grunder",
+        title: "Linux Grunder",
         icon: <Network className="w-4 h-4" />,
         color: "from-cyan-500 to-blue-500",
         taskIds: ["doe25-0-1-subnetting", "doe25-0-2-filsystem"]
     },
     {
         id: "modul-1",
-        title: "Modul 1: Bash Scripting",
+        title: "Bash Scripting",
         icon: <Terminal className="w-4 h-4" />,
         color: "from-green-500 to-emerald-500",
         taskIds: [
@@ -79,7 +84,7 @@ const taskGroups = [
     },
     {
         id: "modul-2",
-        title: "Modul 2: System Admin",
+        title: "System Admin",
         icon: <Server className="w-4 h-4" />,
         color: "from-orange-500 to-amber-500",
         taskIds: [
@@ -95,7 +100,7 @@ const taskGroups = [
     },
     {
         id: "modul-3",
-        title: "Modul 3: DevOps",
+        title: "DevOps",
         icon: <Container className="w-4 h-4" />,
         color: "from-purple-500 to-violet-500",
         taskIds: [
