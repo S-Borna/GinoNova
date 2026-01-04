@@ -22,7 +22,6 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
-    Terminal,
     Menu,
     X,
     ChevronRight,
@@ -96,18 +95,6 @@ export function Navbar() {
                             isScrolled ? "h-16" : "h-20"
                         )}
                     >
-                        {/* Logo */}
-                        <Link href="/" className="flex items-center gap-3 group">
-                            <div
-                                className={cn(
-                                    "p-2.5 rounded-xl",
-                                    "bg-gradient-to-br from-purple-600 to-violet-700",
-                                    "transition-transform duration-200 group-hover:scale-105"
-                                )}
-                            >
-                                <Terminal className="w-5 h-5 text-white" />
-                            </div>
-                        </Link>
 
                         {/* DOE25 Tenta Card - Free Access */}
                         <Link href="/modules" className="hidden md:block group">
