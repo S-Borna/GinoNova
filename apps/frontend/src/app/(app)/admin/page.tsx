@@ -2,17 +2,15 @@
 
 /**
  * ============================================================================
- * ADMIN COMMAND CENTER — Full Control Dashboard
+ * ADMIN COMMAND CENTER v2.0 — Full Control Dashboard
  * ============================================================================
  *
- * The ultimate admin dashboard with:
- * - Real-time user statistics
- * - User management (view, edit, track)
+ * Complete admin dashboard with:
+ * - Real-time user monitoring
+ * - User management (view, edit, delete)
+ * - AI Usage tracking
  * - Activity monitoring
- * - System health
- *
- * @phase Admin
- * @access Admin only (said.ebadi@hotmail.com)
+ * - System controls
  */
 
 import { useEffect, useState, useCallback } from "react"
@@ -46,12 +44,26 @@ import {
     Server,
     Database,
     Globe,
-    MousePointer,
-    LogIn,
-    LogOut,
+    Trash2,
+    UserX,
+    UserCheck,
+    Brain,
+    Sparkles,
+    DollarSign,
+    MessageSquare,
+    Settings,
+    ChevronDown,
+    ChevronUp,
+    X,
+    Check,
+    MoreVertical,
+    Mail,
+    Crown,
+    Ban,
+    Wifi,
+    WifiOff,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const ADMIN_EMAIL = "said.ebadi@hotmail.com"
@@ -65,7 +77,6 @@ interface AdminUser {
     full_name: string | null
     email: string
     avatar_url?: string | null
-    bio?: string | null
     is_active: boolean
     is_admin: boolean
     is_verified?: boolean
@@ -75,40 +86,8 @@ interface AdminUser {
     total_xp: number
     level: number
     current_streak?: number
-    longest_streak?: number
     tasks_completed: number
-    modules_started?: number
     modules_completed: number
-    labs_completed?: number
-    projects_completed?: number
-    total_study_time?: number
-}
-
-/* ============================================================================
-   HELPER FUNCTIONS
-   ============================================================================ */
-
-// Get display name - handles OAuth users without names
-function getDisplayName(user: AdminUser): string {
-    if (user.full_name && user.full_name.trim()) {
-        return user.full_name
-    }
-    // For OAuth users without name, create name from email
-    const emailPrefix = user.email.split("@")[0]
-    return emailPrefix
-        .replace(/[._-]/g, " ")
-        .replace(/\d+$/, "")
-        .split(" ")
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(" ")
-        .trim() || user.email
-}
-
-// Check if user is new (registered within last 7 days)
-function isNewUser(createdAt: string): boolean {
-    const created = new Date(createdAt)
-    const diffDays = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24)
-    return diffDays <= 7
 }
 
 interface SystemStats {
@@ -119,46 +98,84 @@ interface SystemStats {
     users_this_week: number
     online_now: number
     active_today: number
-    total_tracks: number
     total_modules: number
     total_tasks: number
-    total_labs: number
-    total_projects: number
-    total_tasks_completed: number
-    total_xp_earned: number
-    total_study_minutes: number
-    active_sessions: number
-    avg_tasks_per_user: number
-    avg_xp_per_user: number
-    avg_session_minutes: number
     database_status: string
-    cache_status: string
-    api_version: string
 }
 
-interface AdminUsersResponse {
-    users: AdminUser[]
-    total: number
-    page: number
-    per_page: number
-    total_pages: number
+interface AIUsageData {
+    user_id: string
+    email: string
+    total_calls: number
+    total_tokens: number
+    total_cost_usd: number
+}
+
+interface ActivityEvent {
+    type: string
+    email: string
+    name: string | null
+    timestamp: string
+    details: string
 }
 
 /* ============================================================================
-   COMPONENTS
+   HELPERS
    ============================================================================ */
 
-function StatCard({
-    icon: Icon,
-    label,
-    value,
-    subValue,
+function timeAgo(dateString: string | null): string {
+    if (!dateString) return "Aldrig"
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMs / 3600000)
+    const diffDays = Math.floor(diffMs / 86400000)
+
+    if (diffMins < 1) return "Just nu"
+    if (diffMins < 60) return `${diffMins} min sedan`
+    if (diffHours < 24) return `${diffHours}h sedan`
+    if (diffDays < 7) return `${diffDays}d sedan`
+    return date.toLocaleDateString("sv-SE")
+}
+
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString("sv-SE", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    })
+}
+
+function isOnline(lastActivity: string | null): boolean {
+    if (!lastActivity) return false
+    const lastActive = new Date(lastActivity)
+    const diffMs = Date.now() - lastActive.getTime()
+    return diffMs < 30 * 60 * 1000 // 30 minutes
+}
+
+function isActiveToday(lastActivity: string | null): boolean {
+    if (!lastActivity) return false
+    const lastActive = new Date(lastActivity)
+    const today = new Date()
+    return lastActive.toDateString() === today.toDateString()
+}
+
+/* ============================================================================
+   STAT CARD COMPONENT
+   ============================================================================ */
+
+function StatCard({ 
+    icon: Icon, 
+    label, 
+    value, 
+    subValue, 
     color,
-    trend,
-}: {
-    icon: React.ElementType
+    trend
+}: { 
+    icon: any
     label: string
-    value: string | number
+    value: number | string
     subValue?: string
     color: string
     trend?: "up" | "down" | "neutral"
@@ -168,664 +185,402 @@ function StatCard({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-                "relative overflow-hidden rounded-2xl",
-                "bg-zinc-900/80 border border-zinc-800",
-                "p-5 transition-all duration-300",
-                "hover:border-zinc-700 hover:shadow-lg"
+                "relative p-5 rounded-2xl overflow-hidden",
+                "bg-zinc-900/50 border border-zinc-800/50",
+                "hover:border-zinc-700/50 transition-all duration-300"
             )}
         >
-            <div className="flex items-start justify-between">
-                <div>
-                    <p className="text-sm font-medium text-zinc-400">{label}</p>
-                    <p className="mt-1 text-3xl font-bold text-white">
-                        {typeof value === "number" ? value.toLocaleString() : value}
-                    </p>
-                    {subValue && (
-                        <p className="mt-1 text-xs text-zinc-500 flex items-center gap-1">
-                            {trend === "up" && <TrendingUp className="w-3 h-3 text-emerald-400" />}
-                            {subValue}
-                        </p>
-                    )}
+            <div className={cn(
+                "absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20",
+                color
+            )} />
+            <div className="relative">
+                <div className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center mb-3",
+                    color.replace("bg-", "bg-") + "/20"
+                )}>
+                    <Icon className={cn("w-5 h-5", color.replace("bg-", "text-"))} />
                 </div>
-                <div className={cn("p-3 rounded-xl", color)}>
-                    <Icon className="w-5 h-5 text-white" />
-                </div>
+                <p className="text-zinc-400 text-sm mb-1">{label}</p>
+                <p className="text-2xl font-bold text-white">{value}</p>
+                {subValue && (
+                    <p className="text-xs text-zinc-500 mt-1">{subValue}</p>
+                )}
             </div>
         </motion.div>
     )
 }
 
-function ActivityIndicator({ lastActive }: { lastActive: string | null }) {
-    if (!lastActive) {
-        return (
-            <span className="inline-flex items-center gap-1.5 text-zinc-500 text-xs">
-                <span className="w-2 h-2 rounded-full bg-zinc-600" />
-                Aldrig
-            </span>
-        )
-    }
+/* ============================================================================
+   USER ROW COMPONENT
+   ============================================================================ */
 
-    const date = new Date(lastActive)
-    const now = new Date()
-    const hoursSinceActive = (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-
-    if (hoursSinceActive < 0.5) {
-        return (
-            <span className="inline-flex items-center gap-1.5 text-emerald-400 text-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Online nu
-            </span>
-        )
-    }
-
-    if (hoursSinceActive < 24) {
-        const hours = Math.floor(hoursSinceActive)
-        return (
-            <span className="inline-flex items-center gap-1.5 text-amber-400 text-xs">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                {hours}h sedan
-            </span>
-        )
-    }
-
-    const days = Math.floor(hoursSinceActive / 24)
-    return (
-        <span className="inline-flex items-center gap-1.5 text-zinc-400 text-xs">
-            <span className="w-2 h-2 rounded-full bg-zinc-500" />
-            {days}d sedan
-        </span>
-    )
-}
-
-function UserRow({ user, onViewDetails }: { user: AdminUser; onViewDetails: (user: AdminUser) => void }) {
-    const displayName = getDisplayName(user)
-    const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
-    const isNew = isNewUser(user.created_at)
-
-    return (
-        <motion.tr
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => onViewDetails(user)}
-            className="border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors cursor-pointer"
-        >
-            <td className="px-4 py-3">
-                <div className="flex items-center gap-3">
-                    <div className="relative">
-                        <div className={cn(
-                            "w-10 h-10 rounded-xl flex items-center justify-center",
-                            "bg-gradient-to-br from-purple-500 to-indigo-600",
-                            "text-white font-bold text-sm"
-                        )}>
-                            {initials}
-                        </div>
-                        {user.is_admin && (
-                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
-                                <Shield className="w-2.5 h-2.5 text-white" />
-                            </div>
-                        )}
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <p className="font-medium text-white text-sm">{displayName}</p>
-                            {isNew && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">NY</span>
-                            )}
-                            {!user.is_active && (
-                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400">SPÄRRAD</span>
-                            )}
-                        </div>
-                        <p className="text-xs text-zinc-500">{user.email}</p>
-                    </div>
-                </div>
-            </td>
-            <td className="px-4 py-3">
-                <ActivityIndicator lastActive={user.last_activity_at} />
-            </td>
-            <td className="px-4 py-3 text-center">
-                <span className={cn(
-                    "inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold",
-                    "bg-amber-500/20 text-amber-400"
-                )}>
-                    Lvl {user.level}
-                </span>
-            </td>
-            <td className="px-4 py-3 text-center">
-                <span className={cn(
-                    "inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold",
-                    "bg-purple-500/20 text-purple-400"
-                )}>
-                    <Zap className="w-3 h-3" />
-                    {user.total_xp.toLocaleString()}
-                </span>
-            </td>
-            <td className="px-4 py-3 text-center">
-                <span className="text-sm text-zinc-300">
-                    {user.modules_completed}/{user.modules_started || 0}
-                </span>
-            </td>
-            <td className="px-4 py-3 text-center">
-                <span className={cn(
-                    "inline-flex items-center px-2 py-1 rounded-lg text-xs font-semibold",
-                    "bg-emerald-500/20 text-emerald-400"
-                )}>
-                    {user.tasks_completed}
-                </span>
-            </td>
-            <td className="px-4 py-3 text-xs text-zinc-500">
-                {new Date(user.created_at).toLocaleDateString("sv-SE")}
-            </td>
-            <td className="px-4 py-3">
-                <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onViewDetails(user)}
-                    className="text-zinc-400 hover:text-white"
-                >
-                    <Eye className="w-4 h-4" />
-                </Button>
-            </td>
-        </motion.tr>
-    )
-}
-
-function UserDetailModal({
-    user,
-    onClose,
+function UserRow({ 
+    user, 
+    aiUsage,
+    onEdit, 
     onToggleActive,
-    onToggleAdmin,
-    currentUserEmail
-}: {
+    onDelete,
+    isExpanded,
+    onToggleExpand
+}: { 
     user: AdminUser
-    onClose: () => void
-    onToggleActive: (userId: string, isActive: boolean) => Promise<void>
-    onToggleAdmin: (userId: string, isAdmin: boolean) => Promise<void>
-    currentUserEmail: string
+    aiUsage?: AIUsageData
+    onEdit: (user: AdminUser) => void
+    onToggleActive: (user: AdminUser) => void
+    onDelete: (user: AdminUser) => void
+    isExpanded: boolean
+    onToggleExpand: () => void
 }) {
-    const [actionLoading, setActionLoading] = useState(false)
-    const [actionStatus, setActionStatus] = useState<string | null>(null)
-    const displayName = getDisplayName(user)
-    const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
-    const canModify = user.email.toLowerCase() !== currentUserEmail.toLowerCase()
-
-    const handleToggleActive = async () => {
-        setActionLoading(true)
-        try {
-            await onToggleActive(user.id, !user.is_active)
-            setActionStatus(user.is_active ? "✓ Användare spärrad" : "✓ Användare aktiverad")
-        } catch {
-            setActionStatus("✗ Kunde inte uppdatera")
-        }
-        setActionLoading(false)
-        setTimeout(() => setActionStatus(null), 2000)
-    }
-
-    const handleToggleAdmin = async () => {
-        setActionLoading(true)
-        try {
-            await onToggleAdmin(user.id, !user.is_admin)
-            setActionStatus(user.is_admin ? "✓ Admin-rättighet borttagen" : "✓ Admin-rättighet tillagd")
-        } catch {
-            setActionStatus("✗ Kunde inte uppdatera")
-        }
-        setActionLoading(false)
-        setTimeout(() => setActionStatus(null), 2000)
-    }
+    const online = isOnline(user.last_activity_at)
+    const activeToday = isActiveToday(user.last_activity_at)
+    const initials = (user.full_name || user.email)
+        .split(" ")
+        .map(n => n[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase()
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
-            onClick={onClose}
-        >
-            <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
+        <>
+            <motion.tr 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 className={cn(
-                    "w-full max-w-2xl max-h-[90vh] overflow-y-auto",
-                    "bg-zinc-900 rounded-2xl border border-zinc-800",
-                    "shadow-2xl"
+                    "border-b border-zinc-800/50 hover:bg-zinc-800/30 transition-colors cursor-pointer",
+                    isExpanded && "bg-zinc-800/30"
                 )}
+                onClick={onToggleExpand}
             >
-                {/* Header */}
-                <div className="p-6 border-b border-zinc-800">
-                    <div className="flex items-center gap-4">
-                        <div className={cn(
-                            "w-16 h-16 rounded-2xl flex items-center justify-center",
-                            "bg-gradient-to-br from-purple-500 to-indigo-600",
-                            "text-white font-bold text-2xl"
-                        )}>
-                            {initials}
+                {/* User Info */}
+                <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <div className={cn(
+                                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium",
+                                user.is_admin 
+                                    ? "bg-gradient-to-br from-amber-500 to-orange-600 text-white"
+                                    : "bg-zinc-700 text-zinc-300"
+                            )}>
+                                {initials}
+                            </div>
+                            {/* Online indicator */}
+                            <span className={cn(
+                                "absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-zinc-900",
+                                online ? "bg-emerald-500" : activeToday ? "bg-amber-500" : "bg-zinc-600"
+                            )} />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-white">
-                                {displayName}
-                            </h2>
-                            <p className="text-zinc-400">{user.email}</p>
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="flex items-center gap-2">
+                                <span className="font-medium text-white">
+                                    {user.full_name || "Unnamed"}
+                                </span>
                                 {user.is_admin && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400">
-                                        <Shield className="w-3 h-3" />
-                                        Admin
-                                    </span>
+                                    <Crown className="w-4 h-4 text-amber-500" />
                                 )}
-                                {user.is_active ? (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">
-                                        Aktiv
-                                    </span>
-                                ) : (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
-                                        Spärrad
-                                    </span>
-                                )}
-                                {isNewUser(user.created_at) && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
-                                        Ny användare
-                                    </span>
+                                {!user.is_active && (
+                                    <Ban className="w-4 h-4 text-red-500" />
                                 )}
                             </div>
+                            <span className="text-sm text-zinc-500">{user.email}</span>
                         </div>
                     </div>
-                </div>
+                </td>
 
-                {/* Stats */}
-                <div className="p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-4 rounded-xl bg-zinc-800/50">
-                        <div className="text-2xl font-bold text-amber-400">Lvl {user.level}</div>
-                        <div className="text-xs text-zinc-500">Nivå</div>
-                    </div>
-                    <div className="text-center p-4 rounded-xl bg-zinc-800/50">
-                        <div className="text-2xl font-bold text-purple-400">{user.total_xp.toLocaleString()}</div>
-                        <div className="text-xs text-zinc-500">Total XP</div>
-                    </div>
-                    <div className="text-center p-4 rounded-xl bg-zinc-800/50">
-                        <div className="text-2xl font-bold text-emerald-400">{user.tasks_completed}</div>
-                        <div className="text-xs text-zinc-500">Tasks klara</div>
-                    </div>
-                    <div className="text-center p-4 rounded-xl bg-zinc-800/50">
-                        <div className="text-2xl font-bold text-orange-400">{user.current_streak || 0}</div>
-                        <div className="text-xs text-zinc-500">Streak</div>
-                    </div>
-                </div>
-
-                {/* Details */}
-                <div className="p-6 border-t border-zinc-800 space-y-4">
-                    <h3 className="font-semibold text-white mb-3">Detaljer</h3>
-
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <span className="text-zinc-500">Registrerad:</span>
-                            <span className="ml-2 text-white">
-                                {new Date(user.created_at).toLocaleDateString("sv-SE", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                })}
+                {/* Status */}
+                <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                        {online ? (
+                            <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs">
+                                <Wifi className="w-3 h-3" />
+                                Online
                             </span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Senast aktiv:</span>
-                            <span className="ml-2 text-white">
-                                {user.last_activity_at
-                                    ? new Date(user.last_activity_at).toLocaleDateString("sv-SE", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit"
-                                    })
-                                    : "Aldrig"
-                                }
+                        ) : (
+                            <span className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-zinc-700/50 text-zinc-400 text-xs">
+                                <WifiOff className="w-3 h-3" />
+                                Offline
                             </span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Moduler:</span>
-                            <span className="ml-2 text-white">{user.modules_completed}/{user.modules_started || 0} klara</span>
-                        </div>
-                        <div>
-                            <span className="text-zinc-500">Längsta streak:</span>
-                            <span className="ml-2 text-white">{user.longest_streak || 0} dagar</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Behörigheter */}
-                <div className="p-6 border-t border-zinc-800">
-                    <h3 className="font-semibold text-white mb-3">Behörigheter</h3>
-
-                    {actionStatus && (
-                        <div className={cn(
-                            "mb-4 p-3 rounded-lg text-sm",
-                            actionStatus.startsWith("✓")
-                                ? "bg-emerald-500/10 text-emerald-400"
-                                : "bg-red-500/10 text-red-400"
-                        )}>
-                            {actionStatus}
-                        </div>
-                    )}
-
-                    <div className="space-y-3">
-                        <Button
-                            onClick={handleToggleActive}
-                            disabled={actionLoading || !canModify}
-                            className={cn(
-                                "w-full justify-start",
-                                user.is_active
-                                    ? "bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30"
-                                    : "bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                            )}
-                            variant="outline"
-                        >
-                            {actionLoading ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : user.is_active ? (
-                                <>
-                                    <AlertCircle className="w-4 h-4 mr-2" />
-                                    Spärra användare
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle className="w-4 h-4 mr-2" />
-                                    Aktivera användare
-                                </>
-                            )}
-                        </Button>
-
-                        <Button
-                            onClick={handleToggleAdmin}
-                            disabled={actionLoading || !canModify}
-                            className={cn(
-                                "w-full justify-start",
-                                user.is_admin
-                                    ? "bg-zinc-500/10 hover:bg-zinc-500/20 text-zinc-400 border border-zinc-500/30"
-                                    : "bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                            )}
-                            variant="outline"
-                        >
-                            {actionLoading ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : user.is_admin ? (
-                                <>
-                                    <Shield className="w-4 h-4 mr-2" />
-                                    Ta bort admin-rättighet
-                                </>
-                            ) : (
-                                <>
-                                    <Shield className="w-4 h-4 mr-2" />
-                                    Gör till admin
-                                </>
-                            )}
-                        </Button>
-
-                        {!canModify && (
-                            <p className="text-xs text-zinc-500 text-center">
-                                Du kan inte ändra din egen behörighet
-                            </p>
                         )}
                     </div>
-                </div>
+                </td>
 
-                {/* Close button */}
-                <div className="p-6 border-t border-zinc-800 flex justify-end">
-                    <Button variant="outline" onClick={onClose}>
-                        Stäng
-                    </Button>
-                </div>
-            </motion.div>
-        </motion.div>
+                {/* Last Activity */}
+                <td className="px-4 py-3">
+                    <span className={cn(
+                        "text-sm",
+                        online ? "text-emerald-400" : activeToday ? "text-amber-400" : "text-zinc-400"
+                    )}>
+                        {timeAgo(user.last_activity_at)}
+                    </span>
+                </td>
+
+                {/* AI Usage */}
+                <td className="px-4 py-3">
+                    {aiUsage ? (
+                        <div className="flex items-center gap-2">
+                            <Brain className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-zinc-300">{aiUsage.total_calls}</span>
+                            <span className="text-xs text-zinc-500">
+                                (${aiUsage.total_cost_usd.toFixed(3)})
+                            </span>
+                        </div>
+                    ) : (
+                        <span className="text-sm text-zinc-600">—</span>
+                    )}
+                </td>
+
+                {/* XP & Level */}
+                <td className="px-4 py-3">
+                    <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        <span className="text-sm text-zinc-300">{user.total_xp} XP</span>
+                        <span className="text-xs text-zinc-500">Lvl {user.level}</span>
+                    </div>
+                </td>
+
+                {/* Registered */}
+                <td className="px-4 py-3">
+                    <span className="text-sm text-zinc-400">
+                        {formatDate(user.created_at)}
+                    </span>
+                </td>
+
+                {/* Actions */}
+                <td className="px-4 py-3">
+                    <div className="flex items-center gap-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); onEdit(user) }}
+                            className="h-8 w-8 p-0 text-zinc-400 hover:text-white"
+                        >
+                            <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); onToggleActive(user) }}
+                            className={cn(
+                                "h-8 w-8 p-0",
+                                user.is_active 
+                                    ? "text-amber-400 hover:text-amber-300" 
+                                    : "text-emerald-400 hover:text-emerald-300"
+                            )}
+                        >
+                            {user.is_active ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); onDelete(user) }}
+                            className="h-8 w-8 p-0 text-red-400 hover:text-red-300"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </Button>
+                        <ChevronDown className={cn(
+                            "w-4 h-4 text-zinc-500 transition-transform",
+                            isExpanded && "rotate-180"
+                        )} />
+                    </div>
+                </td>
+            </motion.tr>
+
+            {/* Expanded Details */}
+            <AnimatePresence>
+                {isExpanded && (
+                    <motion.tr
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                    >
+                        <td colSpan={7} className="px-4 py-4 bg-zinc-800/20">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div className="p-3 rounded-lg bg-zinc-800/50">
+                                    <p className="text-xs text-zinc-500 mb-1">Tasks Completed</p>
+                                    <p className="text-lg font-semibold text-white">{user.tasks_completed}</p>
+                                </div>
+                                <div className="p-3 rounded-lg bg-zinc-800/50">
+                                    <p className="text-xs text-zinc-500 mb-1">Modules Completed</p>
+                                    <p className="text-lg font-semibold text-white">{user.modules_completed}</p>
+                                </div>
+                                <div className="p-3 rounded-lg bg-zinc-800/50">
+                                    <p className="text-xs text-zinc-500 mb-1">Current Streak</p>
+                                    <p className="text-lg font-semibold text-white">{user.current_streak || 0} 🔥</p>
+                                </div>
+                                <div className="p-3 rounded-lg bg-zinc-800/50">
+                                    <p className="text-xs text-zinc-500 mb-1">AI Quiz Tokens</p>
+                                    <p className="text-lg font-semibold text-white">
+                                        {aiUsage?.total_tokens?.toLocaleString() || 0}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="mt-3 flex gap-2">
+                                <Button size="sm" variant="outline" className="text-xs">
+                                    <Mail className="w-3 h-3 mr-1" />
+                                    Skicka mail
+                                </Button>
+                                <Button size="sm" variant="outline" className="text-xs">
+                                    <Eye className="w-3 h-3 mr-1" />
+                                    Visa profil
+                                </Button>
+                                <Button size="sm" variant="outline" className="text-xs">
+                                    <BarChart3 className="w-3 h-3 mr-1" />
+                                    Aktivitetslogg
+                                </Button>
+                            </div>
+                        </td>
+                    </motion.tr>
+                )}
+            </AnimatePresence>
+        </>
     )
-}
-
-interface ActivityEvent {
-    type: "registration" | "login" | "progress"
-    email: string
-    name: string | null
-    timestamp: string
-    details: string
-}
-
-interface ActivityLogResponse {
-    period_days: number
-    total_events: number
-    new_registrations: number
-    active_users: number
-    events: ActivityEvent[]
 }
 
 /* ============================================================================
-   MAIN COMPONENT
+   ACTIVITY FEED COMPONENT
+   ============================================================================ */
+
+function ActivityFeed({ events }: { events: ActivityEvent[] }) {
+    const getEventIcon = (type: string) => {
+        switch (type) {
+            case "registration": return <UserPlus className="w-4 h-4 text-emerald-400" />
+            case "login": return <Wifi className="w-4 h-4 text-blue-400" />
+            case "progress": return <CheckCircle className="w-4 h-4 text-purple-400" />
+            default: return <Activity className="w-4 h-4 text-zinc-400" />
+        }
+    }
+
+    const getEventColor = (type: string) => {
+        switch (type) {
+            case "registration": return "border-l-emerald-500"
+            case "login": return "border-l-blue-500"
+            case "progress": return "border-l-purple-500"
+            default: return "border-l-zinc-500"
+        }
+    }
+
+    return (
+        <div className="space-y-2 max-h-96 overflow-y-auto">
+            {events.slice(0, 20).map((event, i) => (
+                <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                    className={cn(
+                        "p-3 rounded-lg bg-zinc-800/30 border-l-2",
+                        getEventColor(event.type)
+                    )}
+                >
+                    <div className="flex items-start gap-3">
+                        <div className="mt-0.5">{getEventIcon(event.type)}</div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span className="font-medium text-white text-sm truncate">
+                                    {event.name || event.email}
+                                </span>
+                                <span className="text-xs text-zinc-500">
+                                    {timeAgo(event.timestamp)}
+                                </span>
+                            </div>
+                            <p className="text-xs text-zinc-400 truncate">{event.details}</p>
+                        </div>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    )
+}
+
+/* ============================================================================
+   MAIN ADMIN PAGE
    ============================================================================ */
 
 export default function AdminCommandCenter() {
     const { user, loading: authLoading } = useAuth()
     const router = useRouter()
-
+    
     const [users, setUsers] = useState<AdminUser[]>([])
     const [stats, setStats] = useState<SystemStats | null>(null)
+    const [aiUsage, setAiUsage] = useState<AIUsageData[]>([])
+    const [activityLog, setActivityLog] = useState<ActivityEvent[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [searchQuery, setSearchQuery] = useState("")
-    const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null)
-    const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
-    const [activityLog, setActivityLog] = useState<ActivityLogResponse | null>(null)
-    const [backfillStatus, setBackfillStatus] = useState<string | null>(null)
-    const [migrationStatus, setMigrationStatus] = useState<string | null>(null)
-    const [migrationLoading, setMigrationLoading] = useState(false)
-    const [schemaStatus, setSchemaStatus] = useState<string | null>(null)
-    const [schemaLoading, setSchemaLoading] = useState(false)
+    const [expandedUserId, setExpandedUserId] = useState<string | null>(null)
+    const [lastRefresh, setLastRefresh] = useState(new Date())
+    const [filter, setFilter] = useState<"all" | "online" | "today" | "inactive">("all")
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
-    // Toggle user active status
-    const toggleUserActive = async (userId: string, isActive: boolean) => {
-        const token = getToken()
-        const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ is_active: isActive })
-        })
-        if (!res.ok) throw new Error("Failed to update user")
-
-        // Update local state
-        setUsers(prev => prev.map(u =>
-            u.id === userId ? { ...u, is_active: isActive } : u
-        ))
-        if (selectedUser?.id === userId) {
-            setSelectedUser(prev => prev ? { ...prev, is_active: isActive } : null)
-        }
-    }
-
-    // Toggle user admin status
-    const toggleUserAdmin = async (userId: string, isAdminStatus: boolean) => {
-        const token = getToken()
-        const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ is_admin: isAdminStatus })
-        })
-        if (!res.ok) throw new Error("Failed to update user")
-
-        // Update local state
-        setUsers(prev => prev.map(u =>
-            u.id === userId ? { ...u, is_admin: isAdminStatus } : u
-        ))
-        if (selectedUser?.id === userId) {
-            setSelectedUser(prev => prev ? { ...prev, is_admin: isAdminStatus } : null)
-        }
-    }
-
-    // Apply schema updates (direct SQL)
-    const applySchemaUpdates = async () => {
-        setSchemaLoading(true)
-        setSchemaStatus(null)
-        try {
-            const token = getToken()
-            const res = await fetch(`${API_BASE_URL}/api/admin/apply-schema-updates`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            })
-            const data = await res.json()
-            console.log("Schema update response:", data)
-            if (data.success) {
-                setSchemaStatus(`✅ ${data.results?.join(' | ') || 'Schema uppdaterat'}`)
-            } else {
-                setSchemaStatus(`❌ Fel: ${data.error || 'Okänt fel'}`)
-            }
-        } catch (err) {
-            setSchemaStatus(`❌ Kunde inte uppdatera schema: ${err}`)
-        } finally {
-            setSchemaLoading(false)
-        }
-    }
-
-    // Run database migrations
-    const runMigrations = async () => {
-        setMigrationLoading(true)
-        setMigrationStatus(null)
-        try {
-            const token = getToken()
-            const res = await fetch(`${API_BASE_URL}/api/admin/run-migrations`, {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                }
-            })
-            const data = await res.json()
-            console.log("Migration response:", data)
-            if (data.success) {
-                if (data.applied) {
-                    setMigrationStatus(`✅ Migrationer körda! ${data.previous_revision} → ${data.current_revision}`)
-                } else {
-                    setMigrationStatus(`✅ Databasen är redan uppdaterad (${data.current_revision})`)
-                }
-            } else {
-                // Show detailed error info
-                const errorDetails = [
-                    data.error,
-                    data.stderr,
-                    data.current_error,
-                    data.backend_dir ? `Dir: ${data.backend_dir}` : null
-                ].filter(Boolean).join(' | ')
-                setMigrationStatus(`❌ Fel: ${errorDetails || 'Okänt fel'}`)
-            }
-        } catch (err) {
-            setMigrationStatus(`❌ Kunde inte köra migrationer: ${err}`)
-        } finally {
-            setMigrationLoading(false)
-        }
-    }
-
+    // Fetch all data
     const fetchData = useCallback(async () => {
         try {
             const token = getToken()
-
             if (!token) {
-                setError("Du måste vara inloggad för att se admin-panelen")
+                setError("Du måste vara inloggad")
                 setLoading(false)
                 return
             }
 
-            // Test API connectivity first
-            try {
-                const healthRes = await fetch(`${API_BASE_URL}/health`, {
-                    method: 'GET',
-                    cache: 'no-store',
-                })
-                if (!healthRes.ok) {
-                    throw new Error(`Backend unavailable: ${healthRes.status}`)
-                }
-            } catch (healthErr) {
-                console.error("Health check failed:", healthErr)
-                throw new Error(`Kunde inte nå backend (${API_BASE_URL}). Kontrollera din anslutning.`)
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json"
             }
 
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
+                headers,
                 cache: 'no-store',
             })
 
             if (!usersRes.ok) {
-                if (usersRes.status === 401) {
-                    setError("Sessionen har gått ut. Vänligen logga in igen.")
-                    return
-                }
                 if (usersRes.status === 403) {
                     router.push("/dashboard")
                     return
                 }
-                const errorData = await usersRes.json().catch(() => ({}))
-                throw new Error(errorData.detail || `API-fel: ${usersRes.status}`)
+                throw new Error(`Kunde inte hämta användare: ${usersRes.status}`)
             }
 
-            const usersData: AdminUsersResponse = await usersRes.json()
-            setUsers(usersData.users)
+            const usersData = await usersRes.json()
+            setUsers(usersData.users || [])
 
             // Fetch stats
             try {
-                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    },
-                    cache: 'no-store',
-                })
-
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, { headers })
                 if (statsRes.ok) {
-                    const statsData: SystemStats = await statsRes.json()
-                    setStats(statsData)
+                    setStats(await statsRes.json())
                 }
-            } catch (statsErr) {
-                // Stats endpoint might not exist - silent fail
+            } catch (e) {
+                console.error("Stats fetch failed:", e)
+            }
+
+            // Fetch AI usage
+            try {
+                const aiRes = await fetch(`${API_BASE_URL}/api/admin/ai-usage`, { headers })
+                if (aiRes.ok) {
+                    const aiData = await aiRes.json()
+                    setAiUsage(aiData.users || [])
+                }
+            } catch (e) {
+                console.error("AI usage fetch failed:", e)
             }
 
             // Fetch activity log
             try {
-                const activityRes = await fetch(`${API_BASE_URL}/api/admin/activity-log?days=7`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    },
-                    cache: 'no-store',
-                })
-
+                const activityRes = await fetch(`${API_BASE_URL}/api/admin/activity-log?days=7`, { headers })
                 if (activityRes.ok) {
-                    const activityData: ActivityLogResponse = await activityRes.json()
-                    // Sort events by timestamp (newest first)
-                    activityData.events.sort((a, b) =>
-                        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-                    )
-                    setActivityLog(activityData)
+                    const activityData = await activityRes.json()
+                    setActivityLog(activityData.events || [])
                 }
-            } catch (activityErr) {
-                // Activity log might not exist - silent fail
+            } catch (e) {
+                console.error("Activity log fetch failed:", e)
             }
 
             setError(null)
             setLastRefresh(new Date())
         } catch (err) {
-            console.error("Admin fetchData error:", err)
-            const errorMsg = err instanceof Error ? err.message : "Ett fel uppstod vid hämtning av data"
-            setError(errorMsg)
+            setError(err instanceof Error ? err.message : "Ett fel uppstod")
         } finally {
             setLoading(false)
         }
@@ -833,672 +588,349 @@ export default function AdminCommandCenter() {
 
     useEffect(() => {
         if (authLoading) return
-
         if (!user || !isAdmin) {
             router.push("/dashboard")
             return
         }
-
         fetchData()
-
+        
         // Auto-refresh every 30 seconds
         const interval = setInterval(fetchData, 30000)
         return () => clearInterval(interval)
     }, [user, authLoading, isAdmin, router, fetchData])
 
-    // Filter users by search
+    // Filter users
     const filteredUsers = users.filter(u => {
-        if (!searchQuery) return true
-        const query = searchQuery.toLowerCase()
-        return (
-            u.email.toLowerCase().includes(query) ||
-            (u.full_name?.toLowerCase().includes(query))
-        )
+        // Search filter
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase()
+            if (!u.email.toLowerCase().includes(query) && 
+                !(u.full_name?.toLowerCase().includes(query))) {
+                return false
+            }
+        }
+        
+        // Status filter
+        switch (filter) {
+            case "online":
+                return isOnline(u.last_activity_at)
+            case "today":
+                return isActiveToday(u.last_activity_at)
+            case "inactive":
+                return !u.is_active
+            default:
+                return true
+        }
+    }).sort((a, b) => {
+        const aTime = a.last_activity_at ? new Date(a.last_activity_at).getTime() : 0
+        const bTime = b.last_activity_at ? new Date(b.last_activity_at).getTime() : 0
+        return bTime - aTime
     })
 
+    // Get AI usage for a user
+    const getUserAiUsage = (userId: string) => {
+        return aiUsage.find(u => u.user_id === userId)
+    }
+
+    // Actions
+    const handleEdit = (user: AdminUser) => {
+        router.push(`/admin/users/${user.id}`)
+    }
+
+    const handleToggleActive = async (targetUser: AdminUser) => {
+        if (!confirm(`${targetUser.is_active ? "Inaktivera" : "Aktivera"} ${targetUser.email}?`)) return
+        
+        try {
+            const token = getToken()
+            const res = await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ is_active: !targetUser.is_active })
+            })
+            
+            if (res.ok) {
+                fetchData()
+            }
+        } catch (e) {
+            console.error("Toggle active failed:", e)
+        }
+    }
+
+    const handleDelete = async (targetUser: AdminUser) => {
+        if (!confirm(`VARNING: Ta bort ${targetUser.email} permanent?`)) return
+        if (!confirm("Är du HELT säker? Detta går inte att ångra!")) return
+        
+        try {
+            const token = getToken()
+            const res = await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}?hard_delete=true`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            
+            if (res.ok) {
+                fetchData()
+            }
+        } catch (e) {
+            console.error("Delete failed:", e)
+        }
+    }
+
+    // Loading state
     if (authLoading || loading) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="text-center"
-                >
+                <div className="text-center">
                     <Loader2 className="w-12 h-12 text-purple-500 animate-spin mx-auto mb-4" />
                     <p className="text-zinc-400">Laddar Admin Command Center...</p>
-                </motion.div>
-            </div>
-        )
-    }
-
-    if (!isAdmin) {
-        return (
-            <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-                <div className="text-center">
-                    <Shield className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                    <h1 className="text-2xl font-bold text-white mb-2">Åtkomst nekad</h1>
-                    <p className="text-zinc-400">Du har inte behörighet att se denna sida.</p>
                 </div>
             </div>
         )
     }
 
+    // Error state
     if (error) {
         return (
             <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-center max-w-md"
-                >
+                <div className="text-center max-w-md">
                     <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-white mb-2">Fel</h1>
                     <p className="text-zinc-400 mb-6">{error}</p>
-
-                    <div className="space-y-3">
-                        <Button
-                            onClick={() => { setError(null); setLoading(true); fetchData(); }}
-                            className="w-full bg-purple-600 hover:bg-purple-500"
-                        >
-                            <RefreshCw className="w-4 h-4 mr-2" />
-                            Försök igen
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            onClick={() => router.push("/dashboard")}
-                            className="w-full border-zinc-700"
-                        >
-                            Tillbaka till Dashboard
-                        </Button>
-                    </div>
-
-                    <p className="mt-6 text-xs text-zinc-600">
-                        API: {API_BASE_URL}
-                    </p>
-                </motion.div>
+                    <Button onClick={() => { setError(null); setLoading(true); fetchData() }}>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Försök igen
+                    </Button>
+                </div>
             </div>
         )
     }
 
+    // Calculate totals
+    const totalAICost = aiUsage.reduce((sum, u) => sum + u.total_cost_usd, 0)
+    const totalAICalls = aiUsage.reduce((sum, u) => sum + u.total_calls, 0)
+    const onlineCount = users.filter(u => isOnline(u.last_activity_at)).length
+
     return (
-        <div className="min-h-screen bg-zinc-950 p-6 lg:p-8">
+        <div className="min-h-screen bg-zinc-950 p-4 md:p-8">
             {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
-            >
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className={cn(
-                            "w-14 h-14 rounded-2xl flex items-center justify-center",
-                            "bg-gradient-to-br from-purple-600 to-indigo-600",
-                            "shadow-lg shadow-purple-500/25"
-                        )}>
-                            <Shield className="w-7 h-7 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-white">
-                                Admin Command Center
-                            </h1>
-                            <p className="text-zinc-400">
-                                Full kontroll över DevOpsHub
-                            </p>
-                        </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+                <div className="flex items-center gap-4">
+                    <div className={cn(
+                        "w-14 h-14 rounded-2xl flex items-center justify-center",
+                        "bg-gradient-to-br from-purple-600 to-indigo-600",
+                        "shadow-lg shadow-purple-500/25"
+                    )}>
+                        <Shield className="w-7 h-7 text-white" />
                     </div>
-                    <div className="flex items-center gap-3">
-                        <span className="text-xs text-zinc-500">
-                            Uppdaterad: {lastRefresh.toLocaleTimeString("sv-SE")}
-                        </span>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={fetchData}
-                            className="border-zinc-700"
-                        >
-                            <RefreshCw className="w-4 h-4 mr-2" />
-                            Uppdatera
-                        </Button>
+                    <div>
+                        <h1 className="text-2xl font-bold text-white">Admin Command Center</h1>
+                        <p className="text-zinc-400">Full kontroll över GinoNova</p>
                     </div>
                 </div>
-            </motion.div>
+                <div className="flex items-center gap-3">
+                    <span className="text-xs text-zinc-500">
+                        Uppdaterad: {lastRefresh.toLocaleTimeString("sv-SE")}
+                    </span>
+                    <Button variant="outline" size="sm" onClick={fetchData} className="border-zinc-700">
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Uppdatera
+                    </Button>
+                </div>
+            </div>
 
             {/* Stats Grid */}
-            {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <StatCard
-                        icon={Users}
-                        label="Totalt användare"
-                        value={stats.total_users}
-                        subValue={`+${stats.users_this_week} denna vecka`}
-                        color="bg-indigo-500"
-                        trend="up"
-                    />
-                    <StatCard
-                        icon={Globe}
-                        label="Online nu"
-                        value={stats.online_now}
-                        subValue={`${stats.active_today} aktiva idag`}
-                        color="bg-emerald-500"
-                    />
-                    <StatCard
-                        icon={CheckCircle}
-                        label="Tasks slutförda"
-                        value={stats.total_tasks_completed}
-                        subValue={`${stats.avg_tasks_per_user} snitt/användare`}
-                        color="bg-amber-500"
-                    />
-                    <StatCard
-                        icon={Zap}
-                        label="Total XP"
-                        value={stats.total_xp_earned}
-                        subValue={`${stats.avg_xp_per_user} snitt/användare`}
-                        color="bg-purple-500"
-                    />
-                </div>
-            )}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+                <StatCard
+                    icon={Users}
+                    label="Totalt användare"
+                    value={stats?.total_users || users.length}
+                    subValue={`${stats?.users_this_week || 0} denna vecka`}
+                    color="bg-blue-500"
+                />
+                <StatCard
+                    icon={Globe}
+                    label="Online nu"
+                    value={onlineCount}
+                    subValue={`${stats?.active_today || 0} aktiva idag`}
+                    color="bg-emerald-500"
+                />
+                <StatCard
+                    icon={UserPlus}
+                    label="Nya idag"
+                    value={stats?.users_today || 0}
+                    color="bg-cyan-500"
+                />
+                <StatCard
+                    icon={Brain}
+                    label="AI Quiz Anrop"
+                    value={totalAICalls}
+                    subValue={`$${totalAICost.toFixed(2)} kostnad`}
+                    color="bg-purple-500"
+                />
+                <StatCard
+                    icon={BookOpen}
+                    label="Moduler"
+                    value={stats?.total_modules || 0}
+                    color="bg-amber-500"
+                />
+                <StatCard
+                    icon={Database}
+                    label="Databas"
+                    value={stats?.database_status === "postgres" ? "Online" : "Memory"}
+                    color="bg-green-500"
+                />
+            </div>
 
-            {/* System Status */}
-            {stats && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={cn(
-                            "flex items-center gap-3 p-4 rounded-xl",
-                            "bg-zinc-900/80 border border-zinc-800"
-                        )}
-                    >
-                        <Database className={cn(
-                            "w-5 h-5",
-                            stats.database_status === "postgres" ? "text-emerald-400" : "text-amber-400"
-                        )} />
-                        <div>
-                            <p className="text-xs text-zinc-500">Databas</p>
-                            <p className="text-sm font-medium text-white capitalize">
-                                {stats.database_status}
-                            </p>
-                        </div>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className={cn(
-                            "flex items-center gap-3 p-4 rounded-xl",
-                            "bg-zinc-900/80 border border-zinc-800"
-                        )}
-                    >
-                        <BookOpen className="w-5 h-5 text-blue-400" />
-                        <div>
-                            <p className="text-xs text-zinc-500">Moduler</p>
-                            <p className="text-sm font-medium text-white">{stats.total_modules}</p>
-                        </div>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className={cn(
-                            "flex items-center gap-3 p-4 rounded-xl",
-                            "bg-zinc-900/80 border border-zinc-800"
-                        )}
-                    >
-                        <Target className="w-5 h-5 text-orange-400" />
-                        <div>
-                            <p className="text-xs text-zinc-500">Tasks</p>
-                            <p className="text-sm font-medium text-white">{stats.total_tasks}</p>
-                        </div>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className={cn(
-                            "flex items-center gap-3 p-4 rounded-xl",
-                            "bg-zinc-900/80 border border-zinc-800"
-                        )}
-                    >
-                        <Server className="w-5 h-5 text-purple-400" />
-                        <div>
-                            <p className="text-xs text-zinc-500">API Version</p>
-                            <p className="text-sm font-medium text-white">{stats.api_version}</p>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-
-            {/* Database Migrations Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
-            >
-                <div className={cn(
-                    "rounded-xl overflow-hidden",
-                    "bg-zinc-900/80 border border-zinc-800",
-                    "p-6"
-                )}>
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                            <Database className="w-5 h-5 text-cyan-400" />
-                            <h3 className="text-lg font-semibold text-white">Databashantering</h3>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button
-                                onClick={applySchemaUpdates}
-                                disabled={schemaLoading}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                            >
-                                {schemaLoading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                        Kör...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Zap className="w-4 h-4 mr-2" />
-                                        Lägg till Features
-                                    </>
-                                )}
-                            </Button>
-                            <Button
-                                onClick={runMigrations}
-                                disabled={migrationLoading}
-                                className="bg-cyan-600 hover:bg-cyan-700 text-white"
-                            >
-                                {migrationLoading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                        Kör...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Zap className="w-4 h-4 mr-2" />
-                                        Kör Migrationer
-                                    </>
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                    <p className="text-sm text-zinc-400 mb-3">
-                        <strong>Lägg till Features:</strong> Skapar permissions-kolumn + AI tracking-tabell direkt via SQL.<br />
-                        <strong>Kör Migrationer:</strong> Kör Alembic-migrationer (om de inte redan körts).
-                    </p>
-                    {schemaStatus && (
-                        <div className={cn(
-                            "p-3 rounded-lg text-sm mb-2",
-                            schemaStatus.startsWith("✅")
-                                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                                : "bg-red-500/10 border border-red-500/30 text-red-400"
-                        )}>
-                            {schemaStatus}
-                        </div>
-                    )}
-                    {migrationStatus && (
-                        <div className={cn(
-                            "p-3 rounded-lg text-sm",
-                            migrationStatus.startsWith("✅")
-                                ? "bg-emerald-500/10 border border-emerald-500/30 text-emerald-400"
-                                : "bg-red-500/10 border border-red-500/30 text-red-400"
-                        )}>
-                            {migrationStatus}
-                        </div>
-                    )}
-                </div>
-            </motion.div>
-
-            {/* Online Users Section */}
-            {stats && stats.online_now > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
-                >
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="relative">
-                            <Globe className="w-5 h-5 text-emerald-400" />
-                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                        </div>
-                        <h2 className="text-lg font-semibold text-white">Online nu ({stats.online_now})</h2>
-                    </div>
-                    <div className={cn(
-                        "rounded-xl overflow-hidden",
-                        "bg-zinc-900/80 border border-emerald-500/30",
-                        "p-4"
-                    )}>
-                        <div className="flex flex-wrap gap-3">
-                            {users
-                                .filter(u => {
-                                    if (!u.last_activity_at) return false
-                                    // Ensure UTC comparison by appending Z if not present
-                                    const activityStr = u.last_activity_at.endsWith('Z')
-                                        ? u.last_activity_at
-                                        : u.last_activity_at + 'Z'
-                                    const lastActive = new Date(activityStr)
-                                    const nowUtc = Date.now()
-                                    const minAgo = (nowUtc - lastActive.getTime()) / (1000 * 60)
-                                    return minAgo <= 30
-                                })
-                                .map(u => (
-                                    <div
-                                        key={u.id}
-                                        className={cn(
-                                            "flex items-center gap-2 px-3 py-2 rounded-lg",
-                                            "bg-zinc-800 border border-zinc-700"
-                                        )}
-                                    >
-                                        <div className="relative">
-                                            <div className={cn(
-                                                "w-8 h-8 rounded-lg flex items-center justify-center",
-                                                "bg-gradient-to-br from-emerald-500 to-teal-600",
-                                                "text-white font-bold text-xs"
-                                            )}>
-                                                {u.full_name?.[0]?.toUpperCase() || u.email[0].toUpperCase()}
-                                            </div>
-                                            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-zinc-800" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-medium text-white">
-                                                {u.full_name || u.email.split("@")[0]}
-                                            </p>
-                                            <p className="text-xs text-emerald-400">Online</p>
-                                        </div>
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </div>
-                </motion.div>
-            )}
-
-            {/* Admin Tools Section */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
-            >
-                <div className="flex items-center gap-2 mb-4">
-                    <Shield className="w-5 h-5 text-amber-400" />
-                    <h2 className="text-lg font-semibold text-white">Admin Verktyg</h2>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Link href="/admin/permissions" prefetch={false}>
-                        <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={cn(
-                                "p-4 rounded-xl cursor-pointer",
-                                "bg-zinc-900/80 border border-zinc-800",
-                                "hover:border-purple-500/50 hover:bg-zinc-800/50",
-                                "transition-all duration-200"
-                            )}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-purple-500/20">
-                                    <Shield className="w-5 h-5 text-purple-400" />
+            {/* Main Content Grid */}
+            <div className="grid lg:grid-cols-4 gap-6">
+                {/* User Table - 3 columns */}
+                <div className="lg:col-span-3">
+                    <div className="rounded-2xl bg-zinc-900/50 border border-zinc-800/50 overflow-hidden">
+                        {/* Table Header */}
+                        <div className="p-4 border-b border-zinc-800/50">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <Users className="w-5 h-5 text-purple-400" />
+                                    <h2 className="text-lg font-semibold text-white">
+                                        Användare ({filteredUsers.length})
+                                    </h2>
                                 </div>
-                                <div>
-                                    <p className="font-medium text-white text-sm">Rättigheter</p>
-                                    <p className="text-xs text-zinc-500">Feature access</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </Link>
-                    <Link href="/admin/users" prefetch={false}>
-                        <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={cn(
-                                "p-4 rounded-xl cursor-pointer",
-                                "bg-zinc-900/80 border border-zinc-800",
-                                "hover:border-indigo-500/50 hover:bg-zinc-800/50",
-                                "transition-all duration-200"
-                            )}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-indigo-500/20">
-                                    <Users className="w-5 h-5 text-indigo-400" />
-                                </div>
-                                <div>
-                                    <p className="font-medium text-white text-sm">Användare</p>
-                                    <p className="text-xs text-zinc-500">Hantera alla</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </Link>
-                    <Link href="/admin/content" prefetch={false}>
-                        <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={cn(
-                                "p-4 rounded-xl cursor-pointer",
-                                "bg-zinc-900/80 border border-zinc-800",
-                                "hover:border-emerald-500/50 hover:bg-zinc-800/50",
-                                "transition-all duration-200"
-                            )}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-emerald-500/20">
-                                    <BookOpen className="w-5 h-5 text-emerald-400" />
-                                </div>
-                                <div>
-                                    <p className="font-medium text-white text-sm">Innehåll</p>
-                                    <p className="text-xs text-zinc-500">Moduler & kurser</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </Link>
-                    <Link href="/admin/analytics" prefetch={false}>
-                        <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={cn(
-                                "p-4 rounded-xl cursor-pointer",
-                                "bg-zinc-900/80 border border-zinc-800",
-                                "hover:border-amber-500/50 hover:bg-zinc-800/50",
-                                "transition-all duration-200"
-                            )}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-amber-500/20">
-                                    <BarChart3 className="w-5 h-5 text-amber-400" />
-                                </div>
-                                <div>
-                                    <p className="font-medium text-white text-sm">Analytics</p>
-                                    <p className="text-xs text-zinc-500">Statistik</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </Link>
-                </div>
-            </motion.div>
-
-            {/* Aktivitetslogg - Unified User Activity */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                    "rounded-2xl overflow-hidden",
-                    "bg-zinc-900/80 border border-zinc-800"
-                )}
-            >
-                {/* Header */}
-                <div className="p-6 border-b border-zinc-800">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-purple-500/20">
-                                <Activity className="w-5 h-5 text-purple-400" />
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-white">
-                                    Aktivitetslogg
-                                </h2>
-                                <p className="text-xs text-zinc-500">{users.length} användare</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-                                <input
-                                    type="text"
-                                    placeholder="Sök..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className={cn(
-                                        "pl-9 pr-4 py-2 rounded-lg",
-                                        "bg-zinc-800 border border-zinc-700",
-                                        "text-white placeholder-zinc-500",
-                                        "focus:outline-none focus:border-purple-500",
-                                        "text-sm w-48"
-                                    )}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* User List */}
-                <div className="divide-y divide-zinc-800/50 max-h-[500px] overflow-y-auto">
-                    {filteredUsers
-                        .sort((a, b) => {
-                            // Sort by last activity (most recent first), then by created_at
-                            const aTime = a.last_activity_at ? new Date(a.last_activity_at).getTime() : 0
-                            const bTime = b.last_activity_at ? new Date(b.last_activity_at).getTime() : 0
-                            return bTime - aTime
-                        })
-                        .map((u) => {
-                            const displayName = getDisplayName(u)
-                            const initials = displayName.split(" ").map(n => n[0]).join("").substring(0, 2).toUpperCase()
-
-                            // Calculate online status
-                            const isOnline = u.last_activity_at &&
-                                (Date.now() - new Date(u.last_activity_at).getTime()) / (1000 * 60) <= 30
-
-                            return (
-                                <motion.div
-                                    key={u.id}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    onClick={() => setSelectedUser(u)}
-                                    className="px-6 py-4 flex items-center gap-4 hover:bg-zinc-800/30 cursor-pointer transition-colors"
-                                >
-                                    {/* Avatar with status indicator */}
+                                <div className="flex items-center gap-3">
+                                    {/* Search */}
                                     <div className="relative">
-                                        <div className={cn(
-                                            "w-11 h-11 rounded-xl flex items-center justify-center",
-                                            "bg-gradient-to-br from-purple-500 to-indigo-600",
-                                            "text-white font-bold text-sm"
-                                        )}>
-                                            {initials}
-                                        </div>
-                                        {/* Online/Offline indicator */}
-                                        <span className={cn(
-                                            "absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-zinc-900",
-                                            isOnline ? "bg-emerald-500" : "bg-zinc-600"
-                                        )} />
-                                        {/* Admin badge */}
-                                        {u.is_admin && (
-                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
-                                                <Shield className="w-2.5 h-2.5 text-white" />
-                                            </div>
-                                        )}
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                                        <input
+                                            type="text"
+                                            placeholder="Sök..."
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="pl-9 pr-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-purple-500 w-48"
+                                        />
                                     </div>
-
-                                    {/* User info */}
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2">
-                                            <p className="font-medium text-white text-sm truncate">{displayName}</p>
-                                            {isNewUser(u.created_at) && (
-                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/20 text-blue-400">NY</span>
-                                            )}
-                                            {!u.is_active && (
-                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/20 text-red-400">SPÄRRAD</span>
-                                            )}
-                                        </div>
-                                        <p className="text-xs text-zinc-500 truncate">{u.email}</p>
-                                    </div>
-
-                                    {/* Status */}
-                                    <div className="text-center min-w-[80px]">
-                                        <span className={cn(
-                                            "inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium",
-                                            isOnline
-                                                ? "bg-emerald-500/20 text-emerald-400"
-                                                : "bg-zinc-800 text-zinc-500"
-                                        )}>
-                                            <span className={cn(
-                                                "w-1.5 h-1.5 rounded-full",
-                                                isOnline ? "bg-emerald-400 animate-pulse" : "bg-zinc-600"
-                                            )} />
-                                            {isOnline ? "Online" : "Offline"}
-                                        </span>
-                                    </div>
-
-                                    {/* Last login */}
-                                    <div className="text-right min-w-[100px]">
-                                        <p className="text-xs text-zinc-400">Senast inlogg</p>
-                                        <p className="text-sm text-white">
-                                            {u.last_activity_at
-                                                ? new Date(u.last_activity_at).toLocaleDateString("sv-SE", {
-                                                    day: "numeric",
-                                                    month: "short",
-                                                    hour: "2-digit",
-                                                    minute: "2-digit"
-                                                })
-                                                : "Aldrig"
-                                            }
-                                        </p>
-                                    </div>
-
-                                    {/* Registered */}
-                                    <div className="text-right min-w-[90px]">
-                                        <p className="text-xs text-zinc-400">Registrerad</p>
-                                        <p className="text-sm text-white">
-                                            {new Date(u.created_at).toLocaleDateString("sv-SE", {
-                                                day: "numeric",
-                                                month: "short",
-                                                year: "numeric"
-                                            })}
-                                        </p>
-                                    </div>
-
-                                    {/* Action */}
-                                    <div className="pl-2">
-                                        <ChevronRight className="w-4 h-4 text-zinc-600" />
-                                    </div>
-                                </motion.div>
-                            )
-                        })}
-                    {filteredUsers.length === 0 && (
-                        <div className="px-6 py-12 text-center">
-                            <Users className="w-12 h-12 text-zinc-700 mx-auto mb-3" />
-                            <p className="text-zinc-500">
-                                {searchQuery ? "Inga användare matchar sökningen" : "Inga användare registrerade ännu"}
-                            </p>
+                                    {/* Filter */}
+                                    <select
+                                        value={filter}
+                                        onChange={(e) => setFilter(e.target.value as any)}
+                                        className="px-3 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-white text-sm focus:outline-none focus:border-purple-500"
+                                    >
+                                        <option value="all">Alla</option>
+                                        <option value="online">Online</option>
+                                        <option value="today">Aktiva idag</option>
+                                        <option value="inactive">Inaktiverade</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    )}
+
+                        {/* Table */}
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="border-b border-zinc-800/50 text-left">
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">Användare</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">Status</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">Senast aktiv</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">AI Quiz</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">XP</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">Registrerad</th>
+                                        <th className="px-4 py-3 text-xs font-medium text-zinc-500 uppercase">Åtgärder</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredUsers.map((u) => (
+                                        <UserRow
+                                            key={u.id}
+                                            user={u}
+                                            aiUsage={getUserAiUsage(u.id)}
+                                            onEdit={handleEdit}
+                                            onToggleActive={handleToggleActive}
+                                            onDelete={handleDelete}
+                                            isExpanded={expandedUserId === u.id}
+                                            onToggleExpand={() => setExpandedUserId(
+                                                expandedUserId === u.id ? null : u.id
+                                            )}
+                                        />
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {filteredUsers.length === 0 && (
+                            <div className="p-8 text-center text-zinc-500">
+                                Inga användare hittades
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </motion.div>
 
-            {/* Auto-refresh indicator */}
-            <p className="mt-4 text-xs text-center text-zinc-600">
-                Auto-uppdaterar var 30:e sekund
-            </p>
+                {/* Sidebar - Activity Feed */}
+                <div className="lg:col-span-1">
+                    <div className="rounded-2xl bg-zinc-900/50 border border-zinc-800/50 p-4">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Activity className="w-5 h-5 text-purple-400" />
+                            <h2 className="text-lg font-semibold text-white">Aktivitet</h2>
+                        </div>
+                        <ActivityFeed events={activityLog} />
+                    </div>
 
-            {/* User Detail Modal */}
-            <AnimatePresence>
-                {selectedUser && (
-                    <UserDetailModal
-                        user={selectedUser}
-                        onClose={() => setSelectedUser(null)}
-                        onToggleActive={toggleUserActive}
-                        onToggleAdmin={toggleUserAdmin}
-                        currentUserEmail={user?.email || ""}
-                    />
-                )}
-            </AnimatePresence>
+                    {/* Quick Actions */}
+                    <div className="mt-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 p-4">
+                        <h2 className="text-lg font-semibold text-white mb-4">Snabbåtgärder</h2>
+                        <div className="space-y-2">
+                            <Button 
+                                variant="outline" 
+                                className="w-full justify-start text-left border-zinc-700"
+                                onClick={() => router.push("/admin/analytics")}
+                            >
+                                <BarChart3 className="w-4 h-4 mr-2 text-purple-400" />
+                                AI Analytics
+                            </Button>
+                            <Button 
+                                variant="outline" 
+                                className="w-full justify-start text-left border-zinc-700"
+                                onClick={() => router.push("/admin/content")}
+                            >
+                                <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
+                                Innehåll
+                            </Button>
+                            <Button 
+                                variant="outline" 
+                                className="w-full justify-start text-left border-zinc-700"
+                                onClick={() => router.push("/admin/permissions")}
+                            >
+                                <Shield className="w-4 h-4 mr-2 text-emerald-400" />
+                                Rättigheter
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* AI Usage Summary */}
+                    <div className="mt-6 rounded-2xl bg-gradient-to-br from-purple-900/30 to-indigo-900/20 border border-purple-500/20 p-4">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Brain className="w-5 h-5 text-purple-400" />
+                            <h2 className="text-lg font-semibold text-white">AI Quiz Användning</h2>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="flex justify-between">
+                                <span className="text-zinc-400">Totala anrop</span>
+                                <span className="text-white font-medium">{totalAICalls.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-zinc-400">Total kostnad</span>
+                                <span className="text-emerald-400 font-medium">${totalAICost.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-zinc-400">Användare</span>
+                                <span className="text-white font-medium">{aiUsage.length}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
