@@ -257,6 +257,38 @@ export default function StudyPage() {
                     ))}
                 </motion.div>
 
+                {/* Tenta-Simulator Banner */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="mb-8"
+                >
+                    <Link href="/study/tenta-simulator">
+                        <div className={cn(
+                            "relative overflow-hidden rounded-2xl p-6",
+                            "bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-orange-500/20",
+                            "border border-purple-500/30",
+                            "hover:border-purple-500/50 transition-all group cursor-pointer"
+                        )}>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl">
+                                        🎯
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-white mb-1">Tenta-Simulator</h3>
+                                        <p className="text-zinc-400 text-sm">Öva under tentaförhållanden med tidspressad quiz</p>
+                                    </div>
+                                </div>
+                                <ChevronRight className="w-6 h-6 text-purple-400 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                            {/* Decorative glow */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl" />
+                        </div>
+                    </Link>
+                </motion.div>
+
                 {/* Module Selection */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
