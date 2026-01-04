@@ -123,6 +123,8 @@ export default function StudyPage() {
     const [showTaskSelector, setShowTaskSelector] = useState(false)
     const [studyMode, setStudyMode] = useState<'flashcards' | 'quiz' | null>(null)
     const [shuffleMode, setShuffleMode] = useState(false)
+    const [difficulty, setDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
+    const [questionCount, setQuestionCount] = useState<number>(20)
     const [progress, setProgress] = useState<Record<string, number>>({})
 
     // Get current module
@@ -181,7 +183,9 @@ export default function StudyPage() {
         if (selectedModule && studyMode && selectedTasks.length > 0) {
             const tasksParam = selectedTasks.join(',')
             const shuffleParam = shuffleMode ? '&shuffle=true' : ''
-            router.push(`/study/${selectedModule}/${studyMode}?tasks=${tasksParam}${shuffleParam}`)
+            const difficultyParam = difficulty !== 'all' ? `&difficulty=${difficulty}` : ''
+            const countParam = studyMode === 'quiz' ? `&count=${questionCount}` : ''
+            router.push(`/study/${selectedModule}/${studyMode}?tasks=${tasksParam}${shuffleParam}${difficultyParam}${countParam}`)
         }
     }
 
@@ -678,20 +682,82 @@ export default function StudyPage() {
                     )}
                 </AnimatePresence>
 
-                {/* Shuffle Mode Toggle */}
+                {/* Settings Section */}
                 <AnimatePresence>
                     {selectedModule && studyMode && selectedTasks.length > 0 && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            className="mb-8"
+                            className="mb-8 space-y-4"
                         >
                             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                                 <Shuffle className="w-6 h-6 text-pink-400" />
                                 Inställningar
                             </h2>
 
+                            {/* Difficulty Selection - Only for Quiz */}
+                            {studyMode === 'quiz' && (
+                                <div className="p-5 rounded-2xl bg-zinc-900/50 border-2 border-zinc-800/50">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                        🎯 Svårighetsgrad
+                                    </h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        {[
+                                            { value: 'all', label: 'Alla', emoji: '📚', color: 'purple' },
+                                            { value: 'beginner', label: 'Nybörjare', emoji: '🌱', color: 'emerald' },
+                                            { value: 'intermediate', label: 'Medel', emoji: '⚡', color: 'amber' },
+                                            { value: 'advanced', label: 'Avancerad', emoji: '🔥', color: 'red' }
+                                        ].map((opt) => (
+                                            <button
+                                                key={opt.value}
+                                                onClick={() => setDifficulty(opt.value as typeof difficulty)}
+                                                className={cn(
+                                                    "p-3 rounded-xl text-center transition-all duration-200",
+                                                    "border-2",
+                                                    difficulty === opt.value
+                                                        ? opt.color === 'purple' ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
+                                                        : opt.color === 'emerald' ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                                                        : opt.color === 'amber' ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
+                                                        : "bg-red-500/20 border-red-500/50 text-red-300"
+                                                        : "bg-zinc-800/50 border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                                )}
+                                            >
+                                                <span className="text-xl block mb-1">{opt.emoji}</span>
+                                                <span className="text-sm font-medium">{opt.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Question Count - Only for Quiz */}
+                            {studyMode === 'quiz' && (
+                                <div className="p-5 rounded-2xl bg-zinc-900/50 border-2 border-zinc-800/50">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                                        🔢 Antal frågor
+                                    </h3>
+                                    <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+                                        {[10, 20, 30, 50, 75, 100].map((count) => (
+                                            <button
+                                                key={count}
+                                                onClick={() => setQuestionCount(count)}
+                                                className={cn(
+                                                    "py-2 px-3 rounded-lg text-center transition-all duration-200",
+                                                    "border-2 font-medium",
+                                                    questionCount === count
+                                                        ? "bg-blue-500/20 border-blue-500/50 text-blue-300"
+                                                        : "bg-zinc-800/50 border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                                )}
+                                            >
+                                                {count}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Shuffle Toggle */}
                             <button
                                 onClick={() => setShuffleMode(!shuffleMode)}
                                 className={cn(

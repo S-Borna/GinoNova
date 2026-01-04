@@ -1,4 +1,7 @@
-// Hands-On Lab Task Quiz - 20 frågor per task = 140 totalt
+// Hands-On Lab Task Quiz - 150 frågor per task = 1050 totalt
+// Uppdelat: 50 beginner, 50 intermediate, 50 advanced per task
+
+export type QuizDifficulty = 'beginner' | 'intermediate' | 'advanced' | 'G' | 'VG';
 
 export interface TaskQuizQuestion {
     id: string;
@@ -7,7 +10,7 @@ export interface TaskQuizQuestion {
     correctIndex: number;
     explanation: string;
     category?: string;
-    difficulty?: 'G' | 'VG';
+    difficulty?: QuizDifficulty;
 }
 
 export interface TaskQuizSet {
