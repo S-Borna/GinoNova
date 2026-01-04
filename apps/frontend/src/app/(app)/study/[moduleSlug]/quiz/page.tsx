@@ -19,7 +19,7 @@ import { useFavorites } from "@/hooks/useFavorites"
 // Import local quiz data
 import { DOE25_TASK_QUIZ, getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion, TaskQuizSet } from "@/data/doe25-task-quiz"
 import { LINUX247_TASK_QUIZ, getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
-import { HANDSON_TASK_QUIZ, getAllHandsOnQuiz, getAllHandsOnQuizSets, TaskQuizQuestion as HandsOnQuizQuestion } from "@/data/handson-task-quiz"
+import { HANDSON_TASK_QUIZ, getAllHandsOnQuiz, TaskQuizQuestion as HandsOnQuizQuestion } from "@/data/handson-task-quiz"
 
 // Generic quiz question type for local data
 interface LocalQuizQuestion {
@@ -50,7 +50,7 @@ const MODULE_CONFIG: Record<string, {
     },
     'hands-on-lab': {
         getData: getAllHandsOnQuiz as () => LocalQuizQuestion[],
-        getTaskData: getAllHandsOnQuizSets,
+        getTaskData: () => HANDSON_TASK_QUIZ as unknown as TaskQuizSet[],
         title: 'Hands-On Lab'
     }
 }
