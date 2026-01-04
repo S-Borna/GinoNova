@@ -98,19 +98,15 @@ export function Navbar() {
                     >
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-3 group">
-                            <motion.div
+                            <div
                                 className={cn(
                                     "p-2.5 rounded-xl",
                                     "bg-gradient-to-br from-purple-600 to-violet-700",
-                                    "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
-                                    "group-hover:shadow-[0_0_30px_rgba(139,92,246,0.6)]",
-                                    "transition-all duration-300"
+                                    "transition-transform duration-200 group-hover:scale-105"
                                 )}
-                                whileHover={{ scale: 1.05, rotate: 5 }}
-                                whileTap={{ scale: 0.95 }}
                             >
                                 <Terminal className="w-5 h-5 text-white" />
-                            </motion.div>
+                            </div>
                         </Link>
 
                         {/* DOE25 Tenta Card - Free Access */}

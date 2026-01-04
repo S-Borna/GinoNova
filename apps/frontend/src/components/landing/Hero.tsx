@@ -279,12 +279,6 @@ export function Hero() {
                     className="max-w-4xl mx-auto mb-12"
                 >
                     <p className="text-xl sm:text-2xl md:text-3xl text-zinc-300 leading-relaxed font-light">
-                        Sveriges{" "}
-                        <span className="font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">
-                            smartaste
-                        </span>{" "}
-                        läroplattform för DevOps.{" "}
-                        <br className="hidden sm:block" />
                         <span className="text-white font-medium">Personliga lärstigar</span>,{" "}
                         <span className="font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                             interaktiva labs
