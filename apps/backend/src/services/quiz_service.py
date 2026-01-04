@@ -222,16 +222,18 @@ Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
 
     # Build enhanced user prompt - SWEDISH
     difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
+    difficulty_guide = difficulty_instructions.get(difficulty, difficulty_instructions["intermediate"])
+    
     prompt = f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hints."""
+VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hints.
 
-{difficulty_instructions.get(difficulty, difficulty_instructions["intermediate"])}
+{difficulty_guide}
 
-Based on this module content:
+Baserat på detta modulinnehåll:
 {content_preview}
 
-Generate exactly {count} UNIQUE and DIFFERENT {quiz_type} questions.{focus_text}{variation_seed}
+Generera exakt {count} UNIKA och OLIKA {quiz_type} frågor.{focus_text}{variation_seed}
 
 {format_instruction}
 
@@ -325,14 +327,24 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     from src.db.seeds.content import get_all_modules
     ALL_MODULES = get_all_modules()
 
-    # Find the module by slug
+    # Normalize slug for matching
+    normalized_slug = module_slug.lower().strip()
+    
+    # Find the module by slug (with multiple matching strategies)
     module_data = None
     for mod in ALL_MODULES:
-        if mod.get("slug", "").lower() == module_slug.lower():
+        mod_slug = mod.get("slug", "").lower().strip()
+        # Exact match
+        if mod_slug == normalized_slug:
+            module_data = mod
+            break
+        # Partial match (for variations like "doe25-tenta" vs "doe25")
+        if normalized_slug in mod_slug or mod_slug in normalized_slug:
             module_data = mod
             break
 
     if not module_data:
+        logger.warning(f"Module not found for quiz: {module_slug}. Available: {[m.get('slug') for m in ALL_MODULES]}")
         return None
 
     # Build content string from all node contents
