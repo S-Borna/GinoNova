@@ -30,7 +30,6 @@ import {
     Sparkles,
     Brain,
     Rocket,
-    Zap,
 } from "lucide-react"
 
 /* ============================================================================
@@ -203,25 +202,6 @@ function FeatureCard({ feature, index }: FeatureCardProps) {
                     </p>
                 </div>
 
-                {/* Decorative corner particles */}
-                <motion.div
-                    className="absolute top-4 right-4 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100"
-                    style={{ background: feature.glowColor }}
-                    animate={{
-                        scale: [1, 1.5, 1],
-                        opacity: [0.5, 1, 0.5],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                />
-                <motion.div
-                    className="absolute bottom-4 right-4 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100"
-                    style={{ background: feature.glowColor }}
-                    animate={{
-                        scale: [1, 1.3, 1],
-                        opacity: [0.3, 0.7, 0.3],
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay: 0.3 }}
-                />
             </div>
         </motion.div>
     )
@@ -239,39 +219,21 @@ export function Features() {
                 {/* Base gradient */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#05050a] via-[#0a0a12] to-[#05050a]" />
 
-                {/* Large ambient glow - centered */}
-                <motion.div
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px]"
+                {/* Large ambient glow - centered, static */}
+                <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px]"
                     style={{
                         background: "radial-gradient(ellipse, rgba(99,102,241,0.06) 0%, transparent 60%)",
                         filter: "blur(80px)",
                     }}
-                    animate={{
-                        scale: [1, 1.15, 1],
-                        opacity: [0.4, 0.7, 0.4],
-                    }}
-                    transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
                 />
 
                 {/* Secondary glow - cyan accent */}
-                <motion.div
-                    className="absolute bottom-1/4 right-1/4 w-[600px] h-[400px]"
+                <div
+                    className="absolute bottom-1/4 right-1/4 w-[500px] h-[300px]"
                     style={{
-                        background: "radial-gradient(ellipse, rgba(6,182,212,0.08) 0%, transparent 60%)",
+                        background: "radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 60%)",
                         filter: "blur(60px)",
-                    }}
-                    animate={{
-                        x: [0, 50, 0],
-                        opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                        duration: 12,
-                        repeat: Infinity,
-                        ease: "easeInOut",
                     }}
                 />
 
@@ -301,30 +263,17 @@ export function Features() {
                     className="text-center mb-20"
                 >
                     {/* Badge */}
-                    <motion.div
+                    <div
                         className={cn(
                             "inline-flex items-center gap-2 px-5 py-2 mb-6",
                             "text-sm font-semibold tracking-wide uppercase",
                             "text-cyan-300 bg-cyan-500/15 rounded-full",
                             "border border-cyan-500/30"
                         )}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        animate={{
-                            boxShadow: [
-                                "0 0 15px rgba(34,211,238,0.2)",
-                                "0 0 25px rgba(34,211,238,0.4)",
-                                "0 0 15px rgba(34,211,238,0.2)",
-                            ]
-                        }}
-                        transition={{
-                            boxShadow: { duration: 2, repeat: Infinity }
-                        }}
                     >
                         <Sparkles className="w-4 h-4" />
                         Plattformsfunktioner
-                    </motion.div>
+                    </div>
 
                     <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">
                         Allt du behöver för att{" "}
@@ -354,23 +303,21 @@ export function Features() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
                     className="flex items-center justify-center mt-16"
                 >
-                    <motion.div
+                    <div
                         className={cn(
                             "flex items-center gap-3 px-6 py-3 rounded-full",
-                            "bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-cyan-500/10",
+                            "bg-purple-500/10",
                             "border border-white/10"
                         )}
-                        whileHover={{ scale: 1.02 }}
                     >
                         <Rocket className="w-5 h-5 text-purple-400" />
                         <span className="text-sm font-medium text-zinc-300">
                             Och mycket mer — upptäck allting när du börjar lära
                         </span>
-                        <Zap className="w-5 h-5 text-amber-400" />
-                    </motion.div>
+                    </div>
                 </motion.div>
             </div>
         </section>
