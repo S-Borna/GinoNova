@@ -16,14 +16,8 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
-    Terminal,
-    Github,
-    Twitter,
-    Linkedin,
-    Mail,
     Heart,
     Sparkles,
-    ExternalLink,
 } from "lucide-react"
 
 /* ============================================================================
@@ -69,12 +63,6 @@ const NAV_SECTIONS = [
     },
 ]
 
-const SOCIAL_LINKS = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:hello@devopshub.se", label: "Email" },
-]
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -93,61 +81,7 @@ export function Footer() {
 
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Main footer content */}
-                <div className="py-16 lg:py-20 grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
-                    {/* Brand column */}
-                    <div className="col-span-2">
-                        {/* Logo */}
-                        <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
-                            <motion.div
-                                className={cn(
-                                    "p-2.5 rounded-xl",
-                                    "bg-gradient-to-br from-purple-600 to-violet-700",
-                                    "shadow-[0_0_20px_rgba(139,92,246,0.4)]",
-                                )}
-                                whileHover={{ scale: 1.05, rotate: 5 }}
-                            >
-                                <Terminal className="w-5 h-5 text-white" />
-                            </motion.div>
-                            <span className="text-xl font-bold">
-                                <span className="text-white">DevOps</span>
-                                <span className="bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">Hub</span>
-                            </span>
-                        </Link>
-
-                        <p className="text-zinc-400 text-sm leading-relaxed mb-6 max-w-xs">
-                            Sveriges mest kompletta läroplattform för DevOps.
-                            Master modern infrastruktur, från Linux till Kubernetes.{" "}
-                            <span className="text-purple-400 font-medium">100% gratis.</span>
-                        </p>
-
-                        {/* Social links */}
-                        <div className="flex items-center gap-3">
-                            {SOCIAL_LINKS.map((social) => {
-                                const Icon = social.icon
-                                return (
-                                    <motion.a
-                                        key={social.label}
-                                        href={social.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className={cn(
-                                            "p-2.5 rounded-xl",
-                                            "bg-white/5 text-zinc-400",
-                                            "border border-white/5",
-                                            "hover:bg-purple-500/20 hover:text-purple-400 hover:border-purple-500/30",
-                                            "transition-all duration-300"
-                                        )}
-                                        whileHover={{ scale: 1.1, y: -2 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        aria-label={social.label}
-                                    >
-                                        <Icon className="w-4 h-4" />
-                                    </motion.a>
-                                )
-                            })}
-                        </div>
-                    </div>
-
+                <div className="py-16 lg:py-20 grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
                     {/* Navigation columns */}
                     {NAV_SECTIONS.map((section, i) => (
                         <div key={section.title}>
