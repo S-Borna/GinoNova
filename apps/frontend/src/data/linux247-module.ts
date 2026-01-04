@@ -4,7 +4,7 @@
  */
 
 export interface ContentBlock {
-    type: 'intro' | 'concept' | 'code' | 'quiz' | 'checkpoint' | 'tip' | 'warning'
+    type: 'intro' | 'concept' | 'code' | 'quiz' | 'checkpoint' | 'tip' | 'warning' | 'common_mistake' | 'mnemonic' | 'cheat_sheet'
     title?: string
     content?: string
     code?: string
@@ -15,6 +15,13 @@ export interface ContentBlock {
     explanation?: string
     objectives?: string[]
     diagram?: string
+    // New pedagogical fields
+    wrong?: string
+    right?: string
+    concept?: string
+    trick?: string
+    example?: string
+    commands?: { cmd: string; desc: string }[]
 }
 
 export interface Linux247Task {
@@ -198,8 +205,32 @@ find /tmp -type f -mtime +30 -delete`
                     content: '1. Gör ALLTID backup innan du ändrar config-filer\n2. Använd ls -la innan rm för att verifiera\n3. Lär dig tab-completion - det sparar tid och förhindrar stavfel'
                 },
                 {
+                    type: 'common_mistake',
+                    title: '⚠️ Vanligt misstag',
+                    wrong: 'rm -rf katalog (utan att verifiera först)',
+                    right: 'ls katalog/ && rm -rf katalog',
+                    explanation: 'Dubbelkolla ALLTID med ls innan rm -rf. Ett misstag kan radera allt!'
+                },
+                {
+                    type: 'mnemonic',
+                    title: '🧠 Minnesregel',
+                    concept: 'Navigering',
+                    trick: 'cd = Change Dir, pwd = Print Working Dir, ls = List',
+                    example: 'cd ~ går hem, cd - går tillbaka, cd .. går upp'
+                },
+                {
+                    type: 'cheat_sheet',
+                    title: '📋 Snabbkoll',
+                    commands: [
+                        { cmd: 'ls -lah', desc: 'Lista allt, human-readable' },
+                        { cmd: 'cp -r katalog/', desc: 'Kopiera rekursivt' },
+                        { cmd: 'rm -i fil', desc: 'Ta bort med bekräftelse' },
+                        { cmd: 'find . -name "*.log"', desc: 'Sök filer' }
+                    ]
+                },
+                {
                     type: 'checkpoint',
-                    title: 'Checkpoint: File System Essentials',
+                    title: '🎉 Checkpoint: File System Essentials',
                     content: 'Du kan nu navigera i Linux filsystemet, kopiera/flytta/ta bort filer, och hitta filer med find. Dessa kommandon är grunden för allt DevOps-arbete!'
                 }
             ]
@@ -345,8 +376,32 @@ sort fil.txt | uniq -c   # Med antal`
                     content: '**Snabb felanalys:**\n```bash\ngrep -i error /var/log/syslog | tail -50\n```\n\n**Räkna unika IP-adresser:**\n```bash\nawk \'{print $1}\' access.log | sort | uniq -c | sort -rn | head\n```'
                 },
                 {
+                    type: 'common_mistake',
+                    title: '⚠️ Vanligt misstag',
+                    wrong: 'grep "error" fil (missar ERROR, Error, etc.)',
+                    right: 'grep -i "error" fil (-i = case insensitive)',
+                    explanation: 'Loggmeddelanden kan ha olika case. Använd alltid -i för säkrare sökning.'
+                },
+                {
+                    type: 'mnemonic',
+                    title: '🧠 Minnesregel',
+                    concept: 'grep-flaggor',
+                    trick: '-i = Ignore case, -r = Recursive, -n = Number, -v = inVert',
+                    example: 'grep -rni "error" /var/log/ = sök rekursivt, case-insensitive, med radnummer'
+                },
+                {
+                    type: 'cheat_sheet',
+                    title: '📋 Snabbkoll',
+                    commands: [
+                        { cmd: 'tail -f logfil', desc: 'Följ logg live' },
+                        { cmd: 'grep -rni "text" .', desc: 'Sök rekursivt' },
+                        { cmd: 'cat fil | sort | uniq', desc: 'Unika rader' },
+                        { cmd: 'wc -l fil', desc: 'Räkna rader' }
+                    ]
+                },
+                {
                     type: 'checkpoint',
-                    title: 'Checkpoint: Text Processing',
+                    title: '🎉 Checkpoint: Text Processing',
                     content: 'Du behärskar nu grunderna i texthantering! grep, pipes, och tail -f är dina nya bästa vänner för att analysera loggar och hitta problem snabbt.'
                 }
             ]

@@ -935,6 +935,40 @@ const TASK_4_QUIZ: TaskQuizQuestion[] = [
         explanation: 'readonly eller declare -r gör att variabeln inte kan ändras.',
         difficulty: 'VG',
         category: 'Variabler'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't4-s1',
+        question: 'Skriptet skriver ut "Hello " utan namn fast du angav det. Koden är: echo "Hello $name". Vad är fel?',
+        options: ['Glömt export', 'Variabeln är tom/odefinierad', 'Fel citattecken', 'echo fungerar inte så'],
+        correctIndex: 1, // B
+        explanation: 'Variabeln $name är inte tilldelad. Använd ${name:-"default"} för fallback.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Du debuggar ett skript som inte visar användarnamnet.',
+        isScenario: true
+    },
+    {
+        id: 't4-s2',
+        question: 'echo \'$HOME\' skriver ut "$HOME" bokstavligt. Varför?',
+        options: ['Fel variabelnamn', 'Single quotes expanderar inte variabler', 'HOME är inte exporterad', 'Måste använda ${}'],
+        correctIndex: 1, // B
+        explanation: 'Single quotes (\'\') gör att allt tolkas bokstavligt. Använd double quotes ("").',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'En kollega undrar varför PATH inte visas i skriptet.',
+        isScenario: true
+    },
+    {
+        id: 't4-s3',
+        question: 'Du vill spara kommandooutput: files=ls. Men $files är tom. Varför?',
+        options: ['ls finns inte', 'Måste använda files=$(ls)', 'Fel variabelnamn', 'Behöver export'],
+        correctIndex: 1, // B
+        explanation: 'Command substitution kräver $(kommando) eller `kommando` för att fånga output.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Skriptet ska lista filer men variabeln är alltid tom.',
+        isScenario: true
     }
 ]
 
@@ -1683,6 +1717,40 @@ const TASK_8_QUIZ: TaskQuizQuestion[] = [
         explanation: '-v testar om variabeln är satt (defined).',
         difficulty: 'VG',
         category: 'Avancerat'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't8-s1',
+        question: 'Skriptet ger "[: -eq: unary operator expected". Vad är troligaste felet?',
+        options: ['Syntaxfel i jämförelse', 'Variabeln är tom - bör citeras', 'Fel operator', '-eq finns inte'],
+        correctIndex: 1, // B
+        explanation: 'Om $var är tom blir [ $var -eq 5 ] till [ -eq 5 ]. Citera: [ "$var" -eq 5 ].',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Ditt skript kraschar på ett if-statement.',
+        isScenario: true
+    },
+    {
+        id: 't8-s2',
+        question: 'Du vill kolla om filen /etc/config finns. Vilket test använder du?',
+        options: ['[ -e /etc/config ]', '[ -f /etc/config ]', '[ -r /etc/config ]', 'Alla ovan fungerar'],
+        correctIndex: 3, // D
+        explanation: '-e = exists, -f = regular file, -r = readable. Alla fungerar, men -f är säkrast för filer.',
+        difficulty: 'G',
+        category: 'Praktisk',
+        scenario: 'Du skriver ett setup-skript som behöver en config-fil.',
+        isScenario: true
+    },
+    {
+        id: 't8-s3',
+        question: 'if [ $status = "ok" ] && [ $count -gt 0 ]; then... Vad händer om status är tom?',
+        options: ['Fungerar fint', 'Syntaxfel - too many arguments', 'Hoppar till else', 'Kör if-blocket ändå'],
+        correctIndex: 1, // B
+        explanation: 'Tom $status blir [ = "ok" ] = syntaxfel. Citera: [ "$status" = "ok" ].',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Skriptet fungerar ibland men kraschar oregelbundet.',
+        isScenario: true
     }
 ]
 
@@ -3181,6 +3249,40 @@ const TASK_14_QUIZ: TaskQuizQuestion[] = [
         explanation: 'pwck verifierar passwd och shadow-filer.',
         difficulty: 'VG',
         category: 'Verktyg'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't14-s1',
+        question: 'Ny utvecklare kan inte logga in. useradd john kördes. Vad glömdes troligen?',
+        options: ['Lösenord sattes aldrig', 'Hemkatalog saknas', 'Användaren är låst', 'Alla ovan kan vara problemet'],
+        correctIndex: 3, // D
+        explanation: 'Vanliga problem: inget lösenord (passwd john), ingen hemkatalog (-m), eller låst konto.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'HR ringer - ny anställd kan inte logga in.',
+        isScenario: true
+    },
+    {
+        id: 't14-s2',
+        question: 'Användare behöver sudo-rättigheter. Enklaste sättet på Ubuntu?',
+        options: ['Redigera /etc/sudoers direkt', 'usermod -aG sudo username', 'chmod +s /bin/bash', 'passwd -S username'],
+        correctIndex: 1, // B
+        explanation: 'Lägg till i sudo-gruppen med usermod -aG sudo. Redigera ALDRIG sudoers direkt utan visudo!',
+        difficulty: 'G',
+        category: 'Praktisk',
+        scenario: 'Ny DevOps-ingenjör behöver köra administrativa kommandon.',
+        isScenario: true
+    },
+    {
+        id: 't14-s3',
+        question: 'Du ska sätta samma lösenord för 50 nya användare temporärt. Vilken approach?',
+        options: ['passwd för varje', 'echo "password" | passwd --stdin username', 'chpasswd med fil', 'Skapa utan lösenord'],
+        correctIndex: 2, // C
+        explanation: 'chpasswd läser user:password par från fil/stdin. echo "user1:pass" | chpasswd',
+        difficulty: 'VG',
+        category: 'Automation',
+        scenario: 'Du sätter upp 50 studentkonton för en kurs.',
+        isScenario: true
     }
 ]
 
@@ -3854,6 +3956,40 @@ const TASK_17_QUIZ: TaskQuizQuestion[] = [
         explanation: 'in on INTERFACE begränsar till specifikt nätverkskort.',
         difficulty: 'VG',
         category: 'Interface'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't17-s1',
+        question: 'Du körde ufw enable och nu kan du inte SSHa in. Vad hände troligen?',
+        options: ['SSH-tjänsten stoppades', 'Du glömde ufw allow ssh före enable', 'Servern omstartade', 'UFW blockerade utgående'],
+        correctIndex: 1, // B
+        explanation: 'UFW default nekar allt inkommande. ALLTID tillåt SSH före enable!',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Servern blev oåtkomlig efter brandväggskonfiguration.',
+        isScenario: true
+    },
+    {
+        id: 't17-s2',
+        question: 'Webservern svarar inte på port 443. ufw status visar endast port 80 tillåten. Fix?',
+        options: ['ufw allow https', 'ufw allow 443/tcp', 'ufw allow 443', 'Alla ovan fungerar'],
+        correctIndex: 3, // D
+        explanation: 'Alla tre fungerar. https är alias för 443/tcp.',
+        difficulty: 'G',
+        category: 'Praktisk',
+        scenario: 'HTTPS fungerar inte trots korrekt nginx-config.',
+        isScenario: true
+    },
+    {
+        id: 't17-s3',
+        question: 'Du vill tillåta SSH endast från kontorets IP 10.0.1.50. Rätt kommando?',
+        options: ['ufw allow ssh from 10.0.1.50', 'ufw allow from 10.0.1.50 to any port 22', 'ufw limit from 10.0.1.50', 'ufw allow 22 --source 10.0.1.50'],
+        correctIndex: 1, // B
+        explanation: 'ufw allow from IP to any port PORT är korrekt syntax för IP-begränsning.',
+        difficulty: 'VG',
+        category: 'Avancerat',
+        scenario: 'Säkerhetsteamet kräver SSH-åtkomst endast från kontoret.',
+        isScenario: true
     }
 ]
 
@@ -4228,6 +4364,40 @@ const TASK_21_QUIZ: TaskQuizQuestion[] = [
         explanation: '-f (follow) visar nya loggar i realtid.',
         difficulty: 'VG',
         category: 'Logging'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't21-s1',
+        question: 'Du ändrade en .service-fil men restart tar inte effekt. Vad glömde du?',
+        options: ['systemctl reload', 'systemctl daemon-reload före restart', 'chmod +x på filen', 'Starta om servern'],
+        correctIndex: 1, // B
+        explanation: 'Efter att ändra unit-filer MÅSTE du köra daemon-reload så systemd läser om dem.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Tjänsten använder fortfarande gamla inställningar.',
+        isScenario: true
+    },
+    {
+        id: 't21-s2',
+        question: 'Tjänsten startar vid boot men kraschar direkt. Hur felsöker du?',
+        options: ['cat /var/log/service.log', 'journalctl -u tjänstnamn', 'systemctl debug tjänst', 'tail /etc/systemd/logs'],
+        correctIndex: 1, // B
+        explanation: 'journalctl -u tjänst visar tjänstens loggar inklusive startfel.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Applikationen fungerar manuellt men inte som service.',
+        isScenario: true
+    },
+    {
+        id: 't21-s3',
+        question: 'Du vill att tjänsten startar automatiskt EFTER att nätverket är uppe. Var konfigurerar du det?',
+        options: ['[Service] After=network.target', '[Unit] After=network.target', '[Install] WantedBy=network', 'I /etc/rc.local'],
+        correctIndex: 1, // B
+        explanation: 'I [Unit]-sektionen anger After= beroenden som måste starta först.',
+        difficulty: 'VG',
+        category: 'Konfiguration',
+        scenario: 'Tjänsten kraschar vid boot men fungerar om du startar den manuellt efteråt.',
+        isScenario: true
     }
 ]
 
@@ -4845,6 +5015,40 @@ const TASK_24_QUIZ: TaskQuizQuestion[] = [
         explanation: 'docker compose (V2) är integrerad plugin, docker-compose (V1) är gammal.',
         difficulty: 'VG',
         category: 'Version'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't24-s1',
+        question: 'App-containern startar före databasen är redo och kraschar. Hur löser du det?',
+        options: ['depends_on: db', 'depends_on + healthcheck på db', 'Lägg in sleep i app', 'Starta db manuellt först'],
+        correctIndex: 1, // B
+        explanation: 'depends_on väntar bara på att containern startar, inte att den är redo. Healthcheck + depends_on condition löser det.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Connection refused till databas vid docker-compose up.',
+        isScenario: true
+    },
+    {
+        id: 't24-s2',
+        question: 'Databasdata försvinner vid docker-compose down. Hur bevarar du den?',
+        options: ['Använd --no-rm flagga', 'Definiera en namngiven volym', 'Kör down utan -v', 'Backup före down'],
+        correctIndex: 1, // B
+        explanation: 'Namngivna volymer (volumes: db_data:) bevaras mellan down/up. Anonyma volymer försvinner.',
+        difficulty: 'G',
+        category: 'Volymer',
+        scenario: 'All data försvann efter en omstart av stacken.',
+        isScenario: true
+    },
+    {
+        id: 't24-s3',
+        question: 'Du har lösenord i docker-compose.yml och det hamnade i Git. Bättre lösning?',
+        options: ['Använd .env fil + .gitignore', 'Kryptera docker-compose.yml', 'Hårdkoda i Dockerfile', 'Använd config-filer'],
+        correctIndex: 0, // A
+        explanation: '.env-fil med secrets + lägg till i .gitignore. Referera med ${VARIABEL} i compose.',
+        difficulty: 'VG',
+        category: 'Säkerhet',
+        scenario: 'Säkerhetsscan hittade credentials i repot.',
+        isScenario: true
     }
 ]
 
