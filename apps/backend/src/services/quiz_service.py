@@ -103,47 +103,49 @@ def generate_quiz(
     if not client:
         return None
 
-    # Enhanced prompt with DevOps examples and practical scenarios
+    # Enhanced prompt with DevOps examples and practical scenarios - SWEDISH
     if quiz_type == "flashcard":
-        format_instruction = """Generate flashcards in this JSON format:
+        format_instruction = """Generera flashcards på SVENSKA i detta JSON-format:
 {
   "questions": [
     {
-      "front": "Question or term",
-      "back": "Answer or definition",
-      "hint": "Optional hint"
+      "front": "Fråga eller term (PÅ SVENSKA)",
+      "back": "Svar eller definition (PÅ SVENSKA)",
+      "hint": "Valfri ledtråd (PÅ SVENSKA)"
     }
   ]
 }
 
-Example of GOOD flashcard:
+Exempel på BRA flashcard:
 {
-  "front": "What does 'docker run -d -p 8080:80 nginx' do?",
-  "back": "Runs nginx container in detached mode, mapping host port 8080 to container port 80",
-  "hint": "Think about -d (detached) and -p (port mapping)"
+  "front": "Vad gör kommandot 'docker run -d -p 8080:80 nginx'?",
+  "back": "Kör nginx-container i bakgrunden (detached mode) och mappar värdport 8080 till containerport 80",
+  "hint": "Tänk på -d (detached) och -p (portmappning)"
 }
 
-Example of BAD flashcard (too vague):
+Exempel på DÅLIGT flashcard (för vagt):
 {
   "front": "Docker",
-  "back": "Containerization"
-}"""
+  "back": "Containerisering"
+}
+
+VIKTIGT: Allt innehåll ska vara på SVENSKA!"""
     else:
-        format_instruction = """Generate multiple choice questions in this JSON format:
+        format_instruction = """Generera flervalsfrågor på SVENSKA i detta JSON-format:
 {
   "questions": [
     {
-      "question": "The question text",
-      "options": ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"],
+      "question": "Frågetexten (PÅ SVENSKA)",
+      "options": ["A) Alternativ 1", "B) Alternativ 2", "C) Alternativ 3", "D) Alternativ 4"],
       "correct": "A",
-      "explanation": "Why this answer is correct"
+      "explanation": "Förklaring varför detta svar är rätt (PÅ SVENSKA)"
     }
   ]
 }
 
-Example of GOOD MCQ:
+Exempel på BRA flervalsfråga:
 {
-  "question": "You need to deploy a Python app with dependencies. Which Dockerfile layer order is MOST efficient?",
+  "question": "Du ska deploya en Python-app med dependencies. Vilken Dockerfile-lagerordning är MEST effektiv?",
   "options": [
     "A) COPY . . && RUN pip install -r requirements.txt",
     "B) COPY requirements.txt . && RUN pip install -r requirements.txt && COPY . .",
@@ -151,18 +153,19 @@ Example of GOOD MCQ:
     "D) COPY requirements.txt requirements.txt && COPY . . && RUN pip install"
   ],
   "correct": "B",
-  "explanation": "Copying requirements.txt first allows Docker to cache the pip install layer. If only code changes, Docker reuses the cached pip install layer, making rebuilds faster."
+  "explanation": "Genom att kopiera requirements.txt först kan Docker cacha pip install-lagret. Om endast kod ändras återanvänder Docker det cachade pip install-lagret, vilket gör ombyggnader snabbare."
 }
 
-IMPORTANT: 
-- The correct answer should be randomly distributed across A, B, C, D - do NOT always make A the correct answer
-- Vary the position of the correct answer for each question
-- Make wrong answers plausible but clearly incorrect
-- Focus on practical DevOps scenarios, not just definitions"""
+VIKTIGT: 
+- Det korrekta svaret ska slumpmässigt fördelas över A, B, C, D - gör INTE alltid A till rätt svar
+- Variera positionen för det korrekta svaret för varje fråga
+- Gör felaktiga svar rimliga men tydligt felaktiga
+- Fokusera på praktiska DevOps-scenarion, inte bara definitioner
+- ALLT innehåll (frågor, svar, förklaringar) ska vara på SVENSKA!"""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
     
-    # Add unique variation instruction when generating fresh (not cached)
+    # Add unique variation instruction when generating fresh (not cached) - SWEDISH
     variation_seed = ""
     if not use_cache:
         # Generate random seed for variation
@@ -170,31 +173,32 @@ IMPORTANT:
         unique_id = str(uuid.uuid4())[:8]
         variation_seed = f"""
 
-IMPORTANT: Generate COMPLETELY NEW and UNIQUE questions for this session.
-Session ID: {unique_id}-{random_seed}
-Do NOT repeat questions from previous generations.
-Pick DIFFERENT concepts and scenarios than you would normally choose.
-Be creative and explore less obvious aspects of the content."""
+VIKTIGT: Generera HELT NYA och UNIKA frågor för denna session.
+Sessions-ID: {unique_id}-{random_seed}
+Upprepa INTE frågor från tidigare genereringar.
+Välj OLIKA koncept och scenarion än du normalt skulle välja.
+Var kreativ och utforska mindre uppenbara aspekter av innehållet.
+Skriv ALLT på SVENSKA!"""
 
-    # Determine difficulty-specific instructions
+    # Determine difficulty-specific instructions - SWEDISH
     difficulty_instructions = {
-        "beginner": """Beginner level questions should:
-- Test basic concepts and definitions
-- Use simple, clear language
-- Focus on "what" and "when" questions
-- Example: "What command lists running containers?" (docker ps)""",
-        "intermediate": """Intermediate level questions should:
-- Test practical application and troubleshooting
-- Require understanding of how things work together
-- Focus on "how" and "why" questions
-- Include real-world scenarios
-- Example: "Your Docker container can't connect to a database. What's the most likely cause?" (network configuration)""",
-        "advanced": """Advanced level questions should:
-- Test deep understanding and edge cases
-- Require knowledge of best practices and trade-offs
-- Focus on "what if" and optimization scenarios
-- Include complex multi-step problems
-- Example: "You need to scale a stateless web app to handle 10x traffic. Which approach minimizes latency?" (horizontal scaling with load balancer)"""
+        "beginner": """Nybörjarnivå frågor ska:
+- Testa grundläggande koncept och definitioner
+- Använda enkelt, tydligt språk
+- Fokusera på "vad" och "när" frågor
+- Exempel: "Vilket kommando listar körande containers?" (docker ps)""",
+        "intermediate": """Mellannivå frågor ska:
+- Testa praktisk tillämpning och felsökning
+- Kräva förståelse för hur saker fungerar tillsammans
+- Fokusera på "hur" och "varför" frågor
+- Inkludera verkliga scenarion
+- Exempel: "Din Docker-container kan inte ansluta till databasen. Vad är den mest troliga orsaken?" (nätverkskonfiguration)""",
+        "advanced": """Avancerad nivå frågor ska:
+- Testa djup förståelse och specialfall
+- Kräva kunskap om best practices och avvägningar
+- Fokusera på "vad händer om" och optimeringsscenarier
+- Inkludera komplexa flerstegsproblem
+- Exempel: "Du behöver skala en stateless webbapp för att hantera 10x trafik. Vilken approach minimerar latens?" (horisontell skalning med load balancer)"""
     }
 
     # Increase content limit from 4000 to 8000 chars for better context
@@ -202,20 +206,25 @@ Be creative and explore less obvious aspects of the content."""
     if len(content) > 8000:
         content_preview += "\n\n[... content truncated for token limits ...]"
 
-    # Enhanced system prompt with DevOps expertise
-    system_prompt = """You are an expert DevOps instructor with 10+ years of experience teaching Linux, Docker, Kubernetes, CI/CD, and cloud infrastructure.
+    # Enhanced system prompt with DevOps expertise - SWEDISH
+    system_prompt = """Du är en expert DevOps-instruktör med 10+ års erfarenhet av att undervisa Linux, Docker, Kubernetes, CI/CD och molninfrastruktur.
 
-Your quiz questions should:
-1. Test PRACTICAL understanding, not just memorization
-2. Reflect REAL-WORLD scenarios that DevOps engineers face daily
-3. Include plausible wrong answers that test understanding of common mistakes
-4. Provide clear, actionable explanations that help students learn
-5. Focus on concepts that matter in production environments
+VIKTIGT: Generera ALLT innehåll på SVENSKA. Alla frågor, svar, förklaringar och hints ska vara på svenska.
 
-Return ONLY valid JSON, no markdown formatting, no extra text."""
+Dina quiz-frågor ska:
+1. Testa PRAKTISK förståelse, inte bara memorering
+2. Reflektera VERKLIGA scenarion som DevOps-ingenjörer möter dagligen
+3. Inkludera rimliga felaktiga svar som testar förståelse av vanliga misstag
+4. Ge tydliga, handlingsbara förklaringar som hjälper studenter lära sig
+5. Fokusera på koncept som är viktiga i produktionsmiljöer
 
-    # Build enhanced user prompt
-    prompt = f"""You are creating {difficulty}-level quiz content for the DevOps module: "{module_title}"
+Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
+
+    # Build enhanced user prompt - SWEDISH
+    difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
+    prompt = f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
+
+VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hints."""
 
 {difficulty_instructions.get(difficulty, difficulty_instructions["intermediate"])}
 
@@ -226,16 +235,18 @@ Generate exactly {count} UNIQUE and DIFFERENT {quiz_type} questions.{focus_text}
 
 {format_instruction}
 
-Quality Guidelines:
-- Each question should test a specific, important concept from the content
-- Wrong answers should be plausible but clearly incorrect (not trick questions)
-- Explanations should be educational and help students understand the concept
-- For MCQ: Distribute correct answers evenly across A, B, C, D positions
-- For flashcards: Front should be specific, back should be comprehensive but concise
-- Avoid questions that can be answered without reading the content
-- Prioritize questions about practical application over pure memorization
+Kvalitetsriktlinjer:
+- Varje fråga ska testa ett specifikt, viktigt koncept från innehållet
+- Felaktiga svar ska vara rimliga men tydligt felaktiga (inga lurigfrågor)
+- Förklaringar ska vara pedagogiska och hjälpa studenter förstå konceptet
+- För flerval: Fördela korrekta svar jämnt över A, B, C, D positioner
+- För flashcards: Framsidan ska vara specifik, baksidan ska vara heltäckande men koncis
+- Undvik frågor som kan besvaras utan att läsa innehållet
+- Prioritera frågor om praktisk tillämpning över ren memorering
 
-Return ONLY valid JSON, no markdown code blocks, no explanatory text before or after."""
+VIKTIGT: Generera ALLT innehåll på SVENSKA!
+
+Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före eller efter."""
 
     try:
         # Higher temperature when not caching (force_new mode) for more variation
