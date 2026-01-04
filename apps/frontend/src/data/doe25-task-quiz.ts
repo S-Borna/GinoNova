@@ -1,6 +1,7 @@
 /**
  * DOE25 Tentaplugg - Task-specifika Quiz
- * 20 quiz per task, pedagogiskt fokuserade med variation i rätt svar (A-D)
+ * 20+ quiz per task, pedagogiskt fokuserade med variation i rätt svar (A-D)
+ * Inkluderar scenario-baserade frågor för praktisk tillämpning
  */
 
 export interface TaskQuizQuestion {
@@ -11,6 +12,8 @@ export interface TaskQuizQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
+    scenario?: string // Optional scenario context for practical questions
+    isScenario?: boolean // Flag for scenario-based questions
 }
 
 export interface TaskQuizSet {
@@ -203,6 +206,62 @@ const TASK_1_QUIZ: TaskQuizQuestion[] = [
         explanation: '/22 = 255.255.252.0. Tredje oktetten: 30 AND 252 = 28. Svar: 10.20.28.0',
         difficulty: 'VG',
         category: 'Subnätberäkning'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't1-s1',
+        question: 'Din chef säger: "Vi har 200 anställda som behöver IP-adresser." Vilken subnätmask rekommenderar du?',
+        options: ['/25 (126 hosts)', '/24 (254 hosts)', '/23 (510 hosts)', '/22 (1022 hosts)'],
+        correctIndex: 1, // B
+        explanation: '/24 ger 254 hosts - precis lagom för 200 anställda med lite marginal.',
+        difficulty: 'VG',
+        category: 'Praktisk tillämpning',
+        scenario: 'Du är nätverkstekniker och planerar företagets nya kontor.',
+        isScenario: true
+    },
+    {
+        id: 't1-s2',
+        question: 'Server A (192.168.1.50/24) kan inte pinga Server B (192.168.2.50/24). Vad är troligaste orsaken?',
+        options: ['Fel subnätmask', 'De är på olika subnät - behöver router', 'DNS-fel', 'Brandvägg blockerar'],
+        correctIndex: 1, // B
+        explanation: 'De är på olika nätverk (192.168.1.0 vs 192.168.2.0) och behöver en router för att kommunicera.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Du felsöker nätverksproblem i serverrummet.',
+        isScenario: true
+    },
+    {
+        id: 't1-s3',
+        question: 'Du får 10.0.0.0/8 och ska skapa 4 avdelningar. Vilken prefix ger mest hosts per avdelning?',
+        options: ['/10 (4M hosts)', '/9 (8M hosts)', '/11 (2M hosts)', '/12 (1M hosts)'],
+        correctIndex: 0, // A
+        explanation: '4 subnät = 2 extra bitar. /8 + 2 = /10. Varje /10 ger ~4 miljoner hosts.',
+        difficulty: 'VG',
+        category: 'Subnetting design',
+        scenario: 'Du designar nätverksarkitekturen för ett stort företag.',
+        isScenario: true
+    },
+    {
+        id: 't1-s4',
+        question: 'Nätverksteamet rapporterar: "ipcalc 192.168.5.130/26". Vad är broadcast-adressen?',
+        options: ['192.168.5.127', '192.168.5.191', '192.168.5.255', '192.168.5.159'],
+        correctIndex: 1, // B
+        explanation: '/26 = 64 adresser. 130 ligger i 128-191 blocket. Broadcast = 191.',
+        difficulty: 'VG',
+        category: 'Beräkning',
+        scenario: 'Du dubbelkollar en kollegas nätverksberäkning.',
+        isScenario: true
+    },
+    {
+        id: 't1-s5',
+        question: 'En klient har IP 172.16.50.100/20. Kan den kommunicera med 172.16.60.100 utan router?',
+        options: ['Ja, samma subnät', 'Nej, olika subnät', 'Beror på gateway', 'Endast via VPN'],
+        correctIndex: 0, // A
+        explanation: '/20 ger range 172.16.48.0-172.16.63.255. Båda 50 och 60 ligger i detta intervall.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Du verifierar nätverksanslutningar före lansering.',
+        isScenario: true
     }
 ]
 
@@ -390,6 +449,62 @@ const TASK_2_QUIZ: TaskQuizQuestion[] = [
         explanation: 'Sticky bit (chmod +t) gör att bara filägaren kan ta bort sin fil i katalogen.',
         difficulty: 'VG',
         category: 'Rättigheter'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't2-s1',
+        question: 'Servern är full! Var börjar du leta efter stora logfiler?',
+        options: ['/home', '/var/log', '/etc', '/usr'],
+        correctIndex: 1, // B
+        explanation: '/var/log växer ofta okontrollerat med systemloggar, särskilt auth.log och syslog.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Du får larm: "Disk 95% full" på produktionsservern.',
+        isScenario: true
+    },
+    {
+        id: 't2-s2',
+        question: 'Du ska redigera SSH-konfigurationen. Vilken fil öppnar du?',
+        options: ['/etc/ssh/sshd_config', '/var/ssh/config', '/home/ssh/settings', '/usr/ssh/sshd'],
+        correctIndex: 0, // A
+        explanation: 'Alla tjänsters konfiguration ligger i /etc. SSH-demon = /etc/ssh/sshd_config.',
+        difficulty: 'G',
+        category: 'Praktisk tillämpning',
+        scenario: 'Säkerhetsteamet vill ändra SSH-port från 22 till 2222.',
+        isScenario: true
+    },
+    {
+        id: 't2-s3',
+        question: 'En ny disk /dev/sdb1 är monterad på /data. Var lägger du mount-info för att överleva omstart?',
+        options: ['/etc/mount.conf', '/etc/fstab', '/var/mount/auto', '/boot/mount'],
+        correctIndex: 1, // B
+        explanation: '/etc/fstab (File System Table) definierar automatisk montering vid boot.',
+        difficulty: 'VG',
+        category: 'Praktisk tillämpning',
+        scenario: 'Du har lagt till en ny datadisk som ska monteras automatiskt.',
+        isScenario: true
+    },
+    {
+        id: 't2-s4',
+        question: 'Applikationen loggar inte alls. Var skapar du loggkatalogen enligt FHS?',
+        options: ['/home/app/logs', '/var/log/appname', '/etc/logs/app', '/opt/logs'],
+        correctIndex: 1, // B
+        explanation: '/var/log är standardplatsen för alla typer av loggar enligt FHS.',
+        difficulty: 'G',
+        category: 'Best practices',
+        scenario: 'Du installerar en ny applikation och ska konfigurera loggning.',
+        isScenario: true
+    },
+    {
+        id: 't2-s5',
+        question: 'df -h visar /dev/sda1 på 100%. Vilket kommando visar vilka mappar är störst?',
+        options: ['ls -la /', 'du -sh /* | sort -h', 'cat /proc/diskstats', 'free -h'],
+        correctIndex: 1, // B
+        explanation: 'du -sh /* visar storlek per toppkatalog, sort -h sorterar human-readable.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Du ska hitta vad som fyller disken.',
+        isScenario: true
     }
 ]
 
@@ -577,6 +692,62 @@ const TASK_3_QUIZ: TaskQuizQuestion[] = [
         explanation: 'tee skriver input till både en fil och standard output samtidigt.',
         difficulty: 'VG',
         category: 'I/O'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't3-s1',
+        question: 'Ditt skript körs men visar "Permission denied". Vad har du glömt?',
+        options: ['Shebang', 'chmod +x', 'sudo', 'Variabeldeklaration'],
+        correctIndex: 1, // B
+        explanation: 'Skriptfiler måste vara exekverbara. chmod +x script.sh löser problemet.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Du skrev ett nytt backup-skript men det vägrar köra.',
+        isScenario: true
+    },
+    {
+        id: 't3-s2',
+        question: 'Skriptet fungerar med bash script.sh men inte ./script.sh. Varför?',
+        options: ['Fel filnamn', 'Saknar shebang #!/bin/bash', 'Syntax error', 'Saknar variabel'],
+        correctIndex: 1, // B
+        explanation: 'Utan shebang vet systemet inte vilken tolk som ska användas vid ./körning.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'En kollega frågar varför skriptet bara fungerar på ett sätt.',
+        isScenario: true
+    },
+    {
+        id: 't3-s3',
+        question: 'Du vill logga output och felmeddelanden till samma fil. Vad använder du?',
+        options: ['> logfil', '>> logfil', '&> logfil', '2> logfil'],
+        correctIndex: 2, // C
+        explanation: '&> redirectar både stdout (1) och stderr (2) till samma fil.',
+        difficulty: 'VG',
+        category: 'Praktisk tillämpning',
+        scenario: 'Ditt nattliga cronjob behöver komplett loggning.',
+        isScenario: true
+    },
+    {
+        id: 't3-s4',
+        question: 'Skriptet avslutades utan fel men föregående kommando misslyckades. Vad returnerar echo $?',
+        options: ['0', '1', 'error', 'null'],
+        correctIndex: 0, // A
+        explanation: 'echo lyckades (exit 0) - $? visar SENASTE kommandots exit code, inte tidigare.',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Du debuggar ett skript som inte fångar fel korrekt.',
+        isScenario: true
+    },
+    {
+        id: 't3-s5',
+        question: 'Du vill att skriptet ska avbryta vid första felet. Vilken rad lägger du till?',
+        options: ['set -x', 'set -e', 'trap error', 'exit 1'],
+        correctIndex: 1, // B
+        explanation: 'set -e gör att skriptet avslutar direkt om något kommando returnerar != 0.',
+        difficulty: 'VG',
+        category: 'Best practices',
+        scenario: 'Produktionsskriptet fortsätter trots att ett steg misslyckas.',
+        isScenario: true
     }
 ]
 
@@ -3197,6 +3368,62 @@ const TASK_15_QUIZ: TaskQuizQuestion[] = [
         explanation: '4=SUID, så 4755 = SUID med rwxr-xr-x.',
         difficulty: 'VG',
         category: 'Special'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't15-s1',
+        question: 'Webservern kan inte läsa /var/www/html/index.html. ls visar -rw-------. Vad gör du?',
+        options: ['chmod 777', 'chmod 644', 'chown www-data', 'rm och skapa ny'],
+        correctIndex: 1, // B
+        explanation: '644 (rw-r--r--) ger ägaren skriv, och alla andra läsrättighet - standard för webbfiler.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Webbsidan visar 403 Forbidden.',
+        isScenario: true
+    },
+    {
+        id: 't15-s2',
+        question: 'Du skapade ett skript men kollegan kan inte köra det. ls visar -rw-r--r--. Vad fattas?',
+        options: ['Skrivrättighet', 'Exekveringsrättighet', 'Läsrättighet', 'SUID-bit'],
+        correctIndex: 1, // B
+        explanation: 'Skript behöver x-rättighet. chmod +x script.sh eller chmod 755 löser det.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Kollegans backup-skript vägrar köra.',
+        isScenario: true
+    },
+    {
+        id: 't15-s3',
+        question: 'Säkerhetsteamet säger att /tmp har för öppna rättigheter. Vad är korrekt för /tmp?',
+        options: ['755', '777', '1777 (sticky bit)', '700'],
+        correctIndex: 2, // C
+        explanation: '1777 = rwxrwxrwt. Sticky bit gör att bara ägaren kan ta bort sina filer.',
+        difficulty: 'VG',
+        category: 'Best practices',
+        scenario: 'Du granskar säkerheten på en server.',
+        isScenario: true
+    },
+    {
+        id: 't15-s4',
+        question: 'ls -l visar -rwxr-sr-x. Vad betyder det lilla s:et?',
+        options: ['SUID är satt', 'SGID är satt', 'Sticky bit', 'Symbolisk länk'],
+        correctIndex: 1, // B
+        explanation: 's i gruppens x-position = SGID. Filer körs med gruppens rättigheter.',
+        difficulty: 'VG',
+        category: 'Analys',
+        scenario: 'Du granskar rättigheter på ett delat program.',
+        isScenario: true
+    },
+    {
+        id: 't15-s5',
+        question: 'Applikationen kör som user "app" men kan inte skriva till /data som ägs av root. Bästa lösningen?',
+        options: ['chmod 777 /data', 'chown app:app /data', 'Kör app som root', 'Skapa symlink'],
+        correctIndex: 1, // B
+        explanation: 'Ändra ägare till app-användaren. 777 är en säkerhetsrisk!',
+        difficulty: 'VG',
+        category: 'Best practices',
+        scenario: 'Du deployer en ny applikation.',
+        isScenario: true
     }
 ]
 
@@ -3384,6 +3611,62 @@ const TASK_16_QUIZ: TaskQuizQuestion[] = [
         explanation: '-v (verbose), -vv/-vvv för mer detalj.',
         difficulty: 'VG',
         category: 'Debug'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't16-s1',
+        question: 'SSH säger "Permission denied (publickey)". Vad kollar du först?',
+        options: ['DNS-inställningar', 'Att nyckeln finns i ~/.ssh/authorized_keys på servern', 'Brandväggsregler', 'SSH-version'],
+        correctIndex: 1, // B
+        explanation: 'Publik nyckel måste finnas i serverns authorized_keys för nyckelautentisering.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Du kan inte logga in på produktionsservern.',
+        isScenario: true
+    },
+    {
+        id: 't16-s2',
+        question: 'SSH fungerade igår men idag får du "Host key verification failed". Vad hände?',
+        options: ['Lösenord ändrat', 'Serverns host key ändrades (ny server/reinstall)', 'Fel användarnamn', 'Nätverksfel'],
+        correctIndex: 1, // B
+        explanation: 'Servern har ny identitet. Ta bort gammal nyckel: ssh-keygen -R hostname',
+        difficulty: 'VG',
+        category: 'Felsökning',
+        scenario: 'Efter helgens underhåll fungerar inte SSH.',
+        isScenario: true
+    },
+    {
+        id: 't16-s3',
+        question: 'Säkerhetsteamet kräver att root-login stängs av. Vilken fil och rad ändrar du?',
+        options: ['/etc/ssh/ssh_config: PermitRoot no', '/etc/ssh/sshd_config: PermitRootLogin no', '/etc/passwd: root:x:0', '~/.ssh/config: NoRoot yes'],
+        correctIndex: 1, // B
+        explanation: 'sshd_config är serverns config. PermitRootLogin no stänger av root SSH.',
+        difficulty: 'VG',
+        category: 'Konfiguration',
+        scenario: 'Du härdar säkerheten på alla servrar.',
+        isScenario: true
+    },
+    {
+        id: 't16-s4',
+        question: 'Du vill kopiera din publika nyckel till ny server. Snabbaste sättet?',
+        options: ['scp ~/.ssh/id_rsa.pub', 'ssh-copy-id user@server', 'cat id_rsa.pub | ssh user@server', 'rsync ~/.ssh/'],
+        correctIndex: 1, // B
+        explanation: 'ssh-copy-id kopierar automatiskt publik nyckel till rätt plats med rätt rättigheter.',
+        difficulty: 'G',
+        category: 'Best practices',
+        scenario: 'Du sätter upp lösenordsfri inloggning.',
+        isScenario: true
+    },
+    {
+        id: 't16-s5',
+        question: 'SSH säger "Permissions 0644 for id_rsa are too open". Lösning?',
+        options: ['chmod 755 id_rsa', 'chmod 600 id_rsa', 'chmod 777 id_rsa', 'chown root id_rsa'],
+        correctIndex: 1, // B
+        explanation: 'Privata nycklar MÅSTE vara 600 (endast ägaren kan läsa). SSH vägrar annars.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Din SSH-nyckel fungerar inte efter att du kopierat den.',
+        isScenario: true
     }
 ]
 
@@ -4132,6 +4415,62 @@ const TASK_22_QUIZ: TaskQuizQuestion[] = [
         explanation: 'docker stats visar CPU, minne, nätverk i realtid.',
         difficulty: 'VG',
         category: 'Monitoring'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't22-s1',
+        question: 'Container startar men avslutas direkt. Hur ser du vad som hände?',
+        options: ['docker ps', 'docker logs <container>', 'docker top', 'docker info'],
+        correctIndex: 1, // B
+        explanation: 'docker logs visar stdout/stderr från containern, även efter att den stoppat.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Din nginx-container kraschar direkt vid start.',
+        isScenario: true
+    },
+    {
+        id: 't22-s2',
+        question: 'Du vill debugga inuti en körande container. Vilket kommando?',
+        options: ['docker run -it container bash', 'docker exec -it container bash', 'docker attach container', 'docker debug container'],
+        correctIndex: 1, // B
+        explanation: 'docker exec -it startar ny process inuti körande container. -it ger interaktiv terminal.',
+        difficulty: 'G',
+        category: 'Felsökning',
+        scenario: 'Du behöver kolla config-filer inuti containern.',
+        isScenario: true
+    },
+    {
+        id: 't22-s3',
+        question: 'Containern tar för mycket minne. Hur begränsar du den till max 512MB?',
+        options: ['docker run --memory=512m', 'docker run --ram=512m', 'docker run --limit-mem=512m', 'docker run -m 512'],
+        correctIndex: 0, // A
+        explanation: '--memory=512m (eller -m 512m) sätter minnestak för containern.',
+        difficulty: 'VG',
+        category: 'Resurser',
+        scenario: 'En container äter allt RAM på servern.',
+        isScenario: true
+    },
+    {
+        id: 't22-s4',
+        question: 'Du vill att containern startar automatiskt om servern bootar om. Vilken flagga?',
+        options: ['--autostart', '--restart=always', '--boot=yes', '--daemon'],
+        correctIndex: 1, // B
+        explanation: '--restart=always gör att Docker alltid startar containern, även efter reboot.',
+        difficulty: 'VG',
+        category: 'Konfiguration',
+        scenario: 'Databasen måste starta automatiskt efter strömavbrott.',
+        isScenario: true
+    },
+    {
+        id: 't22-s5',
+        question: 'Port 80 på hosten är upptagen. Hur mappar du nginx till port 8080 istället?',
+        options: ['-p 80:8080', '-p 8080:80', '--port 8080=80', '-expose 8080'],
+        correctIndex: 1, // B
+        explanation: '-p host:container. 8080:80 = hostens 8080 mappas till containerns 80.',
+        difficulty: 'G',
+        category: 'Nätverk',
+        scenario: 'Apache kör redan på port 80 på servern.',
+        isScenario: true
     }
 ]
 
@@ -4693,6 +5032,62 @@ const TASK_25_QUIZ: TaskQuizQuestion[] = [
         explanation: '-a skapar annoterad tag med meddelande och metadata.',
         difficulty: 'VG',
         category: 'Tags'
+    },
+    // SCENARIO-BASERADE FRÅGOR
+    {
+        id: 't25-s1',
+        question: 'Du har gjort ändringar men vill byta branch. Git säger att du har uncommitted changes. Snabbaste lösningen?',
+        options: ['git commit', 'git stash', 'git reset --hard', 'git checkout --force'],
+        correctIndex: 1, // B
+        explanation: 'git stash sparar ändringar temporärt. git stash pop återställer dem senare.',
+        difficulty: 'G',
+        category: 'Workflow',
+        scenario: 'En brådskande bugg måste fixas på annan branch.',
+        isScenario: true
+    },
+    {
+        id: 't25-s2',
+        question: 'Du pushade känslig data (lösenord) av misstag. Vad gör du?',
+        options: ['git revert', 'git commit --amend + force push + rotera lösenord', 'git reset', 'Ignorera det'],
+        correctIndex: 1, // B
+        explanation: 'Ändra historik med amend/force push OCH rotera lösenordet - det kan finnas kopierat.',
+        difficulty: 'VG',
+        category: 'Säkerhet',
+        scenario: 'Du upptäcker API-nycklar i senaste commit.',
+        isScenario: true
+    },
+    {
+        id: 't25-s3',
+        question: 'Din branch har 15 commits, men du vill merga till main med EN commit. Vad gör du?',
+        options: ['git merge --single', 'git merge --squash', 'git commit --all', 'git combine'],
+        correctIndex: 1, // B
+        explanation: '--squash kombinerar alla commits till en enda vid merge.',
+        difficulty: 'VG',
+        category: 'Workflow',
+        scenario: 'Teamet kräver clean git history i main-branchen.',
+        isScenario: true
+    },
+    {
+        id: 't25-s4',
+        question: 'git pull ger konflikt i config.yaml. Hur löser du det?',
+        options: ['git reset --hard origin/main', 'Redigera filen, ta bort konfliktmarkeringar, git add, git commit', 'git pull --force', 'git ignore config.yaml'],
+        correctIndex: 1, // B
+        explanation: 'Öppna filen, välj rätt version manuellt, ta bort <<<<< ===== >>>>>, sedan add+commit.',
+        difficulty: 'G',
+        category: 'Konflikthantering',
+        scenario: 'Både du och kollega ändrade samma fil.',
+        isScenario: true
+    },
+    {
+        id: 't25-s5',
+        question: 'Du vill se exakt vad som ändrades mellan två branches. Kommando?',
+        options: ['git log main..feature', 'git diff main..feature', 'git compare main feature', 'git show main feature'],
+        correctIndex: 1, // B
+        explanation: 'git diff branch1..branch2 visar alla skillnader mellan brancherna.',
+        difficulty: 'G',
+        category: 'Analys',
+        scenario: 'Du granskar en kollegas ändringar före merge.',
+        isScenario: true
     }
 ]
 
