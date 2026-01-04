@@ -108,15 +108,23 @@ async def generate_quiz(
         )
 
     # Import service
+    import logging
+    logger = logging.getLogger(__name__)
+    
     from src.services.quiz_service import generate_quiz as gen_quiz, get_module_content_for_quiz
+
+    logger.info(f"🎯 Quiz request: module={request.module_slug}, type={request.quiz_type}, difficulty={request.difficulty}, count={request.count}")
 
     # Get module content from ACTUAL node data (not just metadata)
     content = get_module_content_for_quiz(request.module_slug)
     if not content:
+        logger.error(f"❌ Module content not found for: {request.module_slug}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Module '{request.module_slug}' not found"
+            detail=f"Module '{request.module_slug}' not found. Available modules: doe25-tenta, hands-on-lab, linux-247"
         )
+
+    logger.info(f"✅ Found content for {request.module_slug}: {len(content)} chars")
 
     # Extract module title from content
     module_title = request.module_slug.replace("-", " ").title()
@@ -126,20 +134,28 @@ async def generate_quiz(
 
     # Generate quiz from actual node content
     # force_new=True (default) skips cache and generates fresh questions every time
-    result = gen_quiz(
-        module_title=module_title,
-        content=content,
-        quiz_type=request.quiz_type,
-        count=request.count,
-        difficulty=request.difficulty,
-        focus_area=request.focus_area,
-        use_cache=not request.force_new  # Skip cache if force_new is True
-    )
-
-    if not result:
+    try:
+        result = gen_quiz(
+            module_title=module_title,
+            content=content,
+            quiz_type=request.quiz_type,
+            count=request.count,
+            difficulty=request.difficulty,
+            focus_area=request.focus_area,
+            use_cache=not request.force_new  # Skip cache if force_new is True
+        )
+    except Exception as e:
+        logger.error(f"❌ Quiz generation exception: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Quiz generation failed. OpenAI service may be unavailable."
+            detail=f"Quiz generation error: {str(e)}"
+        )
+
+    if not result:
+        logger.error(f"❌ Quiz generation returned None for {request.module_slug}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Quiz generation failed. Check OpenAI API key and service availability."
         )
 
     return QuizResponse(
