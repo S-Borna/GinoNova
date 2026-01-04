@@ -534,9 +534,18 @@ def list_all_users(
     add_phase_header(response)
     require_admin(current_user)
 
-    users = user_repository.list_users()
-    all_modules = list_modules()
-    all_tasks = list_tasks()
+    try:
+        users = user_repository.list_users()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to list users: {str(e)}")
+
+    try:
+        all_modules = list_modules()
+        all_tasks = list_tasks()
+    except Exception as e:
+        # Non-critical, continue without
+        all_modules = []
+        all_tasks = []
 
     now = datetime.utcnow()
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
@@ -559,57 +568,66 @@ def list_all_users(
     # Build user details
     user_details = []
     for user in users:
-        # Get progress records
-        progress_records = progress_repository.list_progress_by_user(user.id)
+        try:
+            # Get progress records
+            progress_records = progress_repository.list_progress_by_user(user.id)
 
-        tasks_completed = sum(
-            1 for p in progress_records
-            if p.task_id and (p.status == "completed" or p.progress == 100)
-        )
-        modules_completed = sum(
-            1 for p in progress_records
-            if p.module_id and (p.status == "completed" or p.progress == 100)
-        )
-        labs_completed = sum(
-            1 for p in progress_records
-            if getattr(p, 'lab_id', None) and p.status == "completed"
-        )
-        projects_completed = sum(
-            1 for p in progress_records
-            if getattr(p, 'project_id', None) and p.status == "completed"
-        )
+            tasks_completed = sum(
+                1 for p in progress_records
+                if p.task_id and (p.status == "completed" or p.progress == 100)
+            )
+            modules_completed = sum(
+                1 for p in progress_records
+                if p.module_id and (p.status == "completed" or p.progress == 100)
+            )
+            labs_completed = sum(
+                1 for p in progress_records
+                if getattr(p, 'lab_id', None) and p.status == "completed"
+            )
+            projects_completed = sum(
+                1 for p in progress_records
+                if getattr(p, 'project_id', None) and p.status == "completed"
+            )
 
-        user_xp = getattr(user, 'total_xp', tasks_completed * 25)
+            user_xp = getattr(user, 'total_xp', None)
+            if user_xp is None:
+                user_xp = tasks_completed * 25
 
-        # Get last_activity_at - prefer user's last_activity_at, fallback to progress or updated_at
-        last_active = getattr(user, 'last_activity_at', None) or user.updated_at
-        if progress_records:
-            latest = max(progress_records, key=lambda p: p.updated_at)
-            if latest.updated_at > last_active:
-                last_active = latest.updated_at
+            # Get last_activity_at - prefer user's last_activity_at, fallback to progress or updated_at
+            last_active = getattr(user, 'last_activity_at', None) or getattr(user, 'updated_at', None) or now
+            if progress_records:
+                latest = max(progress_records, key=lambda p: getattr(p, 'updated_at', now) or now)
+                latest_updated = getattr(latest, 'updated_at', None)
+                if latest_updated and last_active and latest_updated > last_active:
+                    last_active = latest_updated
 
-        user_details.append(AdminUserDetail(
-            id=user.id,
-            email=user.email,
-            full_name=getattr(user, 'full_name', None),
-            avatar_url=getattr(user, 'avatar_url', None),
-            bio=getattr(user, 'bio', None),
-            is_active=user.is_active,
-            is_admin=getattr(user, 'is_admin', False),
-            is_verified=getattr(user, 'is_verified', False),
-            total_xp=user_xp,
-            level=calculate_level(user_xp),
-            current_streak=getattr(user, 'current_streak', 0),
-            longest_streak=getattr(user, 'longest_streak', 0),
-            tasks_completed=tasks_completed,
-            modules_completed=modules_completed,
-            labs_completed=labs_completed,
-            projects_completed=projects_completed,
-            total_study_time=0,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
-            last_activity_at=last_active,
-        ))
+            user_details.append(AdminUserDetail(
+                id=user.id,
+                email=user.email,
+                full_name=getattr(user, 'full_name', None),
+                avatar_url=getattr(user, 'avatar_url', None),
+                bio=getattr(user, 'bio', None),
+                is_active=getattr(user, 'is_active', True),
+                is_admin=getattr(user, 'is_admin', False),
+                is_verified=getattr(user, 'is_verified', False),
+                total_xp=user_xp,
+                level=calculate_level(user_xp),
+                current_streak=getattr(user, 'current_streak', 0),
+                longest_streak=getattr(user, 'longest_streak', 0),
+                tasks_completed=tasks_completed,
+                modules_completed=modules_completed,
+                labs_completed=labs_completed,
+                projects_completed=projects_completed,
+                total_study_time=0,
+                created_at=getattr(user, 'created_at', now),
+                updated_at=getattr(user, 'updated_at', now),
+                last_activity_at=last_active,
+            ))
+        except Exception as e:
+            # Log error but continue with other users
+            import logging
+            logging.error(f"Error processing user {user.id}: {str(e)}")
+            continue
 
     # Sort by last activity
     user_details.sort(key=lambda u: u.last_activity_at or datetime.min, reverse=True)
