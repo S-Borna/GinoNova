@@ -101,7 +101,8 @@ def generate_quiz(
 
     client = _get_client()
     if not client:
-        return None
+        logger.error("❌ OpenAI client not available - check OPENAI_KEY or OPENAI_API_KEY env var")
+        raise ValueError("OpenAI API key not configured")
 
     # Enhanced prompt with DevOps examples and practical scenarios - SWEDISH
     if quiz_type == "flashcard":
