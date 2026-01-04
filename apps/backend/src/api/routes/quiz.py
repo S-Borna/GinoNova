@@ -157,24 +157,20 @@ async def get_available_modules(
     current_user: UserPublic = Depends(get_current_user)
 ):
     """Get list of modules available for quiz generation."""
-    # Hardcoded list of modules that are live on the site
-    # These have actual content for quiz generation
+    from src.db.module_repository import list_modules
+
+    # Get all active modules from database
+    modules = list_modules()
+
+    # Filter for active modules only and format response
     available_modules = [
         {
-            "slug": "doe25-tenta",
-            "title": "DOE25 Tentaplugg",
-            "description": "Förberedelser för DOE25 tentan - alla moduler"
-        },
-        {
-            "slug": "hands-on-lab",
-            "title": "Hands-On Lab",
-            "description": "Praktiska labbar från grunderna till avancerade Linux- och DevOps-koncept"
-        },
-        {
-            "slug": "linux-247",
-            "title": "Linux 24/7",
-            "description": "Komplett Linux-kurs med fokus på DevOps"
-        },
+            "slug": module.slug,
+            "title": module.name,
+            "description": module.description or f"Module: {module.name}"
+        }
+        for module in modules
+        if module.is_active
     ]
 
     return {"modules": available_modules}
