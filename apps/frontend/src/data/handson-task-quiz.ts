@@ -16,7 +16,7 @@ export interface TaskQuizSet {
     questions: TaskQuizQuestion[];
 }
 
-export const HANDSON_TASK_QUIZ: TaskQuizSet[] = [
+export const HANDSON_TASK_QUIZ = [
     // ============================================
     // TASK 1: ONBOARDING - FILSYSTEM & TEXTEDITORER (20)
     // ============================================
