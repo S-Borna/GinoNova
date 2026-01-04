@@ -741,6 +741,20 @@ export default function AdminCommandCenter() {
                 return
             }
 
+            // Test API connectivity first
+            try {
+                const healthRes = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    cache: 'no-store',
+                })
+                if (!healthRes.ok) {
+                    throw new Error(`Backend unavailable: ${healthRes.status}`)
+                }
+            } catch (healthErr) {
+                console.error("Health check failed:", healthErr)
+                throw new Error(`Kunde inte nå backend (${API_BASE_URL}). Kontrollera din anslutning.`)
+            }
+
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, {
                 headers: {
@@ -809,6 +823,7 @@ export default function AdminCommandCenter() {
             setError(null)
             setLastRefresh(new Date())
         } catch (err) {
+            console.error("Admin fetchData error:", err)
             const errorMsg = err instanceof Error ? err.message : "Ett fel uppstod vid hämtning av data"
             setError(errorMsg)
         } finally {
