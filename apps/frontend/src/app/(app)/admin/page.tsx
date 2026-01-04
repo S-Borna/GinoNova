@@ -269,23 +269,35 @@ export default function AdminPage() {
 
             // Fetch users
             const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, { headers })
-            if (usersRes.ok) {
-                const data = await usersRes.json()
-                setUsers(data.users || [])
-            } else if (usersRes.status === 403) {
+            
+            if (usersRes.status === 403) {
                 router.push("/dashboard")
                 return
             }
+            
+            if (!usersRes.ok) {
+                const errorText = await usersRes.text()
+                console.error("Admin users error:", usersRes.status, errorText)
+                throw new Error(`API error: ${usersRes.status}`)
+            }
+            
+            const data = await usersRes.json()
+            setUsers(data.users || [])
 
-            // Fetch stats
-            const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, { headers })
-            if (statsRes.ok) {
-                setStats(await statsRes.json())
+            // Fetch stats (optional, don't fail if this fails)
+            try {
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, { headers })
+                if (statsRes.ok) {
+                    setStats(await statsRes.json())
+                }
+            } catch (e) {
+                console.warn("Stats fetch failed:", e)
             }
 
             setError(null)
         } catch (err) {
-            setError("Kunde inte ladda data")
+            console.error("Admin fetch error:", err)
+            setError(err instanceof Error ? err.message : "Kunde inte ladda data")
         } finally {
             setLoading(false)
         }
