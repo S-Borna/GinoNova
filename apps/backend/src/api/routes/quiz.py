@@ -21,6 +21,7 @@ class QuizGenerateRequest(BaseModel):
     count: int = Field(default=10, ge=1, le=20)
     difficulty: Literal["beginner", "intermediate", "advanced"] = Field(default="intermediate")
     focus_area: Optional[str] = Field(default=None)
+    force_new: bool = Field(default=True, description="Generate fresh questions (skip cache)")
 
 
 class QuizMetadata(BaseModel):
@@ -124,13 +125,15 @@ async def generate_quiz(
         module_title = first_line.replace("# Module:", "").strip()
 
     # Generate quiz from actual node content
+    # force_new=True (default) skips cache and generates fresh questions every time
     result = gen_quiz(
         module_title=module_title,
         content=content,
         quiz_type=request.quiz_type,
         count=request.count,
         difficulty=request.difficulty,
-        focus_area=request.focus_area
+        focus_area=request.focus_area,
+        use_cache=not request.force_new  # Skip cache if force_new is True
     )
 
     if not result:

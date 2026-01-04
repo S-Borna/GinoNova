@@ -13,6 +13,8 @@ import os
 import json
 import logging
 import hashlib
+import random
+import uuid
 from typing import Optional, List, Literal
 from datetime import datetime
 
@@ -159,6 +161,20 @@ IMPORTANT:
 - Focus on practical DevOps scenarios, not just definitions"""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
+    
+    # Add unique variation instruction when generating fresh (not cached)
+    variation_seed = ""
+    if not use_cache:
+        # Generate random seed for variation
+        random_seed = random.randint(1000, 9999)
+        unique_id = str(uuid.uuid4())[:8]
+        variation_seed = f"""
+
+IMPORTANT: Generate COMPLETELY NEW and UNIQUE questions for this session.
+Session ID: {unique_id}-{random_seed}
+Do NOT repeat questions from previous generations.
+Pick DIFFERENT concepts and scenarios than you would normally choose.
+Be creative and explore less obvious aspects of the content."""
 
     # Determine difficulty-specific instructions
     difficulty_instructions = {
@@ -206,7 +222,7 @@ Return ONLY valid JSON, no markdown formatting, no extra text."""
 Based on this module content:
 {content_preview}
 
-Generate exactly {count} UNIQUE and DIFFERENT {quiz_type} questions.{focus_text}
+Generate exactly {count} UNIQUE and DIFFERENT {quiz_type} questions.{focus_text}{variation_seed}
 
 {format_instruction}
 
@@ -222,11 +238,12 @@ Quality Guidelines:
 Return ONLY valid JSON, no markdown code blocks, no explanatory text before or after."""
 
     try:
-        # Optimized parameters for better quality
-        # Temperature: 0.7-0.8 for more consistent quality (was 0.9)
-        # Max tokens: 3000-4000 for better explanations (was 2000)
-        temperature = 0.75  # Balanced between creativity and consistency
+        # Higher temperature when not caching (force_new mode) for more variation
+        # Lower temperature when caching for consistency
+        temperature = 0.95 if not use_cache else 0.75  # More creative when generating fresh
         max_tokens = 3500 if quiz_type == "mcq" else 2500  # MCQ needs more tokens for explanations
+        
+        logger.info(f"🎲 Generating quiz with temperature={temperature}, use_cache={use_cache}")
         
         response = client.chat.completions.create(
             model="gpt-4o-mini",
