@@ -110,7 +110,7 @@ export default function Linux247TaskPage() {
                     <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-teal-500/5 rounded-full blur-[100px]" />
                 </div>
 
-                <div className="relative max-w-4xl mx-auto px-6 py-10">
+                <div className="relative max-w-4xl px-8 py-10">
                     {/* Back Link */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
