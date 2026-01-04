@@ -27,7 +27,8 @@ import {
     ChevronRight,
     ChevronDown,
     Check,
-    Square
+    Square,
+    Shuffle
 } from "lucide-react"
 
 // Import module data
@@ -121,6 +122,7 @@ export default function StudyPage() {
     const [selectedTasks, setSelectedTasks] = useState<string[]>([])
     const [showTaskSelector, setShowTaskSelector] = useState(false)
     const [studyMode, setStudyMode] = useState<'flashcards' | 'quiz' | null>(null)
+    const [shuffleMode, setShuffleMode] = useState(false)
     const [progress, setProgress] = useState<Record<string, number>>({})
 
     // Get current module
@@ -178,7 +180,8 @@ export default function StudyPage() {
     const handleStartStudy = () => {
         if (selectedModule && studyMode && selectedTasks.length > 0) {
             const tasksParam = selectedTasks.join(',')
-            router.push(`/study/${selectedModule}/${studyMode}?tasks=${tasksParam}`)
+            const shuffleParam = shuffleMode ? '&shuffle=true' : ''
+            router.push(`/study/${selectedModule}/${studyMode}?tasks=${tasksParam}${shuffleParam}`)
         }
     }
 
@@ -675,6 +678,86 @@ export default function StudyPage() {
                     )}
                 </AnimatePresence>
 
+                {/* Shuffle Mode Toggle */}
+                <AnimatePresence>
+                    {selectedModule && studyMode && selectedTasks.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="mb-8"
+                        >
+                            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                <Shuffle className="w-6 h-6 text-pink-400" />
+                                Inställningar
+                            </h2>
+
+                            <button
+                                onClick={() => setShuffleMode(!shuffleMode)}
+                                className={cn(
+                                    "w-full p-5 rounded-2xl text-left transition-all duration-300",
+                                    "border-2 group",
+                                    shuffleMode
+                                        ? "bg-gradient-to-r from-pink-500/20 to-orange-500/20 border-pink-500/50"
+                                        : "bg-zinc-900/50 border-zinc-800/50 hover:border-pink-500/30"
+                                )}
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "w-12 h-12 rounded-xl flex items-center justify-center",
+                                            "transition-all duration-300",
+                                            shuffleMode
+                                                ? "bg-pink-500/30 shadow-lg shadow-pink-500/20"
+                                                : "bg-zinc-800"
+                                        )}>
+                                            <Shuffle className={cn(
+                                                "w-6 h-6 transition-colors",
+                                                shuffleMode ? "text-pink-300" : "text-zinc-400"
+                                            )} />
+                                        </div>
+                                        <div>
+                                            <h3 className={cn(
+                                                "text-lg font-bold transition-colors",
+                                                shuffleMode ? "text-pink-300" : "text-white"
+                                            )}>
+                                                🎲 Shuffle-läge
+                                            </h3>
+                                            <p className="text-sm text-zinc-400">
+                                                Blanda frågor från alla valda tasks slumpmässigt
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Toggle Switch */}
+                                    <div className={cn(
+                                        "w-14 h-8 rounded-full p-1 transition-all duration-300",
+                                        shuffleMode
+                                            ? "bg-gradient-to-r from-pink-500 to-orange-500"
+                                            : "bg-zinc-700"
+                                    )}>
+                                        <motion.div
+                                            className="w-6 h-6 bg-white rounded-full shadow-md"
+                                            animate={{ x: shuffleMode ? 24 : 0 }}
+                                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                        />
+                                    </div>
+                                </div>
+
+                                {shuffleMode && (
+                                    <motion.p
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        className="mt-4 text-sm text-pink-300/80 pl-16"
+                                    >
+                                        ✨ Perfekt för att testa att du verkligen kan materialet oavsett ordning!
+                                    </motion.p>
+                                )}
+                            </button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {/* Start Button */}
                 <AnimatePresence>
                     {selectedModule && studyMode && selectedTasks.length > 0 && (
@@ -697,8 +780,10 @@ export default function StudyPage() {
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.98 }}
                             >
-                                <Sparkles className="w-5 h-5" />
+                                {shuffleMode && <Shuffle className="w-5 h-5" />}
+                                {!shuffleMode && <Sparkles className="w-5 h-5" />}
                                 Starta {studyMode === 'flashcards' ? 'Flashcards' : 'Quiz'}
+                                {shuffleMode && ' (Shuffle)'}
                                 <ArrowRight className="w-5 h-5" />
                             </motion.button>
 
@@ -708,6 +793,7 @@ export default function StudyPage() {
                                     ? `${selectedFlashcardCount} flashcards`
                                     : `~${Math.round(selectedFlashcardCount * 0.66)} quiz-frågor`
                                 }
+                                {shuffleMode && ' • 🎲 Shuffle aktivt'}
                             </p>
                         </motion.div>
                     )}
