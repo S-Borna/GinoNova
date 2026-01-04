@@ -14,6 +14,11 @@ export interface CompareItem {
     use_case?: string;
 }
 
+export interface CheatSheetCommand {
+    cmd: string;
+    desc: string;
+}
+
 export interface ContentBlock {
     type: string;
     title?: string;
@@ -43,6 +48,21 @@ export interface ContentBlock {
     summary_title?: string;
     key_points?: string[];
     next_step?: string;
+    // NEW: Enhanced pedagogical fields
+    content?: string;
+    remember?: string;
+    wrong?: string;
+    right?: string;
+    concept?: string;
+    trick?: string;
+    example?: string;
+    scenario?: string;
+    tasks?: string[];
+    solution_hint?: string;
+    reveal_solution?: boolean;
+    steps?: { command: string; purpose: string }[];
+    exam_tip?: string;
+    commands?: CheatSheetCommand[];
 }
 
 export interface DOE25Task {
@@ -192,8 +212,52 @@ traceroute google.com`
                     hint: "/8 betyder att bara första oktetten är nätverksdelen"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag på tentan",
+                    wrong: "Glömma att dra bort 2 från totala adresser",
+                    right: "Antal hosts = 2^(hostbitar) - 2",
+                    explanation: "Nätverksadressen (alla hostbitar 0) och broadcast (alla hostbitar 1) kan inte användas för hosts!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel för subnetting",
+                    concept: "CIDR till hosts",
+                    trick: "/24 = 256-2 = 254, /25 = 128-2 = 126, /26 = 64-2 = 62",
+                    example: "Tänk: varje steg halverar antalet hosts! /24→/25→/26 = 254→126→62"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips: Subnetting",
+                    content: "På tentan får du ofta: 'Hur många /26-subnät får plats i ett /24?' Svar: 4 st (eftersom /26 är 2 bitar mer = 2² = 4)",
+                    remember: "Antal subnät = 2^(skillnad i prefix)"
+                },
+                {
+                    type: "challenge",
+                    title: "🎯 Mini-utmaning",
+                    scenario: "Du har fått 192.168.10.0/24 och behöver 4 avdelningar med minst 50 hosts var.",
+                    tasks: [
+                        "1. Vilken prefix behövs för minst 50 hosts?",
+                        "2. Lista de 4 nätverksadresserna",
+                        "3. Räcker /24 för detta?"
+                    ],
+                    solution_hint: "50 hosts kräver minst 6 hostbitar (2^6=64-2=62). Det blir /26.",
+                    reveal_solution: true
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll: Subnetting",
+                    commands: [
+                        { cmd: "/24 = 254 hosts", desc: "Vanligaste subnätet" },
+                        { cmd: "/25 = 126 hosts", desc: "Halva /24" },
+                        { cmd: "/26 = 62 hosts", desc: "Kvarts /24" },
+                        { cmd: "/30 = 2 hosts", desc: "Punkt-till-punkt" },
+                        { cmd: "ip addr show", desc: "Visa nätverksconfig" },
+                        { cmd: "ipcalc X.X.X.X/Y", desc: "Beräkna subnät" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Subnetting! 🌐 Nätverksgrunder avklarade."
+                    message: "🎉 Du har klarat Subnetting! Nätverksgrunder avklarade - du är redo för tentan!"
                 }
             ]
         },
@@ -322,8 +386,38 @@ du -sh /var/log    # Katalogstorlek`
                     hint: "Loggar är variabel data..."
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Redigera filer direkt i /etc utan backup",
+                    right: "cp /etc/config /etc/config.bak && vim /etc/config",
+                    explanation: "Ta ALLTID backup innan du ändrar systemfiler!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "etc = Editable Text Config",
+                    trick: "/etc = config, /var = variabel, /tmp = temp, /home = hem",
+                    example: "ETC = Edit Text Config!"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Tentan frågar ofta 'Var finns X?' - Lär dig: config→/etc, loggar→/var/log",
+                    remember: "Config i /etc, loggar i /var/log!"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "/etc", desc: "Systemkonfiguration" },
+                        { cmd: "/var/log", desc: "Logfiler" },
+                        { cmd: "/home", desc: "Användarkataloger" },
+                        { cmd: "/tmp", desc: "Temporära filer" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Linux Filsystem! 📁 MODUL 0 KLAR!"
+                    message: "🎉 Du har klarat Linux Filsystem! 📁 MODUL 0 KLAR!"
                 }
             ]
         },
@@ -423,8 +517,38 @@ Kolla senaste exit code: echo $?`
                     hint: "I Unix betyder 0 alltid framgång"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma shebang eller skriva #!/bin/bash med mellanslag",
+                    right: "#!/bin/bash måste vara rad 1, utan mellanslag före #",
+                    explanation: "Utan korrekt shebang körs skriptet med fel tolk!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Exit codes",
+                    trick: "0 = OK, allt annat = FEL. Tänk: 'Zero problems!'",
+                    example: "exit 0 = succé, exit 1 = generellt fel"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Frågor om shebang och chmod +x är vanliga! Kom ihåg: skript måste vara exekverbart.",
+                    remember: "chmod +x script.sh && ./script.sh"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "#!/bin/bash", desc: "Shebang för bash" },
+                        { cmd: "chmod +x", desc: "Gör exekverbart" },
+                        { cmd: "echo $?", desc: "Visa senaste exit code" },
+                        { cmd: "./script.sh", desc: "Kör skript" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Bash Grunder! 🐚"
+                    message: "🎉 Du har klarat Bash Grunder! 🐚"
                 }
             ]
         },
@@ -554,8 +678,38 @@ frukter+=("dadel")`
                     hint: "# används för längd i bash"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "var = värde (med mellanslag)",
+                    right: "var=värde (utan mellanslag!)",
+                    explanation: "Bash tolkar mellanslag som kommandoavgränsare!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Citering",
+                    trick: "'single' = literal, \"double\" = expanderar variabler",
+                    example: "echo '$HOME' → $HOME, echo \"$HOME\" → /home/user"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Skillnaden mellan ' och \" är en klassiker på tentan!",
+                    remember: "Single = bokstavligt, Double = expanderar"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "var=värde", desc: "Tilldela (inget mellanslag!)" },
+                        { cmd: "$var eller ${var}", desc: "Läs variabel" },
+                        { cmd: "export VAR", desc: "Miljövariabel" },
+                        { cmd: "\"$var\"", desc: "Expandera säkert" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Variabler! 📦"
+                    message: "🎉 Du har klarat Variabler! 📦"
                 }
             ]
         },
@@ -666,8 +820,39 @@ grep "^$" fil.txt`
                     hint: "^ betyder början av raden"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma escapa specialtecken som . * + ?",
+                    right: "\\. för literal punkt, .* för 'vad som helst'",
+                    explanation: ". matchar ETT tecken, inte en punkt!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Regex-tecken",
+                    trick: "^ = start, $ = slut, * = 0+, + = 1+, ? = 0-1",
+                    example: "^Hej.*$ = rad som börjar med Hej"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Regex-frågor är vanliga! Lär dig: grep -E för extended regex.",
+                    remember: "^ start, $ slut, .* vad som helst"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "^", desc: "Början av rad" },
+                        { cmd: "$", desc: "Slut på rad" },
+                        { cmd: ".*", desc: "Vad som helst" },
+                        { cmd: "[a-z]", desc: "Ett tecken a-z" },
+                        { cmd: "grep -E", desc: "Extended regex" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Regex! 🔍"
+                    message: "🎉 Du har klarat Regex! 🔍"
                 }
             ]
         },
@@ -766,8 +951,38 @@ sed 's/\\(.*\\):\\(.*\\)/\\2:\\1/' fil.txt # Byt ordning`
                     hint: "g står för global"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "sed 's/old/new' fil (glömmer g för global)",
+                    right: "sed 's/old/new/g' fil",
+                    explanation: "Utan /g ersätts bara första träffen per rad!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "sed-syntax",
+                    trick: "s/sök/ersätt/g - tänk 'substitute globally'",
+                    example: "sed 's/fel/rätt/g' = byt alla 'fel' mot 'rätt'"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "sed -i ändrar filen direkt! Utan -i skrivs output till stdout.",
+                    remember: "sed 's/a/b/g' fil > ny_fil ELLER sed -i 's/a/b/g' fil"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "sed 's/old/new/g'", desc: "Ersätt alla" },
+                        { cmd: "sed -i", desc: "Ändra fil direkt" },
+                        { cmd: "sed '/mönster/d'", desc: "Ta bort rader" },
+                        { cmd: "sed -n 'Xp'", desc: "Skriv rad X" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat sed! ✂️"
+                    message: "🎉 Du har klarat sed! ✂️"
                 }
             ]
         },
@@ -881,8 +1096,38 @@ awk '{print $1}' access.log | sort | uniq -c | sort -rn | head`
                     hint: "NF står för Number of Fields"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma att awk använder $1, $2 för kolumner (inte $0)",
+                    right: "$0 = hela raden, $1 = första kolumnen",
+                    explanation: "$0 är HELA raden, $1-$N är kolumner!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "awk kolumner",
+                    trick: "$0=all, $1=first, $NF=last, NR=radnummer",
+                    example: "awk '{print $1, $NF}' = första och sista kolumnen"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "awk -F: för att ändra fältavgränsare (t.ex. /etc/passwd)",
+                    remember: "awk -F: '{print $1}' /etc/passwd = alla användarnamn"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "awk '{print $1}'", desc: "Skriv kolumn 1" },
+                        { cmd: "awk -F:", desc: "Avgränsare :" },
+                        { cmd: "$NF", desc: "Sista kolumnen" },
+                        { cmd: "NR", desc: "Radnummer" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat awk! 📊"
+                    message: "🎉 Du har klarat awk! 📊"
                 }
             ]
         },
@@ -1000,8 +1245,38 @@ fi`
                     hint: "-gt står för greater than"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "if [$var = \"test\"] (glömmer mellanslag)",
+                    right: "if [ $var = \"test\" ] (mellanslag runt [ och ])",
+                    explanation: "[ ] kräver mellanslag! Annars syntax error."
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Test-operatorer",
+                    trick: "-eq numeriskt, = strängar, -f fil, -d katalog",
+                    example: "[ $a -eq 5 ] för tal, [ \"$s\" = \"hej\" ] för text"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Skillnaden mellan [ ] och [[ ]] är tentafavorit!",
+                    remember: "[[ ]] är säkrare och stödjer && ||"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "-eq, -ne, -lt, -gt", desc: "Numeriska jämförelser" },
+                        { cmd: "=, !=", desc: "Strängjämförelser" },
+                        { cmd: "-f fil", desc: "Fil finns?" },
+                        { cmd: "-d dir", desc: "Katalog finns?" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Villkor! 🔀"
+                    message: "🎉 Du har klarat Villkor! 🔀"
                 }
             ]
         },
@@ -1108,8 +1383,38 @@ esac`
                     hint: "-s gömmer input"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "read password (visar lösenordet)",
+                    right: "read -s password (döljer input)",
+                    explanation: "-s = silent, perfekt för lösenord!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "read-flaggor",
+                    trick: "-p prompt, -s secret, -t timeout",
+                    example: "read -sp 'Lösenord: ' pass"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "select skapar numrerade menyer automatiskt!",
+                    remember: "select val in alternativ; do ... done"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "read -p 'text'", desc: "Med prompt" },
+                        { cmd: "read -s", desc: "Dold input" },
+                        { cmd: "read -t 5", desc: "Timeout 5 sek" },
+                        { cmd: "select x in a b c", desc: "Meny" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Interaktiva Skript! 💬"
+                    message: "🎉 Du har klarat Interaktiva Skript! 💬"
                 }
             ]
         },
@@ -1223,8 +1528,38 @@ done`
                     hint: "for med glob-mönster"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "for i in {1..$max} (variabel i brace expansion)",
+                    right: "for ((i=1; i<=max; i++)) för dynamiska gränser",
+                    explanation: "Brace expansion sker innan variabelexpansion!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Loop-typer",
+                    trick: "for=lista, while=villkor sant, until=villkor falskt",
+                    example: "for fil in *.txt; while [ $x -lt 10 ]"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Läsa fil rad för rad: while IFS= read -r line; do ... done < fil",
+                    remember: "IFS= bevarar whitespace, -r bevarar backslash"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "for x in lista", desc: "Iterera lista" },
+                        { cmd: "for ((i=0;i<5;i++))", desc: "C-style" },
+                        { cmd: "while [ villkor ]", desc: "Medans sant" },
+                        { cmd: "break, continue", desc: "Loop-kontroll" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Loopar! 🔄"
+                    message: "🎉 Du har klarat Loopar! 🔄"
                 }
             ]
         },
@@ -1322,8 +1657,38 @@ echo "Count: $count"`
                     hint: "# brukar betyda antal/nummer"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Blanda ihop $@ och $* utan citattecken",
+                    right: "\"$@\" bevarar individuella argument",
+                    explanation: "$* slår ihop alla till en sträng, $@ behåller dem separata"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Specialvariabler",
+                    trick: "$# = antal, $@ = alla, $0 = skriptnamn, $1-$9 = argument",
+                    example: "$# ger antalet argument till skriptet"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "getopts är standard för att parsa flaggor som -a -b",
+                    remember: "while getopts 'ab:' opt; do case $opt in..."
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "$1, $2...", desc: "Positionsparametrar" },
+                        { cmd: "$#", desc: "Antal argument" },
+                        { cmd: "$@", desc: "Alla argument" },
+                        { cmd: "shift", desc: "Skifta parametrar" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Skriptparametrar! 📥"
+                    message: "🎉 Du har klarat Skriptparametrar! 📥"
                 }
             ]
         },
@@ -1425,8 +1790,38 @@ echo "Summa: $result"`
                     hint: "Nyckelordet är 'local'"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "return \"text\" (return är bara för exit codes)",
+                    right: "echo \"text\" och fånga med $(funktion)",
+                    explanation: "return ger 0-255 (exit code), använd echo för output!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Funktions-scope",
+                    trick: "local var=värde gör variabeln lokal",
+                    example: "Utan local är alla variabler globala!"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Funktioner måste definieras FÖRE de anropas i skriptet!",
+                    remember: "function namn() { } ELLER namn() { }"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "funk() { }", desc: "Definiera funktion" },
+                        { cmd: "local var=x", desc: "Lokal variabel" },
+                        { cmd: "return 0", desc: "Exit code" },
+                        { cmd: "$(funk)", desc: "Fånga output" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Funktioner! 🔧"
+                    message: "🎉 Du har klarat Funktioner! 🔧"
                 }
             ]
         },
@@ -1519,8 +1914,38 @@ lockfile="/var/run/myapp.lock"`
                     hint: "INT = Interrupt"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma cleanup vid Ctrl+C (SIGINT)",
+                    right: "trap 'rm -f $tmpfil' EXIT",
+                    explanation: "Trap på EXIT körs alltid, även vid fel!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Vanliga signaler",
+                    trick: "SIGINT=Ctrl+C, SIGTERM=kill, SIGKILL=kill -9 (kan ej fångas)",
+                    example: "trap 'cleanup' SIGINT SIGTERM"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "SIGKILL (9) kan ALDRIG fångas med trap!",
+                    remember: "kill -9 = brutal force, ingen cleanup möjlig"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "trap 'cmd' SIGNAL", desc: "Fånga signal" },
+                        { cmd: "trap '' SIGNAL", desc: "Ignorera signal" },
+                        { cmd: "trap - SIGNAL", desc: "Återställ default" },
+                        { cmd: "kill -l", desc: "Lista signaler" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Signaler! 🚨 MODUL 1 KLAR!"
+                    message: "🎉 Du har klarat Signaler! 🚨 MODUL 1 KLAR!"
                 }
             ]
         },
@@ -1616,8 +2041,38 @@ cat /etc/group | grep developers`
                     hint: "shadow = skugga (dolt)"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "useradd user (skapar utan hemkatalog)",
+                    right: "useradd -m user (skapar MED hemkatalog)",
+                    explanation: "-m = make home directory!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Användarkommandon",
+                    trick: "useradd = skapa, usermod = ändra, userdel = ta bort",
+                    example: "usermod -aG grupp user = lägg till i grupp"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "/etc/passwd har användarinfo, /etc/shadow har lösenord (krypterade)",
+                    remember: "passwd = info, shadow = lösenord"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "useradd -m user", desc: "Skapa med hem" },
+                        { cmd: "usermod -aG grp user", desc: "Lägg till i grupp" },
+                        { cmd: "passwd user", desc: "Sätt lösenord" },
+                        { cmd: "id user", desc: "Visa grupper" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Användarhantering! 👤"
+                    message: "🎉 Du har klarat Användarhantering! 👤"
                 }
             ]
         },
@@ -1715,8 +2170,38 @@ chmod 1777 /tmp     # Sticky + rwxrwxrwx`
                     hint: "6=4+2=r+w, 4=r"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "chmod 777 script.sh (ger alla full åtkomst!)",
+                    right: "chmod 755 script.sh (ägare full, andra kör)",
+                    explanation: "777 är en säkerhetsrisk - alla kan ändra filen!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "rwx = 421",
+                    trick: "r=4 w=2 x=1, addera för att få siffran",
+                    example: "rwxr-xr-x = 4+2+1, 4+1, 4+1 = 755"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "chmod u+x = user execute, chmod go-w = group/others minus write",
+                    remember: "755 = standard för skript, 644 = standard för filer"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "chmod 755", desc: "rwxr-xr-x (skript)" },
+                        { cmd: "chmod 644", desc: "rw-r--r-- (filer)" },
+                        { cmd: "chown user:grupp", desc: "Ändra ägare" },
+                        { cmd: "ls -l", desc: "Visa rättigheter" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Filrättigheter! 🔐"
+                    message: "🎉 Du har klarat Filrättigheter! 🔐"
                 }
             ]
         },
@@ -1819,8 +2304,38 @@ ssh -D 1080 user@server`
                     hint: "authorized = tillåtna"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "chmod 644 ~/.ssh/id_rsa (för öppet!)",
+                    right: "chmod 600 ~/.ssh/id_rsa",
+                    explanation: "Privata nycklar MÅSTE vara 600, annars vägrar SSH!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "SSH-filer",
+                    trick: "600 för privat nyckel, 644 för publik, 700 för .ssh/",
+                    example: "id_rsa=600, id_rsa.pub=644, ~/.ssh=700"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "authorized_keys på SERVER, id_rsa.pub på KLIENT",
+                    remember: "ssh-copy-id user@server kopierar din publika nyckel"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "ssh-keygen -t ed25519", desc: "Generera nyckel" },
+                        { cmd: "ssh-copy-id user@host", desc: "Kopiera nyckel" },
+                        { cmd: "~/.ssh/config", desc: "SSH-konfiguration" },
+                        { cmd: "chmod 600 id_rsa", desc: "Rätt rättigheter" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat SSH! 🔑"
+                    message: "🎉 Du har klarat SSH! 🔑"
                 }
             ]
         },
@@ -1909,8 +2424,38 @@ sudo ufw delete 3`
                     hint: "allow = tillåt"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "ufw enable utan att tillåta SSH först",
+                    right: "ufw allow ssh && ufw enable",
+                    explanation: "Låser du ute dig själv måste du ha fysisk åtkomst!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "UFW-kommandon",
+                    trick: "allow=tillåt, deny=neka, status=visa, enable/disable=på/av",
+                    example: "ufw allow 22/tcp = tillåt SSH"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "UFW = Uncomplicated Firewall, frontend för iptables",
+                    remember: "ufw default deny incoming, ufw default allow outgoing"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "ufw allow 22", desc: "Tillåt SSH" },
+                        { cmd: "ufw status", desc: "Visa regler" },
+                        { cmd: "ufw enable", desc: "Aktivera" },
+                        { cmd: "ufw delete allow 22", desc: "Ta bort regel" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat UFW! 🛡️"
+                    message: "🎉 Du har klarat UFW! 🛡️"
                 }
             ]
         },
@@ -1997,8 +2542,38 @@ sudo firewall-cmd --zone=trusted --change-interface=eth1`
                     hint: "permanent = beständig"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma --permanent (ändring försvinner vid reboot)",
+                    right: "firewall-cmd --permanent --add-service=http && firewall-cmd --reload",
+                    explanation: "Utan --permanent gäller bara till omstart!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Firewalld zoner",
+                    trick: "public=default, trusted=allt tillåtet, drop=allt nekat",
+                    example: "firewall-cmd --zone=public --add-service=ssh"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Firewalld används på RHEL/CentOS, UFW på Ubuntu/Debian",
+                    remember: "--permanent + --reload för bestående ändringar"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "--add-service=http", desc: "Tillåt service" },
+                        { cmd: "--permanent", desc: "Bestående" },
+                        { cmd: "--reload", desc: "Ladda om" },
+                        { cmd: "--list-all", desc: "Visa allt" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Firewalld! 🔥"
+                    message: "🎉 Du har klarat Firewalld! 🔥"
                 }
             ]
         },
@@ -2106,8 +2681,38 @@ sudo mount /dev/vg_data/lv_mysql /var/lib/mysql`
                     hint: "fstab = file system table"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Formatera fel disk och förlora data",
+                    right: "lsblk FÖRST, verifiera rätt disk, sedan formatera",
+                    explanation: "Dubbelkolla ALLTID disknamnet innan mkfs!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "LVM-komponenter",
+                    trick: "PV (fysisk) → VG (grupp) → LV (logisk)",
+                    example: "pvcreate → vgcreate → lvcreate"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "LVM gör det enkelt att ändra storlek på partitioner!",
+                    remember: "lvextend -L +10G /dev/vg/lv && resize2fs"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "lsblk", desc: "Lista blockenheter" },
+                        { cmd: "mkfs.ext4 /dev/sdX", desc: "Formatera" },
+                        { cmd: "mount /dev/sdX /mnt", desc: "Montera" },
+                        { cmd: "/etc/fstab", desc: "Permanent montering" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Lagring! 💾"
+                    message: "🎉 Du har klarat Lagring! 💾"
                 }
             ]
         },
@@ -2213,8 +2818,38 @@ find "$BACKUP_DIR" -name "www_*.tar.gz" -mtime +7 -delete
                     hint: "Synkroniserar = gör identiska"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "rsync utan -a (förlorar rättigheter och timestamps)",
+                    right: "rsync -avz källa/ mål/",
+                    explanation: "-a = archive mode, bevarar allt!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "tar-flaggor",
+                    trick: "c=create, x=extract, v=verbose, f=file, z=gzip",
+                    example: "tar czvf arkiv.tar.gz katalog/ = skapa gzip-arkiv"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "rsync -avz --delete synkar och TAR BORT filer som inte finns i källan!",
+                    remember: "tar för arkiv, rsync för synk"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "tar czvf arkiv.tar.gz dir/", desc: "Skapa arkiv" },
+                        { cmd: "tar xzvf arkiv.tar.gz", desc: "Extrahera" },
+                        { cmd: "rsync -avz src/ dst/", desc: "Synka" },
+                        { cmd: "rsync --delete", desc: "Synka + radera" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Backup! 📦"
+                    message: "🎉 Du har klarat Backup! 📦"
                 }
             ]
         },
@@ -2327,8 +2962,38 @@ sudo systemctl enable --now myapp`
                     hint: "daemon-reload läser om unit-filer"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Glömma systemctl daemon-reload efter .service-ändringar",
+                    right: "systemctl daemon-reload && systemctl restart tjänst",
+                    explanation: "Utan daemon-reload läser systemd inte om unit-filen!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "systemctl-kommandon",
+                    trick: "start/stop/restart = köra, enable/disable = boot",
+                    example: "enable = starta vid boot, start = starta nu"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "journalctl -u tjänst -f = följ loggar för en tjänst",
+                    remember: "systemctl status visar senaste loggrader"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "systemctl start/stop", desc: "Starta/stoppa" },
+                        { cmd: "systemctl enable", desc: "Starta vid boot" },
+                        { cmd: "systemctl status", desc: "Visa status" },
+                        { cmd: "journalctl -u tjänst", desc: "Visa loggar" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Systemd! ⚙️ MODUL 2 KLAR!"
+                    message: "🎉 Du har klarat Systemd! ⚙️ MODUL 2 KLAR!"
                 }
             ]
         },
@@ -2426,8 +3091,38 @@ docker exec -it container_name bash`
                     hint: "d = detached = bakgrund"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "docker run utan -d (blockerar terminalen)",
+                    right: "docker run -d nginx (körs i bakgrunden)",
+                    explanation: "-d = detached mode, frigör din terminal!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Container vs Image",
+                    trick: "Image = recept, Container = maträtten som lagats",
+                    example: "docker pull = ladda ner recept, docker run = laga mat"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "docker exec -it container bash = öppna shell i container",
+                    remember: "-it = interactive + tty (behövs för shell)"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "docker run -d", desc: "Kör i bakgrund" },
+                        { cmd: "docker ps", desc: "Lista körande" },
+                        { cmd: "docker exec -it X bash", desc: "Shell i container" },
+                        { cmd: "docker logs X", desc: "Visa loggar" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Docker Grunder! 🐳"
+                    message: "🎉 Du har klarat Docker Grunder! 🐳"
                 }
             ]
         },
@@ -2520,8 +3215,38 @@ docker pull username/myapp:1.0`
                     hint: "CMD = command"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "COPY . . i Dockerfile (kopierar allt inkl. node_modules)",
+                    right: "Använd .dockerignore för att exkludera filer",
+                    explanation: ".dockerignore fungerar som .gitignore för Docker!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Dockerfile-ordning",
+                    trick: "FROM → RUN → COPY → CMD (vanligaste ordningen)",
+                    example: "Cachning: lägg sällan-ändrade steg först!"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "Multi-stage builds minskar image-storlek drastiskt!",
+                    remember: "FROM node AS builder ... FROM nginx COPY --from=builder"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "docker build -t namn .", desc: "Bygg image" },
+                        { cmd: "FROM alpine", desc: "Basimage" },
+                        { cmd: "RUN apt update", desc: "Kör kommando" },
+                        { cmd: "COPY src/ /app/", desc: "Kopiera filer" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Docker Images! 📦"
+                    message: "🎉 Du har klarat Docker Images! 📦"
                 }
             ]
         },
@@ -2635,8 +3360,38 @@ services:
                     hint: "-d fungerar som i docker run"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "Hårdkoda lösenord i docker-compose.yml",
+                    right: "Använd .env-fil: MYSQL_PASSWORD=${DB_PASS}",
+                    explanation: "Hemligheter ska aldrig vara i versionskontroll!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Compose-nyckelord",
+                    trick: "services = containers, volumes = data, networks = kommunikation",
+                    example: "depends_on: db = starta db först"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "docker-compose up -d --build = bygg om och starta",
+                    remember: "docker-compose down -v = stoppa och ta bort volymer"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "docker-compose up -d", desc: "Starta allt" },
+                        { cmd: "docker-compose down", desc: "Stoppa allt" },
+                        { cmd: "docker-compose logs -f", desc: "Följ loggar" },
+                        { cmd: "docker-compose ps", desc: "Lista services" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Docker Compose! 🎼"
+                    message: "🎉 Du har klarat Docker Compose! 🎼"
                 }
             ]
         },
@@ -2772,8 +3527,38 @@ git blame file.txt`
                     hint: "-b = branch"
                 },
                 {
+                    type: "common_mistake",
+                    title: "⚠️ Vanligt misstag",
+                    wrong: "git push --force (skriver över andras commits!)",
+                    right: "git pull --rebase && git push",
+                    explanation: "--force ska ALDRIG användas på delade branches!"
+                },
+                {
+                    type: "mnemonic",
+                    title: "🧠 Minnesregel",
+                    concept: "Git-workflow",
+                    trick: "pull → branch → commit → push → PR",
+                    example: "git checkout -b feature && git commit && git push"
+                },
+                {
+                    type: "tenta_tip",
+                    title: "💡 Tenta-tips",
+                    content: "git stash sparar ändringar temporärt utan commit",
+                    remember: "git stash → git pull → git stash pop"
+                },
+                {
+                    type: "cheat_sheet",
+                    title: "📋 Snabbkoll",
+                    commands: [
+                        { cmd: "git add -A && git commit -m ''", desc: "Stage + commit" },
+                        { cmd: "git checkout -b branch", desc: "Ny branch" },
+                        { cmd: "git merge branch", desc: "Merga" },
+                        { cmd: "git log --oneline", desc: "Visa historik" }
+                    ]
+                },
+                {
                     type: "checkpoint",
-                    message: "Du har klarat Git! 📚 MODUL 3 KLAR! 🎉 ALLA 25 TASKS AVKLARADE!"
+                    message: "🎉 Du har klarat Git! 📚 MODUL 3 KLAR! ALLA 25 TASKS AVKLARADE! 🏆"
                 }
             ]
         }
