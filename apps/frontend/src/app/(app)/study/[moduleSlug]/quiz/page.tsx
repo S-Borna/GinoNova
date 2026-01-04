@@ -103,9 +103,13 @@ function QuizContent() {
                 return
             }
 
-            // Get task filter from URL (comma-separated task IDs)
+            // Get URL parameters
             const tasksFilter = searchParams?.get("tasks") || ""
             const selectedTaskIds = tasksFilter ? tasksFilter.split(',') : []
+            const shuffle = searchParams?.get("shuffle") === "true"
+            const difficultyFilter = searchParams?.get("difficulty") || "all"
+            const countParam = searchParams?.get("count")
+            const maxCount = countParam ? parseInt(countParam) : undefined
 
             // Get local data - filtered by tasks or all
             let localData: LocalQuizQuestion[] = []
@@ -128,23 +132,44 @@ function QuizContent() {
                 return
             }
 
-            // Get shuffle param
-            const shuffle = searchParams?.get("shuffle") === "true"
+            // Filter by difficulty if specified
+            if (difficultyFilter !== 'all') {
+                // Map difficulty filter to question difficulty
+                const difficultyMap: Record<string, string[]> = {
+                    'beginner': ['G', 'beginner'],
+                    'intermediate': ['VG', 'intermediate'],
+                    'advanced': ['VG', 'advanced']
+                }
+                const validDifficulties = difficultyMap[difficultyFilter] || []
+                localData = localData.filter(q => 
+                    validDifficulties.includes(q.difficulty || 'G')
+                )
+            }
+
+            if (localData.length === 0) {
+                setError("Inga frågor för vald svårighetsgrad")
+                return
+            }
 
             // Transform local data to QuizQuestion format
             let transformedQuestions: QuizQuestion[] = localData.map(q => ({
                 id: q.id,
                 question: q.question,
                 options: [...q.options],
-                correct: q.correctIndex, // Map correctIndex to correct
+                correct: q.correctIndex,
                 explanation: q.explanation,
                 module_slug: moduleSlug,
                 lesson_title: q.category
             }))
 
-            // Shuffle if requested
-            if (shuffle) {
+            // Shuffle (always shuffle for better experience, especially important when limiting count)
+            if (shuffle || maxCount) {
                 transformedQuestions = transformedQuestions.sort(() => Math.random() - 0.5)
+            }
+
+            // Limit to count if specified
+            if (maxCount && transformedQuestions.length > maxCount) {
+                transformedQuestions = transformedQuestions.slice(0, maxCount)
             }
 
             setQuestions(transformedQuestions)
