@@ -100,6 +100,35 @@ def admin_status(response: Response):
 # ACTIVITY BACKFILL & LOG ENDPOINTS
 # ==============================================================================
 
+@admin_router.get("/debug-activity")
+def debug_activity(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """Debug endpoint to check last_activity_at values directly from DB"""
+    add_phase_header(response)
+    require_admin(current_user)
+    
+    if not is_db_configured():
+        return {"error": "Database not configured"}
+    
+    from ..db.database import get_db_context
+    from ..db.models import User
+    
+    with get_db_context() as db:
+        users = db.query(User).order_by(User.created_at.desc()).limit(15).all()
+        return {
+            "users": [
+                {
+                    "email": u.email,
+                    "last_activity_at": u.last_activity_at.isoformat() if u.last_activity_at else None,
+                    "created_at": u.created_at.isoformat() if u.created_at else None,
+                }
+                for u in users
+            ]
+        }
+
+
 @admin_router.post("/run-migrations")
 def run_database_migrations(
     response: Response,
