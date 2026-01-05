@@ -17,7 +17,7 @@ import GitHubProvider from "next-auth/providers/github"
 import DiscordProvider from "next-auth/providers/discord"
 
 // Use server-side env var (without NEXT_PUBLIC_ prefix works on server)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "https://saas-project-production-31f8.up.railway.app"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "https://api.ginonova.com"
 
 // Only include providers that have valid credentials
 const providers: Provider[] = []

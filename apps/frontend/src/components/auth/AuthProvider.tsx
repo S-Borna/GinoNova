@@ -123,7 +123,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const heartbeat = async () => {
             const token = getToken()
             if (!token) return
-            
+
             try {
                 // Call backend /me endpoint to update last_activity_at
                 await fetch(`https://api.ginonova.com/api/auth/me`, {
@@ -145,7 +145,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Also send heartbeat when window regains focus
         const handleFocus = () => heartbeat()
         window.addEventListener('focus', handleFocus)
-        
+
         // Send heartbeat on visibility change (tab becomes visible)
         const handleVisibility = () => {
             if (document.visibilityState === 'visible') {
