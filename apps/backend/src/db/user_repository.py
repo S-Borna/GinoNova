@@ -5,7 +5,7 @@ Phase 1.5: PostgreSQL with SQLAlchemy (primary)
 """
 from typing import Optional
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 
 from .memory import USERS
 from .database import is_db_configured, get_db_context
@@ -168,7 +168,7 @@ def update_user(user_id: UUID, **kwargs) -> Optional[UserInDB]:
                 if key in allowed_fields:
                     setattr(user, key, value)
 
-            user.updated_at = datetime.utcnow()
+            user.updated_at = datetime.now(timezone.utc)
             db.flush()
             db.refresh(user)
             return _model_to_schema(user)

@@ -64,8 +64,10 @@ interface Stats {
 function formatTimeAgo(date: string | null): string {
     if (!date) return "Aldrig"
     
+    // Backend sends UTC time without 'Z' suffix, so we need to treat it as UTC
+    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
     const now = Date.now()
-    const then = new Date(date).getTime()
+    const then = activityDate.getTime()
     const diff = now - then
     
     const mins = Math.floor(diff / 60000)
@@ -77,7 +79,7 @@ function formatTimeAgo(date: string | null): string {
     if (hours < 24) return `${hours}h sedan`
     if (days < 7) return `${days}d sedan`
     if (days < 30) return `${Math.floor(days / 7)}v sedan`
-    return new Date(date).toLocaleDateString("sv-SE")
+    return activityDate.toLocaleDateString("sv-SE")
 }
 
 function formatDate(date: string): string {
@@ -90,15 +92,18 @@ function formatDate(date: string): string {
 
 function isOnline(date: string | null): boolean {
     if (!date) return false
-    // Online if active within last 10 minutes
-    return (Date.now() - new Date(date).getTime()) < 10 * 60 * 1000
+    // Online if active within last 5 minutes (heartbeat every 1 min)
+    // Backend sends UTC time without 'Z' suffix, so we need to treat it as UTC
+    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
+    return (Date.now() - activityDate.getTime()) < 5 * 60 * 1000
 }
 
 function isActiveToday(date: string | null): boolean {
     if (!date) return false
+    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    return new Date(date).getTime() >= today.getTime()
+    return activityDate.getTime() >= today.getTime()
 }
 
 // Online Status Indicator
@@ -342,10 +347,11 @@ export default function AdminPage() {
     const [search, setSearch] = useState("")
     const [filter, setFilter] = useState<"all" | "online" | "active-today" | "inactive">("all")
     const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+    const [backfillDone, setBackfillDone] = useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
-    const fetchData = useCallback(async (showRefreshing = false) => {
+    const fetchData = useCallback(async (showRefreshing = false, runBackfill = false) => {
         if (showRefreshing) setRefreshing(true)
         
         try {
@@ -357,7 +363,6 @@ export default function AdminPage() {
             }
 
             const headers = { Authorization: `Bearer ${token}` }
-
             // Fetch users with cache busting
             const usersRes = await fetch(
                 `${API_BASE_URL}/api/admin/users?per_page=100&_t=${Date.now()}`, 
@@ -387,6 +392,20 @@ export default function AdminPage() {
                 console.warn("Stats fetch failed:", e)
             }
 
+            // Auto-backfill last_activity_at for users who don't have it
+            // This runs silently in background on first admin panel load only
+            if (runBackfill) {
+                try {
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/backfill-activity`,
+                        { method: 'POST', headers, cache: 'no-store' }
+                    )
+                    setBackfillDone(true)
+                } catch {
+                    // Ignore errors - backfill is optional
+                }
+            }
+
             setError(null)
             setLastRefresh(new Date())
         } catch (err) {
@@ -404,11 +423,12 @@ export default function AdminPage() {
             router.push("/dashboard")
             return
         }
-        fetchData()
-        // Auto-refresh every 10 seconds
-        const interval = setInterval(() => fetchData(false), 10000)
+        // Run backfill on first load only
+        fetchData(false, !backfillDone)
+        // Auto-refresh every 10 seconds (without backfill)
+        const interval = setInterval(() => fetchData(false, false), 10000)
         return () => clearInterval(interval)
-    }, [user, authLoading, isAdmin, router, fetchData])
+    }, [user, authLoading, isAdmin, router, fetchData, backfillDone])
 
     // Toggle user active status
     const toggleUserActive = async (targetUser: User) => {
@@ -422,7 +442,7 @@ export default function AdminPage() {
                 },
                 body: JSON.stringify({ is_active: !targetUser.is_active }),
             })
-            fetchData(true)
+            fetchData(true, false)
         } catch (err) {
             console.error("Toggle active error:", err)
         }
@@ -438,7 +458,7 @@ export default function AdminPage() {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             })
-            fetchData(true)
+            fetchData(true, false)
         } catch (err) {
             console.error("Delete user error:", err)
         }
@@ -489,7 +509,7 @@ export default function AdminPage() {
                 <div className="text-center">
                     <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
                     <p className="text-white mb-4">{error}</p>
-                    <Button onClick={() => fetchData(true)}>Försök igen</Button>
+                    <Button onClick={() => fetchData(true, false)}>Försök igen</Button>
                 </div>
             </div>
         )
@@ -517,7 +537,7 @@ export default function AdminPage() {
                             <Button 
                                 variant="outline" 
                                 size="sm" 
-                                onClick={() => fetchData(true)}
+                                onClick={() => fetchData(true, false)}
                                 disabled={refreshing}
                                 className="border-zinc-700"
                             >

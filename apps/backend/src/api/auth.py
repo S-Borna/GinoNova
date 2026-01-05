@@ -6,7 +6,7 @@ Phase OAuth: Google, GitHub, Discord OAuth support
 import os
 from fastapi import APIRouter, HTTPException, status
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, timezone
 
 from ..schemas.user import UserCreate, UserLogin, UserPublic, TokenResponse, OAuthRequest, OAuthTokenResponse
 from ..services.user_service import user_service
@@ -125,7 +125,7 @@ def login(login_data: UserLogin):
 
     # Update last_activity_at on login
     from ..db import user_repository
-    user_repository.update_user(user.id, last_activity_at=datetime.utcnow())
+    user_repository.update_user(user.id, last_activity_at=datetime.now(timezone.utc))
 
     # Generate JWT token
     access_token = create_access_token(
@@ -150,7 +150,7 @@ def get_current_user_info(current_user: CurrentUser):
     Also updates last_activity_at for online status tracking.
     """
     # Update last_activity_at for online status tracking
-    user_repository.update_user(current_user.id, last_activity_at=datetime.utcnow())
+    user_repository.update_user(current_user.id, last_activity_at=datetime.now(timezone.utc))
     return current_user
 
 
@@ -281,8 +281,8 @@ def oauth_login(oauth_data: OAuthRequest):
                         if oauth_data.avatar and not user.avatar_url:
                             user.avatar_url = oauth_data.avatar
                         # Update last_activity_at on OAuth login
-                        user.last_activity_at = datetime.utcnow()
-                        user.updated_at = datetime.utcnow()
+                        user.last_activity_at = datetime.now(timezone.utc)
+                        user.updated_at = datetime.now(timezone.utc)
                         db.flush()
                         db.refresh(user)
 
@@ -307,7 +307,7 @@ def oauth_login(oauth_data: OAuthRequest):
             )
 
         # Create new OAuth user
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         new_user_id = uuid4()
 
         if is_db_configured():

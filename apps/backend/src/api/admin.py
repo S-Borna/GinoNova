@@ -11,7 +11,7 @@ Features:
 from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel
 from typing import Optional, List
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import UUID
 import math
 
@@ -456,7 +456,7 @@ def get_activity_log(
     from ..db.database import get_db_context
     from ..db.models import User, Progress
 
-    cutoff = datetime.utcnow() - timedelta(days=days)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     events = []
 
     with get_db_context() as db:
@@ -547,7 +547,7 @@ def list_all_users(
         all_modules = []
         all_tasks = []
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     # Filter by search
@@ -947,7 +947,7 @@ def get_system_stats(
     labs = list_labs()
     projects = list_projects()
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     week_ago = now - timedelta(days=7)
     thirty_min_ago = now - timedelta(minutes=30)
@@ -1093,7 +1093,7 @@ def get_weekly_ai_usage(
     from ..services.ai_usage_service import get_weekly_summary
 
     return {
-        "year": year or datetime.utcnow().year,
+        "year": year or datetime.now(timezone.utc).year,
         "weeks": get_weekly_summary(year=year),
     }
 
