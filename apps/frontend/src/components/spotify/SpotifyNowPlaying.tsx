@@ -9,7 +9,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { Music, Volume2, Pause, X } from "lucide-react"
+import { Music, Volume2, Pause } from "lucide-react"
 
 interface SpotifyTrack {
     isPlaying: boolean
@@ -27,49 +27,40 @@ interface SpotifyNowPlayingProps {
     variant?: 'compact' | 'full' | 'mini'
 }
 
-const STORAGE_KEY = 'spotify-widget-hidden'
-
 export function SpotifyNowPlaying({
     className,
     variant = 'compact'
 }: SpotifyNowPlayingProps) {
     const [track, setTrack] = useState<SpotifyTrack | null>(null)
     const [loading, setLoading] = useState(true)
-    const [isHidden, setIsHidden] = useState(false)
     const [progress, setProgress] = useState(0)
 
-    // Check localStorage on mount
     useEffect(() => {
-        const hidden = localStorage.getItem(STORAGE_KEY)
-        if (hidden === 'true') {
-            setIsHidden(true)
-        }
-    }, [])
-
-    const handleDismiss = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
-        setIsHidden(true)
-        localStorage.setItem(STORAGE_KEY, 'true')
-    }
-
-    useEffect(() => {
-        if (isHidden) return
-
         const fetchNowPlaying = async () => {
             try {
-                const res = await fetch(`/api/spotify/now-playing?t=${Date.now()}`, {
+                const res = await fetch(`/api/music/now-playing?t=${Date.now()}`, {
                     cache: 'no-store'
                 })
                 if (res.ok) {
                     const data = await res.json()
-                    setTrack(data)
-                    if (data.durationMs > 0) {
-                        setProgress((data.progressMs / data.durationMs) * 100)
+                    // Map the Last.fm response to our track format
+                    if (data.track) {
+                        setTrack({
+                            isPlaying: data.isPlaying,
+                            title: data.track.name,
+                            artist: data.track.artist,
+                            album: data.track.album,
+                            albumImageUrl: data.track.albumArt,
+                            songUrl: data.track.lastFmUrl,
+                            durationMs: 0,
+                            progressMs: 0
+                        })
+                    } else {
+                        setTrack(null)
                     }
                 }
             } catch (error) {
-                console.error('Failed to fetch Spotify data:', error)
+                console.error('Failed to fetch music data:', error)
             } finally {
                 setLoading(false)
             }
@@ -78,7 +69,7 @@ export function SpotifyNowPlaying({
         fetchNowPlaying()
         const interval = setInterval(fetchNowPlaying, 15000)
         return () => clearInterval(interval)
-    }, [isHidden])
+    }, [])
 
     // Update progress smoothly when playing
     useEffect(() => {
@@ -93,8 +84,6 @@ export function SpotifyNowPlaying({
 
         return () => clearInterval(interval)
     }, [track?.isPlaying, track?.durationMs])
-
-    if (isHidden) return null
 
     // Loading state
     if (loading) {
@@ -186,7 +175,7 @@ export function SpotifyNowPlaying({
     // Compact variant
     if (variant === 'compact') {
         return (
-            <div className="relative group/dismiss">
+            <div className="relative">
                 <motion.a
                     href={track.songUrl || '#'}
                     target="_blank"
@@ -277,15 +266,6 @@ export function SpotifyNowPlaying({
                         </svg>
                     </div>
                 </motion.a>
-                
-                {/* Dismiss button */}
-                <button
-                    onClick={handleDismiss}
-                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center opacity-0 group-hover/dismiss:opacity-100 transition-opacity hover:bg-zinc-700 hover:border-zinc-600"
-                    title="Dölj widgeten"
-                >
-                    <X className="w-3 h-3 text-zinc-400" />
-                </button>
             </div>
         )
     }
