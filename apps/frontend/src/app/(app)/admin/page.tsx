@@ -409,24 +409,29 @@ export default function AdminPage() {
                     setError("Du har inte behörighet att se denna sida")
                     return
                 }
-                throw new Error(`HTTP ${usersRes.status}`)
+                throw new Error(`Kunde inte hämta användare (HTTP ${usersRes.status})`)
             }
 
             const usersData = await usersRes.json()
             setUsers(usersData.users || [])
 
-            // Fetch stats
-            const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
-                headers: { Authorization: `Bearer ${token}` }
-            })
+            // Fetch stats (optional - don't fail if this doesn't work)
+            try {
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
 
-            if (statsRes.ok) {
-                const statsData = await statsRes.json()
-                setStats(statsData)
+                if (statsRes.ok) {
+                    const statsData = await statsRes.json()
+                    setStats(statsData)
+                }
+            } catch (statsErr) {
+                console.warn("Stats fetch failed:", statsErr)
+                // Don't set error - users loaded successfully
             }
         } catch (err) {
             console.error("Admin fetch error:", err)
-            setError("Kunde inte hämta data")
+            setError(err instanceof Error ? err.message : "Kunde inte hämta data")
         } finally {
             setLoading(false)
         }
