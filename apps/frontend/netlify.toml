@@ -29,4 +29,4 @@
     # Permissions policy (disable unnecessary APIs)
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
     # Content Security Policy
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.ginonova.com https://*.netlify.app; frame-ancestors 'none';"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.ginonova.com https://*.ginonova.com https://*.netlify.app wss://*.ginonova.com; frame-ancestors 'none';"
