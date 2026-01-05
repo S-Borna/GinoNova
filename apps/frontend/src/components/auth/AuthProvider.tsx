@@ -121,8 +121,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!user) return
 
         const heartbeat = async () => {
+            const token = getToken()
+            if (!token) return
+            
             try {
-                await getMe()
+                // Call backend /me endpoint to update last_activity_at
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://saas-project-production-a896.up.railway.app'}/api/auth/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
             } catch {
                 // Ignore errors - just a heartbeat
             }
@@ -137,10 +145,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Also send heartbeat when window regains focus
         const handleFocus = () => heartbeat()
         window.addEventListener('focus', handleFocus)
+        
+        // Send heartbeat on visibility change (tab becomes visible)
+        const handleVisibility = () => {
+            if (document.visibilityState === 'visible') {
+                heartbeat()
+            }
+        }
+        document.addEventListener('visibilitychange', handleVisibility)
 
         return () => {
             clearInterval(interval)
             window.removeEventListener('focus', handleFocus)
+            document.removeEventListener('visibilitychange', handleVisibility)
         }
     }, [user])
 
