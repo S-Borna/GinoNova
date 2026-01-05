@@ -429,6 +429,23 @@ export default function AdminPage() {
         return () => clearInterval(interval)
     }, [user, authLoading, isAdmin, router, fetchData])
 
+    // Backfill activity for users with NULL last_activity_at
+    const backfillActivity = async () => {
+        try {
+            const token = getToken()
+            const res = await fetch(`${API_BASE_URL}/api/admin/backfill-activity`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            const data = await res.json()
+            alert(`✅ Backfill klar: ${data.updated} användare uppdaterade`)
+            fetchData(true)
+        } catch (err) {
+            console.error("Backfill error:", err)
+            alert("❌ Backfill misslyckades")
+        }
+    }
+
     // Toggle user active status
     const toggleUserActive = async (targetUser: User) => {
         try {
@@ -533,6 +550,15 @@ export default function AdminPage() {
                             <span className="text-xs text-zinc-600">
                                 Uppdaterad {lastRefresh.toLocaleTimeString("sv-SE")}
                             </span>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={backfillActivity}
+                                className="border-zinc-700 text-yellow-400 hover:text-yellow-300"
+                                title="Fixa användare som visar 'Aldrig' senast aktiv"
+                            >
+                                🔧 Fix Offline
+                            </Button>
                             <Button
                                 variant="outline"
                                 size="sm"
