@@ -38,7 +38,8 @@ export function LastFmNowPlaying({
     useEffect(() => {
         const fetchNowPlaying = async () => {
             try {
-                const response = await fetch('/api/lastfm/now-playing')
+                // Add cache buster to prevent browser caching
+                const response = await fetch(`/api/lastfm/now-playing?t=${Date.now()}`)
                 if (response.ok) {
                     const data = await response.json()
                     if (data.title) {
@@ -58,8 +59,8 @@ export function LastFmNowPlaying({
 
         fetchNowPlaying()
         
-        // Poll every 30 seconds
-        const interval = setInterval(fetchNowPlaying, 30000)
+        // Poll every 15 seconds for more responsive updates
+        const interval = setInterval(fetchNowPlaying, 15000)
         return () => clearInterval(interval)
     }, [])
 
