@@ -413,54 +413,54 @@ export default function AdminV2AIUsage() {
                         <div key={i} className="h-32 bg-zinc-800 rounded-xl animate-pulse" />
                     ))}
                 </div>
-            ) : data ? (
+            ) : data?.summary ? (
                 <>
                     {/* Summary Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <MetricCard
                             title="Total Requests"
-                            value={data.summary.total_requests.toLocaleString()}
+                            value={(data.summary.total_requests || 0).toLocaleString()}
                             icon={Brain}
-                            trend={data.summary.requests_change}
+                            trend={data.summary.requests_change || 0}
                             color="purple"
                         />
                         <MetricCard
                             title="Total Tokens"
-                            value={data.summary.total_tokens.toLocaleString()}
+                            value={(data.summary.total_tokens || 0).toLocaleString()}
                             icon={Activity}
                             color="blue"
                         />
                         <MetricCard
                             title="Estimated Cost"
-                            value={formatCost(data.summary.estimated_cost)}
+                            value={formatCost(data.summary.estimated_cost || 0)}
                             subtitle={`${timeRange} period`}
                             icon={DollarSign}
                             color="green"
                         />
                         <MetricCard
                             title="Success Rate"
-                            value={`${data.summary.success_rate.toFixed(1)}%`}
+                            value={`${(data.summary.success_rate || 0).toFixed(1)}%`}
                             icon={Zap}
-                            color={data.summary.success_rate >= 99 ? "green" : "orange"}
+                            color={(data.summary.success_rate || 0) >= 99 ? "green" : "orange"}
                         />
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <MetricCard
                             title="Avg Response"
-                            value={`${data.summary.avg_response_time}ms`}
+                            value={`${data.summary.avg_response_time || 0}ms`}
                             icon={Clock}
                             color="orange"
                         />
                         <MetricCard
                             title="Unique Users"
-                            value={data.summary.unique_users.toLocaleString()}
+                            value={(data.summary.unique_users || 0).toLocaleString()}
                             icon={Users}
                             color="blue"
                         />
                         <MetricCard
                             title="Today's Requests"
-                            value={data.summary.requests_today.toLocaleString()}
+                            value={(data.summary.requests_today || 0).toLocaleString()}
                             subtitle="so far"
                             icon={TrendingUp}
                             color="purple"
@@ -468,7 +468,7 @@ export default function AdminV2AIUsage() {
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
                             <div className="text-xs text-zinc-400 mb-2">Cost per Request</div>
                             <div className="text-2xl font-bold text-green-400">
-                                ${(data.summary.estimated_cost / Math.max(data.summary.total_requests, 1)).toFixed(4)}
+                                ${((data.summary.estimated_cost || 0) / Math.max(data.summary.total_requests || 1, 1)).toFixed(4)}
                             </div>
                             <div className="text-xs text-zinc-500 mt-1">average</div>
                         </div>
@@ -480,7 +480,7 @@ export default function AdminV2AIUsage() {
                             <Activity className="w-5 h-5 text-purple-400" />
                             Daily Usage
                         </h3>
-                        <UsageChart data={data.by_day} />
+                        <UsageChart data={data.by_day || []} />
                     </div>
 
                     {/* Two Column Layout */}
@@ -491,7 +491,7 @@ export default function AdminV2AIUsage() {
                                 <Brain className="w-5 h-5 text-blue-400" />
                                 By Model
                             </h3>
-                            <ModelBreakdown data={data.by_model} />
+                            <ModelBreakdown data={data.by_model || []} />
                         </div>
 
                         {/* Top Users */}
@@ -500,7 +500,7 @@ export default function AdminV2AIUsage() {
                                 <Users className="w-5 h-5 text-green-400" />
                                 Top Users
                             </h3>
-                            <TopUsersTable data={data.top_users} />
+                            <TopUsersTable data={data.top_users || []} />
                         </div>
                     </div>
 
@@ -510,7 +510,7 @@ export default function AdminV2AIUsage() {
                             <Zap className="w-5 h-5 text-orange-400" />
                             By Feature
                         </h3>
-                        <FeatureTable data={data.by_feature} />
+                        <FeatureTable data={data.by_feature || []} />
                     </div>
 
                     {/* Errors */}
@@ -519,7 +519,7 @@ export default function AdminV2AIUsage() {
                             <AlertTriangle className="w-5 h-5 text-red-400" />
                             Errors & Issues
                         </h3>
-                        <ErrorsSection data={data.errors} />
+                        <ErrorsSection data={data.errors || []} />
                     </div>
                 </>
             ) : (

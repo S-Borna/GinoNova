@@ -308,22 +308,22 @@ export default function AdminV2Analytics() {
                         <div key={i} className="h-32 bg-zinc-800 rounded-xl animate-pulse" />
                     ))}
                 </div>
-            ) : data ? (
+            ) : data?.overview ? (
                 <>
                     {/* Overview Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <StatCard
                             title="Total Users"
-                            value={data.overview.total_users.toLocaleString()}
+                            value={(data.overview.total_users || 0).toLocaleString()}
                             icon={Users}
-                            trend={data.overview.growth_rate}
+                            trend={data.overview.growth_rate || 0}
                             color="purple"
                         />
                         <StatCard
                             title={`Active (${timeRange})`}
                             value={timeRange === "7d" 
-                                ? data.overview.active_users_7d.toLocaleString()
-                                : data.overview.active_users_30d.toLocaleString()
+                                ? (data.overview.active_users_7d || 0).toLocaleString()
+                                : (data.overview.active_users_30d || 0).toLocaleString()
                             }
                             subtitle="unique users"
                             icon={Zap}
@@ -332,8 +332,8 @@ export default function AdminV2Analytics() {
                         <StatCard
                             title="New Users"
                             value={timeRange === "7d"
-                                ? data.overview.new_users_7d.toLocaleString()
-                                : data.overview.new_users_30d.toLocaleString()
+                                ? (data.overview.new_users_7d || 0).toLocaleString()
+                                : (data.overview.new_users_30d || 0).toLocaleString()
                             }
                             subtitle={`last ${timeRange}`}
                             icon={TrendingUp}
@@ -341,7 +341,7 @@ export default function AdminV2Analytics() {
                         />
                         <StatCard
                             title="Avg Session"
-                            value={formatDuration(data.engagement.avg_session_duration)}
+                            value={formatDuration(data.engagement?.avg_session_duration || 0)}
                             icon={Clock}
                             color="orange"
                         />
@@ -351,21 +351,21 @@ export default function AdminV2Analytics() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <StatCard
                             title="Modules Completed"
-                            value={data.engagement.modules_completed_total.toLocaleString()}
-                            subtitle={`${data.engagement.avg_modules_per_user.toFixed(1)} per user`}
+                            value={(data.engagement?.modules_completed_total || 0).toLocaleString()}
+                            subtitle={`${(data.engagement?.avg_modules_per_user || 0).toFixed(1)} per user`}
                             icon={BookOpen}
                             color="green"
                         />
                         <StatCard
                             title="Tasks Completed"
-                            value={data.engagement.tasks_completed_total.toLocaleString()}
-                            subtitle={`${data.engagement.avg_tasks_per_user.toFixed(1)} per user`}
+                            value={(data.engagement?.tasks_completed_total || 0).toLocaleString()}
+                            subtitle={`${(data.engagement?.avg_tasks_per_user || 0).toFixed(1)} per user`}
                             icon={CheckCircle}
                             color="blue"
                         />
                         <StatCard
                             title="Sessions/User"
-                            value={data.engagement.sessions_per_user.toFixed(1)}
+                            value={(data.engagement?.sessions_per_user || 0).toFixed(1)}
                             subtitle="average"
                             icon={Target}
                             color="pink"
@@ -373,9 +373,9 @@ export default function AdminV2Analytics() {
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4">
                             <h3 className="text-sm font-medium text-zinc-400 mb-3">Retention</h3>
                             <div className="grid grid-cols-3 gap-2">
-                                <RetentionCard label="Day 1" value={data.retention.day1} />
-                                <RetentionCard label="Day 7" value={data.retention.day7} />
-                                <RetentionCard label="Day 30" value={data.retention.day30} />
+                                <RetentionCard label="Day 1" value={data.retention?.day1 || 0} />
+                                <RetentionCard label="Day 7" value={data.retention?.day7 || 0} />
+                                <RetentionCard label="Day 30" value={data.retention?.day30 || 0} />
                             </div>
                         </div>
                     </div>
@@ -389,7 +389,7 @@ export default function AdminV2Analytics() {
                                 Daily Activity
                             </h3>
                             <BarChart
-                                data={data.activity_by_day}
+                                data={data.activity_by_day || []}
                                 xKey="date"
                                 yKey="users"
                                 label="Active Users per Day"
@@ -402,7 +402,7 @@ export default function AdminV2Analytics() {
                                 <Clock className="w-5 h-5 text-blue-400" />
                                 Peak Hours
                             </h3>
-                            <HourlyChart data={data.activity_by_hour} />
+                            <HourlyChart data={data.activity_by_hour || []} />
                         </div>
                     </div>
                     
@@ -414,20 +414,20 @@ export default function AdminV2Analytics() {
                                 <BookOpen className="w-5 h-5 text-green-400" />
                                 Top Modules
                             </h3>
-                            {data.top_modules.length === 0 ? (
+                            {(data.top_modules || []).length === 0 ? (
                                 <p className="text-zinc-500 text-sm">No data yet</p>
                             ) : (
                                 <div className="space-y-3">
-                                    {data.top_modules.slice(0, 5).map((module, i) => (
+                                    {(data.top_modules || []).slice(0, 5).map((module, i) => (
                                         <div key={i} className="flex items-center justify-between py-2 border-b border-zinc-800 last:border-0">
                                             <div>
                                                 <div className="font-medium text-sm">{module.name}</div>
                                                 <div className="text-xs text-zinc-500">
-                                                    Avg time: {formatDuration(module.avg_time)}
+                                                    Avg time: {formatDuration(module.avg_time || 0)}
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <div className="text-lg font-bold text-green-400">{module.completions}</div>
+                                                <div className="text-lg font-bold text-green-400">{module.completions || 0}</div>
                                                 <div className="text-xs text-zinc-500">completions</div>
                                             </div>
                                         </div>
@@ -442,10 +442,10 @@ export default function AdminV2Analytics() {
                                 <BarChart3 className="w-5 h-5 text-purple-400" />
                                 Level Distribution
                             </h3>
-                            {data.user_levels.length === 0 ? (
+                            {(data.user_levels || []).length === 0 ? (
                                 <p className="text-zinc-500 text-sm">No data yet</p>
                             ) : (
-                                <LevelDistribution data={data.user_levels} />
+                                <LevelDistribution data={data.user_levels || []} />
                             )}
                         </div>
                     </div>
