@@ -5,17 +5,20 @@
  * 
  * Combines quizzes and flashcards in a timed exam-like environment
  * Features:
- * - Timed sessions (30, 60, 90 min)
+ * - Timed sessions (60, 75, 90, 120 min)
  * - Random questions from all tasks
  * - Mix of G and VG difficulty
+ * - Live grading OR grading at end
  * - Progress tracking and scoring
  * - Review mode at the end
  */
 
 import * as React from "react"
 import { useState, useEffect, useMemo, useCallback } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { motion, AnimatePresence } from "framer-motion"
 import { 
     ArrowLeft, ArrowRight, Clock, CheckCircle, XCircle, 
     Trophy, Brain, RotateCcw, Play, Pause, Target, 
@@ -31,6 +34,7 @@ interface SimulatorSettings {
     includeG: boolean
     includeVG: boolean
     showTimer: boolean
+    gradingMode: 'live' | 'end' // NEW: live = immediate feedback, end = feedback after completion
 }
 
 interface QuizResult {
@@ -44,11 +48,12 @@ interface QuizResult {
 type SimulatorPhase = 'setup' | 'quiz' | 'review' | 'results'
 
 const DEFAULT_SETTINGS: SimulatorSettings = {
-    duration: 30,
-    questionCount: 25,
+    duration: 90,
+    questionCount: 200,
     includeG: true,
     includeVG: true,
-    showTimer: true
+    showTimer: true,
+    gradingMode: 'live'
 }
 
 // Shuffle array helper
@@ -62,6 +67,9 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default function TentaSimulatorPage() {
+    // URL params
+    const searchParams = useSearchParams()
+    
     // State
     const [phase, setPhase] = useState<SimulatorPhase>('setup')
     const [settings, setSettings] = useState<SimulatorSettings>(DEFAULT_SETTINGS)
@@ -72,11 +80,52 @@ export default function TentaSimulatorPage() {
     const [timeRemaining, setTimeRemaining] = useState(0)
     const [questionStartTime, setQuestionStartTime] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
+    const [showLiveFeedback, setShowLiveFeedback] = useState(false)
+    const [hasAutoStarted, setHasAutoStarted] = useState(false)
 
     // Get all questions from DOE25
     const allQuestions = useMemo(() => {
         return DOE25_TASK_QUIZ.flatMap(set => set.questions)
     }, [])
+
+    // Parse URL params and auto-start if params provided
+    useEffect(() => {
+        if (hasAutoStarted) return
+        
+        const timeParam = searchParams?.get('time')
+        const countParam = searchParams?.get('count')
+        const gradingParam = searchParams?.get('grading')
+        
+        if (timeParam || countParam || gradingParam) {
+            const newSettings: SimulatorSettings = {
+                ...DEFAULT_SETTINGS,
+                duration: timeParam ? parseInt(timeParam) : DEFAULT_SETTINGS.duration,
+                questionCount: countParam ? (parseInt(countParam) === 999 ? 9999 : parseInt(countParam)) : DEFAULT_SETTINGS.questionCount,
+                gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end'
+            }
+            setSettings(newSettings)
+            setHasAutoStarted(true)
+            
+            // Auto-start the quiz
+            setTimeout(() => {
+                let filtered = allQuestions.filter(q => {
+                    if (newSettings.includeG && q.difficulty === 'G') return true
+                    if (newSettings.includeVG && q.difficulty === 'VG') return true
+                    return false
+                })
+                const shuffled = shuffleArray(filtered)
+                const prepared = shuffled.slice(0, newSettings.questionCount)
+                
+                setQuestions(prepared)
+                setCurrentIndex(0)
+                setSelectedAnswer(null)
+                setResults([])
+                setTimeRemaining(newSettings.duration * 60)
+                setQuestionStartTime(Date.now())
+                setPhase('quiz')
+            }, 100)
+        }
+    }, [searchParams, hasAutoStarted, allQuestions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {
@@ -145,7 +194,18 @@ export default function TentaSimulatorPage() {
 
         setResults(prev => [...prev, result])
 
-        // Move to next question or finish
+        // If live grading, show feedback before moving to next
+        if (settings.gradingMode === 'live') {
+            setShowLiveFeedback(true)
+        } else {
+            // End grading - move to next question immediately
+            moveToNextQuestion()
+        }
+    }
+
+    // Move to next question (called after live feedback or directly in end mode)
+    const moveToNextQuestion = () => {
+        setShowLiveFeedback(false)
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1)
             setSelectedAnswer(null)
@@ -308,6 +368,8 @@ export default function TentaSimulatorPage() {
     const renderQuiz = () => {
         const currentQuestion = questions[currentIndex]
         const progress = ((currentIndex + 1) / questions.length) * 100
+        const lastResult = results[results.length - 1]
+        const isCorrect = lastResult?.correct
 
         return (
             <div className="max-w-3xl mx-auto">
@@ -324,6 +386,15 @@ export default function TentaSimulatorPage() {
                                 : "bg-green-500/20 text-green-300"
                         )}>
                             {currentQuestion.difficulty}
+                        </span>
+                        {/* Grading mode indicator */}
+                        <span className={cn(
+                            "px-2 py-1 rounded text-xs font-medium",
+                            settings.gradingMode === 'live'
+                                ? "bg-emerald-500/20 text-emerald-300"
+                                : "bg-orange-500/20 text-orange-300"
+                        )}>
+                            {settings.gradingMode === 'live' ? '⚡ Live' : '📝 Efteråt'}
                         </span>
                     </div>
 
@@ -355,7 +426,12 @@ export default function TentaSimulatorPage() {
                 </div>
 
                 {/* Question */}
-                <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-8 mb-6">
+                <div className={cn(
+                    "bg-zinc-900/50 border rounded-2xl p-8 mb-6 transition-all",
+                    showLiveFeedback && isCorrect && "border-green-500/50 bg-green-500/5",
+                    showLiveFeedback && !isCorrect && "border-red-500/50 bg-red-500/5",
+                    !showLiveFeedback && "border-zinc-800"
+                )}>
                     {currentQuestion.scenario && (
                         <div className="flex items-start gap-3 mb-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
                             <Brain className="w-5 h-5 text-blue-400 mt-0.5" />
@@ -369,50 +445,126 @@ export default function TentaSimulatorPage() {
                 </div>
 
                 {/* Options */}
-                <div className="space-y-3 mb-8">
-                    {currentQuestion.options.map((option, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setSelectedAnswer(idx)}
-                            className={cn(
-                                "w-full text-left p-5 rounded-xl border transition-all",
-                                selectedAnswer === idx
-                                    ? "bg-purple-500/20 border-purple-500 text-white"
-                                    : "bg-zinc-900/50 border-zinc-800 text-zinc-300 hover:border-zinc-700"
-                            )}
-                        >
-                            <div className="flex items-center gap-4">
-                                <span className={cn(
-                                    "w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm",
-                                    selectedAnswer === idx
-                                        ? "bg-purple-500 text-white"
-                                        : "bg-zinc-800 text-zinc-400"
-                                )}>
-                                    {String.fromCharCode(65 + idx)}
-                                </span>
-                                <span>{option}</span>
-                            </div>
-                        </button>
-                    ))}
+                <div className="space-y-3 mb-6">
+                    {currentQuestion.options.map((option, idx) => {
+                        const isSelected = selectedAnswer === idx
+                        const isCorrectOption = idx === currentQuestion.correctIndex
+                        const showAsCorrect = showLiveFeedback && isCorrectOption
+                        const showAsWrong = showLiveFeedback && isSelected && !isCorrectOption
+
+                        return (
+                            <motion.button
+                                key={idx}
+                                onClick={() => !showLiveFeedback && setSelectedAnswer(idx)}
+                                disabled={showLiveFeedback}
+                                animate={showAsCorrect ? { scale: [1, 1.02, 1] } : showAsWrong ? { x: [0, -5, 5, 0] } : {}}
+                                transition={{ duration: 0.3 }}
+                                className={cn(
+                                    "w-full text-left p-5 rounded-xl border transition-all",
+                                    showAsCorrect && "bg-green-500/20 border-green-500 text-green-100",
+                                    showAsWrong && "bg-red-500/20 border-red-500 text-red-100",
+                                    !showLiveFeedback && isSelected && "bg-purple-500/20 border-purple-500 text-white",
+                                    !showLiveFeedback && !isSelected && "bg-zinc-900/50 border-zinc-800 text-zinc-300 hover:border-zinc-700",
+                                    showLiveFeedback && !showAsCorrect && !showAsWrong && "bg-zinc-900/50 border-zinc-800 text-zinc-500"
+                                )}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <span className={cn(
+                                        "w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm",
+                                        showAsCorrect && "bg-green-500 text-white",
+                                        showAsWrong && "bg-red-500 text-white",
+                                        !showLiveFeedback && isSelected && "bg-purple-500 text-white",
+                                        !showLiveFeedback && !isSelected && "bg-zinc-800 text-zinc-400",
+                                        showLiveFeedback && !showAsCorrect && !showAsWrong && "bg-zinc-800 text-zinc-500"
+                                    )}>
+                                        {showAsCorrect ? <CheckCircle className="w-5 h-5" /> : 
+                                         showAsWrong ? <XCircle className="w-5 h-5" /> : 
+                                         String.fromCharCode(65 + idx)}
+                                    </span>
+                                    <span>{option}</span>
+                                </div>
+                            </motion.button>
+                        )
+                    })}
                 </div>
 
-                {/* Submit button */}
-                <button
-                    onClick={submitAnswer}
-                    disabled={selectedAnswer === null}
-                    className={cn(
-                        "w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all",
-                        selectedAnswer !== null
-                            ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
-                            : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                {/* Live feedback explanation */}
+                <AnimatePresence>
+                    {showLiveFeedback && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className={cn(
+                                "mb-6 p-5 rounded-xl border",
+                                isCorrect 
+                                    ? "bg-green-500/10 border-green-500/30" 
+                                    : "bg-red-500/10 border-red-500/30"
+                            )}
+                        >
+                            <div className="flex items-start gap-3">
+                                {isCorrect ? (
+                                    <CheckCircle className="w-6 h-6 text-green-400 shrink-0" />
+                                ) : (
+                                    <XCircle className="w-6 h-6 text-red-400 shrink-0" />
+                                )}
+                                <div>
+                                    <p className={cn(
+                                        "font-bold mb-2",
+                                        isCorrect ? "text-green-400" : "text-red-400"
+                                    )}>
+                                        {isCorrect ? "Rätt svar! 🎉" : "Fel svar"}
+                                    </p>
+                                    <p className="text-zinc-300 text-sm">
+                                        {currentQuestion.explanation}
+                                    </p>
+                                </div>
+                            </div>
+                        </motion.div>
                     )}
-                >
-                    {currentIndex < questions.length - 1 ? (
-                        <>Nästa fråga <ArrowRight className="w-5 h-5" /></>
-                    ) : (
-                        <>Avsluta <CheckCircle className="w-5 h-5" /></>
-                    )}
-                </button>
+                </AnimatePresence>
+
+                {/* Submit / Next button */}
+                {!showLiveFeedback ? (
+                    <button
+                        onClick={submitAnswer}
+                        disabled={selectedAnswer === null}
+                        className={cn(
+                            "w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all",
+                            selectedAnswer !== null
+                                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                                : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                        )}
+                    >
+                        {settings.gradingMode === 'end' ? (
+                            currentIndex < questions.length - 1 ? (
+                                <>Nästa fråga <ArrowRight className="w-5 h-5" /></>
+                            ) : (
+                                <>Avsluta & visa resultat <CheckCircle className="w-5 h-5" /></>
+                            )
+                        ) : (
+                            <>Svara <Zap className="w-5 h-5" /></>
+                        )}
+                    </button>
+                ) : (
+                    <motion.button
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        onClick={moveToNextQuestion}
+                        className={cn(
+                            "w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2",
+                            isCorrect 
+                                ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+                                : "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+                        )}
+                    >
+                        {currentIndex < questions.length - 1 ? (
+                            <>Nästa fråga <ArrowRight className="w-5 h-5" /></>
+                        ) : (
+                            <>Avsluta & visa resultat <Trophy className="w-5 h-5" /></>
+                        )}
+                    </motion.button>
+                )}
             </div>
         )
     }
