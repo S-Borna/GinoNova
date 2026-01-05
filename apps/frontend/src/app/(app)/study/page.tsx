@@ -281,17 +281,17 @@ export default function StudyPage() {
                         )}>
                             {/* Animated background pattern */}
                             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-                            
+
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="flex items-center gap-5">
-                                    <motion.div 
+                                    <motion.div
                                         className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-purple-500 flex items-center justify-center text-3xl shadow-xl shadow-orange-500/30"
-                                        animate={{ 
+                                        animate={{
                                             rotate: [0, -5, 5, 0],
                                             scale: [1, 1.05, 1]
                                         }}
-                                        transition={{ 
-                                            duration: 3, 
+                                        transition={{
+                                            duration: 3,
                                             repeat: Infinity,
                                             ease: "easeInOut"
                                         }}
@@ -329,7 +329,7 @@ export default function StudyPage() {
                                     <ChevronRight className="w-8 h-8 text-orange-400 group-hover:translate-x-2 transition-transform" />
                                 </div>
                             </div>
-                            
+
                             {/* Decorative glows */}
                             <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/20 rounded-full blur-3xl" />
                             <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl" />
@@ -350,7 +350,7 @@ export default function StudyPage() {
                             Välj din studieväg
                         </h2>
                         <p className="text-zinc-400 max-w-lg mx-auto">
-                            Varje modul innehåller <span className="text-purple-400 font-semibold">flashcards</span> för memorering 
+                            Varje modul innehåller <span className="text-purple-400 font-semibold">flashcards</span> för memorering
                             och <span className="text-emerald-400 font-semibold">quiz</span> för att testa dina kunskaper
                         </p>
                     </div>
@@ -764,9 +764,9 @@ export default function StudyPage() {
                                                     "border-2",
                                                     difficulty === opt.value
                                                         ? opt.color === 'purple' ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
-                                                        : opt.color === 'emerald' ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
-                                                        : opt.color === 'amber' ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
-                                                        : "bg-red-500/20 border-red-500/50 text-red-300"
+                                                            : opt.color === 'emerald' ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-300"
+                                                                : opt.color === 'amber' ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
+                                                                    : "bg-red-500/20 border-red-500/50 text-red-300"
                                                         : "bg-zinc-800/50 border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                                 )}
                                             >
