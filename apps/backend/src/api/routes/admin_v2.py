@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from src.core.deps import get_current_user
 from src.db.database import get_db
-from src.db.models import User
+from src.db.models import User, AIUsageLog
 from src.schemas.user import UserPublic
 
 router = APIRouter()
@@ -309,6 +309,18 @@ async def get_overview_stats(
         User.created_at >= week_ago
     ).scalar() or 0
 
+    # AI Usage stats from ai_usage_logs
+    try:
+        total_ai_requests = db.query(func.count(AIUsageLog.id)).scalar() or 0
+        ai_cost_total = db.query(func.sum(AIUsageLog.cost_usd)).scalar() or 0.0
+        ai_cost_today = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+            AIUsageLog.created_at >= today_start
+        ).scalar() or 0.0
+    except Exception:
+        total_ai_requests = 0
+        ai_cost_total = 0.0
+        ai_cost_today = 0.0
+
     return OverviewStats(
         online_users=online_users,
         online_trend=0,  # Would need historical data to calculate
@@ -321,9 +333,9 @@ async def get_overview_stats(
         total_study_sessions=0,  # Would need study_sessions table
         avg_session_duration_minutes=0,
         total_tasks_completed=0,  # Would need progress table aggregation
-        total_ai_requests=0,  # Would need ai_usage_logs table
-        ai_cost_total=0.0,
-        ai_cost_today=0.0,
+        total_ai_requests=total_ai_requests,
+        ai_cost_total=round(ai_cost_total, 2),
+        ai_cost_today=round(ai_cost_today, 4),
     )
 
 
@@ -821,6 +833,39 @@ async def get_combined_analytics(
     # Just return all users at level 1 for now
     user_levels = [{"level": 1, "count": total_users}]
 
+    # Calculate actual retention based on user activity
+    # Day 1: Users who came back within 1 day of signup
+    # Day 7: Users who came back within 7 days of signup
+    # Day 30: Users who came back within 30 days of signup
+    try:
+        # Users created more than 1 day ago
+        users_1d_old = db.query(User).filter(
+            User.created_at < now - timedelta(days=1)
+        ).all()
+        retained_1d = sum(1 for u in users_1d_old if u.last_activity_at and
+                         u.last_activity_at > u.created_at + timedelta(hours=1))
+        retention_day1 = round((retained_1d / len(users_1d_old) * 100) if users_1d_old else 0)
+
+        # Users created more than 7 days ago
+        users_7d_old = db.query(User).filter(
+            User.created_at < now - timedelta(days=7)
+        ).all()
+        retained_7d = sum(1 for u in users_7d_old if u.last_activity_at and
+                         u.last_activity_at > u.created_at + timedelta(days=1))
+        retention_day7 = round((retained_7d / len(users_7d_old) * 100) if users_7d_old else 0)
+
+        # Users created more than 30 days ago
+        users_30d_old = db.query(User).filter(
+            User.created_at < now - timedelta(days=30)
+        ).all()
+        retained_30d = sum(1 for u in users_30d_old if u.last_activity_at and
+                          u.last_activity_at > u.created_at + timedelta(days=7))
+        retention_day30 = round((retained_30d / len(users_30d_old) * 100) if users_30d_old else 0)
+    except Exception:
+        retention_day1 = 0
+        retention_day7 = 0
+        retention_day30 = 0
+
     return {
         "overview": {
             "total_users": total_users,
@@ -839,9 +884,9 @@ async def get_combined_analytics(
             "avg_tasks_per_user": 0
         },
         "retention": {
-            "day1": 80,  # Placeholder
-            "day7": 50,
-            "day30": 30
+            "day1": retention_day1,
+            "day7": retention_day7,
+            "day30": retention_day30
         },
         "activity_by_hour": activity_by_hour,
         "activity_by_day": activity_by_day,
@@ -1003,41 +1048,187 @@ async def get_combined_ai_usage(
         days = 90
 
     now = datetime.now(timezone.utc)
+    start_date = now - timedelta(days=days)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = now - timedelta(days=7)
 
-    # Generate daily data (placeholder)
-    by_day = []
-    for i in range(min(days, 14) - 1, -1, -1):
-        day = now - timedelta(days=i)
-        by_day.append({
-            "date": day.strftime("%Y-%m-%d"),
-            "requests": 0,
-            "tokens": 0,
-            "cost": 0.0
-        })
+    try:
+        # Total stats for period
+        total_requests = db.query(func.count(AIUsageLog.id)).filter(
+            AIUsageLog.created_at >= start_date
+        ).scalar() or 0
 
-    # Top users (placeholder)
-    top_users = []
+        total_tokens = db.query(func.sum(AIUsageLog.total_tokens)).filter(
+            AIUsageLog.created_at >= start_date
+        ).scalar() or 0
+
+        total_cost = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+            AIUsageLog.created_at >= start_date
+        ).scalar() or 0.0
+
+        # Today's stats
+        requests_today = db.query(func.count(AIUsageLog.id)).filter(
+            AIUsageLog.created_at >= today_start
+        ).scalar() or 0
+
+        # Unique users
+        unique_users = db.query(func.count(func.distinct(AIUsageLog.user_id))).filter(
+            AIUsageLog.created_at >= start_date
+        ).scalar() or 0
+
+        # By feature
+        feature_stats = db.query(
+            AIUsageLog.feature,
+            func.count(AIUsageLog.id).label('requests'),
+            func.sum(AIUsageLog.total_tokens).label('tokens'),
+            func.sum(AIUsageLog.cost_usd).label('cost')
+        ).filter(
+            AIUsageLog.created_at >= start_date
+        ).group_by(AIUsageLog.feature).all()
+
+        by_feature = []
+        for feat in feature_stats:
+            by_feature.append({
+                "name": feat.feature or "Unknown",
+                "requests": feat.requests or 0,
+                "tokens": feat.tokens or 0,
+                "cost": round(feat.cost or 0, 4),
+                "avg_time": 200
+            })
+
+        # If no data, show default features
+        if not by_feature:
+            by_feature = [
+                {"name": "AI Quiz", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 200},
+                {"name": "Dallas Chat", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 350},
+                {"name": "Study Assistant", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 180}
+            ]
+
+        # By model
+        model_stats = db.query(
+            AIUsageLog.model,
+            func.count(AIUsageLog.id).label('requests'),
+            func.sum(AIUsageLog.total_tokens).label('tokens'),
+            func.sum(AIUsageLog.cost_usd).label('cost')
+        ).filter(
+            AIUsageLog.created_at >= start_date
+        ).group_by(AIUsageLog.model).all()
+
+        by_model = []
+        for mod in model_stats:
+            by_model.append({
+                "model": mod.model or "unknown",
+                "requests": mod.requests or 0,
+                "tokens": mod.tokens or 0,
+                "cost": round(mod.cost or 0, 4)
+            })
+
+        if not by_model:
+            by_model = [
+                {"model": "gpt-4", "requests": 0, "tokens": 0, "cost": 0.0},
+                {"model": "gpt-3.5-turbo", "requests": 0, "tokens": 0, "cost": 0.0}
+            ]
+
+        # Daily data for chart
+        by_day = []
+        for i in range(min(days, 14) - 1, -1, -1):
+            day_start = (now - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
+            day_end = day_start + timedelta(days=1)
+
+            day_requests = db.query(func.count(AIUsageLog.id)).filter(
+                and_(
+                    AIUsageLog.created_at >= day_start,
+                    AIUsageLog.created_at < day_end
+                )
+            ).scalar() or 0
+
+            day_tokens = db.query(func.sum(AIUsageLog.total_tokens)).filter(
+                and_(
+                    AIUsageLog.created_at >= day_start,
+                    AIUsageLog.created_at < day_end
+                )
+            ).scalar() or 0
+
+            day_cost = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+                and_(
+                    AIUsageLog.created_at >= day_start,
+                    AIUsageLog.created_at < day_end
+                )
+            ).scalar() or 0.0
+
+            by_day.append({
+                "date": day_start.strftime("%Y-%m-%d"),
+                "requests": day_requests,
+                "tokens": day_tokens or 0,
+                "cost": round(day_cost or 0, 4)
+            })
+
+        # Top users by usage
+        top_users_data = db.query(
+            AIUsageLog.user_id,
+            func.count(AIUsageLog.id).label('requests'),
+            func.sum(AIUsageLog.total_tokens).label('tokens'),
+            func.sum(AIUsageLog.cost_usd).label('cost')
+        ).filter(
+            and_(
+                AIUsageLog.created_at >= start_date,
+                AIUsageLog.user_id.isnot(None)
+            )
+        ).group_by(AIUsageLog.user_id).order_by(desc('requests')).limit(10).all()
+
+        top_users = []
+        for tu in top_users_data:
+            user = db.query(User).filter(User.id == tu.user_id).first()
+            if user:
+                top_users.append({
+                    "user_id": str(tu.user_id),
+                    "email": user.email,
+                    "full_name": user.full_name,
+                    "requests": tu.requests or 0,
+                    "tokens": tu.tokens or 0,
+                    "cost": round(tu.cost or 0, 4)
+                })
+
+    except Exception as e:
+        # If table doesn't exist or other error, return zeros
+        total_requests = 0
+        total_tokens = 0
+        total_cost = 0.0
+        requests_today = 0
+        unique_users = 0
+        by_feature = [
+            {"name": "AI Quiz", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 200},
+            {"name": "Dallas Chat", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 350},
+            {"name": "Study Assistant", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 180}
+        ]
+        by_model = [
+            {"model": "gpt-4", "requests": 0, "tokens": 0, "cost": 0.0},
+            {"model": "gpt-3.5-turbo", "requests": 0, "tokens": 0, "cost": 0.0}
+        ]
+        by_day = []
+        for i in range(min(days, 14) - 1, -1, -1):
+            day = now - timedelta(days=i)
+            by_day.append({
+                "date": day.strftime("%Y-%m-%d"),
+                "requests": 0,
+                "tokens": 0,
+                "cost": 0.0
+            })
+        top_users = []
 
     return {
         "summary": {
-            "total_requests": 0,
-            "total_tokens": 0,
-            "estimated_cost": 0.0,
+            "total_requests": total_requests,
+            "total_tokens": total_tokens,
+            "estimated_cost": round(total_cost, 2),
             "avg_response_time": 150,
             "success_rate": 99.5,
-            "unique_users": 0,
-            "requests_today": 0,
+            "unique_users": unique_users,
+            "requests_today": requests_today,
             "requests_change": 0
         },
-        "by_feature": [
-            {"name": "AI Quiz", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 200},
-            {"name": "Code Review", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 350},
-            {"name": "Study Assistant", "requests": 0, "tokens": 0, "cost": 0.0, "avg_time": 180}
-        ],
-        "by_model": [
-            {"model": "gpt-4", "requests": 0, "tokens": 0, "cost": 0.0},
-            {"model": "gpt-3.5-turbo", "requests": 0, "tokens": 0, "cost": 0.0}
-        ],
+        "by_feature": by_feature,
+        "by_model": by_model,
         "by_day": by_day,
         "top_users": top_users,
         "errors": []
@@ -1050,16 +1241,47 @@ async def get_ai_usage_overview(
     admin: UserPublic = Depends(require_admin)
 ):
     """Get AI usage overview statistics"""
-    # This would need an ai_usage_logs table to be accurate
-    # For now, return placeholder data
+    now = datetime.now(timezone.utc)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = now - timedelta(days=7)
+
+    try:
+        total_requests = db.query(func.count(AIUsageLog.id)).scalar() or 0
+        total_tokens = db.query(func.sum(AIUsageLog.total_tokens)).scalar() or 0
+        total_cost = db.query(func.sum(AIUsageLog.cost_usd)).scalar() or 0.0
+
+        requests_today = db.query(func.count(AIUsageLog.id)).filter(
+            AIUsageLog.created_at >= today_start
+        ).scalar() or 0
+
+        cost_today = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+            AIUsageLog.created_at >= today_start
+        ).scalar() or 0.0
+
+        requests_this_week = db.query(func.count(AIUsageLog.id)).filter(
+            AIUsageLog.created_at >= week_ago
+        ).scalar() or 0
+
+        cost_this_week = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+            AIUsageLog.created_at >= week_ago
+        ).scalar() or 0.0
+    except Exception:
+        total_requests = 0
+        total_tokens = 0
+        total_cost = 0.0
+        requests_today = 0
+        cost_today = 0.0
+        requests_this_week = 0
+        cost_this_week = 0.0
+
     return AIUsageOverview(
-        total_requests=0,
-        total_tokens=0,
-        total_cost=0.0,
-        requests_today=0,
-        cost_today=0.0,
-        requests_this_week=0,
-        cost_this_week=0.0
+        total_requests=total_requests,
+        total_tokens=total_tokens or 0,
+        total_cost=round(total_cost or 0, 2),
+        requests_today=requests_today,
+        cost_today=round(cost_today or 0, 4),
+        requests_this_week=requests_this_week,
+        cost_this_week=round(cost_this_week or 0, 4)
     )
 
 
@@ -1071,11 +1293,44 @@ async def get_ai_usage_by_user(
     admin: UserPublic = Depends(require_admin)
 ):
     """Get AI usage grouped by user"""
-    # This would need an ai_usage_logs table to be accurate
-    # For now, return empty list
+    try:
+        # Get aggregated stats per user
+        user_stats = db.query(
+            AIUsageLog.user_id,
+            func.count(AIUsageLog.id).label('requests'),
+            func.sum(AIUsageLog.total_tokens).label('tokens'),
+            func.sum(AIUsageLog.cost_usd).label('cost'),
+            func.max(AIUsageLog.created_at).label('last_used')
+        ).filter(
+            AIUsageLog.user_id.isnot(None)
+        ).group_by(AIUsageLog.user_id).order_by(desc('requests')).offset(
+            (page - 1) * page_size
+        ).limit(page_size).all()
+
+        total = db.query(func.count(func.distinct(AIUsageLog.user_id))).filter(
+            AIUsageLog.user_id.isnot(None)
+        ).scalar() or 0
+
+        users = []
+        for us in user_stats:
+            user = db.query(User).filter(User.id == us.user_id).first()
+            if user:
+                users.append(AIUsageByUser(
+                    id=str(us.user_id),
+                    email=user.email,
+                    full_name=user.full_name,
+                    requests=us.requests or 0,
+                    tokens=us.tokens or 0,
+                    cost=round(us.cost or 0, 4),
+                    last_used=us.last_used
+                ))
+    except Exception:
+        users = []
+        total = 0
+
     return AIUsageListResponse(
-        users=[],
-        total=0
+        users=users,
+        total=total
     )
 
 
@@ -1090,13 +1345,43 @@ async def get_user_ai_usage(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    # This would need an ai_usage_logs table
+    try:
+        total_requests = db.query(func.count(AIUsageLog.id)).filter(
+            AIUsageLog.user_id == user_id
+        ).scalar() or 0
+
+        total_tokens = db.query(func.sum(AIUsageLog.total_tokens)).filter(
+            AIUsageLog.user_id == user_id
+        ).scalar() or 0
+
+        total_cost = db.query(func.sum(AIUsageLog.cost_usd)).filter(
+            AIUsageLog.user_id == user_id
+        ).scalar() or 0.0
+
+        recent = db.query(AIUsageLog).filter(
+            AIUsageLog.user_id == user_id
+        ).order_by(desc(AIUsageLog.created_at)).limit(10).all()
+
+        recent_requests = [{
+            "id": str(r.id),
+            "feature": r.feature,
+            "model": r.model,
+            "tokens": r.total_tokens,
+            "cost": round(r.cost_usd, 4),
+            "created_at": r.created_at.isoformat() if r.created_at else None
+        } for r in recent]
+    except Exception:
+        total_requests = 0
+        total_tokens = 0
+        total_cost = 0.0
+        recent_requests = []
+
     return {
         "user_id": str(user_id),
-        "total_requests": 0,
-        "total_tokens": 0,
-        "total_cost": 0.0,
-        "recent_requests": []
+        "total_requests": total_requests,
+        "total_tokens": total_tokens or 0,
+        "total_cost": round(total_cost or 0, 4),
+        "recent_requests": recent_requests
     }
 
 
