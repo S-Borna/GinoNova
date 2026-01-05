@@ -126,7 +126,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             
             try {
                 // Call backend /me endpoint to update last_activity_at
-                await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://saas-project-production-a896.up.railway.app'}/api/auth/me`, {
+                await fetch(`https://api.ginonova.com/api/auth/me`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
