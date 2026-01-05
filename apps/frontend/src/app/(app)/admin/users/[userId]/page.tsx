@@ -106,11 +106,11 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
     const [editing, setEditing] = useState(false)
     const [loading, setLoading] = useState(false)
     const [permissions, setPermissions] = useState(user.permissions)
-    
+
     const savePermissions = async () => {
         const token = getToken()
         if (!token) return
-        
+
         setLoading(true)
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/users/${user.id}`, {
@@ -121,7 +121,7 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
                 },
                 body: JSON.stringify({ permissions })
             })
-            
+
             if (res.ok) {
                 setEditing(false)
                 onUpdate()
@@ -130,7 +130,7 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
             setLoading(false)
         }
     }
-    
+
     const statCards = [
         { label: "Total XP", value: user.total_xp.toLocaleString(), icon: BarChart3, color: "text-purple-400" },
         { label: "Level", value: user.level, icon: Shield, color: "text-blue-400" },
@@ -140,7 +140,7 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
         { label: "Study Sessions", value: user.stats.study_sessions, icon: Clock, color: "text-cyan-400" },
         { label: "AI Requests", value: user.stats.ai_requests, icon: Brain, color: "text-pink-400" }
     ]
-    
+
     return (
         <div className="space-y-6">
             {/* Stats Grid */}
@@ -153,7 +153,7 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
                     </div>
                 ))}
             </div>
-            
+
             {/* Account Info */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                 <h3 className="font-semibold mb-4">Account Information</h3>
@@ -185,14 +185,14 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
                     <div className="flex justify-between py-2 border-b border-zinc-800">
                         <span className="text-zinc-400">Last Active</span>
                         <span>
-                            {user.last_activity_at 
+                            {user.last_activity_at
                                 ? new Date(user.last_activity_at).toLocaleString("sv-SE")
                                 : "Never"}
                         </span>
                     </div>
                 </div>
             </div>
-            
+
             {/* Permissions */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -223,12 +223,12 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
                         </button>
                     )}
                 </div>
-                
+
                 <div className="space-y-3">
                     {Object.entries(permissions).map(([key, value]) => (
                         <div key={key} className="flex items-center justify-between py-2 border-b border-zinc-800">
                             <span className="text-sm">
-                                {key.split("_").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+                                {key.split("_").map(w => (w?.[0] || "").toUpperCase() + (w?.slice(1) || "")).join(" ")}
                             </span>
                             {editing ? (
                                 <button
@@ -262,17 +262,17 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
 function ActivityTab({ userId }: { userId: string }) {
     const [activities, setActivities] = useState<ActivityItem[]>([])
     const [loading, setLoading] = useState(true)
-    
+
     useEffect(() => {
         async function fetchActivity() {
             const token = getToken()
             if (!token) return
-            
+
             try {
                 const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/activity`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
-                
+
                 if (res.ok) {
                     const data = await res.json()
                     setActivities(data.activities || [])
@@ -281,10 +281,10 @@ function ActivityTab({ userId }: { userId: string }) {
                 setLoading(false)
             }
         }
-        
+
         fetchActivity()
     }, [userId])
-    
+
     const getActivityIcon = (type: string) => {
         switch (type) {
             case "login": return <UserIcon className="w-4 h-4 text-blue-400" />
@@ -294,7 +294,7 @@ function ActivityTab({ userId }: { userId: string }) {
             default: return <Activity className="w-4 h-4 text-zinc-400" />
         }
     }
-    
+
     if (loading) {
         return (
             <div className="space-y-4">
@@ -310,7 +310,7 @@ function ActivityTab({ userId }: { userId: string }) {
             </div>
         )
     }
-    
+
     if (activities.length === 0) {
         return (
             <div className="text-center py-12 text-zinc-500">
@@ -318,11 +318,11 @@ function ActivityTab({ userId }: { userId: string }) {
             </div>
         )
     }
-    
+
     return (
         <div className="space-y-4">
             {activities.map((activity) => (
-                <div 
+                <div
                     key={activity.id}
                     className="flex gap-4 p-4 bg-zinc-900/50 border border-zinc-800 rounded-xl"
                 >
@@ -344,17 +344,17 @@ function ActivityTab({ userId }: { userId: string }) {
 function LearningTab({ userId }: { userId: string }) {
     const [data, setData] = useState<LearningData | null>(null)
     const [loading, setLoading] = useState(true)
-    
+
     useEffect(() => {
         async function fetchLearning() {
             const token = getToken()
             if (!token) return
-            
+
             try {
                 const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/learning`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
-                
+
                 if (res.ok) {
                     setData(await res.json())
                 }
@@ -362,10 +362,10 @@ function LearningTab({ userId }: { userId: string }) {
                 setLoading(false)
             }
         }
-        
+
         fetchLearning()
     }, [userId])
-    
+
     if (loading) {
         return <div className="animate-pulse space-y-4">
             {[...Array(3)].map((_, i) => (
@@ -373,11 +373,11 @@ function LearningTab({ userId }: { userId: string }) {
             ))}
         </div>
     }
-    
+
     if (!data) {
         return <div className="text-center py-12 text-zinc-500">No learning data available</div>
     }
-    
+
     return (
         <div className="space-y-6">
             {/* Modules */}
@@ -394,7 +394,7 @@ function LearningTab({ userId }: { userId: string }) {
                                     <span className="text-sm text-zinc-400">{module.progress}%</span>
                                 </div>
                                 <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                    <div 
+                                    <div
                                         className={cn(
                                             "h-full rounded-full transition-all",
                                             module.progress === 100 ? "bg-green-500" : "bg-purple-500"
@@ -407,7 +407,7 @@ function LearningTab({ userId }: { userId: string }) {
                     </div>
                 )}
             </div>
-            
+
             {/* Skill Paths */}
             <div>
                 <h3 className="font-semibold mb-4">Skill Paths</h3>
@@ -422,7 +422,7 @@ function LearningTab({ userId }: { userId: string }) {
                                     <span className="text-sm text-zinc-400">{path.progress}%</span>
                                 </div>
                                 <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                    <div 
+                                    <div
                                         className="h-full bg-blue-500 rounded-full"
                                         style={{ width: `${path.progress}%` }}
                                     />
@@ -432,7 +432,7 @@ function LearningTab({ userId }: { userId: string }) {
                     </div>
                 )}
             </div>
-            
+
             {/* Recent Tasks */}
             <div>
                 <h3 className="font-semibold mb-4">Recent Completed Tasks</h3>
@@ -458,17 +458,17 @@ function LearningTab({ userId }: { userId: string }) {
 function AIUsageTab({ userId }: { userId: string }) {
     const [data, setData] = useState<AIUsageData | null>(null)
     const [loading, setLoading] = useState(true)
-    
+
     useEffect(() => {
         async function fetchAI() {
             const token = getToken()
             if (!token) return
-            
+
             try {
                 const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/ai-usage`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
-                
+
                 if (res.ok) {
                     setData(await res.json())
                 }
@@ -476,21 +476,21 @@ function AIUsageTab({ userId }: { userId: string }) {
                 setLoading(false)
             }
         }
-        
+
         fetchAI()
     }, [userId])
-    
+
     if (loading) {
         return <div className="animate-pulse space-y-4">
             <div className="h-32 bg-zinc-800 rounded-xl" />
             <div className="h-48 bg-zinc-800 rounded-xl" />
         </div>
     }
-    
+
     if (!data) {
         return <div className="text-center py-12 text-zinc-500">No AI usage data available</div>
     }
-    
+
     return (
         <div className="space-y-6">
             {/* Summary */}
@@ -506,7 +506,7 @@ function AIUsageTab({ userId }: { userId: string }) {
                     <div className="text-sm text-zinc-500">Tokens Used</div>
                 </div>
             </div>
-            
+
             {/* Daily Chart */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                 <h3 className="font-semibold mb-4">Requests Last 7 Days</h3>
@@ -516,7 +516,7 @@ function AIUsageTab({ userId }: { userId: string }) {
                         const height = (day.count / max) * 100
                         return (
                             <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                                <div 
+                                <div
                                     className="w-full bg-purple-500 rounded-t"
                                     style={{ height: `${height}%`, minHeight: day.count > 0 ? 4 : 0 }}
                                 />
@@ -528,7 +528,7 @@ function AIUsageTab({ userId }: { userId: string }) {
                     })}
                 </div>
             </div>
-            
+
             {/* Top Features */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                 <h3 className="font-semibold mb-4">Top Features Used</h3>
@@ -546,7 +546,7 @@ function AIUsageTab({ userId }: { userId: string }) {
                                         <span className="text-zinc-400">{feature.count}</span>
                                     </div>
                                     <div className="h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                        <div 
+                                        <div
                                             className="h-full bg-pink-500 rounded-full"
                                             style={{ width: `${width}%` }}
                                         />
@@ -566,21 +566,21 @@ export default function AdminV2UserDetail() {
     const params = useParams()
     const router = useRouter()
     const userId = params.userId as string
-    
+
     const [user, setUser] = useState<UserDetail | null>(null)
     const [loading, setLoading] = useState(true)
     const [activeTab, setActiveTab] = useState<TabId>("overview")
     const [actionLoading, setActionLoading] = useState(false)
-    
+
     const fetchUser = useCallback(async () => {
         const token = getToken()
         if (!token) return
-        
+
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            
+
             if (res.ok) {
                 setUser(await res.json())
             } else if (res.status === 404) {
@@ -590,23 +590,23 @@ export default function AdminV2UserDetail() {
             setLoading(false)
         }
     }, [userId, router])
-    
+
     useEffect(() => {
         fetchUser()
     }, [fetchUser])
-    
+
     const executeAction = async (action: string, method = "POST") => {
         const token = getToken()
         if (!token || !user) return
-        
+
         setActionLoading(true)
-        
+
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/${action}`, {
                 method,
                 headers: { Authorization: `Bearer ${token}` }
             })
-            
+
             if (res.ok) {
                 fetchUser()
             }
@@ -614,14 +614,14 @@ export default function AdminV2UserDetail() {
             setActionLoading(false)
         }
     }
-    
+
     const tabs = [
         { id: "overview" as TabId, label: "Overview", icon: UserIcon },
         { id: "activity" as TabId, label: "Activity", icon: Activity },
         { id: "learning" as TabId, label: "Learning", icon: BookOpen },
         { id: "ai" as TabId, label: "AI Usage", icon: Brain }
     ]
-    
+
     if (loading) {
         return (
             <div className="p-6">
@@ -638,7 +638,7 @@ export default function AdminV2UserDetail() {
             </div>
         )
     }
-    
+
     if (!user) {
         return (
             <div className="p-6 text-center">
@@ -649,18 +649,18 @@ export default function AdminV2UserDetail() {
             </div>
         )
     }
-    
+
     return (
         <div className="p-6">
             {/* Back Button */}
-            <Link 
+            <Link
                 href="/admin/users"
                 className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white mb-6 transition"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Users
             </Link>
-            
+
             {/* Header */}
             <div className="flex flex-col md:flex-row gap-6 mb-8">
                 {/* Avatar */}
@@ -676,11 +676,11 @@ export default function AdminV2UserDetail() {
                     ) : (
                         <div className={cn(
                             "w-24 h-24 rounded-xl flex items-center justify-center text-2xl font-bold",
-                            user.is_admin 
+                            user.is_admin
                                 ? "bg-gradient-to-br from-purple-500 to-pink-500"
                                 : "bg-zinc-800 text-zinc-400"
                         )}>
-                            {user.full_name 
+                            {user.full_name
                                 ? user.full_name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
                                 : user.email.slice(0, 2).toUpperCase()}
                         </div>
@@ -694,7 +694,7 @@ export default function AdminV2UserDetail() {
                         user.is_banned && "bg-red-500"
                     )} />
                 </div>
-                
+
                 {/* Info */}
                 <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -721,7 +721,7 @@ export default function AdminV2UserDetail() {
                         </span>
                     </div>
                 </div>
-                
+
                 {/* Actions */}
                 <div className="flex gap-2">
                     <button
@@ -729,8 +729,8 @@ export default function AdminV2UserDetail() {
                         disabled={actionLoading}
                         className={cn(
                             "p-2 rounded-lg transition",
-                            user.is_admin 
-                                ? "bg-zinc-800 hover:bg-zinc-700" 
+                            user.is_admin
+                                ? "bg-zinc-800 hover:bg-zinc-700"
                                 : "bg-purple-600/20 hover:bg-purple-600/30 text-purple-400"
                         )}
                         title={user.is_admin ? "Remove Admin" : "Make Admin"}
@@ -750,8 +750,8 @@ export default function AdminV2UserDetail() {
                         disabled={actionLoading}
                         className={cn(
                             "p-2 rounded-lg transition",
-                            user.is_banned 
-                                ? "bg-green-600/20 hover:bg-green-600/30 text-green-400" 
+                            user.is_banned
+                                ? "bg-green-600/20 hover:bg-green-600/30 text-green-400"
                                 : "bg-red-600/20 hover:bg-red-600/30 text-red-400"
                         )}
                         title={user.is_banned ? "Unban User" : "Ban User"}
@@ -760,7 +760,7 @@ export default function AdminV2UserDetail() {
                     </button>
                 </div>
             </div>
-            
+
             {/* Tabs */}
             <div className="flex gap-1 p-1 bg-zinc-900/50 rounded-lg mb-6 w-fit">
                 {tabs.map(tab => (
@@ -779,7 +779,7 @@ export default function AdminV2UserDetail() {
                     </button>
                 ))}
             </div>
-            
+
             {/* Tab Content */}
             <div>
                 {activeTab === "overview" && <OverviewTab user={user} onUpdate={fetchUser} />}

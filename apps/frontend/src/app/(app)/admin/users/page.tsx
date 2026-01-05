@@ -76,7 +76,7 @@ type StatusFilter = "all" | "online" | "away" | "offline" | "banned"
 type RoleFilter = "all" | "admin" | "user"
 
 // Components
-function StatusBadge({ status, isBanned }: { status: string, isBanned: boolean }) {
+function StatusBadge({ status, isBanned }: { status?: string, isBanned?: boolean }) {
     if (isBanned) {
         return (
             <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400">
@@ -85,35 +85,40 @@ function StatusBadge({ status, isBanned }: { status: string, isBanned: boolean }
             </span>
         )
     }
-    
+
+    // Default to offline if status is undefined
+    const safeStatus = status || "offline"
+
     const styles = {
         online: "bg-green-500/10 text-green-400",
         away: "bg-yellow-500/10 text-yellow-400",
         offline: "bg-zinc-500/10 text-zinc-400"
     }
-    
+
     const dotStyles = {
         online: "bg-green-500 animate-pulse",
         away: "bg-yellow-500",
         offline: "bg-zinc-500"
     }
-    
+
+    const displayStatus = safeStatus.charAt(0).toUpperCase() + safeStatus.slice(1)
+
     return (
         <span className={cn(
             "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium",
-            styles[status as keyof typeof styles] || styles.offline
+            styles[safeStatus as keyof typeof styles] || styles.offline
         )}>
-            <span className={cn("w-2 h-2 rounded-full", dotStyles[status as keyof typeof dotStyles] || dotStyles.offline)} />
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            <span className={cn("w-2 h-2 rounded-full", dotStyles[safeStatus as keyof typeof dotStyles] || dotStyles.offline)} />
+            {displayStatus}
         </span>
     )
 }
 
 function UserAvatar({ user }: { user: User }) {
-    const initials = user.full_name 
-        ? user.full_name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
-        : user.email.slice(0, 2).toUpperCase()
-    
+    const initials = user?.full_name
+        ? user.full_name.split(" ").map(n => n?.[0] || "").join("").toUpperCase().slice(0, 2)
+        : (user?.email || "??").slice(0, 2).toUpperCase()
+
     return (
         <div className="relative">
             {user.avatar_url ? (
@@ -127,7 +132,7 @@ function UserAvatar({ user }: { user: User }) {
             ) : (
                 <div className={cn(
                     "w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm",
-                    user.is_admin 
+                    user.is_admin
                         ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white"
                         : "bg-zinc-800 text-zinc-400"
                 )}>
@@ -153,23 +158,29 @@ function ActionMenu({ user, onAction, isOpen, onClose }: {
     onClose: () => void
 }) {
     if (!isOpen) return null
-    
+
     const actions = [
         { id: "view", icon: Eye, label: "View Details", color: "text-zinc-300" },
         { id: "divider1" },
-        { id: "toggle-admin", icon: user.is_admin ? ShieldOff : ShieldCheck, 
-          label: user.is_admin ? "Remove Admin" : "Make Admin",
-          color: user.is_admin ? "text-zinc-400" : "text-purple-400" },
-        { id: "toggle-active", icon: user.is_active ? UserX : UserCheck,
-          label: user.is_active ? "Deactivate" : "Activate",
-          color: user.is_active ? "text-yellow-400" : "text-green-400" },
+        {
+            id: "toggle-admin", icon: user.is_admin ? ShieldOff : ShieldCheck,
+            label: user.is_admin ? "Remove Admin" : "Make Admin",
+            color: user.is_admin ? "text-zinc-400" : "text-purple-400"
+        },
+        {
+            id: "toggle-active", icon: user.is_active ? UserX : UserCheck,
+            label: user.is_active ? "Deactivate" : "Activate",
+            color: user.is_active ? "text-yellow-400" : "text-green-400"
+        },
         { id: "divider2" },
         { id: "force-logout", icon: LogOut, label: "Force Logout", color: "text-orange-400" },
-        { id: "ban", icon: Ban, label: user.is_banned ? "Unban User" : "Ban User", 
-          color: user.is_banned ? "text-green-400" : "text-red-400" },
+        {
+            id: "ban", icon: Ban, label: user.is_banned ? "Unban User" : "Ban User",
+            color: user.is_banned ? "text-green-400" : "text-red-400"
+        },
         { id: "delete", icon: Trash2, label: "Delete User", color: "text-red-500" },
     ]
-    
+
     return (
         <>
             <div className="fixed inset-0 z-40" onClick={onClose} />
@@ -198,11 +209,11 @@ function ActionMenu({ user, onAction, isOpen, onClose }: {
     )
 }
 
-function ConfirmDialog({ 
-    isOpen, 
-    onClose, 
-    onConfirm, 
-    title, 
+function ConfirmDialog({
+    isOpen,
+    onClose,
+    onConfirm,
+    title,
     description,
     confirmLabel = "Confirm",
     confirmColor = "red",
@@ -218,13 +229,13 @@ function ConfirmDialog({
     loading?: boolean
 }) {
     if (!isOpen) return null
-    
+
     const colors = {
         red: "bg-red-600 hover:bg-red-700",
         green: "bg-green-600 hover:bg-green-700",
         purple: "bg-purple-600 hover:bg-purple-700"
     }
-    
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
             <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
@@ -260,7 +271,7 @@ function Toast({ message, type, onClose }: { message: string, type: "success" | 
         const timer = setTimeout(onClose, 4000)
         return () => clearTimeout(timer)
     }, [onClose])
-    
+
     return (
         <div className={cn(
             "fixed bottom-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg",
@@ -277,17 +288,17 @@ function Toast({ message, type, onClose }: { message: string, type: "success" | 
 
 function UserRow({ user, onAction }: { user: User, onAction: (action: string, user: User) => void }) {
     const [menuOpen, setMenuOpen] = useState(false)
-    
-    const lastActive = user.last_activity_at 
+
+    const lastActive = user.last_activity_at
         ? new Date(user.last_activity_at).toLocaleString("sv-SE")
         : "Never"
-    
+
     const createdAt = new Date(user.created_at).toLocaleDateString("sv-SE", {
         year: "numeric",
         month: "short",
         day: "numeric"
     })
-    
+
     return (
         <tr className={cn(
             "border-b border-zinc-800 hover:bg-zinc-900/50 transition",
@@ -342,7 +353,7 @@ function UserRow({ user, onAction }: { user: User, onAction: (action: string, us
                     >
                         <MoreVertical className="w-4 h-4 text-zinc-500" />
                     </button>
-                    <ActionMenu 
+                    <ActionMenu
                         user={user}
                         isOpen={menuOpen}
                         onClose={() => setMenuOpen(false)}
@@ -361,14 +372,14 @@ export default function AdminV2Users() {
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [loading, setLoading] = useState(true)
-    
+
     // Filters
     const [search, setSearch] = useState("")
     const [statusFilter, setStatusFilter] = useState<StatusFilter>("all")
     const [roleFilter, setRoleFilter] = useState<RoleFilter>("all")
     const [sortField, setSortField] = useState<SortField>("last_activity")
     const [sortOrder, setSortOrder] = useState<SortOrder>("desc")
-    
+
     // Action state
     const [actionLoading, setActionLoading] = useState(false)
     const [confirmDialog, setConfirmDialog] = useState<{
@@ -380,13 +391,13 @@ export default function AdminV2Users() {
         confirmColor: "red" | "green" | "purple"
     } | null>(null)
     const [toast, setToast] = useState<{ message: string, type: "success" | "error" } | null>(null)
-    
+
     const fetchUsers = useCallback(async () => {
         const token = getToken()
         if (!token) return
-        
+
         setLoading(true)
-        
+
         try {
             const params = new URLSearchParams({
                 page: page.toString(),
@@ -394,15 +405,15 @@ export default function AdminV2Users() {
                 sort: sortField,
                 order: sortOrder
             })
-            
+
             if (search) params.set("search", search)
             if (statusFilter !== "all") params.set("status", statusFilter)
             if (roleFilter !== "all") params.set("role", roleFilter)
-            
+
             const res = await fetch(`${API_BASE_URL}/api/admin/users?${params}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            
+
             if (res.ok) {
                 const data: UsersResponse = await res.json()
                 setUsers(data.users)
@@ -416,27 +427,27 @@ export default function AdminV2Users() {
             setLoading(false)
         }
     }, [page, search, statusFilter, roleFilter, sortField, sortOrder])
-    
+
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchUsers()
         }, search ? 300 : 0) // Debounce search
-        
+
         return () => clearTimeout(timer)
     }, [fetchUsers])
-    
+
     // Auto-refresh every minute
     useEffect(() => {
         const interval = setInterval(fetchUsers, 60000)
         return () => clearInterval(interval)
     }, [fetchUsers])
-    
+
     const executeAction = async (action: string, endpoint: string, method = "POST", body?: object) => {
         const token = getToken()
         if (!token) return
-        
+
         setActionLoading(true)
-        
+
         try {
             const res = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method,
@@ -446,12 +457,12 @@ export default function AdminV2Users() {
                 },
                 body: body ? JSON.stringify(body) : undefined
             })
-            
+
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}))
                 throw new Error(data.detail || `HTTP ${res.status}`)
             }
-            
+
             setToast({ message: `Action completed successfully`, type: "success" })
             fetchUsers() // Refresh
         } catch (err) {
@@ -461,18 +472,18 @@ export default function AdminV2Users() {
             setConfirmDialog(null)
         }
     }
-    
+
     const handleAction = (action: string, user: User) => {
         switch (action) {
             case "view":
                 window.location.href = `/admin/users/${user.id}`
                 break
-                
+
             case "toggle-admin":
                 setConfirmDialog({
                     isOpen: true,
                     title: user.is_admin ? "Remove Admin Rights" : "Grant Admin Rights",
-                    description: user.is_admin 
+                    description: user.is_admin
                         ? `Remove admin privileges from ${user.email}?`
                         : `Grant admin privileges to ${user.email}?`,
                     action: () => executeAction(action, `/api/admin/users/${user.id}/toggle-admin`),
@@ -480,7 +491,7 @@ export default function AdminV2Users() {
                     confirmColor: user.is_admin ? "red" : "purple"
                 })
                 break
-                
+
             case "toggle-active":
                 setConfirmDialog({
                     isOpen: true,
@@ -493,7 +504,7 @@ export default function AdminV2Users() {
                     confirmColor: user.is_active ? "red" : "green"
                 })
                 break
-                
+
             case "force-logout":
                 setConfirmDialog({
                     isOpen: true,
@@ -504,7 +515,7 @@ export default function AdminV2Users() {
                     confirmColor: "red"
                 })
                 break
-                
+
             case "ban":
                 if (user.is_banned) {
                     setConfirmDialog({
@@ -526,7 +537,7 @@ export default function AdminV2Users() {
                     })
                 }
                 break
-                
+
             case "delete":
                 setConfirmDialog({
                     isOpen: true,
@@ -539,9 +550,9 @@ export default function AdminV2Users() {
                 break
         }
     }
-    
+
     const onlineCount = users.filter(u => u.status === "online").length
-    
+
     return (
         <div className="p-6">
             {/* Header */}
@@ -561,7 +572,7 @@ export default function AdminV2Users() {
                     Refresh
                 </button>
             </div>
-            
+
             {/* Filters */}
             <div className="flex flex-col md:flex-row gap-3 mb-6">
                 {/* Search */}
@@ -575,7 +586,7 @@ export default function AdminV2Users() {
                         className="w-full pl-10 pr-4 py-2.5 bg-zinc-900 border border-zinc-800 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-purple-500 transition"
                     />
                 </div>
-                
+
                 {/* Status Filter */}
                 <select
                     value={statusFilter}
@@ -588,7 +599,7 @@ export default function AdminV2Users() {
                     <option value="offline">Offline</option>
                     <option value="banned">Banned</option>
                 </select>
-                
+
                 {/* Role Filter */}
                 <select
                     value={roleFilter}
@@ -599,7 +610,7 @@ export default function AdminV2Users() {
                     <option value="admin">Admins</option>
                     <option value="user">Users</option>
                 </select>
-                
+
                 {/* Sort */}
                 <select
                     value={`${sortField}-${sortOrder}`}
@@ -617,7 +628,7 @@ export default function AdminV2Users() {
                     <option value="xp-desc">Highest XP</option>
                 </select>
             </div>
-            
+
             {/* Table */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
                 <div className="overflow-x-auto">
@@ -660,9 +671,9 @@ export default function AdminV2Users() {
                                 </tr>
                             ) : (
                                 users.map(user => (
-                                    <UserRow 
-                                        key={user.id} 
-                                        user={user} 
+                                    <UserRow
+                                        key={user.id}
+                                        user={user}
                                         onAction={handleAction}
                                     />
                                 ))
@@ -670,7 +681,7 @@ export default function AdminV2Users() {
                         </tbody>
                     </table>
                 </div>
-                
+
                 {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-800">
@@ -696,7 +707,7 @@ export default function AdminV2Users() {
                     </div>
                 )}
             </div>
-            
+
             {/* Confirm Dialog */}
             {confirmDialog && (
                 <ConfirmDialog
@@ -710,7 +721,7 @@ export default function AdminV2Users() {
                     loading={actionLoading}
                 />
             )}
-            
+
             {/* Toast */}
             {toast && (
                 <Toast

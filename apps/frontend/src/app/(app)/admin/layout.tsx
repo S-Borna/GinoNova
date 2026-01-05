@@ -29,12 +29,24 @@ const navItems = [
 
 export default function AdminV2Layout({ children }: { children: ReactNode }) {
     const pathname = usePathname()
-    const { user } = useAuth()
-    
+    const { user, loading } = useAuth()
+
+    // Show loading state while checking auth
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white">
+                <div className="text-center">
+                    <Shield className="w-16 h-16 text-purple-500 mx-auto mb-4 animate-pulse" />
+                    <p className="text-zinc-400">Loading admin panel...</p>
+                </div>
+            </div>
+        )
+    }
+
     // Check admin access
     const isAdmin = user?.is_admin || user?.email?.toLowerCase() === "said.ebadi@hotmail.com"
-    
-    if (!isAdmin) {
+
+    if (!user || !isAdmin) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-zinc-950 text-white">
                 <div className="text-center">
@@ -64,14 +76,14 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                         Admin v2
                     </h1>
                 </div>
-                
+
                 {/* Navigation */}
                 <nav className="flex-1 p-3">
                     <ul className="space-y-1">
                         {navItems.map((item) => {
-                            const isActive = pathname === item.href || 
+                            const isActive = pathname === item.href ||
                                 (item.href !== "/admin" && pathname.startsWith(item.href))
-                            
+
                             return (
                                 <li key={item.href}>
                                     <Link
@@ -91,14 +103,14 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                         })}
                     </ul>
                 </nav>
-                
+
                 {/* Footer */}
                 <div className="p-4 border-t border-zinc-800 text-xs text-zinc-500">
                     <p>Logged in as:</p>
                     <p className="text-zinc-300 truncate">{user?.email}</p>
                 </div>
             </aside>
-            
+
             {/* Main Content */}
             <main className="flex-1 overflow-auto">
                 {children}
