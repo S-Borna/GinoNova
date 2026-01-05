@@ -196,14 +196,14 @@ def get_user_status(last_activity: Optional[datetime]) -> str:
     """Calculate user status based on last_activity_at"""
     if not last_activity:
         return "offline"
-    
+
     now = datetime.now(timezone.utc)
     # Ensure last_activity is timezone-aware
     if last_activity.tzinfo is None:
         last_activity = last_activity.replace(tzinfo=timezone.utc)
-    
+
     diff = (now - last_activity).total_seconds()
-    
+
     if diff < 300:  # 5 minutes
         return "online"
     elif diff < 3600:  # 1 hour
@@ -261,20 +261,20 @@ async def get_overview_stats(
     week_ago = now - timedelta(days=7)
     five_min_ago = now - timedelta(minutes=5)
     day_ago = now - timedelta(hours=24)
-    
+
     # Online users (active in last 5 minutes)
     online_users = db.query(func.count(User.id)).filter(
         User.last_activity_at >= five_min_ago
     ).scalar() or 0
-    
+
     # Total users
     total_users = db.query(func.count(User.id)).scalar() or 0
-    
+
     # New users today
     new_today = db.query(func.count(User.id)).filter(
         User.created_at >= today_start
     ).scalar() or 0
-    
+
     # New users yesterday (for trend)
     new_yesterday = db.query(func.count(User.id)).filter(
         and_(
@@ -282,22 +282,22 @@ async def get_overview_stats(
             User.created_at < today_start
         )
     ).scalar() or 0
-    
+
     # Active users in last 24h
     active_24h = db.query(func.count(User.id)).filter(
         User.last_activity_at >= day_ago
     ).scalar() or 0
-    
+
     # Active users this week
     active_week = db.query(func.count(User.id)).filter(
         User.last_activity_at >= week_ago
     ).scalar() or 0
-    
+
     # Users registered this week (for trend)
     new_this_week = db.query(func.count(User.id)).filter(
         User.created_at >= week_ago
     ).scalar() or 0
-    
+
     return OverviewStats(
         online_users=online_users,
         online_trend=0,  # Would need historical data to calculate
@@ -325,11 +325,11 @@ async def get_activity_stats(
     """Get activity statistics for the last N days"""
     now = datetime.now(timezone.utc)
     data = []
-    
+
     for i in range(days - 1, -1, -1):
         day_start = (now - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
         day_end = day_start + timedelta(days=1)
-        
+
         # Active users that day
         active = db.query(func.count(User.id)).filter(
             and_(
@@ -337,7 +337,7 @@ async def get_activity_stats(
                 User.last_activity_at < day_end
             )
         ).scalar() or 0
-        
+
         # New users that day
         new = db.query(func.count(User.id)).filter(
             and_(
@@ -345,14 +345,14 @@ async def get_activity_stats(
                 User.created_at < day_end
             )
         ).scalar() or 0
-        
+
         data.append(ActivityData(
             date=day_start.strftime("%Y-%m-%d"),
             active_users=active,
             new_users=new,
             study_sessions=0  # Would need study_sessions table
         ))
-    
+
     return ActivityResponse(data=data)
 
 
@@ -363,7 +363,7 @@ async def get_system_health(
 ):
     """Get system health status"""
     import time
-    
+
     # Test database
     db_start = time.time()
     try:
@@ -373,7 +373,7 @@ async def get_system_health(
     except Exception:
         db_latency = 0
         db_status = "error"
-    
+
     return SystemHealth(
         database={
             "status": db_status,
@@ -410,9 +410,9 @@ async def get_users(
     now = datetime.now(timezone.utc)
     five_min_ago = now - timedelta(minutes=5)
     one_hour_ago = now - timedelta(hours=1)
-    
+
     query = db.query(User)
-    
+
     # Search filter
     if search:
         search_term = f"%{search.lower()}%"
@@ -422,13 +422,13 @@ async def get_users(
                 func.lower(User.full_name).like(search_term)
             )
         )
-    
+
     # Role filter
     if role == "admin":
         query = query.filter(User.is_admin.is_(True))
     elif role == "user":
         query = query.filter(User.is_admin.is_(False))
-    
+
     # Status filter
     if status == "banned":
         query = query.filter(User.is_active.is_(False))
@@ -448,10 +448,10 @@ async def get_users(
                 User.last_activity_at.is_(None)
             )
         )
-    
+
     # Get total count
     total = query.count()
-    
+
     # Sorting
     sort_column = {
         "last_activity": User.last_activity_at,
@@ -459,16 +459,16 @@ async def get_users(
         "email": User.email,
         "xp": User.total_xp if hasattr(User, 'total_xp') else User.created_at
     }.get(sort, User.last_activity_at)
-    
+
     if order == "desc":
         query = query.order_by(desc(sort_column).nullslast())
     else:
         query = query.order_by(asc(sort_column).nullsfirst())
-    
+
     # Pagination
     offset = (page - 1) * page_size
     users = query.offset(offset).limit(page_size).all()
-    
+
     return UsersListResponse(
         users=[user_to_response(u) for u in users],
         total=total,
@@ -488,7 +488,7 @@ async def get_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     return user_to_response(user)
 
 
@@ -503,18 +503,18 @@ async def update_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     if data.full_name is not None:
         user.full_name = data.full_name
     if data.is_admin is not None:
         user.is_admin = data.is_admin
     if data.is_active is not None:
         user.is_active = data.is_active
-    
+
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
     db.refresh(user)
-    
+
     return user_to_response(user)
 
 
@@ -528,14 +528,14 @@ async def delete_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Don't allow deleting yourself
     if user.id == admin.id:
         raise HTTPException(status_code=400, detail="Cannot delete yourself")
-    
+
     db.delete(user)
     db.commit()
-    
+
     return {"ok": True, "message": "User deleted successfully"}
 
 
@@ -550,19 +550,19 @@ async def ban_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     if user.id == admin.id:
         raise HTTPException(status_code=400, detail="Cannot ban yourself")
-    
+
     user.is_active = False
     user.updated_at = datetime.now(timezone.utc)
-    
+
     # Force logout by clearing session version if exists
     if hasattr(user, 'force_logout_at'):
         user.force_logout_at = datetime.now(timezone.utc)
-    
+
     db.commit()
-    
+
     return {"ok": True, "message": f"User {user.email} has been banned", "reason": data.reason}
 
 
@@ -576,11 +576,11 @@ async def unban_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     user.is_active = True
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    
+
     return {"ok": True, "message": f"User {user.email} has been unbanned"}
 
 
@@ -594,12 +594,12 @@ async def force_logout_user(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # Set force_logout_at if the column exists
     if hasattr(user, 'force_logout_at'):
         user.force_logout_at = datetime.now(timezone.utc)
         db.commit()
-    
+
     return {"ok": True, "message": f"User {user.email} will be logged out"}
 
 
@@ -613,14 +613,14 @@ async def toggle_admin(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     if user.id == admin.id:
         raise HTTPException(status_code=400, detail="Cannot change your own admin status")
-    
+
     user.is_admin = not user.is_admin
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    
+
     status = "admin" if user.is_admin else "regular user"
     return {"ok": True, "message": f"User {user.email} is now {status}", "is_admin": user.is_admin}
 
@@ -636,15 +636,15 @@ async def update_permissions(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     if data.ai_quiz_access is not None and hasattr(user, 'ai_quiz_access'):
         user.ai_quiz_access = data.ai_quiz_access
     if data.premium_modules_access is not None and hasattr(user, 'premium_modules_access'):
         user.premium_modules_access = data.premium_modules_access
-    
+
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    
+
     return {"ok": True, "message": "Permissions updated"}
 
 
@@ -661,16 +661,16 @@ async def get_user_growth(
     """Get user growth data over time"""
     now = datetime.now(timezone.utc)
     data = []
-    
+
     for i in range(days - 1, -1, -1):
         day_start = (now - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
         day_end = day_start + timedelta(days=1)
-        
+
         # Total users up to this day
         total = db.query(func.count(User.id)).filter(
             User.created_at < day_end
         ).scalar() or 0
-        
+
         # New users that day
         new = db.query(func.count(User.id)).filter(
             and_(
@@ -678,13 +678,13 @@ async def get_user_growth(
                 User.created_at < day_end
             )
         ).scalar() or 0
-        
+
         data.append(UserGrowthData(
             date=day_start.strftime("%Y-%m-%d"),
             total_users=total,
             new_users=new
         ))
-    
+
     return UserGrowthResponse(data=data)
 
 
@@ -697,12 +697,12 @@ async def get_activity_heatmap(
     """Get activity heatmap data (day of week vs hour)"""
     now = datetime.now(timezone.utc)
     start_date = now - timedelta(days=days)
-    
+
     # Get all last_activity_at timestamps in range
     activities = db.query(User.last_activity_at).filter(
         User.last_activity_at >= start_date
     ).all()
-    
+
     # Build heatmap
     heatmap = {}
     for (activity_time,) in activities:
@@ -711,7 +711,7 @@ async def get_activity_heatmap(
             hour = activity_time.hour
             key = (day, hour)
             heatmap[key] = heatmap.get(key, 0) + 1
-    
+
     # Convert to list
     data = []
     for day in range(7):
@@ -721,7 +721,7 @@ async def get_activity_heatmap(
                 hour=hour,
                 count=heatmap.get((day, hour), 0)
             ))
-    
+
     return HeatmapResponse(data=data)
 
 
@@ -734,24 +734,24 @@ async def get_top_users(
     """Get top users by various metrics"""
     now = datetime.now(timezone.utc)
     week_ago = now - timedelta(days=7)
-    
+
     # Most active (by last_activity_at frequency - simplified)
     most_active = db.query(User).filter(
         User.last_activity_at >= week_ago
     ).order_by(desc(User.last_activity_at)).limit(limit).all()
-    
+
     # Highest XP
     highest_xp_query = db.query(User)
     if hasattr(User, 'total_xp'):
         highest_xp_query = highest_xp_query.order_by(desc(User.total_xp))
     highest_xp = highest_xp_query.limit(limit).all()
-    
+
     # Longest streak
     longest_streak_query = db.query(User)
     if hasattr(User, 'current_streak'):
         longest_streak_query = longest_streak_query.order_by(desc(User.current_streak))
     longest_streak = longest_streak_query.limit(limit).all()
-    
+
     return TopUsersResponse(
         most_active=[
             TopUser(
@@ -835,7 +835,7 @@ async def get_user_ai_usage(
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     # This would need an ai_usage_logs table
     return {
         "user_id": str(user_id),

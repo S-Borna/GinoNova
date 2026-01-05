@@ -342,7 +342,7 @@ export default function AdminV2AIUsage() {
         setLoading(true)
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin-v2/ai-usage?range=${timeRange}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/ai-usage?range=${timeRange}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 

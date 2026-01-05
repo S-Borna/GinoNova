@@ -20,11 +20,11 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
 
 const navItems = [
-    { href: "/admin-v2", icon: LayoutDashboard, label: "Dashboard" },
-    { href: "/admin-v2/users", icon: Users, label: "Users" },
-    { href: "/admin-v2/analytics", icon: BarChart3, label: "Analytics" },
-    { href: "/admin-v2/ai-usage", icon: Bot, label: "AI Usage" },
-    { href: "/admin-v2/settings", icon: Settings, label: "Settings" },
+    { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+    { href: "/admin/users", icon: Users, label: "Users" },
+    { href: "/admin/analytics", icon: BarChart3, label: "Analytics" },
+    { href: "/admin/ai-usage", icon: Bot, label: "AI Usage" },
+    { href: "/admin/settings", icon: Settings, label: "Settings" },
 ]
 
 export default function AdminV2Layout({ children }: { children: ReactNode }) {
@@ -70,7 +70,7 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                     <ul className="space-y-1">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href || 
-                                (item.href !== "/admin-v2" && pathname.startsWith(item.href))
+                                (item.href !== "/admin" && pathname.startsWith(item.href))
                             
                             return (
                                 <li key={item.href}>
