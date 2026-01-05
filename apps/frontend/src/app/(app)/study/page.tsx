@@ -133,7 +133,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'all'>('doe25')
+    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux'>('doe25')
 
     // Get current module
     const currentModule = useMemo(() =>
