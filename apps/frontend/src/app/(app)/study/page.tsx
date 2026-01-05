@@ -314,7 +314,7 @@ export default function StudyPage() {
                                             </span>
                                         </div>
                                         <p className="text-zinc-300 text-lg">
-                                            Välj <span className="text-purple-400 font-bold">DOE25</span> för tentafokus, <span className="text-emerald-400 font-bold">Hands-On</span> för praktik, eller <span className="text-yellow-400 font-bold">alla 1600+</span>
+                                            Välj <span className="text-purple-400 font-bold">DOE25</span> för tentafokus, <span className="text-emerald-400 font-bold">Hands-On</span> för praktik, eller <span className="text-orange-400 font-bold">Linux Kommandon 💻</span>
                                         </p>
                                     </div>
                                 </div>
@@ -491,23 +491,23 @@ export default function StudyPage() {
                                         <span className="text-[10px] opacity-70 font-normal">1051 frågor</span>
                                     </button>
                                     <button
-                                        onClick={() => setTentaSource('all')}
+                                        onClick={() => setTentaSource('linux')}
                                         className={cn(
                                             "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
-                                            tentaSource === 'all'
-                                                ? "bg-gradient-to-r from-purple-500 to-emerald-500 text-white shadow-lg shadow-cyan-500/30"
+                                            tentaSource === 'linux'
+                                                ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30"
                                                 : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
                                         )}
                                     >
-                                        <span className="text-2xl">🔀</span>
-                                        <span className="text-xs font-medium">Alla</span>
-                                        <span className="text-[10px] opacity-70 font-normal">1600+ frågor</span>
+                                        <span className="text-2xl">💻</span>
+                                        <span className="text-xs font-medium">Linux Kommandon</span>
+                                        <span className="text-[10px] opacity-70 font-normal">350+ frågor</span>
                                     </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
                                     {tentaSource === 'doe25' && "✨ Rekommenderat för tentan"}
                                     {tentaSource === 'handson' && "Praktiska frågor"}
-                                    {tentaSource === 'all' && "Allt blandat"}
+                                    {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
                                 </p>
                             </div>
 
