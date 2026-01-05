@@ -35,7 +35,7 @@ export async function GET() {
         })
 
         const response = await fetch(`${LASTFM_API_URL}?${params}`, {
-            next: { revalidate: 30 }, // Cache for 30 seconds
+            cache: 'no-store', // Never cache - always fetch fresh data
         })
 
         if (!response.ok) {
