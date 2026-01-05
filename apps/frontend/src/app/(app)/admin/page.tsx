@@ -126,36 +126,50 @@ function isActiveToday(date: string | null): boolean {
     return activityDate.getTime() >= today.getTime()
 }
 
-// Online Status Indicator
+// Online Status Indicator - Shows: Online (with time), or Offline (with last seen)
 function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
-    const online = isOnline(lastActivity)
-    const activeToday = isActiveToday(lastActivity)
-
-    // Show raw date on hover for debugging
-    const rawDate = lastActivity || "NULL"
-
-    if (online) {
+    const activityDate = parseUTCDate(lastActivity)
+    
+    // No activity data
+    if (!activityDate) {
         return (
-            <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
+            <div className="flex items-center gap-1.5" title="Aldrig aktiv">
+                <div className="w-2 h-2 rounded-full bg-zinc-700" />
+                <span className="text-xs text-zinc-600">Aldrig aktiv</span>
+            </div>
+        )
+    }
+    
+    const now = Date.now()
+    const diff = now - activityDate.getTime()
+    const mins = Math.floor(diff / 60000)
+    
+    // Online: Active within last 5 minutes
+    if (diff >= 0 && mins < 5) {
+        return (
+            <div className="flex items-center gap-1.5" title={`Aktiv ${mins < 1 ? 'just nu' : `${mins} min sedan`}`}>
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-green-400">Online</span>
             </div>
         )
     }
-
-    if (activeToday) {
-        return (
-            <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
-                <div className="w-2 h-2 rounded-full bg-yellow-500" />
-                <span className="text-xs text-yellow-400">Aktiv idag</span>
-            </div>
-        )
-    }
+    
+    // Offline: Show last seen time
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+    
+    let lastSeen = ""
+    if (mins < 60) lastSeen = `${mins}m sedan`
+    else if (hours < 24) lastSeen = `${hours}h sedan`
+    else if (days < 7) lastSeen = `${days}d sedan`
+    else if (days < 30) lastSeen = `${Math.floor(days / 7)}v sedan`
+    else if (days < 365) lastSeen = `${Math.floor(days / 30)} mån sedan`
+    else lastSeen = "länge sedan"
 
     return (
-        <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
+        <div className="flex items-center gap-1.5" title={`Senast sedd: ${activityDate.toLocaleString('sv-SE')}`}>
             <div className="w-2 h-2 rounded-full bg-zinc-600" />
-            <span className="text-xs text-zinc-500">Offline</span>
+            <span className="text-xs text-zinc-500">{lastSeen}</span>
         </div>
     )
 }
