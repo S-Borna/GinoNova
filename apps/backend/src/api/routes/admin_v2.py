@@ -196,12 +196,12 @@ def require_admin(current_user: UserPublic = Depends(get_current_user)) -> UserP
 
 def get_user_status(last_activity: Optional[datetime], last_login: Optional[datetime] = None) -> str:
     """
-    Calculate user status based on last_login_at (actual login) 
+    Calculate user status based on last_login_at (actual login)
     NOT last_activity_at (which updates on every API call)
     """
     # Prefer last_login_at for accurate "online" status
     check_time = last_login if last_login else last_activity
-    
+
     if not check_time:
         return "offline"
 
@@ -224,7 +224,7 @@ def user_to_response(user: User) -> UserResponse:
     """Convert User model to UserResponse"""
     last_activity = getattr(user, 'last_activity_at', None)
     last_login = getattr(user, 'last_login_at', None)
-    
+
     return UserResponse(
         id=str(user.id),
         email=user.email,

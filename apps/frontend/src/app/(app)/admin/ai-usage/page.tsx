@@ -349,7 +349,11 @@ export default function AdminV2AIUsage() {
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/ai-usage?range=${timeRange}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
             })
 
             if (res.ok) {

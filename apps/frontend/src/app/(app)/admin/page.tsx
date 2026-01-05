@@ -207,16 +207,16 @@ export default function AdminV2Dashboard() {
 
         try {
             // Fetch all data in parallel
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+            const fetchOptions = { headers, credentials: 'include' as RequestCredentials }
+
             const [statsRes, activityRes, healthRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/api/admin/stats/overview`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                }),
-                fetch(`${API_BASE_URL}/api/admin/stats/activity?days=7`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                }),
-                fetch(`${API_BASE_URL}/api/admin/stats/system-health`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
+                fetch(`${API_BASE_URL}/api/admin/stats/overview`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/stats/activity?days=7`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/stats/system-health`, fetchOptions)
             ])
 
             if (statsRes.ok) {
