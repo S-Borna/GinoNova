@@ -131,8 +131,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Send heartbeat immediately on mount
         heartbeat()
         
-        // Then every 2 minutes (admin panel refreshes every 15s, 10min timeout)
-        const interval = setInterval(heartbeat, 2 * 60 * 1000)
+        // Then every 1 minute for accurate online status
+        const interval = setInterval(heartbeat, 60 * 1000)
         
         // Also send heartbeat when window regains focus
         const handleFocus = () => heartbeat()
