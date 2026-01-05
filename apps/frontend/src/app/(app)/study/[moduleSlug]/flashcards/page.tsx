@@ -142,16 +142,16 @@ function FlashcardsContent() {
     // Apply difficulty filter when it changes
     useEffect(() => {
         if (allFlashcardsRaw.length === 0) return
-        
+
         let filtered = allFlashcardsRaw
         if (difficultyFilter !== 'all') {
             filtered = allFlashcardsRaw.filter(fc => fc.difficulty === difficultyFilter)
         }
-        
+
         if (isShuffled) {
             filtered = shuffleArray([...filtered])
         }
-        
+
         setFlashcards(filtered)
         setCurrentIndex(0)
         setIsFlipped(false)
@@ -347,8 +347,8 @@ function FlashcardsContent() {
                         {currentCard.difficulty && (
                             <div className={cn(
                                 "absolute top-4 right-4 px-2 py-1 rounded text-xs font-semibold",
-                                currentCard.difficulty === 'VG' 
-                                    ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                                currentCard.difficulty === 'VG'
+                                    ? "bg-purple-500/30 text-purple-300 border border-purple-500/50"
                                     : "bg-green-500/30 text-green-300 border border-green-500/50"
                             )}>
                                 {currentCard.difficulty}

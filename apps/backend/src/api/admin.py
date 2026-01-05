@@ -2681,22 +2681,22 @@ def clear_quiz_cache(
 ) -> CacheClearResponse:
     """
     Clear quiz generation cache.
-    
+
     - **module_slug**: Optional. If provided, clears cache only for this module.
                       If None, clears all quiz cache.
     """
     add_phase_header(response)
     require_admin(current_user)
-    
+
     try:
         from ..services.quiz_service import clear_quiz_cache
         deleted = clear_quiz_cache(module_slug)
-        
+
         if module_slug:
             message = f"Cleared {deleted} cache entries for module '{module_slug}'"
         else:
             message = f"Cleared {deleted} quiz cache entries"
-        
+
         return CacheClearResponse(
             success=True,
             message=message,
@@ -2719,20 +2719,20 @@ def get_quiz_cache_stats(
     """
     add_phase_header(response)
     require_admin(current_user)
-    
+
     from ..db.redis_client import get_redis_client
-    
+
     client = get_redis_client()
     if not client:
         return {
             "redis_available": False,
             "message": "Redis not configured"
         }
-    
+
     try:
         # Get all quiz cache keys
         keys = client.keys("quiz:*")
-        
+
         # Get TTL for each key
         cache_info = []
         total_size = 0
@@ -2741,13 +2741,13 @@ def get_quiz_cache_stats(
             value = client.get(key)
             size = len(value) if value else 0
             total_size += size
-            
+
             cache_info.append({
                 "key": key,
                 "ttl_seconds": ttl,
                 "size_bytes": size
             })
-        
+
         return {
             "redis_available": True,
             "total_keys": len(keys),

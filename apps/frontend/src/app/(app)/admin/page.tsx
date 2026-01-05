@@ -61,19 +61,35 @@ interface Stats {
 }
 
 // Helper functions
+// Parse date string handling all UTC formats from backend
+function parseUTCDate(date: string | null): Date | null {
+    if (!date) return null
+    // Backend can send: "2024-01-15T14:30:00" (naive), "2024-01-15T14:30:00Z", or "2024-01-15T14:30:00+00:00"
+    // All should be treated as UTC
+    let dateStr = date
+    if (!date.endsWith('Z') && !date.includes('+') && !date.includes('-', 10)) {
+        dateStr = date + 'Z'
+    }
+    const parsed = new Date(dateStr)
+    return isNaN(parsed.getTime()) ? null : parsed
+}
+
 function formatTimeAgo(date: string | null): string {
-    if (!date) return "Aldrig"
-    
-    // Backend sends UTC time without 'Z' suffix, so we need to treat it as UTC
-    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
+    const activityDate = parseUTCDate(date)
+    if (!activityDate) return "Aldrig"
+
     const now = Date.now()
     const then = activityDate.getTime()
     const diff = now - then
-    
+
+    // Sanity check - if diff is negative or way too large, something's wrong
+    if (diff < 0) return "Just nu"
+    if (diff > 365 * 24 * 60 * 60 * 1000) return "Över ett år sedan"
+
     const mins = Math.floor(diff / 60000)
     const hours = Math.floor(diff / 3600000)
     const days = Math.floor(diff / 86400000)
-    
+
     if (mins < 1) return "Just nu"
     if (mins < 60) return `${mins} min sedan`
     if (hours < 24) return `${hours}h sedan`
@@ -91,16 +107,16 @@ function formatDate(date: string): string {
 }
 
 function isOnline(date: string | null): boolean {
-    if (!date) return false
+    const activityDate = parseUTCDate(date)
+    if (!activityDate) return false
+    const diff = Date.now() - activityDate.getTime()
     // Online if active within last 5 minutes (heartbeat every 1 min)
-    // Backend sends UTC time without 'Z' suffix, so we need to treat it as UTC
-    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
-    return (Date.now() - activityDate.getTime()) < 5 * 60 * 1000
+    return diff >= 0 && diff < 5 * 60 * 1000
 }
 
 function isActiveToday(date: string | null): boolean {
-    if (!date) return false
-    const activityDate = date.endsWith('Z') ? new Date(date) : new Date(date + 'Z')
+    const activityDate = parseUTCDate(date)
+    if (!activityDate) return false
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     return activityDate.getTime() >= today.getTime()
@@ -110,7 +126,7 @@ function isActiveToday(date: string | null): boolean {
 function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
     const online = isOnline(lastActivity)
     const activeToday = isActiveToday(lastActivity)
-    
+
     if (online) {
         return (
             <div className="flex items-center gap-1.5">
@@ -119,7 +135,7 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
             </div>
         )
     }
-    
+
     if (activeToday) {
         return (
             <div className="flex items-center gap-1.5">
@@ -128,7 +144,7 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
             </div>
         )
     }
-    
+
     return (
         <div className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full bg-zinc-600" />
@@ -138,12 +154,12 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
 }
 
 // Stat Card Component
-function StatCard({ 
-    icon: Icon, 
-    value, 
-    label, 
-    color = "blue" 
-}: { 
+function StatCard({
+    icon: Icon,
+    value,
+    label,
+    color = "blue"
+}: {
     icon: React.ElementType
     value: number | string
     label: string
@@ -155,7 +171,7 @@ function StatCard({
         yellow: "text-yellow-400 bg-yellow-500/10",
         purple: "text-purple-400 bg-purple-500/10",
     }
-    
+
     return (
         <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800">
             <div className="flex items-center gap-3">
@@ -172,18 +188,18 @@ function StatCard({
 }
 
 // User Row Component
-function UserRow({ 
-    user, 
+function UserRow({
+    user,
     onToggleActive,
     onDelete,
-}: { 
+}: {
     user: User
     onToggleActive: () => void
     onDelete: () => void
 }) {
     const [showMenu, setShowMenu] = useState(false)
     const online = isOnline(user.last_activity_at)
-    
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -199,7 +215,7 @@ function UserRow({
                 <div className="relative">
                     <div className={cn(
                         "w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold",
-                        user.is_admin 
+                        user.is_admin
                             ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white"
                             : "bg-zinc-800 text-zinc-400"
                     )}>
@@ -211,7 +227,7 @@ function UserRow({
                         online ? "bg-green-500" : "bg-zinc-600"
                     )} />
                 </div>
-                
+
                 {/* User Info */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -231,53 +247,53 @@ function UserRow({
                     </div>
                     <p className="text-sm text-zinc-500 truncate">{user.email}</p>
                 </div>
-                
+
                 {/* Activity Info */}
                 <div className="hidden md:flex items-center gap-6 text-sm">
                     {/* Online Status */}
                     <div className="w-24">
                         <OnlineStatus lastActivity={user.last_activity_at} />
                     </div>
-                    
+
                     {/* Last Active */}
                     <div className="w-28 text-right">
                         <p className="text-zinc-400">{formatTimeAgo(user.last_activity_at)}</p>
                         <p className="text-[10px] text-zinc-600">Senast aktiv</p>
                     </div>
-                    
+
                     {/* Created */}
                     <div className="w-28 text-right">
                         <p className="text-zinc-400">{formatDate(user.created_at)}</p>
                         <p className="text-[10px] text-zinc-600">Registrerad</p>
                     </div>
-                    
+
                     {/* Stats */}
                     <div className="w-16 text-right">
                         <p className="text-zinc-400">{user.total_xp}</p>
                         <p className="text-[10px] text-zinc-600">XP</p>
                     </div>
-                    
+
                     <div className="w-16 text-right">
                         <p className="text-zinc-400">{user.tasks_completed}</p>
                         <p className="text-[10px] text-zinc-600">Tasks</p>
                     </div>
                 </div>
-                
+
                 {/* Actions */}
                 <div className="relative">
-                    <button 
+                    <button
                         onClick={() => setShowMenu(!showMenu)}
                         className="p-2 rounded-lg hover:bg-zinc-800 text-zinc-400 hover:text-white transition-colors"
                     >
                         <MoreHorizontal className="w-5 h-5" />
                     </button>
-                    
+
                     <AnimatePresence>
                         {showMenu && (
                             <>
-                                <div 
-                                    className="fixed inset-0 z-10" 
-                                    onClick={() => setShowMenu(false)} 
+                                <div
+                                    className="fixed inset-0 z-10"
+                                    onClick={() => setShowMenu(false)}
                                 />
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -314,7 +330,7 @@ function UserRow({
                     </AnimatePresence>
                 </div>
             </div>
-            
+
             {/* Mobile Activity Info */}
             <div className="md:hidden mt-3 pt-3 border-t border-zinc-800 grid grid-cols-2 gap-2 text-xs">
                 <div>
@@ -338,7 +354,7 @@ function UserRow({
 export default function AdminPage() {
     const { user, loading: authLoading } = useAuth()
     const router = useRouter()
-    
+
     const [users, setUsers] = useState<User[]>([])
     const [stats, setStats] = useState<Stats | null>(null)
     const [loading, setLoading] = useState(true)
@@ -353,7 +369,7 @@ export default function AdminPage() {
 
     const fetchData = useCallback(async (showRefreshing = false, runBackfill = false) => {
         if (showRefreshing) setRefreshing(true)
-        
+
         try {
             const token = getToken()
             if (!token) {
@@ -365,24 +381,24 @@ export default function AdminPage() {
             const headers = { Authorization: `Bearer ${token}` }
             // Fetch users with cache busting
             const usersRes = await fetch(
-                `${API_BASE_URL}/api/admin/users?per_page=100&_t=${Date.now()}`, 
+                `${API_BASE_URL}/api/admin/users?per_page=100&_t=${Date.now()}`,
                 { headers, cache: 'no-store' }
             )
-            
+
             if (usersRes.status === 403) {
                 router.push("/dashboard")
                 return
             }
-            
+
             if (!usersRes.ok) throw new Error(`API error: ${usersRes.status}`)
-            
+
             const data = await usersRes.json()
             setUsers(data.users || [])
 
             // Fetch stats
             try {
                 const statsRes = await fetch(
-                    `${API_BASE_URL}/api/admin/stats?_t=${Date.now()}`, 
+                    `${API_BASE_URL}/api/admin/stats?_t=${Date.now()}`,
                     { headers, cache: 'no-store' }
                 )
                 if (statsRes.ok) {
@@ -457,7 +473,7 @@ export default function AdminPage() {
     // Delete user
     const deleteUser = async (targetUser: User) => {
         if (!confirm(`Vill du verkligen ta bort ${targetUser.email}?`)) return
-        
+
         try {
             const token = getToken()
             await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}?hard_delete=true`, {
@@ -481,15 +497,15 @@ export default function AdminPage() {
         .filter(u => {
             if (!search) return true
             const q = search.toLowerCase()
-            return u.email.toLowerCase().includes(q) || 
-                   (u.full_name?.toLowerCase().includes(q))
+            return u.email.toLowerCase().includes(q) ||
+                (u.full_name?.toLowerCase().includes(q))
         })
         .sort((a, b) => {
             // Online users first, then by last activity
             const aOnline = isOnline(a.last_activity_at)
             const bOnline = isOnline(b.last_activity_at)
             if (aOnline !== bOnline) return bOnline ? 1 : -1
-            
+
             const aTime = a.last_activity_at ? new Date(a.last_activity_at).getTime() : 0
             const bTime = b.last_activity_at ? new Date(b.last_activity_at).getTime() : 0
             return bTime - aTime
@@ -540,9 +556,9 @@ export default function AdminPage() {
                             <span className="text-xs text-zinc-600">
                                 Uppdaterad {lastRefresh.toLocaleTimeString("sv-SE")}
                             </span>
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
+                            <Button
+                                variant="outline"
+                                size="sm"
                                 onClick={() => fetchData(true, false)}
                                 disabled={refreshing}
                                 className="border-zinc-700"
@@ -558,29 +574,29 @@ export default function AdminPage() {
             <div className="max-w-6xl mx-auto px-4 py-6">
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                    <StatCard 
-                        icon={Users} 
-                        value={users.length} 
-                        label="Totalt" 
-                        color="blue" 
+                    <StatCard
+                        icon={Users}
+                        value={users.length}
+                        label="Totalt"
+                        color="blue"
                     />
-                    <StatCard 
-                        icon={CircleDot} 
-                        value={onlineCount} 
-                        label="Online nu" 
-                        color="green" 
+                    <StatCard
+                        icon={CircleDot}
+                        value={onlineCount}
+                        label="Online nu"
+                        color="green"
                     />
-                    <StatCard 
-                        icon={Activity} 
-                        value={activeTodayCount} 
-                        label="Aktiva idag" 
-                        color="yellow" 
+                    <StatCard
+                        icon={Activity}
+                        value={activeTodayCount}
+                        label="Aktiva idag"
+                        color="yellow"
                     />
-                    <StatCard 
-                        icon={Calendar} 
-                        value={stats?.users_this_week || 0} 
-                        label="Nya denna vecka" 
-                        color="purple" 
+                    <StatCard
+                        icon={Calendar}
+                        value={stats?.users_this_week || 0}
+                        label="Nya denna vecka"
+                        color="purple"
                     />
                 </div>
 
@@ -591,9 +607,9 @@ export default function AdminPage() {
                         <div>
                             <h3 className="font-medium text-white">Kommande: E-postverifiering</h3>
                             <p className="text-sm text-zinc-400 mt-1">
-                                För att minska lösdrivarkonton planeras e-postverifiering där nya användare 
-                                måste bekräfta sin e-post innan de får full tillgång. Verifierade användare 
-                                visas med <CheckCircle className="w-3.5 h-3.5 inline text-green-400" /> och 
+                                För att minska lösdrivarkonton planeras e-postverifiering där nya användare
+                                måste bekräfta sin e-post innan de får full tillgång. Verifierade användare
+                                visas med <CheckCircle className="w-3.5 h-3.5 inline text-green-400" /> och
                                 overifierade med <XCircle className="w-3.5 h-3.5 inline text-yellow-400" />.
                             </p>
                         </div>
@@ -649,8 +665,8 @@ export default function AdminPage() {
                         </div>
                     ) : (
                         filteredUsers.map((u) => (
-                            <UserRow 
-                                key={u.id} 
+                            <UserRow
+                                key={u.id}
                                 user={u}
                                 onToggleActive={() => toggleUserActive(u)}
                                 onDelete={() => deleteUser(u)}

@@ -396,8 +396,8 @@ export default function TentaSimulatorPage() {
                 <div className="flex items-center justify-between text-sm mb-2">
                     <span className="text-zinc-500">Tillgängliga frågor:</span>
                     <span className="text-zinc-300">
-                        {allQuestions.filter(q => 
-                            (settings.includeG && q.difficulty === 'G') || 
+                        {allQuestions.filter(q =>
+                            (settings.includeG && q.difficulty === 'G') ||
                             (settings.includeVG && q.difficulty === 'VG')
                         ).length} st
                     </span>
@@ -762,7 +762,7 @@ export default function TentaSimulatorPage() {
                                     </span>
                                 </div>
                                 <div className="h-2 bg-green-900/30 rounded-full overflow-hidden mb-2">
-                                    <div 
+                                    <div
                                         className="h-full bg-green-500 transition-all"
                                         style={{ width: `${gPercentage}%` }}
                                     />
@@ -782,7 +782,7 @@ export default function TentaSimulatorPage() {
                                     </span>
                                 </div>
                                 <div className="h-2 bg-purple-900/30 rounded-full overflow-hidden mb-2">
-                                    <div 
+                                    <div
                                         className="h-full bg-purple-500 transition-all"
                                         style={{ width: `${vgPercentage}%` }}
                                     />

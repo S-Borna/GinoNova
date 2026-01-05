@@ -119,7 +119,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Heartbeat: Update last_activity_at for online status tracking
     useEffect(() => {
         if (!user) return
-        
+
         const heartbeat = async () => {
             try {
                 await getMe()
@@ -127,17 +127,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 // Ignore errors - just a heartbeat
             }
         }
-        
+
         // Send heartbeat immediately on mount
         heartbeat()
-        
+
         // Then every 1 minute for accurate online status
         const interval = setInterval(heartbeat, 60 * 1000)
-        
+
         // Also send heartbeat when window regains focus
         const handleFocus = () => heartbeat()
         window.addEventListener('focus', handleFocus)
-        
+
         return () => {
             clearInterval(interval)
             window.removeEventListener('focus', handleFocus)
