@@ -82,7 +82,8 @@ function timeAgo(date: string | null): string {
 
 function isOnline(date: string | null): boolean {
     if (!date) return false
-    return (Date.now() - new Date(date).getTime()) < 30 * 60 * 1000
+    // Online = aktivitet inom 10 minuter (heartbeat skickas var 5:e minut)
+    return (Date.now() - new Date(date).getTime()) < 10 * 60 * 1000
 }
 
 /* ============================================================================
