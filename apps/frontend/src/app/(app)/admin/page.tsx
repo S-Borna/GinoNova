@@ -33,6 +33,9 @@ import { useAuth } from "@/components/auth/AuthProvider"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 
+// Fallback admin check by email
+const ADMIN_EMAIL = "said.ebadi@hotmail.com"
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -429,19 +432,22 @@ export default function AdminPage() {
         }
     }, [])
 
+    // Admin check with email fallback
+    const isAdminUser = currentUser?.is_admin || currentUser?.email?.toLowerCase() === ADMIN_EMAIL
+    
     useEffect(() => {
-        if (!authLoading && currentUser?.is_admin) {
+        if (!authLoading && isAdminUser) {
             fetchData()
         }
-    }, [authLoading, currentUser, fetchData])
+    }, [authLoading, isAdminUser, fetchData])
 
     // Auto-refresh every 30 seconds
     useEffect(() => {
         const interval = setInterval(() => {
-            if (currentUser?.is_admin) fetchData()
+            if (isAdminUser) fetchData()
         }, 30000)
         return () => clearInterval(interval)
-    }, [currentUser, fetchData])
+    }, [isAdminUser, fetchData])
 
     // ==========================================================================
     // ACTIONS
@@ -580,7 +586,7 @@ export default function AdminPage() {
         )
     }
 
-    if (!currentUser?.is_admin) {
+    if (!isAdminUser) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 text-white p-4">
                 <Shield className="w-16 h-16 text-red-500 mb-4" />
