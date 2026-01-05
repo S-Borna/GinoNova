@@ -120,7 +120,7 @@ export default function StudyPage() {
     const router = useRouter()
     const [selectedModule, setSelectedModule] = useState<string | null>(null)
     const [selectedTasks, setSelectedTasks] = useState<string[]>([])
-    const [showTaskSelector, setShowTaskSelector] = useState(false)
+    const [showTaskSelector, setShowTaskSelector] = useState(true)
     const [studyMode, setStudyMode] = useState<'flashcards' | 'quiz' | null>(null)
     const [shuffleMode, setShuffleMode] = useState(false)
     const [difficulty, setDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
