@@ -28,6 +28,7 @@ import {
     Sparkles,
 } from "lucide-react"
 import { TentaCountdown } from "@/components/ui/tenta-countdown"
+import { LastFmNowPlaying } from "@/components/lastfm/LastFmNowPlaying"
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -121,6 +122,11 @@ export function Navbar() {
                                 <Sparkles className="w-4 h-4 text-emerald-400" />
                             </motion.div>
                         </Link>
+
+                        {/* Last.fm Now Playing - Desktop */}
+                        <div className="hidden md:block">
+                            <LastFmNowPlaying variant="mini" />
+                        </div>
 
                         {/* Countdown Timer - Desktop */}
                         <div className="hidden md:block">
