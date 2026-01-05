@@ -2,7 +2,7 @@
 
 /**
  * Tenta-Simulator - Exam Prep Mode
- * 
+ *
  * Combines quizzes and flashcards in a timed exam-like environment
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
@@ -19,9 +19,9 @@ import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-    ArrowLeft, ArrowRight, Clock, CheckCircle, XCircle, 
-    Trophy, Brain, RotateCcw, Play, Pause, Target, 
+import {
+    ArrowLeft, ArrowRight, Clock, CheckCircle, XCircle,
+    Trophy, Brain, RotateCcw, Play, Pause, Target,
     Zap, Award, BookOpen, AlertTriangle
 } from "lucide-react"
 
@@ -69,7 +69,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
-    
+
     // State
     const [phase, setPhase] = useState<SimulatorPhase>('setup')
     const [settings, setSettings] = useState<SimulatorSettings>(DEFAULT_SETTINGS)
@@ -82,6 +82,7 @@ export default function TentaSimulatorPage() {
     const [isPaused, setIsPaused] = useState(false)
     const [showLiveFeedback, setShowLiveFeedback] = useState(false)
     const [hasAutoStarted, setHasAutoStarted] = useState(false)
+    const [showAbortModal, setShowAbortModal] = useState(false)
 
     // Get all questions from DOE25
     const allQuestions = useMemo(() => {
@@ -91,11 +92,11 @@ export default function TentaSimulatorPage() {
     // Parse URL params and auto-start if params provided
     useEffect(() => {
         if (hasAutoStarted) return
-        
+
         const timeParam = searchParams?.get('time')
         const countParam = searchParams?.get('count')
         const gradingParam = searchParams?.get('grading')
-        
+
         if (timeParam || countParam || gradingParam) {
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
@@ -105,7 +106,7 @@ export default function TentaSimulatorPage() {
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
-            
+
             // Auto-start the quiz
             setTimeout(() => {
                 let filtered = allQuestions.filter(q => {
@@ -115,7 +116,7 @@ export default function TentaSimulatorPage() {
                 })
                 const shuffled = shuffleArray(filtered)
                 const prepared = shuffled.slice(0, newSettings.questionCount)
-                
+
                 setQuestions(prepared)
                 setCurrentIndex(0)
                 setSelectedAnswer(null)
@@ -183,7 +184,7 @@ export default function TentaSimulatorPage() {
 
         const currentQuestion = questions[currentIndex]
         const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000)
-        
+
         const result: QuizResult = {
             questionId: currentQuestion.id,
             correct: selectedAnswer === currentQuestion.correctIndex,
@@ -213,6 +214,13 @@ export default function TentaSimulatorPage() {
         } else {
             setPhase('results')
         }
+    }
+
+    // Abort exam and go to results
+    const abortExam = () => {
+        setShowAbortModal(false)
+        setShowLiveFeedback(false)
+        setPhase('results')
     }
 
     // Calculate results
@@ -373,15 +381,70 @@ export default function TentaSimulatorPage() {
 
         return (
             <div className="max-w-3xl mx-auto">
+                {/* Abort confirmation modal */}
+                <AnimatePresence>
+                    {showAbortModal && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                            onClick={() => setShowAbortModal(false)}
+                        >
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 max-w-md w-full"
+                            >
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
+                                        <AlertTriangle className="w-6 h-6 text-orange-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-white">Avbryt provet?</h3>
+                                        <p className="text-sm text-zinc-400">Du har svarat på {results.length} av {questions.length} frågor</p>
+                                    </div>
+                                </div>
+                                <p className="text-zinc-300 mb-6">
+                                    Är du säker på att du vill avbryta? Dina {results.length} besvarade frågor kommer att rättas och du får se ditt resultat.
+                                </p>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={() => setShowAbortModal(false)}
+                                        className="flex-1 py-3 px-4 rounded-xl border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition-all"
+                                    >
+                                        Fortsätt provet
+                                    </button>
+                                    <button
+                                        onClick={abortExam}
+                                        className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold hover:opacity-90 transition-all"
+                                    >
+                                        Avbryt & rätta
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setShowAbortModal(true)}
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all text-sm"
+                        >
+                            <XCircle className="w-4 h-4" />
+                            Avbryt
+                        </button>
                         <span className="text-zinc-400">
                             Fråga {currentIndex + 1} / {questions.length}
                         </span>
                         <span className={cn(
                             "px-2 py-1 rounded text-xs font-medium",
-                            currentQuestion.difficulty === 'VG' 
+                            currentQuestion.difficulty === 'VG'
                                 ? "bg-purple-500/20 text-purple-300"
                                 : "bg-green-500/20 text-green-300"
                         )}>
@@ -402,8 +465,8 @@ export default function TentaSimulatorPage() {
                         <div className={cn(
                             "flex items-center gap-2 px-4 py-2 rounded-xl",
                             timeRemaining < 60 ? "bg-red-500/20 text-red-400" :
-                            timeRemaining < 300 ? "bg-yellow-500/20 text-yellow-400" :
-                            "bg-zinc-800 text-zinc-300"
+                                timeRemaining < 300 ? "bg-yellow-500/20 text-yellow-400" :
+                                    "bg-zinc-800 text-zinc-300"
                         )}>
                             <Clock className="w-4 h-4" />
                             <span className="font-mono font-semibold">{formatTime(timeRemaining)}</span>
@@ -419,7 +482,7 @@ export default function TentaSimulatorPage() {
 
                 {/* Progress bar */}
                 <div className="h-1 bg-zinc-800 rounded-full mb-8 overflow-hidden">
-                    <div 
+                    <div
                         className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
                         style={{ width: `${progress}%` }}
                     />
@@ -438,7 +501,7 @@ export default function TentaSimulatorPage() {
                             <p className="text-blue-300 text-sm">{currentQuestion.scenario}</p>
                         </div>
                     )}
-                    
+
                     <h2 className="text-xl font-semibold text-white leading-relaxed">
                         {currentQuestion.question}
                     </h2>
@@ -477,9 +540,9 @@ export default function TentaSimulatorPage() {
                                         !showLiveFeedback && !isSelected && "bg-zinc-800 text-zinc-400",
                                         showLiveFeedback && !showAsCorrect && !showAsWrong && "bg-zinc-800 text-zinc-500"
                                     )}>
-                                        {showAsCorrect ? <CheckCircle className="w-5 h-5" /> : 
-                                         showAsWrong ? <XCircle className="w-5 h-5" /> : 
-                                         String.fromCharCode(65 + idx)}
+                                        {showAsCorrect ? <CheckCircle className="w-5 h-5" /> :
+                                            showAsWrong ? <XCircle className="w-5 h-5" /> :
+                                                String.fromCharCode(65 + idx)}
                                     </span>
                                     <span>{option}</span>
                                 </div>
@@ -497,8 +560,8 @@ export default function TentaSimulatorPage() {
                             exit={{ opacity: 0, y: -10 }}
                             className={cn(
                                 "mb-6 p-5 rounded-xl border",
-                                isCorrect 
-                                    ? "bg-green-500/10 border-green-500/30" 
+                                isCorrect
+                                    ? "bg-green-500/10 border-green-500/30"
                                     : "bg-red-500/10 border-red-500/30"
                             )}
                         >
@@ -553,7 +616,7 @@ export default function TentaSimulatorPage() {
                         onClick={moveToNextQuestion}
                         className={cn(
                             "w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2",
-                            isCorrect 
+                            isCorrect
                                 ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
                                 : "bg-gradient-to-r from-orange-500 to-red-500 text-white"
                         )}
@@ -572,12 +635,12 @@ export default function TentaSimulatorPage() {
     // Render results phase
     const renderResults = () => {
         const gradeInfo = getGrade(score.percentage)
-        
+
         // Group results by category
         const categoryStats = results.reduce((acc, result) => {
             const question = questions.find(q => q.id === result.questionId)
             if (!question) return acc
-            
+
             const category = question.category || 'Övrigt'
             if (!acc[category]) {
                 acc[category] = { correct: 0, total: 0 }
@@ -599,7 +662,7 @@ export default function TentaSimulatorPage() {
                             {gradeInfo.grade}
                         </span>
                     </div>
-                    
+
                     <h1 className="text-3xl font-bold text-white mb-2">
                         {score.correct} av {score.total} rätt
                     </h1>
@@ -643,11 +706,11 @@ export default function TentaSimulatorPage() {
                                     <div key={category} className="flex items-center gap-4">
                                         <span className="text-zinc-400 w-40 truncate">{category}</span>
                                         <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div 
+                                            <div
                                                 className={cn(
                                                     "h-full transition-all",
                                                     pct >= 75 ? "bg-green-500" :
-                                                    pct >= 50 ? "bg-yellow-500" : "bg-red-500"
+                                                        pct >= 50 ? "bg-yellow-500" : "bg-red-500"
                                                 )}
                                                 style={{ width: `${pct}%` }}
                                             />
@@ -665,21 +728,21 @@ export default function TentaSimulatorPage() {
                 {Object.entries(categoryStats)
                     .filter(([, s]) => (s.correct / s.total) < 0.5)
                     .length > 0 && (
-                    <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-4 mb-8">
-                        <div className="flex items-start gap-3">
-                            <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5" />
-                            <div>
-                                <h3 className="font-semibold text-orange-300 mb-1">Fokusområden</h3>
-                                <p className="text-orange-200/70 text-sm">
-                                    Repetera: {Object.entries(categoryStats)
-                                        .filter(([, s]) => (s.correct / s.total) < 0.5)
-                                        .map(([cat]) => cat)
-                                        .join(', ')}
-                                </p>
+                        <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-4 mb-8">
+                            <div className="flex items-start gap-3">
+                                <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5" />
+                                <div>
+                                    <h3 className="font-semibold text-orange-300 mb-1">Fokusområden</h3>
+                                    <p className="text-orange-200/70 text-sm">
+                                        Repetera: {Object.entries(categoryStats)
+                                            .filter(([, s]) => (s.correct / s.total) < 0.5)
+                                            .map(([cat]) => cat)
+                                            .join(', ')}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
                 {/* Actions */}
                 <div className="flex gap-4">
@@ -721,7 +784,7 @@ export default function TentaSimulatorPage() {
                     if (!question) return null
 
                     return (
-                        <div 
+                        <div
                             key={result.questionId}
                             className={cn(
                                 "bg-zinc-900/50 border rounded-xl p-6",
@@ -745,11 +808,11 @@ export default function TentaSimulatorPage() {
                                         key={optIdx}
                                         className={cn(
                                             "p-3 rounded-lg text-sm",
-                                            optIdx === question.correctIndex 
+                                            optIdx === question.correctIndex
                                                 ? "bg-green-500/20 text-green-300 border border-green-500/30"
                                                 : optIdx === result.selectedIndex && !result.correct
-                                                ? "bg-red-500/20 text-red-300 border border-red-500/30"
-                                                : "bg-zinc-800/50 text-zinc-400"
+                                                    ? "bg-red-500/20 text-red-300 border border-red-500/30"
+                                                    : "bg-zinc-800/50 text-zinc-400"
                                         )}
                                     >
                                         <span className="font-semibold mr-2">{String.fromCharCode(65 + optIdx)}.</span>
@@ -773,7 +836,7 @@ export default function TentaSimulatorPage() {
         <div className="min-h-screen bg-zinc-950 text-white p-8">
             {/* Back link */}
             <div className="max-w-3xl mx-auto mb-8">
-                <Link 
+                <Link
                     href="/study"
                     className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
                 >

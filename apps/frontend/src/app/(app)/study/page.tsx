@@ -126,7 +126,7 @@ export default function StudyPage() {
     const [difficulty, setDifficulty] = useState<'all' | 'beginner' | 'intermediate' | 'advanced'>('all')
     const [questionCount, setQuestionCount] = useState<number>(20)
     const [progress, setProgress] = useState<Record<string, number>>({})
-    
+
     // Tenta-simulator settings
     const [tentaTime, setTentaTime] = useState<number>(90)
     const [tentaCount, setTentaCount] = useState<number>(200)
@@ -284,7 +284,7 @@ export default function StudyPage() {
                     )}>
                         {/* Animated background pattern */}
                         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
-                        
+
                         {/* Main content */}
                         <div className="relative z-10">
                             <div className="flex items-start justify-between mb-6">
@@ -445,7 +445,7 @@ export default function StudyPage() {
                     <div className="flex items-center justify-center gap-4 mb-8">
                         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
                         <div className="flex items-center gap-3">
-                            <motion.span 
+                            <motion.span
                                 className="text-4xl"
                                 animate={{ rotate: [0, 10, -10, 0] }}
                                 transition={{ duration: 2, repeat: Infinity }}
@@ -461,7 +461,7 @@ export default function StudyPage() {
                                     Quiz
                                 </span>
                             </div>
-                            <motion.span 
+                            <motion.span
                                 className="text-4xl"
                                 animate={{ rotate: [0, -10, 10, 0] }}
                                 transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
