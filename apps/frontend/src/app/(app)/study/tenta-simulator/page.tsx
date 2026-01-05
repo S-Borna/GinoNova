@@ -66,6 +66,27 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffled
 }
 
+// Shuffle options within a question and update correctIndex
+function shuffleQuestionOptions(question: TaskQuizQuestion): TaskQuizQuestion {
+    // Create array of option objects with their original index
+    const optionsWithIndex = question.options.map((option, index) => ({
+        option,
+        wasCorrect: index === question.correctIndex
+    }))
+    
+    // Shuffle the options
+    const shuffledOptions = shuffleArray(optionsWithIndex)
+    
+    // Find new correct index
+    const newCorrectIndex = shuffledOptions.findIndex(o => o.wasCorrect) as 0 | 1 | 2 | 3
+    
+    return {
+        ...question,
+        options: shuffledOptions.map(o => o.option) as [string, string, string, string],
+        correctIndex: newCorrectIndex
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -115,7 +136,9 @@ export default function TentaSimulatorPage() {
                     return false
                 })
                 const shuffled = shuffleArray(filtered)
-                const prepared = shuffled.slice(0, newSettings.questionCount)
+                const sliced = shuffled.slice(0, newSettings.questionCount)
+                // Shuffle options within each question for randomized answer positions
+                const prepared = sliced.map(q => shuffleQuestionOptions(q))
 
                 setQuestions(prepared)
                 setCurrentIndex(0)
@@ -136,9 +159,11 @@ export default function TentaSimulatorPage() {
             return false
         })
 
-        // Shuffle and take requested count
+        // Shuffle questions and take requested count
         const shuffled = shuffleArray(filtered)
-        return shuffled.slice(0, settings.questionCount)
+        const sliced = shuffled.slice(0, settings.questionCount)
+        // Shuffle options within each question for randomized answer positions
+        return sliced.map(q => shuffleQuestionOptions(q))
     }, [allQuestions, settings])
 
     // Timer effect
