@@ -196,11 +196,11 @@ def require_admin(current_user: UserPublic = Depends(get_current_user)) -> UserP
 
 def get_user_status(last_activity: Optional[datetime], last_login: Optional[datetime] = None) -> str:
     """
-    Calculate user status based on last_login_at (actual login)
-    NOT last_activity_at (which updates on every API call)
+    Calculate user status based on last_activity_at (most recent activity)
+    This tracks actual usage, not just login time
     """
-    # Prefer last_login_at for accurate "online" status
-    check_time = last_login if last_login else last_activity
+    # Prefer last_activity_at as it updates on every API call (more accurate)
+    check_time = last_activity if last_activity else last_login
 
     if not check_time:
         return "offline"
@@ -212,9 +212,9 @@ def get_user_status(last_activity: Optional[datetime], last_login: Optional[date
 
     diff = (now - check_time).total_seconds()
 
-    if diff < 300:  # 5 minutes since login
+    if diff < 600:  # 10 minutes - online (was 5 min, too short)
         return "online"
-    elif diff < 3600:  # 1 hour since login
+    elif diff < 1800:  # 30 minutes - away (was 1 hour)
         return "away"
     else:
         return "offline"
