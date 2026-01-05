@@ -131,9 +131,12 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
     const online = isOnline(lastActivity)
     const activeToday = isActiveToday(lastActivity)
 
+    // Show raw date on hover for debugging
+    const rawDate = lastActivity || "NULL"
+
     if (online) {
         return (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                 <span className="text-xs text-green-400">Online</span>
             </div>
@@ -142,7 +145,7 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
 
     if (activeToday) {
         return (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
                 <div className="w-2 h-2 rounded-full bg-yellow-500" />
                 <span className="text-xs text-yellow-400">Aktiv idag</span>
             </div>
@@ -150,7 +153,7 @@ function OnlineStatus({ lastActivity }: { lastActivity: string | null }) {
     }
 
     return (
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5" title={`Raw: ${rawDate}`}>
             <div className="w-2 h-2 rounded-full bg-zinc-600" />
             <span className="text-xs text-zinc-500">Offline</span>
         </div>
@@ -199,7 +202,6 @@ function UserRow({
     onForceLogout,
     onBan,
     onToggleAdmin,
-    onRefreshActivity,
 }: {
     user: User
     onToggleActive: () => void
@@ -207,7 +209,6 @@ function UserRow({
     onForceLogout: () => void
     onBan: () => void
     onToggleAdmin: () => void
-    onRefreshActivity: () => void
 }) {
     const [showMenu, setShowMenu] = useState(false)
     const online = isOnline(user.last_activity_at)
@@ -313,15 +314,6 @@ function UserRow({
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     className="absolute right-0 top-full mt-1 w-52 py-1 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl z-20"
                                 >
-                                    {/* Refresh Activity - för användare som visas offline men är online */}
-                                    <button
-                                        onClick={() => { onRefreshActivity(); setShowMenu(false) }}
-                                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center gap-2"
-                                    >
-                                        <RefreshCw className="w-4 h-4 text-cyan-400" />
-                                        <span className="text-cyan-400">Uppdatera aktivitet</span>
-                                    </button>
-
                                     {/* Force Logout */}
                                     <button
                                         onClick={() => { onForceLogout(); setShowMenu(false) }}
@@ -330,7 +322,7 @@ function UserRow({
                                         <LogOut className="w-4 h-4 text-orange-400" />
                                         <span className="text-orange-400">Tvångsutloggning</span>
                                     </button>
-                                    
+
                                     {/* Toggle Admin */}
                                     <button
                                         onClick={() => { onToggleAdmin(); setShowMenu(false) }}
@@ -558,21 +550,6 @@ export default function AdminPage() {
         } catch (err) {
             console.error("Force logout error:", err)
             alert("❌ Kunde inte logga ut användaren")
-        }
-    }
-
-    // Refresh user activity (fix users showing offline when online)
-    const refreshUserActivity = async (targetUser: User) => {
-        try {
-            const token = getToken()
-            await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}/refresh-activity`, {
-                method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            fetchData(true)
-        } catch (err) {
-            console.error("Refresh activity error:", err)
-            alert("❌ Kunde inte uppdatera aktivitet")
         }
     }
 
@@ -812,7 +789,6 @@ export default function AdminPage() {
                                 onForceLogout={() => forceLogoutUser(u)}
                                 onBan={() => banUser(u)}
                                 onToggleAdmin={() => toggleAdminStatus(u)}
-                                onRefreshActivity={() => refreshUserActivity(u)}
                             />
                         ))
                     )}

@@ -953,8 +953,8 @@ def force_logout_user(
 ):
     """
     Force logout a user by invalidating their session.
-    
-    This sets last_activity_at to a past date, effectively 
+
+    This sets last_activity_at to a past date, effectively
     showing them as offline. They will need to re-login.
     """
     add_phase_header(response)
@@ -969,7 +969,7 @@ def force_logout_user(
     # For true session invalidation, we'd need a token blacklist
     from datetime import datetime, timezone
     user_repository.update_user(user_id, last_activity_at=datetime(2000, 1, 1, tzinfo=timezone.utc))
-    
+
     return {"success": True, "message": f"User {user.email} logged out (session invalidated)"}
 
 
@@ -995,11 +995,11 @@ def ban_user(
     # Deactivate and set last_activity to epoch
     from datetime import datetime, timezone
     user_repository.update_user(
-        user_id, 
+        user_id,
         is_active=False,
         last_activity_at=datetime(2000, 1, 1, tzinfo=timezone.utc)
     )
-    
+
     return {"success": True, "message": f"User {user.email} has been banned"}
 
 
@@ -1022,7 +1022,7 @@ def refresh_user_activity(
 
     from datetime import datetime, timezone
     user_repository.update_user(user_id, last_activity_at=datetime.now(timezone.utc))
-    
+
     return {"success": True, "message": f"Activity refreshed for {user.email}"}
 
 
