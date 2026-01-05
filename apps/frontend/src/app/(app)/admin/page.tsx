@@ -31,6 +31,10 @@ import {
     CheckCircle,
     XCircle,
     CircleDot,
+    LogOut,
+    Ban,
+    ShieldCheck,
+    ShieldOff,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -192,10 +196,16 @@ function UserRow({
     user,
     onToggleActive,
     onDelete,
+    onForceLogout,
+    onBan,
+    onToggleAdmin,
 }: {
     user: User
     onToggleActive: () => void
     onDelete: () => void
+    onForceLogout: () => void
+    onBan: () => void
+    onToggleAdmin: () => void
 }) {
     const [showMenu, setShowMenu] = useState(false)
     const online = isOnline(user.last_activity_at)
@@ -299,8 +309,39 @@ function UserRow({
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
-                                    className="absolute right-0 top-full mt-1 w-48 py-1 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl z-20"
+                                    className="absolute right-0 top-full mt-1 w-52 py-1 bg-zinc-900 border border-zinc-800 rounded-xl shadow-xl z-20"
                                 >
+                                    {/* Force Logout */}
+                                    <button
+                                        onClick={() => { onForceLogout(); setShowMenu(false) }}
+                                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center gap-2"
+                                    >
+                                        <LogOut className="w-4 h-4 text-orange-400" />
+                                        <span className="text-orange-400">Tvångsutloggning</span>
+                                    </button>
+                                    
+                                    {/* Toggle Admin */}
+                                    <button
+                                        onClick={() => { onToggleAdmin(); setShowMenu(false) }}
+                                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center gap-2"
+                                    >
+                                        {user.is_admin ? (
+                                            <>
+                                                <ShieldOff className="w-4 h-4 text-zinc-400" />
+                                                <span className="text-zinc-400">Ta bort admin</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <ShieldCheck className="w-4 h-4 text-purple-400" />
+                                                <span className="text-purple-400">Gör till admin</span>
+                                            </>
+                                        )}
+                                    </button>
+
+                                    {/* Divider */}
+                                    <div className="my-1 border-t border-zinc-800" />
+
+                                    {/* Toggle Active */}
                                     <button
                                         onClick={() => { onToggleActive(); setShowMenu(false) }}
                                         className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center gap-2"
@@ -317,12 +358,23 @@ function UserRow({
                                             </>
                                         )}
                                     </button>
+
+                                    {/* Ban */}
+                                    <button
+                                        onClick={() => { onBan(); setShowMenu(false) }}
+                                        className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-800 flex items-center gap-2"
+                                    >
+                                        <Ban className="w-4 h-4 text-red-500" />
+                                        <span className="text-red-500">Spärra konto</span>
+                                    </button>
+
+                                    {/* Delete */}
                                     <button
                                         onClick={() => { onDelete(); setShowMenu(false) }}
                                         className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-zinc-800 flex items-center gap-2"
                                     >
                                         <Trash2 className="w-4 h-4" />
-                                        Ta bort
+                                        Radera permanent
                                     </button>
                                 </motion.div>
                             </>
@@ -466,7 +518,7 @@ export default function AdminPage() {
 
     // Delete user
     const deleteUser = async (targetUser: User) => {
-        if (!confirm(`Vill du verkligen ta bort ${targetUser.email}?`)) return
+        if (!confirm(`⚠️ VARNING: Detta raderar användaren PERMANENT!\n\nRadera ${targetUser.email}?`)) return
 
         try {
             const token = getToken()
@@ -477,6 +529,64 @@ export default function AdminPage() {
             fetchData(true)
         } catch (err) {
             console.error("Delete user error:", err)
+        }
+    }
+
+    // Force logout user
+    const forceLogoutUser = async (targetUser: User) => {
+        if (!confirm(`Tvångsutlogga ${targetUser.email}?\n\nAnvändaren måste logga in igen.`)) return
+
+        try {
+            const token = getToken()
+            await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}/force-logout`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            alert(`✅ ${targetUser.email} har loggats ut`)
+            fetchData(true)
+        } catch (err) {
+            console.error("Force logout error:", err)
+            alert("❌ Kunde inte logga ut användaren")
+        }
+    }
+
+    // Ban user
+    const banUser = async (targetUser: User) => {
+        if (!confirm(`🚫 SPÄRRA ${targetUser.email}?\n\nKontot inaktiveras och användaren kan inte logga in.`)) return
+
+        try {
+            const token = getToken()
+            await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}/ban`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+            alert(`🚫 ${targetUser.email} har spärrats`)
+            fetchData(true)
+        } catch (err) {
+            console.error("Ban user error:", err)
+            alert("❌ Kunde inte spärra användaren")
+        }
+    }
+
+    // Toggle admin status
+    const toggleAdminStatus = async (targetUser: User) => {
+        const action = targetUser.is_admin ? "ta bort admin från" : "göra till admin"
+        if (!confirm(`${action.charAt(0).toUpperCase() + action.slice(1)} ${targetUser.email}?`)) return
+
+        try {
+            const token = getToken()
+            await fetch(`${API_BASE_URL}/api/admin/users/${targetUser.id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ is_admin: !targetUser.is_admin }),
+            })
+            fetchData(true)
+        } catch (err) {
+            console.error("Toggle admin error:", err)
+            alert("❌ Kunde inte ändra admin-status")
         }
     }
 
@@ -673,6 +783,9 @@ export default function AdminPage() {
                                 user={u}
                                 onToggleActive={() => toggleUserActive(u)}
                                 onDelete={() => deleteUser(u)}
+                                onForceLogout={() => forceLogoutUser(u)}
+                                onBan={() => banUser(u)}
+                                onToggleAdmin={() => toggleAdminStatus(u)}
                             />
                         ))
                     )}

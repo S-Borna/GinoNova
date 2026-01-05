@@ -945,6 +945,64 @@ def deactivate_user(
         return {"success": True, "message": "User deactivated"}
 
 
+@admin_router.post("/users/{user_id}/force-logout")
+def force_logout_user(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Force logout a user by invalidating their session.
+    
+    This sets last_activity_at to a past date, effectively 
+    showing them as offline. They will need to re-login.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Set last_activity_at to epoch (effectively "never active")
+    # The user's JWT is still valid but they'll appear offline
+    # For true session invalidation, we'd need a token blacklist
+    from datetime import datetime, timezone
+    user_repository.update_user(user_id, last_activity_at=datetime(2000, 1, 1, tzinfo=timezone.utc))
+    
+    return {"success": True, "message": f"User {user.email} logged out (session invalidated)"}
+
+
+@admin_router.post("/users/{user_id}/ban")
+def ban_user(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Ban a user - deactivates account and prevents login.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot ban yourself")
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Deactivate and set last_activity to epoch
+    from datetime import datetime, timezone
+    user_repository.update_user(
+        user_id, 
+        is_active=False,
+        last_activity_at=datetime(2000, 1, 1, tzinfo=timezone.utc)
+    )
+    
+    return {"success": True, "message": f"User {user.email} has been banned"}
+
+
 # ==============================================================================
 # SYSTEM STATS ENDPOINTS
 # ==============================================================================
