@@ -55,7 +55,7 @@ export function LastFmNowPlaying({
 
     useEffect(() => {
         if (isHidden) return // Don't fetch if hidden
-        
+
         const fetchNowPlaying = async () => {
             try {
                 // Add cache buster to prevent browser caching
@@ -205,79 +205,79 @@ export function LastFmNowPlaying({
                         className
                     )}
                 >
-                {/* Album art */}
-                <div className="relative shrink-0">
-                    {track.albumImageUrl ? (
-                        <img
-                            src={track.albumImageUrl}
-                            alt={track.album}
-                            className="w-12 h-12 rounded-lg shadow-lg"
-                        />
-                    ) : (
-                        <div className="w-12 h-12 rounded-lg bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-5 h-5 text-zinc-500" />
-                        </div>
-                    )}
-                    {track.isPlaying && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                            <Volume2 className="w-2.5 h-2.5 text-white" />
-                        </div>
-                    )}
-                </div>
-
-                {/* Track info */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                        <span className={cn(
-                            "text-xs font-medium",
-                            track.isPlaying ? "text-red-400" : "text-zinc-500"
-                        )}>
-                            {track.isPlaying ? 'LYSSNAR PÅ' : 'SENAST SPELAD'}
-                        </span>
+                    {/* Album art */}
+                    <div className="relative shrink-0">
+                        {track.albumImageUrl ? (
+                            <img
+                                src={track.albumImageUrl}
+                                alt={track.album}
+                                className="w-12 h-12 rounded-lg shadow-lg"
+                            />
+                        ) : (
+                            <div className="w-12 h-12 rounded-lg bg-zinc-800 flex items-center justify-center">
+                                <Music className="w-5 h-5 text-zinc-500" />
+                            </div>
+                        )}
                         {track.isPlaying && (
-                            <div className="flex gap-0.5">
-                                {[...Array(3)].map((_, i) => (
-                                    <motion.div
-                                        key={i}
-                                        className="w-0.5 bg-red-500 rounded-full"
-                                        animate={{ height: [4, 12, 4] }}
-                                        transition={{
-                                            duration: 0.5,
-                                            repeat: Infinity,
-                                            delay: i * 0.1
-                                        }}
-                                    />
-                                ))}
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                <Volume2 className="w-2.5 h-2.5 text-white" />
                             </div>
                         )}
                     </div>
-                    <p className="text-sm font-medium text-white truncate">{track.title}</p>
-                    <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
-                    {!track.isPlaying && track.scrobbledAt && (
-                        <p className="text-[10px] text-zinc-500 flex items-center gap-1 mt-0.5">
-                            <Clock className="w-3 h-3" />
-                            {formatTimeAgo(track.scrobbledAt)}
-                        </p>
-                    )}
-                </div>
 
-                {/* Last.fm logo */}
-                <div className="shrink-0 opacity-50 group-hover:opacity-100 transition-opacity">
-                    <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z" />
-                    </svg>
-                </div>
-            </motion.a>
-            
-            {/* Dismiss button */}
-            <button
-                onClick={handleDismiss}
-                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center opacity-0 group-hover/dismiss:opacity-100 transition-opacity hover:bg-zinc-700 hover:border-zinc-600"
-                title="Dölj widgeten"
-            >
-                <X className="w-3 h-3 text-zinc-400" />
-            </button>
-        </div>
+                    {/* Track info */}
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                            <span className={cn(
+                                "text-xs font-medium",
+                                track.isPlaying ? "text-red-400" : "text-zinc-500"
+                            )}>
+                                {track.isPlaying ? 'LYSSNAR PÅ' : 'SENAST SPELAD'}
+                            </span>
+                            {track.isPlaying && (
+                                <div className="flex gap-0.5">
+                                    {[...Array(3)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            className="w-0.5 bg-red-500 rounded-full"
+                                            animate={{ height: [4, 12, 4] }}
+                                            transition={{
+                                                duration: 0.5,
+                                                repeat: Infinity,
+                                                delay: i * 0.1
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <p className="text-sm font-medium text-white truncate">{track.title}</p>
+                        <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
+                        {!track.isPlaying && track.scrobbledAt && (
+                            <p className="text-[10px] text-zinc-500 flex items-center gap-1 mt-0.5">
+                                <Clock className="w-3 h-3" />
+                                {formatTimeAgo(track.scrobbledAt)}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Last.fm logo */}
+                    <div className="shrink-0 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z" />
+                        </svg>
+                    </div>
+                </motion.a>
+
+                {/* Dismiss button */}
+                <button
+                    onClick={handleDismiss}
+                    className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center opacity-0 group-hover/dismiss:opacity-100 transition-opacity hover:bg-zinc-700 hover:border-zinc-600"
+                    title="Dölj widgeten"
+                >
+                    <X className="w-3 h-3 text-zinc-400" />
+                </button>
+            </div>
         )
     }
 
