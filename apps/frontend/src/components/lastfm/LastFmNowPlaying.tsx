@@ -10,7 +10,7 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { Music, ExternalLink, Volume2, Clock } from "lucide-react"
+import { Music, ExternalLink, Volume2, Clock, X } from "lucide-react"
 
 interface LastFmTrack {
     isPlaying: boolean
@@ -28,14 +28,34 @@ interface LastFmNowPlayingProps {
     variant?: 'compact' | 'full' | 'mini'
 }
 
-export function LastFmNowPlaying({ 
-    className, 
+const STORAGE_KEY = 'lastfm-widget-hidden'
+
+export function LastFmNowPlaying({
+    className,
     variant = 'compact'
 }: LastFmNowPlayingProps) {
     const [track, setTrack] = useState<LastFmTrack | null>(null)
     const [loading, setLoading] = useState(true)
+    const [isHidden, setIsHidden] = useState(false)
+
+    // Check localStorage on mount
+    useEffect(() => {
+        const hidden = localStorage.getItem(STORAGE_KEY)
+        if (hidden === 'true') {
+            setIsHidden(true)
+        }
+    }, [])
+
+    const handleDismiss = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        setIsHidden(true)
+        localStorage.setItem(STORAGE_KEY, 'true')
+    }
 
     useEffect(() => {
+        if (isHidden) return // Don't fetch if hidden
+        
         const fetchNowPlaying = async () => {
             try {
                 // Add cache buster to prevent browser caching
@@ -58,11 +78,11 @@ export function LastFmNowPlaying({
         }
 
         fetchNowPlaying()
-        
+
         // Poll every 15 seconds for more responsive updates
         const interval = setInterval(fetchNowPlaying, 15000)
         return () => clearInterval(interval)
-    }, [])
+    }, [isHidden])
 
     // Format relative time
     const formatTimeAgo = (timestamp: number) => {
@@ -71,6 +91,11 @@ export function LastFmNowPlaying({
         if (seconds < 3600) return `${Math.floor(seconds / 60)} min sedan`
         if (seconds < 86400) return `${Math.floor(seconds / 3600)} tim sedan`
         return `${Math.floor(seconds / 86400)} dagar sedan`
+    }
+
+    // Don't render if user dismissed
+    if (isHidden) {
+        return null
     }
 
     if (loading) {
@@ -100,7 +125,7 @@ export function LastFmNowPlaying({
                 </div>
             )
         }
-        
+
         return (
             <div className={cn(
                 "flex items-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800",
@@ -128,7 +153,7 @@ export function LastFmNowPlaying({
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
                     "group flex items-center gap-2 px-3 py-1.5 rounded-full",
-                    track.isPlaying 
+                    track.isPlaying
                         ? "bg-gradient-to-r from-red-500/10 to-pink-500/10 border border-red-500/20 hover:border-red-500/40"
                         : "bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700",
                     "transition-all cursor-pointer",
@@ -137,8 +162,8 @@ export function LastFmNowPlaying({
             >
                 <div className="relative">
                     {track.albumImageUrl ? (
-                        <img 
-                            src={track.albumImageUrl} 
+                        <img
+                            src={track.albumImageUrl}
                             alt={track.album}
                             className="w-5 h-5 rounded-sm"
                         />
@@ -163,27 +188,28 @@ export function LastFmNowPlaying({
     // Compact variant
     if (variant === 'compact') {
         return (
-            <motion.a
-                href={track.songUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={cn(
-                    "group flex items-center gap-3 p-3 rounded-xl",
-                    "bg-gradient-to-r from-zinc-900/80 to-zinc-900/50",
-                    track.isPlaying 
-                        ? "border border-red-500/30 hover:border-red-500/50"
-                        : "border border-zinc-800 hover:border-zinc-700",
-                    "transition-all cursor-pointer",
-                    className
-                )}
-            >
+            <div className="relative group/dismiss">
+                <motion.a
+                    href={track.songUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={cn(
+                        "flex items-center gap-3 p-3 rounded-xl",
+                        "bg-gradient-to-r from-zinc-900/80 to-zinc-900/50",
+                        track.isPlaying
+                            ? "border border-red-500/30 hover:border-red-500/50"
+                            : "border border-zinc-800 hover:border-zinc-700",
+                        "transition-all cursor-pointer",
+                        className
+                    )}
+                >
                 {/* Album art */}
                 <div className="relative shrink-0">
                     {track.albumImageUrl ? (
-                        <img 
-                            src={track.albumImageUrl} 
+                        <img
+                            src={track.albumImageUrl}
                             alt={track.album}
                             className="w-12 h-12 rounded-lg shadow-lg"
                         />
@@ -238,10 +264,20 @@ export function LastFmNowPlaying({
                 {/* Last.fm logo */}
                 <div className="shrink-0 opacity-50 group-hover:opacity-100 transition-opacity">
                     <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z"/>
+                        <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z" />
                     </svg>
                 </div>
             </motion.a>
+            
+            {/* Dismiss button */}
+            <button
+                onClick={handleDismiss}
+                className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center opacity-0 group-hover/dismiss:opacity-100 transition-opacity hover:bg-zinc-700 hover:border-zinc-600"
+                title="Dölj widgeten"
+            >
+                <X className="w-3 h-3 text-zinc-400" />
+            </button>
+        </div>
         )
     }
 
@@ -261,13 +297,13 @@ export function LastFmNowPlaying({
             <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800/50">
                 <div className="flex items-center gap-2">
                     <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z"/>
+                        <path d="M10.584 17.21l-.88-2.392s-1.43 1.594-3.573 1.594c-1.897 0-3.244-1.649-3.244-4.288 0-3.382 1.704-4.591 3.381-4.591 2.42 0 3.189 1.567 3.849 3.574l.88 2.749c.88 2.666 2.529 4.81 7.285 4.81 3.409 0 5.718-1.044 5.718-3.793 0-2.227-1.265-3.381-3.63-3.931l-1.758-.385c-1.21-.275-1.567-.77-1.567-1.594 0-.935.742-1.484 1.952-1.484 1.32 0 2.034.495 2.144 1.677l2.749-.33c-.22-2.474-1.924-3.492-4.729-3.492-2.474 0-4.893.935-4.893 3.932 0 1.87.907 3.051 3.189 3.601l1.87.44c1.402.33 1.869.825 1.869 1.704 0 1.017-.99 1.43-2.86 1.43-2.776 0-3.931-1.457-4.591-3.464l-.907-2.749c-1.155-3.573-2.997-4.893-6.653-4.893C2.144 5.333 0 7.89 0 12.233c0 4.18 2.144 6.434 5.993 6.434 3.106 0 4.591-1.457 4.591-1.457z" />
                     </svg>
                     <span className="text-sm font-medium text-white">
                         {track.isPlaying ? 'Lyssnar just nu' : 'Senast spelad'}
                     </span>
                 </div>
-                <a 
+                <a
                     href={track.songUrl}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -283,8 +319,8 @@ export function LastFmNowPlaying({
                     {/* Album art */}
                     <div className="relative shrink-0">
                         {track.albumImageUrl ? (
-                            <img 
-                                src={track.albumImageUrl} 
+                            <img
+                                src={track.albumImageUrl}
                                 alt={track.album}
                                 className="w-20 h-20 rounded-xl shadow-xl"
                             />
@@ -294,7 +330,7 @@ export function LastFmNowPlaying({
                             </div>
                         )}
                         {track.isPlaying && (
-                            <motion.div 
+                            <motion.div
                                 className="absolute inset-0 rounded-xl border-2 border-red-500/30"
                                 animate={{ scale: [1, 1.05, 1] }}
                                 transition={{ duration: 2, repeat: Infinity }}
@@ -324,8 +360,8 @@ export function LastFmNowPlaying({
                         <motion.div
                             key={i}
                             className="w-1 bg-red-500/40 rounded-full"
-                            animate={{ 
-                                height: [4, Math.random() * 20 + 8, 4] 
+                            animate={{
+                                height: [4, Math.random() * 20 + 8, 4]
                             }}
                             transition={{
                                 duration: 0.5 + Math.random() * 0.3,

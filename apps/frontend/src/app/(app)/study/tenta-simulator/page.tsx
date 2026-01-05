@@ -73,13 +73,13 @@ function shuffleQuestionOptions(question: TaskQuizQuestion): TaskQuizQuestion {
         option,
         wasCorrect: index === question.correctIndex
     }))
-    
+
     // Shuffle the options
     const shuffledOptions = shuffleArray(optionsWithIndex)
-    
+
     // Find new correct index
     const newCorrectIndex = shuffledOptions.findIndex(o => o.wasCorrect) as 0 | 1 | 2 | 3
-    
+
     return {
         ...question,
         options: shuffledOptions.map(o => o.option) as [string, string, string, string],
