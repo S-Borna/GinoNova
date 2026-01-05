@@ -1399,9 +1399,9 @@ const TASK_7_QUIZ: TaskQuizQuestion[] = [
     {
         id: 't7-q6',
         question: 'Hur skriver du ut kolumn 1 och 3 med awk?',
-        options: ['awk "{print $1 $3}" fil', 'awk "{print $1, $3}" fil', 'awk "$1 $3" fil', 'awk -c "1,3" fil'],
+        options: ["awk '{print $1 $3}' fil", "awk '{print $1, $3}' fil", "awk '$1 $3' fil", "awk -c '1,3' fil"],
         correctIndex: 1, // B
-        explanation: 'Komma mellan fält ger mellanslag i output.',
+        explanation: 'Komma mellan fält ger mellanslag i output. Använd enkla citattecken så att $1 och $3 inte expanderas av shellen.',
         difficulty: 'G',
         category: 'Syntax'
     },
@@ -1489,27 +1489,27 @@ const TASK_7_QUIZ: TaskQuizQuestion[] = [
     {
         id: 't7-q16',
         question: 'Hur använder du printf i awk för formaterad output?',
-        options: ['awk "{format $1}" fil', 'awk "{printf "%s", $1}" fil', 'awk -f "%s" fil', 'awk "{print -f $1}" fil'],
+        options: ["awk '{format $1}' fil", 'awk \'{printf "%s", $1}\' fil', "awk -f '%s' fil", "awk '{print -f $1}' fil"],
         correctIndex: 1, // B
-        explanation: 'printf fungerar som i C - formatsträngar med %s, %d, etc.',
+        explanation: 'printf fungerar som i C - formatsträngar med %s, %d, etc. Använd enkla citattecken runt awk-programmet.',
         difficulty: 'VG',
         category: 'Formatering'
     },
     {
         id: 't7-q17',
         question: 'Hur kör du awk med mönstermatchning?',
-        options: ['awk "match /error/" fil', 'awk "/error/ {print}" fil', 'awk -m "error" fil', 'awk "{grep error}" fil'],
+        options: ["awk 'match /error/' fil", "awk '/error/ {print}' fil", "awk -m 'error' fil", "awk '{grep error}' fil"],
         correctIndex: 1, // B
-        explanation: '/pattern/ före {} matchar rader som innehåller pattern.',
+        explanation: '/pattern/ före {} matchar rader som innehåller pattern. Använd enkla citattecken.',
         difficulty: 'VG',
         category: 'Filtrering'
     },
     {
         id: 't7-q18',
         question: 'Hur definierar du en variabel utifrån i awk?',
-        options: ['awk "var=100" fil', 'awk -v var=100 "{print var}" fil', 'awk --set var=100 fil', 'awk "{var=100}" fil'],
+        options: ["awk 'var=100' fil", "awk -v var=100 '{print var}' fil", "awk --set var=100 fil", "awk '{var=100}' fil"],
         correctIndex: 1, // B
-        explanation: '-v variabel=värde sätter variabel innan processning.',
+        explanation: '-v variabel=värde sätter variabel innan processning. Använd enkla citattecken runt awk-programmet.',
         difficulty: 'VG',
         category: 'Variabler'
     },
