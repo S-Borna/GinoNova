@@ -88,6 +88,7 @@ def create_user_in_db(
         is_admin=is_admin,
         created_at=now,
         updated_at=now,
+        last_activity_at=now,  # Set initial activity to registration time
     )
 
 
