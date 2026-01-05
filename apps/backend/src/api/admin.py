@@ -409,22 +409,17 @@ def backfill_user_activity(
         users = db.query(User).all()
 
         for user in users:
-            # Find the most recent activity for this user
+            # Only backfill if user has actual progress records
             latest_progress = db.query(Progress).filter(
                 Progress.user_id == user.id
             ).order_by(Progress.updated_at.desc()).first()
 
-            # Determine best last_activity_at
-            best_activity = user.updated_at
-
+            # Only set activity if there's actual progress (real activity)
             if latest_progress and latest_progress.updated_at:
-                if latest_progress.updated_at > best_activity:
-                    best_activity = latest_progress.updated_at
-
-            # Only update if last_activity_at is NULL or older
-            if user.last_activity_at is None or best_activity > user.last_activity_at:
-                user.last_activity_at = best_activity
-                updated_count += 1
+                # Only update if last_activity_at is NULL or progress is newer
+                if user.last_activity_at is None or latest_progress.updated_at > user.last_activity_at:
+                    user.last_activity_at = latest_progress.updated_at
+                    updated_count += 1
 
         db.flush()
 
@@ -433,6 +428,48 @@ def backfill_user_activity(
         "message": f"Backfilled last_activity_at for {updated_count} users",
         "updated": updated_count,
         "total_users": len(users)
+    }
+
+
+@admin_router.post("/reset-fake-activity")
+def reset_fake_activity(
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Reset last_activity_at for users who have no real activity (no progress records).
+    This cleans up fake activity data from previous backfill bugs.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    if not is_db_configured():
+        return {"error": "Database not configured", "reset": 0}
+
+    from ..db.database import get_db_context
+    from ..db.models import User, Progress
+
+    reset_count = 0
+    with get_db_context() as db:
+        users = db.query(User).filter(User.last_activity_at.isnot(None)).all()
+
+        for user in users:
+            # Check if user has any progress records
+            has_progress = db.query(Progress).filter(
+                Progress.user_id == user.id
+            ).first() is not None
+
+            # If no progress and not recently created, reset last_activity_at
+            if not has_progress:
+                user.last_activity_at = None
+                reset_count += 1
+
+        db.flush()
+
+    return {
+        "success": True,
+        "message": f"Reset last_activity_at for {reset_count} users with no real activity",
+        "reset": reset_count
     }
 
 
@@ -593,13 +630,8 @@ def list_all_users(
             if user_xp is None:
                 user_xp = tasks_completed * 25
 
-            # Get last_activity_at - prefer user's last_activity_at, fallback to progress or updated_at
-            last_active = getattr(user, 'last_activity_at', None) or getattr(user, 'updated_at', None) or now
-            if progress_records:
-                latest = max(progress_records, key=lambda p: getattr(p, 'updated_at', now) or now)
-                latest_updated = getattr(latest, 'updated_at', None)
-                if latest_updated and last_active and latest_updated > last_active:
-                    last_active = latest_updated
+            # Get last_activity_at - ONLY use real activity data, no fake fallbacks
+            last_active = getattr(user, 'last_activity_at', None)
 
             user_details.append(AdminUserDetail(
                 id=user.id,
