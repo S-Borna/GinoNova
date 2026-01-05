@@ -131,7 +131,7 @@ export default function SignupPage() {
             {/* Header */}
             <div className="text-center lg:text-left">
                 {/* Mobile logo */}
-                <motion.div 
+                <motion.div
                     className="flex items-center justify-center lg:hidden gap-2 mb-6"
                     animate={{ opacity: 1 }}
                 >
@@ -147,7 +147,7 @@ export default function SignupPage() {
                         <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
                             Gino
                         </span>
-                        <span 
+                        <span
                             className="text-2xl font-black tracking-tight"
                             style={{
                                 background: "linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)",

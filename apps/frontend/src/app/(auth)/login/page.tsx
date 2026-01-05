@@ -126,7 +126,7 @@ export default function LoginPage() {
                             <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
                                 Gino
                             </span>
-                            <span 
+                            <span
                                 className="text-2xl font-black tracking-tight"
                                 style={{
                                     background: "linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)",
