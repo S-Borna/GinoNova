@@ -55,11 +55,11 @@ interface AnalyticsData {
 type TimeRange = "7d" | "30d" | "90d"
 
 // Components
-function StatCard({ 
-    title, 
-    value, 
-    subtitle, 
-    icon: Icon, 
+function StatCard({
+    title,
+    value,
+    subtitle,
+    icon: Icon,
     trend,
     color = "purple"
 }: {
@@ -77,7 +77,7 @@ function StatCard({
         orange: "from-orange-500/20 to-orange-600/20 text-orange-400",
         pink: "from-pink-500/20 to-pink-600/20 text-pink-400"
     }
-    
+
     return (
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
             <div className={cn(
@@ -113,7 +113,7 @@ function BarChart({ data, xKey, yKey, label }: {
     label: string
 }) {
     const maxValue = Math.max(...data.map(d => Number(d[yKey]) || 0), 1)
-    
+
     return (
         <div>
             <div className="flex items-end gap-1 h-48">
@@ -122,7 +122,7 @@ function BarChart({ data, xKey, yKey, label }: {
                     const height = (value / maxValue) * 100
                     return (
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                            <div 
+                            <div
                                 className="w-full bg-purple-500 rounded-t opacity-80 hover:opacity-100 transition cursor-pointer relative group"
                                 style={{ height: `${height}%`, minHeight: value > 0 ? 4 : 0 }}
                             >
@@ -144,13 +144,13 @@ function BarChart({ data, xKey, yKey, label }: {
 
 function HourlyChart({ data }: { data: Array<{ hour: number; count: number }> }) {
     const maxValue = Math.max(...data.map(d => d.count), 1)
-    
+
     // Fill in missing hours
     const fullData = Array.from({ length: 24 }, (_, i) => {
         const found = data.find(d => d.hour === i)
         return { hour: i, count: found?.count || 0 }
     })
-    
+
     return (
         <div>
             <div className="flex items-end gap-0.5 h-32">
@@ -158,7 +158,7 @@ function HourlyChart({ data }: { data: Array<{ hour: number; count: number }> })
                     const height = (item.count / maxValue) * 100
                     return (
                         <div key={i} className="flex-1 flex flex-col items-center">
-                            <div 
+                            <div
                                 className="w-full bg-blue-500 rounded-t opacity-70 hover:opacity-100 transition cursor-pointer relative group"
                                 style={{ height: `${height}%`, minHeight: item.count > 0 ? 2 : 0 }}
                             >
@@ -187,7 +187,7 @@ function RetentionCard({ label, value }: { label: string, value: number }) {
         if (v >= 40) return "text-yellow-400 bg-yellow-500/20"
         return "text-red-400 bg-red-500/20"
     }
-    
+
     return (
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 text-center">
             <div className={cn("text-3xl font-bold mb-1", getColor(value).split(" ")[0])}>
@@ -200,7 +200,7 @@ function RetentionCard({ label, value }: { label: string, value: number }) {
 
 function LevelDistribution({ data }: { data: Array<{ level: number; count: number }> }) {
     const total = data.reduce((sum, d) => sum + d.count, 0) || 1
-    
+
     return (
         <div className="space-y-2">
             {data.slice(0, 10).map((item) => {
@@ -209,7 +209,7 @@ function LevelDistribution({ data }: { data: Array<{ level: number; count: numbe
                     <div key={item.level} className="flex items-center gap-3">
                         <span className="text-xs text-zinc-400 w-12">Lv.{item.level}</span>
                         <div className="flex-1 h-6 bg-zinc-800 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-end pr-2"
                                 style={{ width: `${Math.max(percentage, 5)}%` }}
                             >
@@ -228,18 +228,18 @@ export default function AdminV2Analytics() {
     const [data, setData] = useState<AnalyticsData | null>(null)
     const [loading, setLoading] = useState(true)
     const [timeRange, setTimeRange] = useState<TimeRange>("30d")
-    
+
     const fetchAnalytics = useCallback(async () => {
         const token = getToken()
         if (!token) return
-        
+
         setLoading(true)
-        
+
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/analytics?range=${timeRange}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
-            
+
             if (res.ok) {
                 setData(await res.json())
             }
@@ -247,23 +247,23 @@ export default function AdminV2Analytics() {
             setLoading(false)
         }
     }, [timeRange])
-    
+
     useEffect(() => {
         fetchAnalytics()
     }, [fetchAnalytics])
-    
+
     // Auto-refresh every 5 minutes
     useEffect(() => {
         const interval = setInterval(fetchAnalytics, 5 * 60 * 1000)
         return () => clearInterval(interval)
     }, [fetchAnalytics])
-    
+
     const formatDuration = (seconds: number) => {
         if (seconds < 60) return `${seconds}s`
         if (seconds < 3600) return `${Math.floor(seconds / 60)}m`
         return `${(seconds / 3600).toFixed(1)}h`
     }
-    
+
     return (
         <div className="p-6">
             {/* Header */}
@@ -290,7 +290,7 @@ export default function AdminV2Analytics() {
                             </button>
                         ))}
                     </div>
-                    
+
                     <button
                         onClick={fetchAnalytics}
                         disabled={loading}
@@ -301,7 +301,7 @@ export default function AdminV2Analytics() {
                     </button>
                 </div>
             </div>
-            
+
             {loading && !data ? (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     {[...Array(8)].map((_, i) => (
@@ -321,7 +321,7 @@ export default function AdminV2Analytics() {
                         />
                         <StatCard
                             title={`Active (${timeRange})`}
-                            value={timeRange === "7d" 
+                            value={timeRange === "7d"
                                 ? (data.overview.active_users_7d || 0).toLocaleString()
                                 : (data.overview.active_users_30d || 0).toLocaleString()
                             }
@@ -346,7 +346,7 @@ export default function AdminV2Analytics() {
                             color="orange"
                         />
                     </div>
-                    
+
                     {/* Engagement Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <StatCard
@@ -379,7 +379,7 @@ export default function AdminV2Analytics() {
                             </div>
                         </div>
                     </div>
-                    
+
                     {/* Charts Row */}
                     <div className="grid md:grid-cols-2 gap-6 mb-6">
                         {/* Activity by Day */}
@@ -395,7 +395,7 @@ export default function AdminV2Analytics() {
                                 label="Active Users per Day"
                             />
                         </div>
-                        
+
                         {/* Activity by Hour */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                             <h3 className="font-semibold mb-4 flex items-center gap-2">
@@ -405,7 +405,7 @@ export default function AdminV2Analytics() {
                             <HourlyChart data={data.activity_by_hour || []} />
                         </div>
                     </div>
-                    
+
                     {/* Bottom Row */}
                     <div className="grid md:grid-cols-2 gap-6">
                         {/* Top Modules */}
@@ -435,7 +435,7 @@ export default function AdminV2Analytics() {
                                 </div>
                             )}
                         </div>
-                        
+
                         {/* User Level Distribution */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                             <h3 className="font-semibold mb-4 flex items-center gap-2">

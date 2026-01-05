@@ -87,7 +87,7 @@ function Toast({ message, type, onClose }: { message: string, type: "success" | 
     )
 }
 
-function Toggle({ enabled, onChange, disabled = false }: { 
+function Toggle({ enabled, onChange, disabled = false }: {
     enabled: boolean
     onChange: (value: boolean) => void
     disabled?: boolean
@@ -111,11 +111,11 @@ function Toggle({ enabled, onChange, disabled = false }: {
     )
 }
 
-function SettingRow({ 
-    title, 
-    description, 
-    children 
-}: { 
+function SettingRow({
+    title,
+    description,
+    children
+}: {
     title: string
     description?: string
     children: React.ReactNode
@@ -131,10 +131,10 @@ function SettingRow({
     )
 }
 
-function NumberInput({ 
-    value, 
-    onChange, 
-    min = 0, 
+function NumberInput({
+    value,
+    onChange,
+    min = 0,
     max = 9999,
     disabled = false
 }: {
@@ -160,9 +160,9 @@ function NumberInput({
     )
 }
 
-function TextInput({ 
-    value, 
-    onChange, 
+function TextInput({
+    value,
+    onChange,
     placeholder = "",
     type = "text",
     disabled = false
@@ -186,38 +186,38 @@ function TextInput({
 }
 
 // Tab Components
-function GeneralSettings({ settings, onChange }: { 
+function GeneralSettings({ settings, onChange }: {
     settings: Settings["general"]
     onChange: (key: string, value: unknown) => void
 }) {
     return (
         <div className="space-y-1">
             <SettingRow title="Site Name" description="Displayed in browser title and emails">
-                <TextInput 
+                <TextInput
                     value={settings.site_name}
                     onChange={(v) => onChange("site_name", v)}
                 />
             </SettingRow>
             <SettingRow title="Site Description" description="Meta description for SEO">
-                <TextInput 
+                <TextInput
                     value={settings.site_description}
                     onChange={(v) => onChange("site_description", v)}
                 />
             </SettingRow>
             <SettingRow title="Maintenance Mode" description="Disable site for non-admins">
-                <Toggle 
+                <Toggle
                     enabled={settings.maintenance_mode}
                     onChange={(v) => onChange("maintenance_mode", v)}
                 />
             </SettingRow>
             <SettingRow title="Registration" description="Allow new user signups">
-                <Toggle 
+                <Toggle
                     enabled={settings.registration_enabled}
                     onChange={(v) => onChange("registration_enabled", v)}
                 />
             </SettingRow>
             <SettingRow title="Email Verification" description="Require email verification for new users">
-                <Toggle 
+                <Toggle
                     enabled={settings.email_verification_required}
                     onChange={(v) => onChange("email_verification_required", v)}
                 />
@@ -233,7 +233,7 @@ function SecuritySettings({ settings, onChange }: {
     return (
         <div className="space-y-1">
             <SettingRow title="Max Login Attempts" description="Before account lockout">
-                <NumberInput 
+                <NumberInput
                     value={settings.max_login_attempts}
                     onChange={(v) => onChange("max_login_attempts", v)}
                     min={3}
@@ -241,7 +241,7 @@ function SecuritySettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="Lockout Duration" description="Minutes until login re-enabled">
-                <NumberInput 
+                <NumberInput
                     value={settings.lockout_duration_minutes}
                     onChange={(v) => onChange("lockout_duration_minutes", v)}
                     min={5}
@@ -249,7 +249,7 @@ function SecuritySettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="Session Timeout" description="Hours until auto-logout">
-                <NumberInput 
+                <NumberInput
                     value={settings.session_timeout_hours}
                     onChange={(v) => onChange("session_timeout_hours", v)}
                     min={1}
@@ -257,13 +257,13 @@ function SecuritySettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="Require 2FA for Admins" description="Force two-factor for admin accounts">
-                <Toggle 
+                <Toggle
                     enabled={settings.require_2fa_for_admins}
                     onChange={(v) => onChange("require_2fa_for_admins", v)}
                 />
             </SettingRow>
             <SettingRow title="Password Min Length" description="Minimum characters required">
-                <NumberInput 
+                <NumberInput
                     value={settings.password_min_length}
                     onChange={(v) => onChange("password_min_length", v)}
                     min={6}
@@ -281,13 +281,13 @@ function NotificationSettings({ settings, onChange }: {
     return (
         <div className="space-y-1">
             <SettingRow title="Email Notifications" description="Send system emails">
-                <Toggle 
+                <Toggle
                     enabled={settings.email_notifications_enabled}
                     onChange={(v) => onChange("email_notifications_enabled", v)}
                 />
             </SettingRow>
             <SettingRow title="Slack Webhook" description="For real-time alerts">
-                <TextInput 
+                <TextInput
                     value={settings.slack_webhook_url}
                     onChange={(v) => onChange("slack_webhook_url", v)}
                     placeholder="https://hooks.slack.com/..."
@@ -295,19 +295,19 @@ function NotificationSettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="New User Alerts" description="Notify on user registration">
-                <Toggle 
+                <Toggle
                     enabled={settings.notify_on_new_user}
                     onChange={(v) => onChange("notify_on_new_user", v)}
                 />
             </SettingRow>
             <SettingRow title="Error Alerts" description="Notify on system errors">
-                <Toggle 
+                <Toggle
                     enabled={settings.notify_on_error}
                     onChange={(v) => onChange("notify_on_error", v)}
                 />
             </SettingRow>
             <SettingRow title="Daily Report" description="Send daily activity summary">
-                <Toggle 
+                <Toggle
                     enabled={settings.daily_report_enabled}
                     onChange={(v) => onChange("daily_report_enabled", v)}
                 />
@@ -323,13 +323,13 @@ function AISettings({ settings, onChange }: {
     return (
         <div className="space-y-1">
             <SettingRow title="AI Features" description="Enable/disable all AI features">
-                <Toggle 
+                <Toggle
                     enabled={settings.ai_features_enabled}
                     onChange={(v) => onChange("ai_features_enabled", v)}
                 />
             </SettingRow>
             <SettingRow title="Max Requests/Day" description="Per user daily limit">
-                <NumberInput 
+                <NumberInput
                     value={settings.max_requests_per_user_day}
                     onChange={(v) => onChange("max_requests_per_user_day", v)}
                     min={1}
@@ -338,7 +338,7 @@ function AISettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="Max Tokens/Request" description="Token limit per request">
-                <NumberInput 
+                <NumberInput
                     value={settings.max_tokens_per_request}
                     onChange={(v) => onChange("max_tokens_per_request", v)}
                     min={100}
@@ -347,7 +347,7 @@ function AISettings({ settings, onChange }: {
                 />
             </SettingRow>
             <SettingRow title="Rate Limiting" description="Enforce request limits">
-                <Toggle 
+                <Toggle
                     enabled={settings.rate_limit_enabled}
                     onChange={(v) => onChange("rate_limit_enabled", v)}
                     disabled={!settings.ai_features_enabled}
@@ -402,12 +402,12 @@ function FeatureSettings({ settings, onChange }: {
     return (
         <div className="space-y-1">
             {features.map(feature => (
-                <SettingRow 
+                <SettingRow
                     key={feature.key}
                     title={feature.title}
                     description={feature.description}
                 >
-                    <Toggle 
+                    <Toggle
                         enabled={settings[feature.key as keyof Settings["features"]]}
                         onChange={(v) => onChange(feature.key, v)}
                     />
@@ -577,31 +577,31 @@ export default function AdminV2Settings() {
                     {/* Content */}
                     <div className="flex-1 bg-zinc-900/50 border border-zinc-800 rounded-xl p-6">
                         {activeTab === "general" && (
-                            <GeneralSettings 
+                            <GeneralSettings
                                 settings={settings.general}
                                 onChange={(k, v) => handleChange("general", k, v)}
                             />
                         )}
                         {activeTab === "security" && (
-                            <SecuritySettings 
+                            <SecuritySettings
                                 settings={settings.security}
                                 onChange={(k, v) => handleChange("security", k, v)}
                             />
                         )}
                         {activeTab === "notifications" && (
-                            <NotificationSettings 
+                            <NotificationSettings
                                 settings={settings.notifications}
                                 onChange={(k, v) => handleChange("notifications", k, v)}
                             />
                         )}
                         {activeTab === "ai" && (
-                            <AISettings 
+                            <AISettings
                                 settings={settings.ai}
                                 onChange={(k, v) => handleChange("ai", k, v)}
                             />
                         )}
                         {activeTab === "features" && (
-                            <FeatureSettings 
+                            <FeatureSettings
                                 settings={settings.features}
                                 onChange={(k, v) => handleChange("features", k, v)}
                             />
