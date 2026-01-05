@@ -1,9 +1,9 @@
 /**
  * Last.fm Now Playing API Route
- * 
+ *
  * Fetches currently playing/recent track from Last.fm
  * Works automatically if you have Last.fm connected to Spotify!
- * 
+ *
  * Requires environment variables:
  * - LASTFM_API_KEY (get free at https://www.last.fm/api/account/create)
  * - LASTFM_USERNAME (your Last.fm username)
@@ -51,13 +51,13 @@ export async function GET() {
         }
 
         const track = tracks[0]
-        
+
         // Check if currently playing (has @attr.nowplaying)
         const isPlaying = track['@attr']?.nowplaying === 'true'
 
         // Get album art - Last.fm provides multiple sizes
         const images = track.image || []
-        const albumImageUrl = images.find((img: any) => img.size === 'extralarge')?.['#text'] 
+        const albumImageUrl = images.find((img: any) => img.size === 'extralarge')?.['#text']
             || images.find((img: any) => img.size === 'large')?.['#text']
             || images[images.length - 1]?.['#text']
             || ''
