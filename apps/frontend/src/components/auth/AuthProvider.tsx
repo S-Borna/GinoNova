@@ -122,21 +122,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         const heartbeat = async () => {
             const token = getToken()
-            if (!token) return
+            if (!token) {
+                console.warn('[Heartbeat] No token found')
+                return
+            }
 
             try {
                 // Call backend /me endpoint to update last_activity_at
-                await fetch(`https://api.ginonova.com/api/auth/me`, {
+                const response = await fetch(`https://api.ginonova.com/api/auth/me`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-            } catch {
-                // Ignore errors - just a heartbeat
+                if (!response.ok) {
+                    console.warn('[Heartbeat] Failed:', response.status)
+                }
+            } catch (err) {
+                console.warn('[Heartbeat] Error:', err)
             }
         }
 
         // Send heartbeat immediately on mount
+        console.log('[Heartbeat] Starting for user:', user.email)
         heartbeat()
 
         // Then every 1 minute for accurate online status
