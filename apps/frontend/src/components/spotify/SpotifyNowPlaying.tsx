@@ -51,7 +51,7 @@ export function SpotifyNowPlaying({
                             artist: data.track.artist,
                             album: data.track.album,
                             albumImageUrl: data.track.albumArt,
-                            songUrl: data.track.lastFmUrl,
+                            songUrl: data.track.spotifyUrl, // Use Spotify search URL!
                             durationMs: 0,
                             progressMs: 0
                         })
