@@ -192,11 +192,18 @@ export default function AdminV2Dashboard() {
     const [activity, setActivity] = useState<ActivityData[]>([])
     const [health, setHealth] = useState<SystemHealth | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
     const fetchData = useCallback(async () => {
         const token = getToken()
-        if (!token) return
+        if (!token) {
+            setError("Not authenticated - please log in")
+            setLoading(false)
+            return
+        }
+
+        setError(null)
 
         try {
             // Fetch all data in parallel
@@ -215,21 +222,28 @@ export default function AdminV2Dashboard() {
             if (statsRes.ok) {
                 const statsData = await statsRes.json()
                 setStats(statsData)
+            } else {
+                console.error("Stats API error:", statsRes.status, await statsRes.text())
             }
 
             if (activityRes.ok) {
                 const activityData = await activityRes.json()
                 setActivity(activityData.data || [])
+            } else {
+                console.error("Activity API error:", activityRes.status, await activityRes.text())
             }
 
             if (healthRes.ok) {
                 const healthData = await healthRes.json()
                 setHealth(healthData)
+            } else {
+                console.error("Health API error:", healthRes.status, await healthRes.text())
             }
 
             setLastUpdated(new Date())
         } catch (err) {
             console.error("Dashboard fetch error:", err)
+            setError(`Network error: ${err instanceof Error ? err.message : String(err)}`)
         } finally {
             setLoading(false)
         }

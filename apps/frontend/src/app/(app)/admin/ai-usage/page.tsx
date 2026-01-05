@@ -333,13 +333,19 @@ function ErrorsSection({ data }: { data: AIUsageData["errors"] }) {
 export default function AdminV2AIUsage() {
     const [data, setData] = useState<AIUsageData | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>("30d")
 
     const fetchData = useCallback(async () => {
         const token = getToken()
-        if (!token) return
+        if (!token) {
+            setError("Not authenticated - please log in")
+            setLoading(false)
+            return
+        }
 
         setLoading(true)
+        setError(null)
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/ai-usage?range=${timeRange}`, {
@@ -347,8 +353,16 @@ export default function AdminV2AIUsage() {
             })
 
             if (res.ok) {
-                setData(await res.json())
+                const json = await res.json()
+                setData(json)
+            } else {
+                const errorText = await res.text()
+                console.error("AI Usage API error:", res.status, errorText)
+                setError(`API error: ${res.status} - ${errorText}`)
             }
+        } catch (err) {
+            console.error("AI Usage fetch error:", err)
+            setError(`Network error: ${err instanceof Error ? err.message : String(err)}`)
         } finally {
             setLoading(false)
         }
@@ -523,8 +537,9 @@ export default function AdminV2AIUsage() {
                     </div>
                 </>
             ) : (
-                <div className="text-center py-12 text-zinc-500">
-                    Failed to load AI usage data
+                <div className="text-center py-12">
+                    <p className="text-zinc-500 mb-2">Failed to load AI usage data</p>
+                    {error && <p className="text-red-400 text-sm">{error}</p>}
                 </div>
             )}
         </div>
