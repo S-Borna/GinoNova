@@ -131,14 +131,35 @@ export default function SignupPage() {
             {/* Header */}
             <div className="text-center lg:text-left">
                 {/* Mobile logo */}
-                <div className="flex items-center justify-center lg:hidden gap-2 mb-6">
-                    <div className="p-2 rounded-lg bg-gradient-to-br from-primary-500 to-purple-600">
-                        <Terminal className="w-5 h-5 text-white" />
+                <motion.div 
+                    className="flex items-center justify-center lg:hidden gap-2 mb-6"
+                    animate={{ opacity: 1 }}
+                >
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    >
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-400 flex items-center justify-center shadow-[0_0_20px_rgba(168,85,247,0.6)]">
+                            <Sparkles className="w-5 h-5 text-white" />
+                        </div>
+                    </motion.div>
+                    <div className="flex items-baseline">
+                        <span className="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+                            Gino
+                        </span>
+                        <span 
+                            className="text-2xl font-black tracking-tight"
+                            style={{
+                                background: "linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                filter: "drop-shadow(0 0 8px rgba(168,85,247,0.5))",
+                            }}
+                        >
+                            Nova
+                        </span>
                     </div>
-                    <span className="text-xl font-bold text-neutral-900 dark:text-white">
-                        Said&apos;s DevOps Hub
-                    </span>
-                </div>
+                </motion.div>
 
                 <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white">
                     Create your account
