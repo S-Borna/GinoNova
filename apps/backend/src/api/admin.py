@@ -108,13 +108,13 @@ def debug_activity(
     """Debug endpoint to check last_activity_at values directly from DB"""
     add_phase_header(response)
     require_admin(current_user)
-    
+
     if not is_db_configured():
         return {"error": "Database not configured"}
-    
+
     from ..db.database import get_db_context
     from ..db.models import User
-    
+
     with get_db_context() as db:
         users = db.query(User).order_by(User.created_at.desc()).limit(15).all()
         return {
@@ -420,9 +420,9 @@ def backfill_user_activity(
     current_user: CurrentUser,
 ):
     """
-    Backfill last_activity_at for all users based on their progress records.
-
-    This fixes users who logged in before the last_activity_at tracking was implemented.
+    Backfill last_activity_at for users who have NULL.
+    Sets it to either their latest progress timestamp or created_at.
+    Safe to run multiple times - only updates NULL values.
     """
     add_phase_header(response)
     require_admin(current_user)
@@ -435,71 +435,34 @@ def backfill_user_activity(
 
     updated_count = 0
     with get_db_context() as db:
-        users = db.query(User).all()
+        # Only get users with NULL last_activity_at
+        users = db.query(User).filter(User.last_activity_at.is_(None)).all()
 
         for user in users:
-            # Only backfill if user has actual progress records
+            # Try to get latest progress
             latest_progress = db.query(Progress).filter(
                 Progress.user_id == user.id
             ).order_by(Progress.updated_at.desc()).first()
 
-            # Only set activity if there's actual progress (real activity)
             if latest_progress and latest_progress.updated_at:
-                # Only update if last_activity_at is NULL or progress is newer
-                if user.last_activity_at is None or latest_progress.updated_at > user.last_activity_at:
-                    user.last_activity_at = latest_progress.updated_at
-                    updated_count += 1
+                # Use latest progress time
+                user.last_activity_at = latest_progress.updated_at
+            else:
+                # Fall back to created_at (user exists, so they've been active)
+                user.last_activity_at = user.created_at
+            updated_count += 1
 
         db.flush()
 
     return {
         "success": True,
         "message": f"Backfilled last_activity_at for {updated_count} users",
-        "updated": updated_count,
-        "total_users": len(users)
+        "updated": updated_count
     }
 
 
-@admin_router.post("/reset-fake-activity")
-def reset_fake_activity(
-    response: Response,
-    current_user: CurrentUser,
-):
-    """
-    Reset last_activity_at for users who have no real activity (no progress records).
-    This cleans up fake activity data from previous backfill bugs.
-    """
-    add_phase_header(response)
-    require_admin(current_user)
-
-    if not is_db_configured():
-        return {"error": "Database not configured", "reset": 0}
-
-    from ..db.database import get_db_context
-    from ..db.models import User, Progress
-
-    reset_count = 0
-    with get_db_context() as db:
-        users = db.query(User).filter(User.last_activity_at.isnot(None)).all()
-
-        for user in users:
-            # Check if user has any progress records
-            has_progress = db.query(Progress).filter(
-                Progress.user_id == user.id
-            ).first() is not None
-
-            # If no progress and not recently created, reset last_activity_at
-            if not has_progress:
-                user.last_activity_at = None
-                reset_count += 1
-
-        db.flush()
-
-    return {
-        "success": True,
-        "message": f"Reset last_activity_at for {reset_count} users with no real activity",
-        "reset": reset_count
-    }
+# REMOVED: reset-fake-activity endpoint - it was destroying valid activity data
+# last_activity_at should NEVER be reset to None, only updated
 
 
 @admin_router.get("/activity-log")

@@ -363,11 +363,10 @@ export default function AdminPage() {
     const [search, setSearch] = useState("")
     const [filter, setFilter] = useState<"all" | "online" | "active-today" | "inactive">("all")
     const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
-    const [backfillDone, setBackfillDone] = useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
-    const fetchData = useCallback(async (showRefreshing = false, runBackfill = false) => {
+    const fetchData = useCallback(async (showRefreshing = false) => {
         if (showRefreshing) setRefreshing(true)
 
         try {
@@ -377,7 +376,6 @@ export default function AdminPage() {
                 setLoading(false)
                 return
             }
-
             const headers = { Authorization: `Bearer ${token}` }
             // Fetch users with cache busting
             const usersRes = await fetch(
@@ -408,26 +406,6 @@ export default function AdminPage() {
                 console.warn("Stats fetch failed:", e)
             }
 
-            // Clean up fake activity data on first load, then backfill real data
-            // This runs silently in background on first admin panel load only
-            if (runBackfill) {
-                try {
-                    // First reset fake activity
-                    await fetch(
-                        `${API_BASE_URL}/api/admin/reset-fake-activity`,
-                        { method: 'POST', headers, cache: 'no-store' }
-                    )
-                    // Then backfill real activity from progress
-                    await fetch(
-                        `${API_BASE_URL}/api/admin/backfill-activity`,
-                        { method: 'POST', headers, cache: 'no-store' }
-                    )
-                    setBackfillDone(true)
-                } catch {
-                    // Ignore errors - cleanup is optional
-                }
-            }
-
             setError(null)
             setLastRefresh(new Date())
         } catch (err) {
@@ -445,12 +423,11 @@ export default function AdminPage() {
             router.push("/dashboard")
             return
         }
-        // Run backfill on first load only
-        fetchData(false, !backfillDone)
-        // Auto-refresh every 10 seconds (without backfill)
-        const interval = setInterval(() => fetchData(false, false), 10000)
+        fetchData()
+        // Auto-refresh every 10 seconds
+        const interval = setInterval(() => fetchData(), 10000)
         return () => clearInterval(interval)
-    }, [user, authLoading, isAdmin, router, fetchData, backfillDone])
+    }, [user, authLoading, isAdmin, router, fetchData])
 
     // Toggle user active status
     const toggleUserActive = async (targetUser: User) => {
@@ -464,7 +441,7 @@ export default function AdminPage() {
                 },
                 body: JSON.stringify({ is_active: !targetUser.is_active }),
             })
-            fetchData(true, false)
+            fetchData(true)
         } catch (err) {
             console.error("Toggle active error:", err)
         }
@@ -480,7 +457,7 @@ export default function AdminPage() {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             })
-            fetchData(true, false)
+            fetchData(true)
         } catch (err) {
             console.error("Delete user error:", err)
         }
@@ -531,7 +508,7 @@ export default function AdminPage() {
                 <div className="text-center">
                     <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
                     <p className="text-white mb-4">{error}</p>
-                    <Button onClick={() => fetchData(true, false)}>Försök igen</Button>
+                    <Button onClick={() => fetchData(true)}>Försök igen</Button>
                 </div>
             </div>
         )
@@ -559,7 +536,7 @@ export default function AdminPage() {
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => fetchData(true, false)}
+                                onClick={() => fetchData(true)}
                                 disabled={refreshing}
                                 className="border-zinc-700"
                             >
