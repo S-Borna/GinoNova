@@ -111,31 +111,31 @@ def bootstrap_admin(request: BootstrapAdminRequest, response: Response):
     This is a one-time setup endpoint for initial admin creation.
     """
     add_phase_header(response)
-    
+
     # Secret key for bootstrap (should match env var or hardcoded for setup)
     import os
     bootstrap_secret = os.environ.get("BOOTSTRAP_SECRET", "devops-hub-bootstrap-2024")
-    
+
     if request.secret != bootstrap_secret:
         raise HTTPException(status_code=403, detail="Invalid bootstrap secret")
-    
+
     if not is_db_configured():
         raise HTTPException(status_code=500, detail="Database not configured")
-    
+
     from ..db.database import get_db_context
     from ..db.models import User
-    
+
     with get_db_context() as db:
         user = db.query(User).filter(User.email == request.email).first()
         if not user:
             raise HTTPException(status_code=404, detail=f"User {request.email} not found")
-        
+
         if user.is_admin:
             return {"success": True, "message": f"{request.email} is already an admin"}
-        
+
         user.is_admin = True
         db.commit()
-        
+
         return {"success": True, "message": f"{request.email} is now an admin!"}
 
 

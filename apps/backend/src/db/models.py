@@ -51,6 +51,7 @@ class User(Base):
     current_streak = Column(Integer, default=0)
     longest_streak = Column(Integer, default=0)
     last_activity_at = Column(DateTime, nullable=True)
+    last_login_at = Column(DateTime, nullable=True)  # Actual login time (not API activity)
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow)
