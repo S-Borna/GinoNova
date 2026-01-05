@@ -379,7 +379,7 @@ export default function AdminPage() {
             const headers = { Authorization: `Bearer ${token}` }
             // Fetch users with cache busting
             const usersRes = await fetch(
-                `${API_BASE_URL}/api/admin/users?per_page=100&_t=${Date.now()}`,
+                `${API_BASE_URL}/api/admin/users?per_page=500&_t=${Date.now()}`,
                 { headers, cache: 'no-store' }
             )
 
