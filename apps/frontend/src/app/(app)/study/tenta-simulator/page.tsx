@@ -125,7 +125,7 @@ function convertDOE25Question(q: TaskQuizQuestion): SimulatorQuestion {
 function convertHandsOnQuestion(q: MegaQuizQuestion): SimulatorQuestion {
     // Map: beginner/intermediate → G, advanced → VG
     const difficulty: 'G' | 'VG' = q.difficulty === 'advanced' ? 'VG' : 'G'
-    
+
     return {
         id: q.id,
         question: q.question,
@@ -142,7 +142,7 @@ function convertHandsOnQuestion(q: MegaQuizQuestion): SimulatorQuestion {
 function convertLinuxCommandQuestion(q: LinuxCommandQuestion): SimulatorQuestion {
     // Map: beginner/intermediate → G, advanced → VG
     const difficulty: 'G' | 'VG' = q.difficulty === 'advanced' ? 'VG' : 'G'
-    
+
     return {
         id: q.id,
         question: q.question,
@@ -175,11 +175,11 @@ export default function TentaSimulatorPage() {
 
     // Get DOE25 questions
     const doe25Questions = useMemo(() => {
-        return DOE25_TASK_QUIZ.flatMap(set => 
+        return DOE25_TASK_QUIZ.flatMap(set =>
             set.questions.map(convertDOE25Question)
         )
     }, [])
-    
+
     // Get Hands-On questions
     const handsonQuestions = useMemo(() => {
         return HANDSON_MEGA_QUIZ.flatMap(set =>

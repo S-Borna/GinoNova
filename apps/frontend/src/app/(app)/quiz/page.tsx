@@ -55,7 +55,7 @@ import { getToken } from "@/lib/auth";
 import { CosmicAurora } from "@/components/ui/cosmic-aurora";
 import { cn } from "@/lib/utils";
 
-const API_BASE_URL = "https://saas-project-production-31f8.up.railway.app";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com";
 
 /* ============================================================================
    STATS CARD — Same as DOE25 Tenta

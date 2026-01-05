@@ -1,11 +1,11 @@
 /**
  * Hands-On Lab MEGA Quiz - 150 frågor per task = 1050 totalt
- * 
+ *
  * Struktur per task:
  * - 50 beginner (nybörjare)
- * - 50 intermediate (medel) 
+ * - 50 intermediate (medel)
  * - 50 advanced (avancerad)
- * 
+ *
  * Alla frågor speglar exakt innehållet i respektive task!
  */
 
@@ -83,7 +83,7 @@ const TASK1_ONBOARDING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho1-b48", question: "Vad händer om du kör 'mv fil.txt /tmp/'?", options: ["Kopieras", "Flyttas till /tmp", "Tas bort", "Byter namn"], correctIndex: 1, explanation: "Filen flyttas till /tmp/-katalogen.", difficulty: "beginner", category: "Filhantering" },
     { id: "ho1-b49", question: "Vad gör 'echo Hello'?", options: ["Skapar fil", "Skriver ut Hello", "Söker Hello", "Sparar Hello"], correctIndex: 1, explanation: "echo skriver ut text till terminalen.", difficulty: "beginner", category: "Terminal" },
     { id: "ho1-b50", question: "Hur visar du 20 första raderna i en fil?", options: ["head fil", "head -20 fil", "top 20 fil", "first 20 fil"], correctIndex: 1, explanation: "head -n 20 eller head -20 visar första 20 raderna.", difficulty: "beginner", category: "Filvisning" },
-    
+
     // ==================== INTERMEDIATE (50) ====================
     { id: "ho1-i1", question: "Vad är skillnaden mellan absolut och relativ sökväg?", options: ["Ingen skillnad", "Absolut börjar med /, relativ från nuvarande", "Relativ börjar med /", "Absolut är kortare"], correctIndex: 1, explanation: "Absolut path börjar från root (/), relativ från nuvarande position.", difficulty: "intermediate", category: "Navigation" },
     { id: "ho1-i2", question: "Vad gör 'ls -lah'?", options: ["Listar bara mappar", "Listar allt med storlek i human-readable format", "Listar hidden files", "Sorterar efter datum"], correctIndex: 1, explanation: "-l (long), -a (all), -h (human readable) kombinerat.", difficulty: "intermediate", category: "Navigation" },
@@ -135,7 +135,7 @@ const TASK1_ONBOARDING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho1-i48", question: "Hur ser du i vilken shell du kör?", options: ["shell", "echo $SHELL", "which shell", "ps shell"], correctIndex: 1, explanation: "$SHELL-variabeln innehåller din default shell.", difficulty: "intermediate", category: "Terminal" },
     { id: "ho1-i49", question: "Vad är skillnaden mellan bash och sh?", options: ["Ingen", "bash har fler features", "sh är nyare", "bash är snabbare"], correctIndex: 1, explanation: "bash är en utökad version av sh med fler funktioner.", difficulty: "intermediate", category: "Terminal" },
     { id: "ho1-i50", question: "Hur gör du ett kommando till bakgrundsjobb?", options: ["bg kommando", "kommando &", "nohup kommando", "kommando --bg"], correctIndex: 1, explanation: "& i slutet kör kommandot i bakgrunden.", difficulty: "intermediate", category: "Terminal" },
-    
+
     // ==================== ADVANCED (50) ====================
     { id: "ho1-a1", question: "Vad är skillnaden mellan 'cp -a' och 'cp -r'?", options: ["Ingen skillnad", "-a bevarar attribut och länkar", "-r är snabbare", "-a är för arkiv"], correctIndex: 1, explanation: "-a (archive) bevarar permissions, timestamps, länkar etc. -r bara kopierar rekursivt.", difficulty: "advanced", category: "Filhantering" },
     { id: "ho1-a2", question: "Hur hittar du filer större än 100MB?", options: ["find . -size 100M", "find . -size +100M", "find . -bigger 100M", "ls -size +100M"], correctIndex: 1, explanation: "+100M hittar filer STÖRRE än 100MB. Utan + = exakt storlek.", difficulty: "advanced", category: "Sökning" },
@@ -249,7 +249,7 @@ const TASK2_PAKETHANTERING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho2-b48", question: "Behöver du starta om efter kerneluppdatering?", options: ["Aldrig", "Alltid", "Bara på servrar", "Bara på desktops"], correctIndex: 1, explanation: "Ny kernel laddas vid boot - omstart krävs för att använda den.", difficulty: "beginner", category: "System" },
     { id: "ho2-b49", question: "Hur startar du om Linux?", options: ["restart", "reboot", "shutdown", "boot"], correctIndex: 1, explanation: "sudo reboot startar om systemet.", difficulty: "beginner", category: "System" },
     { id: "ho2-b50", question: "Vad är rpm?", options: ["APT alternativ", "Red Hat Package Manager", "Remote Package Manager", "Root Package Manager"], correctIndex: 1, explanation: "rpm är paketformatet för Red Hat-baserade system.", difficulty: "beginner", category: "DNF" },
-    
+
     // ==================== INTERMEDIATE (50) ====================
     { id: "ho2-i1", question: "Vad är skillnaden mellan apt update och apt upgrade?", options: ["Samma sak", "update hämtar info, upgrade installerar", "upgrade är snabbare", "update tar bort paket"], correctIndex: 1, explanation: "update uppdaterar paketlistan, upgrade installerar nyare versioner.", difficulty: "intermediate", category: "APT" },
     { id: "ho2-i2", question: "Varför står det (Y/n) efter apt upgrade?", options: ["Y är standard", "n är standard", "Inget korrekt alternativ", "Det är ett fel"], correctIndex: 0, explanation: "Stor bokstav = default. Y är default så Enter = Yes.", difficulty: "intermediate", category: "APT" },
@@ -301,7 +301,7 @@ const TASK2_PAKETHANTERING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho2-i48", question: "Hur byter du passphrase på befintlig nyckel?", options: ["ssh-keygen -p", "ssh-passphrase", "ssh-change", "passphrase-edit"], correctIndex: 0, explanation: "ssh-keygen -p låter dig ändra passphrase utan att skapa ny nyckel.", difficulty: "intermediate", category: "SSH" },
     { id: "ho2-i49", question: "Vad gör dnf downgrade paket?", options: ["Uppgraderar", "Installerar äldre version", "Tar bort", "Verifierar"], correctIndex: 1, explanation: "downgrade installerar en tidigare version av paketet.", difficulty: "intermediate", category: "DNF" },
     { id: "ho2-i50", question: "Hur söker du efter paket som äger en fil?", options: ["dpkg -S /path/fil", "apt owns /path/fil", "which /path/fil", "locate --owner"], correctIndex: 0, explanation: "dpkg -S visar vilket paket som äger en specifik fil.", difficulty: "intermediate", category: "System" },
-    
+
     // ==================== ADVANCED (50) ====================
     { id: "ho2-a1", question: "Hur konfigurerar du proxy för apt?", options: ["apt --proxy", "I /etc/apt/apt.conf", "apt proxy set", "export APT_PROXY"], correctIndex: 1, explanation: "Proxy konfigureras i /etc/apt/apt.conf eller apt.conf.d/.", difficulty: "advanced", category: "APT" },
     { id: "ho2-a2", question: "Hur pinnar du ett specifikt repository?", options: ["/etc/apt/preferences", "/etc/apt/pins", "/etc/apt/priority", "/etc/apt/repos"], correctIndex: 0, explanation: "APT pinning görs i /etc/apt/preferences för att prioritera repos.", difficulty: "advanced", category: "APT" },
@@ -463,7 +463,7 @@ const TASK3_SSH_BRANDVAGG_QUIZ: MegaQuizQuestion[] = [
     { id: "ho3-i48", question: "Vad är icmp-blocks i firewalld?", options: ["Blockerar ping", "Blockerar ICMP-meddelanden", "ufw", "Network-block"], correctIndex: 0, explanation: "Kan blockera ping och andra ICMP-typer.", difficulty: "intermediate", category: "firewalld" },
     { id: "ho3-i49", question: "Hur blockerar du ping i UFW?", options: ["ufw deny ping", "Ändra i /etc/ufw/before.rules", "ufw block icmp", "Går ej"], correctIndex: 1, explanation: "ICMP konfigureras i before.rules, inte via ufw-kommandon.", difficulty: "intermediate", category: "UFW" },
     { id: "ho3-i50", question: "Vad är 'reject' vs 'drop' i brandväggar?", options: ["Samma", "reject svarar, drop ignorerar", "drop är säkrare", "reject är snabbare"], correctIndex: 1, explanation: "reject skickar svar, drop kastar tyst (svårare att skanna).", difficulty: "intermediate", category: "UFW" },
-    
+
     // ==================== ADVANCED (50) ====================
     { id: "ho3-a1", question: "Hur konfigurerar du SSH med certificate authority?", options: ["TrustedUserCAKeys i sshd_config", "CAFile i ssh_config", "CertAuth yes", "UseCertificates yes"], correctIndex: 0, explanation: "TrustedUserCAKeys pekar på CA:s publika nyckel.", difficulty: "advanced", category: "SSH" },
     { id: "ho3-a2", question: "Vad är AuthorizedPrincipalsFile?", options: ["Lista över tillåtna CA", "Lista över tillåtna principals", "Autentiseringslogg", "Nyckel-principals"], correctIndex: 1, explanation: "Definierar vilka principals (roller) som får logga in.", difficulty: "advanced", category: "SSH" },
@@ -573,7 +573,7 @@ const TASK4_ANVANDARHANTERING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho4-b48", question: "Vad är en sekundär grupp?", options: ["Backup-grupp", "Extra grupp utöver primär", "Admingrupp", "Systemgrupp"], correctIndex: 1, explanation: "Sekundära grupper är alla grupper utöver den primära.", difficulty: "beginner", category: "Grupper" },
     { id: "ho4-b49", question: "Hur skapar du användare med specifik hemkatalog?", options: ["useradd -d /path user", "useradd -h /path user", "useradd --home=/path user", "invalid-user-cmd"], correctIndex: 0, explanation: "-d eller --home anger hemkatalog.", difficulty: "beginner", category: "Användare" },
     { id: "ho4-b50", question: "Hur skapar du användare utan hemkatalog?", options: ["useradd user", "useradd -M user", "useradd --no-home user", "invalid-user-cmd"], correctIndex: 0, explanation: "-M eller --no-create-home skapar ingen hemkatalog.", difficulty: "beginner", category: "Användare" },
-    
+
     // ==================== INTERMEDIATE (50) ====================
     { id: "ho4-i1", question: "Vad är SGID på en katalog?", options: ["Setuid", "Filer ärver gruppägare", "Super GID", "Standard GID"], correctIndex: 1, explanation: "SGID på katalog gör att nya filer ärver katallogens grupp.", difficulty: "intermediate", category: "Behörigheter" },
     { id: "ho4-i2", question: "Hur sätter du SGID på en katalog?", options: ["chmod g+s katalog", "chmod 2775 katalog", "chmod 000", "sgid katalog"], correctIndex: 0, explanation: "chmod-invalid", difficulty: "intermediate", category: "Behörigheter" },
@@ -625,7 +625,7 @@ const TASK4_ANVANDARHANTERING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho4-i48", question: "Hur tar du bort immutable-attributet?", options: ["chattr -i fil", "rm immutable", "chmod -i", "unset +i"], correctIndex: 0, explanation: "chattr -i tar bort immutable-flaggan.", difficulty: "intermediate", category: "Behörigheter" },
     { id: "ho4-i49", question: "Vad gör 'chattr +a fil'?", options: ["Arkiverar", "Endast append tillåtet", "Attribut", "Inget korrekt alternativ"], correctIndex: 1, explanation: "+a tillåter endast tillägg, ingen borttagning eller ändring.", difficulty: "intermediate", category: "Behörigheter" },
     { id: "ho4-i50", question: "Var är chattr användbart?", options: ["Logfiler", "Konfigurationsfiler", "chmod 000", "Aldrig"], correctIndex: 0, explanation: "+a för loggar (bara tillägg), +i för kritiska config-filer.", difficulty: "intermediate", category: "Behörigheter" },
-    
+
     // ==================== ADVANCED (50) ====================
     { id: "ho4-a1", question: "Hur fungerar Linux capability system?", options: ["Hela root-privilegiet", "Finfördelade root-rättigheter", "Kapabilitetstest", "Kompatibilitet"], correctIndex: 1, explanation: "Capabilities delar upp root i mindre privilegier (CAP_NET_BIND_SERVICE etc).", difficulty: "advanced", category: "Behörigheter" },
     { id: "ho4-a2", question: "Hur ger du en binär CAP_NET_BIND_SERVICE?", options: ["setcap cap_net_bind_service=ep binary", "chcap binary net_bind", "chmod +cap binary", "cap add binary net"], correctIndex: 0, explanation: "setcap sätter capabilities på körbara filer.", difficulty: "advanced", category: "Behörigheter" },
@@ -735,7 +735,7 @@ const TASK5_SUBNETTING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho5-b48", question: "Varför beräkna för hand på tenta?", options: ["Snabbare", "Inga verktyg tillåtna", "Bättre förståelse", "Ogiltigt kommando"], correctIndex: 0, explanation: "Tentan testar förståelse, inga hjälpmedel tillåtna.", difficulty: "beginner", category: "Verktyg" },
     { id: "ho5-b49", question: "Vad är 'block size' i subnetting?", options: ["Filstorlek", "Antal adresser per subnät", "Blockerad trafik", "Minnesblock"], correctIndex: 1, explanation: "Block size = antal adresser i subnätet (inkl network och broadcast).", difficulty: "beginner", category: "Subnät" },
     { id: "ho5-b50", question: "Vad är block size för /24?", options: ["255", "256", "254", "128"], correctIndex: 1, explanation: "2^(32-24) = 2^8 = 256 adresser.", difficulty: "beginner", category: "Subnät" },
-    
+
     // ==================== INTERMEDIATE (50) ====================
     { id: "ho5-i1", question: "För IP 192.168.50.100/26, vilken är network address?", options: ["192.168.50.0", "192.168.50.64", "192.168.50.96", "192.168.50.128"], correctIndex: 1, explanation: "/26 = block size 64. 100 ligger i blocket 64-127, så network = .64", difficulty: "intermediate", category: "Beräkning" },
     { id: "ho5-i2", question: "För IP 192.168.50.100/26, vilken är broadcast?", options: ["192.168.50.63", "192.168.50.127", "192.168.50.191", "192.168.50.255"], correctIndex: 1, explanation: "Network .64, block size 64, broadcast = 64 + 64 - 1 = 127", difficulty: "intermediate", category: "Beräkning" },
@@ -787,7 +787,7 @@ const TASK5_SUBNETTING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho5-i48", question: "Varför behövs NAT?", options: ["Säkerhet", "IPv4-brist", "Felaktigt alternativ", "Hastighet"], correctIndex: 0, explanation: "NAT ger både säkerhet (döljer interna IP) och sparar IPv4-adresser.", difficulty: "intermediate", category: "NAT" },
     { id: "ho5-i49", question: "Vad är PAT/NAPT?", options: ["Port Address Translation", "Många interna till en extern IP", "Felaktigt alternativ", "Privat Address Table"], correctIndex: 0, explanation: "PAT mappar flera interna adresser till en extern via olika portar.", difficulty: "intermediate", category: "NAT" },
     { id: "ho5-i50", question: "Du ser 'Destination Host Unreachable' - vad kan vara fel?", options: ["Fel IP", "Ingen route", "Firewall", "Alla kan orsaka det"], correctIndex: 3, explanation: "Kan bero på fel IP, routing-problem, eller brandvägg.", difficulty: "intermediate", category: "Felsökning" },
-    
+
     // ==================== ADVANCED (50) ====================
     { id: "ho5-a1", question: "Beräkna: 192.168.100.200/29 - network address?", options: ["192.168.100.192", "192.168.100.200", "192.168.100.196", "192.168.100.198"], correctIndex: 0, explanation: "/29 = block 8. 200 ÷ 8 = 25, 25 × 8 = 200. Nej! 192 + 8 = 200, så 192 är network.", difficulty: "advanced", category: "Beräkning" },
     { id: "ho5-a2", question: "Beräkna: 10.50.100.150/21 - network address?", options: ["10.50.96.0", "10.50.100.0", "10.50.104.0", "10.50.98.0"], correctIndex: 0, explanation: "/21 påverkar tredje oktett. Block = 8 (i tredje oktetten). 100 ÷ 8 = 12.5, 12 × 8 = 96.", difficulty: "advanced", category: "Beräkning" },
@@ -1215,17 +1215,17 @@ export function getAllQuestionsForTask(taskId: string): MegaQuizQuestion[] {
 
 // Helper to get shuffled questions
 export function getShuffledQuestions(taskId: string, difficulty?: QuizDifficulty, count?: number): MegaQuizQuestion[] {
-    let questions = difficulty 
+    let questions = difficulty
         ? getQuestionsByDifficulty(taskId, difficulty)
         : getAllQuestionsForTask(taskId);
-    
+
     // Fisher-Yates shuffle
     const shuffled = [...questions];
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    
+
     return count ? shuffled.slice(0, count) : shuffled;
 }
 
