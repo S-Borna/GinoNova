@@ -1003,6 +1003,29 @@ def ban_user(
     return {"success": True, "message": f"User {user.email} has been banned"}
 
 
+@admin_router.post("/users/{user_id}/refresh-activity")
+def refresh_user_activity(
+    user_id: UUID,
+    response: Response,
+    current_user: CurrentUser,
+):
+    """
+    Manually refresh a user's last_activity_at to NOW.
+    Use this to fix users who appear offline but are actually online.
+    """
+    add_phase_header(response)
+    require_admin(current_user)
+
+    user = user_repository.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    from datetime import datetime, timezone
+    user_repository.update_user(user_id, last_activity_at=datetime.now(timezone.utc))
+    
+    return {"success": True, "message": f"Activity refreshed for {user.email}"}
+
+
 # ==============================================================================
 # SYSTEM STATS ENDPOINTS
 # ==============================================================================

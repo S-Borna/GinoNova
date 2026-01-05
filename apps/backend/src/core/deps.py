@@ -18,8 +18,9 @@ from ..db import user_repository
 # HTTP Bearer token security scheme (auto_error=False for explicit error handling)
 security = HTTPBearer(auto_error=False)
 
-# Throttle activity updates - only update if more than 5 minutes since last update
-ACTIVITY_UPDATE_THROTTLE_MINUTES = 5
+# Throttle activity updates - only update if more than 2 minutes since last update
+# Frontend heartbeat is every 1 min, online threshold is 5 min, so 2 min throttle is safe
+ACTIVITY_UPDATE_THROTTLE_MINUTES = 2
 
 
 async def get_current_user(
@@ -86,7 +87,12 @@ async def get_current_user(
     if user.last_activity_at is None:
         should_update_activity = True
     else:
-        time_since_last = now - user.last_activity_at
+        # Handle both naive and aware datetimes from database
+        last_activity = user.last_activity_at
+        if last_activity.tzinfo is not None:
+            # Convert aware to naive UTC for comparison
+            last_activity = last_activity.replace(tzinfo=None)
+        time_since_last = now - last_activity
         if time_since_last > timedelta(minutes=ACTIVITY_UPDATE_THROTTLE_MINUTES):
             should_update_activity = True
 
