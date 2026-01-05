@@ -563,3 +563,7 @@ def well_known_health():
 # =============================================================================
 
 app.include_router(api_router, prefix="/api")
+
+# Admin v2 routes
+from .api.routes.admin_v2 import router as admin_v2_router
+app.include_router(admin_v2_router, prefix="/api/admin-v2", tags=["admin-v2"])
