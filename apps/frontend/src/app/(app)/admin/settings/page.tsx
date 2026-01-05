@@ -440,7 +440,11 @@ export default function AdminV2Settings() {
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/settings`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
             })
 
             if (res.ok) {
