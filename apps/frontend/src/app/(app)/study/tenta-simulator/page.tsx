@@ -174,13 +174,27 @@ export default function TentaSimulatorPage() {
         const timeParam = searchParams?.get('time')
         const countParam = searchParams?.get('count')
         const gradingParam = searchParams?.get('grading')
+        const difficultyParam = searchParams?.get('difficulty')
 
-        if (timeParam || countParam || gradingParam) {
+        if (timeParam || countParam || gradingParam || difficultyParam) {
+            // Parse difficulty param: 'G', 'VG', or 'both'
+            let includeG = true
+            let includeVG = true
+            if (difficultyParam === 'G') {
+                includeG = true
+                includeVG = false
+            } else if (difficultyParam === 'VG') {
+                includeG = false
+                includeVG = true
+            }
+
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
                 duration: timeParam ? parseInt(timeParam) : DEFAULT_SETTINGS.duration,
                 questionCount: countParam ? (parseInt(countParam) === 999 ? 9999 : parseInt(countParam)) : DEFAULT_SETTINGS.questionCount,
-                gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end'
+                gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end',
+                includeG,
+                includeVG
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
