@@ -55,6 +55,7 @@ export interface NowPlayingResponse {
     artist: string
     album: string
     albumArt: string | null
+    spotifyUrl: string
     lastFmUrl: string
     playedAt?: number
   } | null
@@ -180,14 +181,21 @@ export async function GET() {
     })
   }
 
+  // Build Spotify search URL (opens in Spotify app/web)
+  const trackName = lastFmTrack.name
+  const artistName = lastFmTrack.artist['#text']
+  const spotifySearchQuery = encodeURIComponent(`${trackName} ${artistName}`)
+  const spotifyUrl = `https://open.spotify.com/search/${spotifySearchQuery}`
+
   // Build response
   const response: NowPlayingResponse = {
     isPlaying,
     track: {
-      name: lastFmTrack.name,
-      artist: lastFmTrack.artist['#text'],
+      name: trackName,
+      artist: artistName,
       album: lastFmTrack.album['#text'],
       albumArt: getBestAlbumArt(lastFmTrack.image),
+      spotifyUrl,
       lastFmUrl: lastFmTrack.url,
       playedAt: lastFmTrack.date ? parseInt(lastFmTrack.date.uts) * 1000 : undefined,
     },

@@ -235,7 +235,7 @@ function MiniWidget({
 
   return (
     <motion.a
-      href={track.lastFmUrl}
+      href={track.spotifyUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
@@ -296,7 +296,7 @@ function CompactWidget({
 
   return (
     <motion.a
-      href={track.lastFmUrl}
+      href={track.spotifyUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
@@ -373,7 +373,7 @@ function FullWidget({
 
   return (
     <motion.a
-      href={track.lastFmUrl}
+      href={track.spotifyUrl}
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
