@@ -20,6 +20,7 @@ import { useFavorites } from "@/hooks/useFavorites"
 import { DOE25_TASK_QUIZ, getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion, TaskQuizSet } from "@/data/doe25-task-quiz"
 import { LINUX247_TASK_QUIZ, getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
 import { HANDSON_TASK_QUIZ, getAllHandsOnQuiz, TaskQuizQuestion as HandsOnQuizQuestion } from "@/data/handson-task-quiz"
+import { HANDSON_MEGA_QUIZ, MegaQuizQuestion, MegaQuizTaskSet } from "@/data/handson-mega-quiz"
 
 // Generic quiz question type for local data
 interface LocalQuizQuestion {
@@ -28,15 +29,26 @@ interface LocalQuizQuestion {
     options: string[]
     correctIndex: number
     explanation: string
-    difficulty: 'G' | 'VG'
-    category: string
+    difficulty?: 'G' | 'VG' | 'beginner' | 'intermediate' | 'advanced'
+    category?: string
+}
+
+// Helper to get all mega quiz questions flattened
+function getAllMegaQuiz(): LocalQuizQuestion[] {
+    return HANDSON_MEGA_QUIZ.flatMap(task => 
+        task.questions.map(q => ({
+            ...q,
+            options: q.options as string[]
+        }))
+    )
 }
 
 // Module configuration - maps URL slugs to data
 const MODULE_CONFIG: Record<string, {
     getData: () => LocalQuizQuestion[]
-    getTaskData: () => TaskQuizSet[]
+    getTaskData: () => TaskQuizSet[] | MegaQuizTaskSet[]
     title: string
+    useMegaQuiz?: boolean
 }> = {
     'doe25-tenta': {
         getData: getAllDOE25Quiz as () => LocalQuizQuestion[],
@@ -49,9 +61,10 @@ const MODULE_CONFIG: Record<string, {
         title: 'Linux 24/7'
     },
     'hands-on-lab': {
-        getData: getAllHandsOnQuiz as () => LocalQuizQuestion[],
-        getTaskData: () => HANDSON_TASK_QUIZ as unknown as TaskQuizSet[],
-        title: 'Hands-On Lab'
+        getData: getAllMegaQuiz as () => LocalQuizQuestion[],
+        getTaskData: () => HANDSON_MEGA_QUIZ as MegaQuizTaskSet[],
+        title: 'Hands-On Lab',
+        useMegaQuiz: true
     }
 }
 
