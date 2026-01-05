@@ -22,7 +22,7 @@ import {
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ""
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Types
 interface AIUsageData {
