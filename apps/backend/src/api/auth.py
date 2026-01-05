@@ -123,9 +123,10 @@ def login(login_data: UserLogin):
     if not user:
         raise_unauthorized("Incorrect email or password")
 
-    # Update last_activity_at on login
+    # Update last_activity_at AND last_login_at on login
     from ..db import user_repository
-    user_repository.update_user(user.id, last_activity_at=datetime.now(timezone.utc))
+    now = datetime.now(timezone.utc)
+    user_repository.update_user(user.id, last_activity_at=now, last_login_at=now)
 
     # Generate JWT token
     access_token = create_access_token(
@@ -280,9 +281,11 @@ def oauth_login(oauth_data: OAuthRequest):
                         # Update avatar if provided and not already set
                         if oauth_data.avatar and not user.avatar_url:
                             user.avatar_url = oauth_data.avatar
-                        # Update last_activity_at on OAuth login
-                        user.last_activity_at = datetime.now(timezone.utc)
-                        user.updated_at = datetime.now(timezone.utc)
+                        # Update last_activity_at AND last_login_at on OAuth login
+                        now = datetime.now(timezone.utc)
+                        user.last_activity_at = now
+                        user.last_login_at = now
+                        user.updated_at = now
                         db.flush()
                         db.refresh(user)
 

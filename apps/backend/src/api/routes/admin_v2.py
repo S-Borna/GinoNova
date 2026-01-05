@@ -194,21 +194,27 @@ def require_admin(current_user: UserPublic = Depends(get_current_user)) -> UserP
     return current_user
 
 
-def get_user_status(last_activity: Optional[datetime]) -> str:
-    """Calculate user status based on last_activity_at"""
-    if not last_activity:
+def get_user_status(last_activity: Optional[datetime], last_login: Optional[datetime] = None) -> str:
+    """
+    Calculate user status based on last_login_at (actual login) 
+    NOT last_activity_at (which updates on every API call)
+    """
+    # Prefer last_login_at for accurate "online" status
+    check_time = last_login if last_login else last_activity
+    
+    if not check_time:
         return "offline"
 
     now = datetime.now(timezone.utc)
-    # Ensure last_activity is timezone-aware
-    if last_activity.tzinfo is None:
-        last_activity = last_activity.replace(tzinfo=timezone.utc)
+    # Ensure check_time is timezone-aware
+    if check_time.tzinfo is None:
+        check_time = check_time.replace(tzinfo=timezone.utc)
 
-    diff = (now - last_activity).total_seconds()
+    diff = (now - check_time).total_seconds()
 
-    if diff < 300:  # 5 minutes
+    if diff < 300:  # 5 minutes since login
         return "online"
-    elif diff < 3600:  # 1 hour
+    elif diff < 3600:  # 1 hour since login
         return "away"
     else:
         return "offline"
@@ -216,6 +222,9 @@ def get_user_status(last_activity: Optional[datetime]) -> str:
 
 def user_to_response(user: User) -> UserResponse:
     """Convert User model to UserResponse"""
+    last_activity = getattr(user, 'last_activity_at', None)
+    last_login = getattr(user, 'last_login_at', None)
+    
     return UserResponse(
         id=str(user.id),
         email=user.email,
@@ -227,7 +236,7 @@ def user_to_response(user: User) -> UserResponse:
         is_verified=getattr(user, 'is_verified', False),
         oauth_provider=getattr(user, 'oauth_provider', None),
         created_at=user.created_at,
-        last_activity_at=getattr(user, 'last_activity_at', None),
+        last_activity_at=last_activity,
         total_xp=getattr(user, 'total_xp', 0) or 0,
         level=getattr(user, 'level', 1) or 1,
         current_streak=getattr(user, 'current_streak', 0) or 0,
@@ -243,7 +252,7 @@ def user_to_response(user: User) -> UserResponse:
             study_sessions=0,  # Would need to query study sessions
             ai_requests=0,  # Would need to query AI usage
         ),
-        status=get_user_status(getattr(user, 'last_activity_at', None))
+        status=get_user_status(last_activity, last_login)
     )
 
 
