@@ -817,18 +817,9 @@ async def get_combined_analytics(
     # Top modules (placeholder - would need module progress data)
     top_modules = []
 
-    # User levels distribution
-    user_levels = []
-    for level in range(1, 11):
-        count = db.query(func.count(User.id)).filter(
-            User.level == level if hasattr(User, 'level') else True
-        ).scalar() or 0
-        if count > 0:
-            user_levels.append({"level": level, "count": count})
-
-    # If no level data, provide default
-    if not user_levels:
-        user_levels = [{"level": 1, "count": total_users}]
+    # User levels distribution - User model doesn't have level column yet
+    # Just return all users at level 1 for now
+    user_levels = [{"level": 1, "count": total_users}]
 
     return {
         "overview": {
