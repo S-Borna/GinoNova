@@ -392,17 +392,23 @@ export default function AdminPage() {
                 console.warn("Stats fetch failed:", e)
             }
 
-            // Auto-backfill last_activity_at for users who don't have it
+            // Clean up fake activity data on first load, then backfill real data
             // This runs silently in background on first admin panel load only
             if (runBackfill) {
                 try {
+                    // First reset fake activity
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/reset-fake-activity`,
+                        { method: 'POST', headers, cache: 'no-store' }
+                    )
+                    // Then backfill real activity from progress
                     await fetch(
                         `${API_BASE_URL}/api/admin/backfill-activity`,
                         { method: 'POST', headers, cache: 'no-store' }
                     )
                     setBackfillDone(true)
                 } catch {
-                    // Ignore errors - backfill is optional
+                    // Ignore errors - cleanup is optional
                 }
             }
 
