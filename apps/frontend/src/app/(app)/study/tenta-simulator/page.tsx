@@ -82,31 +82,8 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffled
 }
 
-// Check if a question has meta-answers that reference other options (should not be shuffled)
-function hasMetaAnswers(question: SimulatorQuestion): boolean {
-    const metaPatterns = [
-        /\bBåda\s+(A|B|C|D)\s+och\s+(A|B|C|D)/i,  // "Båda A och B"
-        /\b(A|B|C|D)\s+och\s+(A|B|C|D)\b/i,       // "A och B", "B och C"
-        /\bAlla\s+(ovan|alternativen|tre|fyra)/i,  // "Alla ovan", "Alla alternativen"
-        /\bInget\s+av\s+(ovan|alternativen)/i,     // "Inget av ovan"
-        /\bSamtliga\s+(ovan|alternativen)/i,       // "Samtliga ovan"
-        /\bBåde\s+(A|B|C|D)\s+och\s+(A|B|C|D)/i,   // "Både A och B"
-        /\bBåda\s+fungerar/i,                       // "Båda fungerar" (meta-svar)
-        /\bAlternativ\s+(A|B|C|D)/i,               // "Alternativ A", "Alternativ B"
-    ]
-    
-    return question.options.some(option => 
-        metaPatterns.some(pattern => pattern.test(option))
-    )
-}
-
 // Shuffle options within a question and update correctIndex
 function shuffleQuestionOptions(question: SimulatorQuestion): SimulatorQuestion {
-    // Don't shuffle if question has meta-answers that reference other options
-    if (hasMetaAnswers(question)) {
-        return question
-    }
-    
     // Create array of option objects with their original index
     const optionsWithIndex = question.options.map((option, index) => ({
         option,
