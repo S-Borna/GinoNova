@@ -133,6 +133,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
+    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'all'>('doe25')
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -313,7 +314,7 @@ export default function StudyPage() {
                                             </span>
                                         </div>
                                         <p className="text-zinc-300 text-lg">
-                                            <span className="text-emerald-400 font-bold">1600+ frågor</span> från DOE25 + Hands-On
+                                            Välj <span className="text-purple-400 font-bold">DOE25</span> för tentafokus, <span className="text-emerald-400 font-bold">Hands-On</span> för praktik, eller <span className="text-yellow-400 font-bold">alla 1600+</span>
                                         </p>
                                     </div>
                                 </div>
@@ -456,8 +457,62 @@ export default function StudyPage() {
                                 </div>
                             </div>
 
+                            {/* Question Source Selection */}
+                            <div className="bg-black/30 rounded-2xl p-5 border border-cyan-500/20 mb-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <BookOpen className="w-5 h-5 text-cyan-400" />
+                                    <span className="text-white font-bold">Frågekälla</span>
+                                </div>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button
+                                        onClick={() => setTentaSource('doe25')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'doe25'
+                                                ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">🎓</span>
+                                        <span className="text-xs font-medium">DOE25</span>
+                                        <span className="text-[10px] opacity-70 font-normal">554 frågor</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setTentaSource('handson')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'handson'
+                                                ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">🔧</span>
+                                        <span className="text-xs font-medium">Hands-On</span>
+                                        <span className="text-[10px] opacity-70 font-normal">1051 frågor</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setTentaSource('all')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'all'
+                                                ? "bg-gradient-to-r from-purple-500 to-emerald-500 text-white shadow-lg shadow-cyan-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">🔀</span>
+                                        <span className="text-xs font-medium">Alla</span>
+                                        <span className="text-[10px] opacity-70 font-normal">1600+ frågor</span>
+                                    </button>
+                                </div>
+                                <p className="text-xs text-zinc-400 mt-3 text-center">
+                                    {tentaSource === 'doe25' && "✨ Rekommenderat för tentan"}
+                                    {tentaSource === 'handson' && "Praktiska frågor"}
+                                    {tentaSource === 'all' && "Allt blandat"}
+                                </p>
+                            </div>
+
                             {/* Start button */}
-                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}`}>
+                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}

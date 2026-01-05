@@ -49,6 +49,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
+    questionSource: 'doe25' | 'handson' | 'all' // Which question sources to include
 }
 
 interface QuizResult {
@@ -67,7 +68,8 @@ const DEFAULT_SETTINGS: SimulatorSettings = {
     includeG: true,
     includeVG: true,
     showTimer: true,
-    gradingMode: 'live'
+    gradingMode: 'live',
+    questionSource: 'doe25' // Default to DOE25 only for best exam prep
 }
 
 // Shuffle array helper
@@ -80,8 +82,31 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffled
 }
 
+// Check if a question has meta-answers that reference other options (should not be shuffled)
+function hasMetaAnswers(question: SimulatorQuestion): boolean {
+    const metaPatterns = [
+        /\bBåda\s+(A|B|C|D)\s+och\s+(A|B|C|D)/i,  // "Båda A och B"
+        /\b(A|B|C|D)\s+och\s+(A|B|C|D)\b/i,       // "A och B", "B och C"
+        /\bAlla\s+(ovan|alternativen|tre|fyra)/i,  // "Alla ovan", "Alla alternativen"
+        /\bInget\s+av\s+(ovan|alternativen)/i,     // "Inget av ovan"
+        /\bSamtliga\s+(ovan|alternativen)/i,       // "Samtliga ovan"
+        /\bBåde\s+(A|B|C|D)\s+och\s+(A|B|C|D)/i,   // "Både A och B"
+        /\bBåda\s+fungerar/i,                       // "Båda fungerar" (meta-svar)
+        /\bAlternativ\s+(A|B|C|D)/i,               // "Alternativ A", "Alternativ B"
+    ]
+    
+    return question.options.some(option => 
+        metaPatterns.some(pattern => pattern.test(option))
+    )
+}
+
 // Shuffle options within a question and update correctIndex
 function shuffleQuestionOptions(question: SimulatorQuestion): SimulatorQuestion {
+    // Don't shuffle if question has meta-answers that reference other options
+    if (hasMetaAnswers(question)) {
+        return question
+    }
+    
     // Create array of option objects with their original index
     const optionsWithIndex = question.options.map((option, index) => ({
         option,
@@ -151,21 +176,32 @@ export default function TentaSimulatorPage() {
     const [hasAutoStarted, setHasAutoStarted] = useState(false)
     const [showAbortModal, setShowAbortModal] = useState(false)
 
-    // Get all questions combined from DOE25 + Hands-On
-    const allQuestions = useMemo(() => {
-        // Convert DOE25 questions
-        const doe25Questions = DOE25_TASK_QUIZ.flatMap(set => 
+    // Get DOE25 questions
+    const doe25Questions = useMemo(() => {
+        return DOE25_TASK_QUIZ.flatMap(set => 
             set.questions.map(convertDOE25Question)
         )
-        
-        // Convert Hands-On questions (map beginner/intermediate → G, advanced → VG)
-        const handsonQuestions = HANDSON_MEGA_QUIZ.flatMap(set =>
+    }, [])
+    
+    // Get Hands-On questions
+    const handsonQuestions = useMemo(() => {
+        return HANDSON_MEGA_QUIZ.flatMap(set =>
             set.questions.map(convertHandsOnQuestion)
         )
-        
-        // Combine all
-        return [...doe25Questions, ...handsonQuestions]
     }, [])
+
+    // Get filtered questions based on source setting
+    const allQuestions = useMemo(() => {
+        switch (settings.questionSource) {
+            case 'doe25':
+                return doe25Questions
+            case 'handson':
+                return handsonQuestions
+            case 'all':
+            default:
+                return [...doe25Questions, ...handsonQuestions]
+        }
+    }, [doe25Questions, handsonQuestions, settings.questionSource])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -175,8 +211,9 @@ export default function TentaSimulatorPage() {
         const countParam = searchParams?.get('count')
         const gradingParam = searchParams?.get('grading')
         const difficultyParam = searchParams?.get('difficulty')
+        const sourceParam = searchParams?.get('source')
 
-        if (timeParam || countParam || gradingParam || difficultyParam) {
+        if (timeParam || countParam || gradingParam || difficultyParam || sourceParam) {
             // Parse difficulty param: 'G', 'VG', or 'both'
             let includeG = true
             let includeVG = true
@@ -188,20 +225,43 @@ export default function TentaSimulatorPage() {
                 includeVG = true
             }
 
+            // Parse source param
+            let questionSource: 'doe25' | 'handson' | 'all' = 'doe25'
+            if (sourceParam === 'handson') {
+                questionSource = 'handson'
+            } else if (sourceParam === 'all') {
+                questionSource = 'all'
+            }
+
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
                 duration: timeParam ? parseInt(timeParam) : DEFAULT_SETTINGS.duration,
                 questionCount: countParam ? (parseInt(countParam) === 999 ? 9999 : parseInt(countParam)) : DEFAULT_SETTINGS.questionCount,
                 gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end',
                 includeG,
-                includeVG
+                includeVG,
+                questionSource
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
 
+            // Get questions based on source
+            let sourceQuestions: SimulatorQuestion[]
+            switch (questionSource) {
+                case 'doe25':
+                    sourceQuestions = doe25Questions
+                    break
+                case 'handson':
+                    sourceQuestions = handsonQuestions
+                    break
+                case 'all':
+                default:
+                    sourceQuestions = [...doe25Questions, ...handsonQuestions]
+            }
+
             // Auto-start the quiz
             setTimeout(() => {
-                let filtered = allQuestions.filter(q => {
+                let filtered = sourceQuestions.filter(q => {
                     if (newSettings.includeG && q.difficulty === 'G') return true
                     if (newSettings.includeVG && q.difficulty === 'VG') return true
                     return false
@@ -220,7 +280,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, allQuestions])
+    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {
@@ -444,6 +504,57 @@ export default function TentaSimulatorPage() {
                     </p>
                 </div>
 
+                {/* Question Source Selection */}
+                <div className="mb-6">
+                    <label className="block text-sm text-zinc-400 mb-3">Frågekälla</label>
+                    <div className="grid grid-cols-3 gap-3">
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, questionSource: 'doe25' }))}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.questionSource === 'doe25'
+                                    ? "bg-purple-500/20 border-purple-500 text-purple-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            <span className="text-lg">🎓</span>
+                            <span className="text-sm font-medium">DOE25</span>
+                            <span className="text-xs opacity-70">{doe25Questions.length} frågor</span>
+                        </button>
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, questionSource: 'handson' }))}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.questionSource === 'handson'
+                                    ? "bg-emerald-500/20 border-emerald-500 text-emerald-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            <span className="text-lg">🔧</span>
+                            <span className="text-sm font-medium">Hands-On</span>
+                            <span className="text-xs opacity-70">{handsonQuestions.length} frågor</span>
+                        </button>
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, questionSource: 'all' }))}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.questionSource === 'all'
+                                    ? "bg-gradient-to-r from-purple-500/20 to-emerald-500/20 border-yellow-500 text-yellow-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            <span className="text-lg">🔀</span>
+                            <span className="text-sm font-medium">Alla</span>
+                            <span className="text-xs opacity-70">{doe25Questions.length + handsonQuestions.length} frågor</span>
+                        </button>
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-2">
+                        {settings.questionSource === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
+                        {settings.questionSource === 'handson' && "Praktiska frågor från Hands-On modulen"}
+                        {settings.questionSource === 'all' && "Kombinerat frågepaket från alla källor"}
+                    </p>
+                </div>
+
                 {/* Timer toggle */}
                 <div className="flex items-center justify-between py-3">
                     <span className="text-zinc-400">Visa timer</span>
@@ -479,6 +590,9 @@ export default function TentaSimulatorPage() {
                     </span>
                     <span className="text-purple-400">
                         VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
+                    </span>
+                    <span className="text-zinc-500 ml-auto">
+                        Källa: {settings.questionSource === 'doe25' ? '🎓 DOE25' : settings.questionSource === 'handson' ? '🔧 Hands-On' : '🔀 Alla'}
                     </span>
                 </div>
             </div>
