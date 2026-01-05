@@ -6,7 +6,7 @@
  * Combines quizzes and flashcards in a timed exam-like environment
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
- * - Random questions from all tasks
+ * - Random questions from DOE25 + Hands-On (~1600 questions)
  * - Mix of G and VG difficulty
  * - Live grading OR grading at end
  * - Progress tracking and scoring
@@ -27,6 +27,20 @@ import {
 
 // Import quiz data
 import { DOE25_TASK_QUIZ, type TaskQuizQuestion } from "@/data/doe25-task-quiz"
+import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-quiz"
+
+// Unified question type for simulator (always has G/VG difficulty)
+interface SimulatorQuestion {
+    id: string
+    question: string
+    options: [string, string, string, string]
+    correctIndex: 0 | 1 | 2 | 3
+    explanation: string
+    difficulty: 'G' | 'VG'
+    category: string
+    source: 'doe25' | 'handson'
+    scenario?: string // Optional scenario context
+}
 
 interface SimulatorSettings {
     duration: number // minutes
@@ -34,7 +48,7 @@ interface SimulatorSettings {
     includeG: boolean
     includeVG: boolean
     showTimer: boolean
-    gradingMode: 'live' | 'end' // NEW: live = immediate feedback, end = feedback after completion
+    gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
 }
 
 interface QuizResult {
@@ -67,7 +81,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 // Shuffle options within a question and update correctIndex
-function shuffleQuestionOptions(question: TaskQuizQuestion): TaskQuizQuestion {
+function shuffleQuestionOptions(question: SimulatorQuestion): SimulatorQuestion {
     // Create array of option objects with their original index
     const optionsWithIndex = question.options.map((option, index) => ({
         option,
@@ -87,6 +101,38 @@ function shuffleQuestionOptions(question: TaskQuizQuestion): TaskQuizQuestion {
     }
 }
 
+// Convert DOE25 question to SimulatorQuestion
+function convertDOE25Question(q: TaskQuizQuestion): SimulatorQuestion {
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        difficulty: q.difficulty, // Already 'G' | 'VG'
+        category: q.category,
+        source: 'doe25',
+        scenario: q.scenario // Include if present
+    }
+}
+
+// Convert Hands-On question to SimulatorQuestion (map difficulty)
+function convertHandsOnQuestion(q: MegaQuizQuestion): SimulatorQuestion {
+    // Map: beginner/intermediate → G, advanced → VG
+    const difficulty: 'G' | 'VG' = q.difficulty === 'advanced' ? 'VG' : 'G'
+    
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex as 0 | 1 | 2 | 3,
+        explanation: q.explanation,
+        difficulty,
+        category: q.category,
+        source: 'handson'
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -94,7 +140,7 @@ export default function TentaSimulatorPage() {
     // State
     const [phase, setPhase] = useState<SimulatorPhase>('setup')
     const [settings, setSettings] = useState<SimulatorSettings>(DEFAULT_SETTINGS)
-    const [questions, setQuestions] = useState<TaskQuizQuestion[]>([])
+    const [questions, setQuestions] = useState<SimulatorQuestion[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
     const [results, setResults] = useState<QuizResult[]>([])
@@ -105,9 +151,20 @@ export default function TentaSimulatorPage() {
     const [hasAutoStarted, setHasAutoStarted] = useState(false)
     const [showAbortModal, setShowAbortModal] = useState(false)
 
-    // Get all questions from DOE25
+    // Get all questions combined from DOE25 + Hands-On
     const allQuestions = useMemo(() => {
-        return DOE25_TASK_QUIZ.flatMap(set => set.questions)
+        // Convert DOE25 questions
+        const doe25Questions = DOE25_TASK_QUIZ.flatMap(set => 
+            set.questions.map(convertDOE25Question)
+        )
+        
+        // Convert Hands-On questions (map beginner/intermediate → G, advanced → VG)
+        const handsonQuestions = HANDSON_MEGA_QUIZ.flatMap(set =>
+            set.questions.map(convertHandsOnQuestion)
+        )
+        
+        // Combine all
+        return [...doe25Questions, ...handsonQuestions]
     }, [])
 
     // Parse URL params and auto-start if params provided
