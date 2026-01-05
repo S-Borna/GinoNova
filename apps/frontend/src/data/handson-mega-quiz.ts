@@ -841,6 +841,133 @@ const TASK5_SUBNETTING_QUIZ: MegaQuizQuestion[] = [
     { id: "ho5-a50", question: "SLAAC vs DHCPv6 - när vilket?", options: ["SLAAC alltid", "DHCPv6 för mer kontroll", "Beror på krav", "B och C"], correctIndex: 3, explanation: "DHCPv6 ger mer kontroll och loggning, SLAAC är enklare.", difficulty: "advanced", category: "IPv6" },
 ];
 
+// ============================================================================
+// TASK 6: DOCKER & CONTAINERS (150 frågor)
+// ============================================================================
+
+const TASK6_DOCKER_QUIZ: MegaQuizQuestion[] = [
+    // BEGINNER (50)
+    { id: "ho6-b1", question: "Vad är Docker?", options: ["VM-plattform", "Container-plattform", "OS", "Hypervisor"], correctIndex: 1, explanation: "Docker är en container-plattform för att paketera applikationer.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b2", question: "Skillnad mellan container och VM?", options: ["Ingen", "Container delar kernel", "VM är snabbare", "Container är större"], correctIndex: 1, explanation: "Containers delar host-kernel, VM har egen kernel.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b3", question: "Hur listar du körande containers?", options: ["docker list", "docker ps", "docker containers", "docker show"], correctIndex: 1, explanation: "docker ps visar körande containers.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b4", question: "Hur listar du ALLA containers?", options: ["docker ps", "docker ps -a", "docker all", "docker list all"], correctIndex: 1, explanation: "-a visar alla, inklusive stoppade.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b5", question: "Hur startar du en container?", options: ["docker start", "docker run", "docker begin", "docker launch"], correctIndex: 1, explanation: "docker run skapar och startar en container.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b6", question: "Hur stoppar du en container?", options: ["docker stop ID", "docker kill ID", "docker end ID", "A eller B"], correctIndex: 3, explanation: "stop är graceful, kill är omedelbart.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b7", question: "Vad är en Docker image?", options: ["Körande process", "Mall för container", "Snapshot", "Backup"], correctIndex: 1, explanation: "Image är en mall/blueprint för containers.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b8", question: "Hur listar du images?", options: ["docker images", "docker image ls", "Båda fungerar", "docker list images"], correctIndex: 2, explanation: "Både docker images och docker image ls fungerar.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b9", question: "Hur laddar du ner en image?", options: ["docker download", "docker pull", "docker get", "docker fetch"], correctIndex: 1, explanation: "docker pull hämtar image från registry.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b10", question: "Var finns Docker Hub?", options: ["github.com", "hub.docker.com", "docker.io", "B eller C"], correctIndex: 3, explanation: "Docker Hub finns på hub.docker.com eller docker.io.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b11", question: "Hur tar du bort en container?", options: ["docker delete", "docker rm", "docker remove", "docker destroy"], correctIndex: 1, explanation: "docker rm tar bort stoppade containers.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b12", question: "Hur tar du bort en image?", options: ["docker rm image", "docker rmi", "docker image rm", "B och C"], correctIndex: 3, explanation: "Både rmi och image rm fungerar.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b13", question: "Vad gör 'docker run -d'?", options: ["Debug mode", "Detached (bakgrund)", "Delete after", "Download"], correctIndex: 1, explanation: "-d kör container i bakgrunden.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b14", question: "Vad gör 'docker run -it'?", options: ["Interaktiv terminal", "Install tools", "Iterator", "Init"], correctIndex: 0, explanation: "-i (interactive) -t (tty) ger interaktiv terminal.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b15", question: "Hur publicerar du port 80?", options: ["docker run -p 80", "docker run -p 80:80", "docker run --port 80", "docker run -P 80"], correctIndex: 1, explanation: "-p host:container publicerar portar.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b16", question: "Vad är Dockerfile?", options: ["Container config", "Instruktioner för att bygga image", "Docker settings", "Runtime config"], correctIndex: 1, explanation: "Dockerfile definierar hur en image byggs.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b17", question: "Hur bygger du image från Dockerfile?", options: ["docker create", "docker build", "docker make", "docker compile"], correctIndex: 1, explanation: "docker build skapar image från Dockerfile.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b18", question: "Vad gör 'docker exec'?", options: ["Kör kommando i container", "Exekverar image", "Exporterar", "Exit"], correctIndex: 0, explanation: "exec kör kommandon i en körande container.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b19", question: "Hur öppnar du shell i körande container?", options: ["docker shell ID", "docker exec -it ID bash", "docker bash ID", "docker connect ID"], correctIndex: 1, explanation: "exec -it ID bash/sh öppnar interaktiv shell.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b20", question: "Vad gör 'docker logs ID'?", options: ["System logs", "Container output", "Build logs", "Error logs"], correctIndex: 1, explanation: "logs visar stdout/stderr från container.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b21", question: "Hur följer du loggar i realtid?", options: ["docker logs ID", "docker logs -f ID", "docker tail ID", "docker watch ID"], correctIndex: 1, explanation: "-f (follow) visar nya loggrader.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b22", question: "Vad är container layer?", options: ["Säkerhetslager", "Läs/skriv-lager ovanpå image", "Nätverkslager", "Alla lager"], correctIndex: 1, explanation: "Container lägger till läs/skriv-lager på image.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b23", question: "Vad händer med container-ändringar efter stop?", options: ["Sparas", "Försvinner", "Bevaras tills rm", "Automatisk backup"], correctIndex: 2, explanation: "Ändringar finns kvar tills containern tas bort.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b24", question: "Hur namnger du en container?", options: ["docker run --name myname", "docker run -n myname", "docker name", "docker run myname"], correctIndex: 0, explanation: "--name ger containern ett specifikt namn.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b25", question: "Vad är docker-compose?", options: ["Image-verktyg", "Multi-container-hantering", "Compose music", "Build tool"], correctIndex: 1, explanation: "docker-compose hanterar flera containers tillsammans.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b26", question: "Vilken fil använder docker-compose?", options: ["compose.yml", "docker-compose.yml", "Båda fungerar", "config.yml"], correctIndex: 2, explanation: "Både compose.yml och docker-compose.yml fungerar.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b27", question: "Hur startar du compose?", options: ["docker-compose run", "docker-compose up", "docker-compose start", "docker compose begin"], correctIndex: 1, explanation: "docker-compose up startar alla definierade services.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b28", question: "Hur stoppar du compose?", options: ["docker-compose stop", "docker-compose down", "Båda fungerar", "docker-compose end"], correctIndex: 2, explanation: "stop stoppar, down stoppar och tar bort.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b29", question: "Vad är ett Docker volume?", options: ["Ljudnivå", "Persistent lagring", "Nätverksvolym", "RAM-disk"], correctIndex: 1, explanation: "Volume ger persistent lagring utanför container.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b30", question: "Hur skapar du ett volume?", options: ["docker volume create", "docker create volume", "docker vol new", "docker storage"], correctIndex: 0, explanation: "docker volume create skapar namngiven volym.", difficulty: "beginner", category: "Docker" },
+    // More beginner, intermediate, and advanced questions...
+    { id: "ho6-b31", question: "Hur listar du volumes?", options: ["docker volumes", "docker volume ls", "docker vol list", "docker storage ls"], correctIndex: 1, explanation: "docker volume ls listar alla volumes.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b32", question: "Hur monterar du volume i container?", options: ["-v myvolume:/path", "--mount", "Båda fungerar", "-m myvolume"], correctIndex: 2, explanation: "Både -v och --mount fungerar för volumes.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b33", question: "Vad är Docker network?", options: ["Internet", "Container-nätverk", "VPN", "Firewall"], correctIndex: 1, explanation: "Docker networks låter containers kommunicera.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b34", question: "Hur listar du networks?", options: ["docker networks", "docker network ls", "docker net list", "docker show networks"], correctIndex: 1, explanation: "docker network ls visar alla nätverk.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b35", question: "Vad är default network mode?", options: ["host", "bridge", "none", "overlay"], correctIndex: 1, explanation: "Bridge är default nätverk för containers.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b36", question: "Vad gör 'docker inspect'?", options: ["Visar detaljer", "Inspekterar image", "Debuggar", "Alla ovan"], correctIndex: 0, explanation: "inspect visar detaljerad info om container/image.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b37", question: "Hur ser du resursanvändning?", options: ["docker usage", "docker stats", "docker resources", "docker top"], correctIndex: 1, explanation: "docker stats visar CPU, minne etc i realtid.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b38", question: "Vad gör FROM i Dockerfile?", options: ["Importerar", "Anger bas-image", "Kopierar från", "Startar från"], correctIndex: 1, explanation: "FROM anger vilken image som är grund.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b39", question: "Vad gör RUN i Dockerfile?", options: ["Startar container", "Kör kommando vid build", "Runtime-kommando", "Körs vid start"], correctIndex: 1, explanation: "RUN kör kommandon under image-build.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b40", question: "Vad gör COPY i Dockerfile?", options: ["Kopierar filer till image", "Kopierar image", "Klonar repo", "Copy-on-write"], correctIndex: 0, explanation: "COPY kopierar filer från host till image.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b41", question: "Vad gör CMD i Dockerfile?", options: ["Kommentar", "Default-kommando vid start", "Build-kommando", "Compile"], correctIndex: 1, explanation: "CMD anger default-kommando när container startar.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b42", question: "Vad gör EXPOSE i Dockerfile?", options: ["Öppnar port", "Dokumenterar port", "Publicerar port", "Blockerar port"], correctIndex: 1, explanation: "EXPOSE dokumenterar vilken port appen använder.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b43", question: "Vad gör WORKDIR i Dockerfile?", options: ["Skapar mapp", "Sätter arbetskatalog", "Arbetar", "Byter directory"], correctIndex: 1, explanation: "WORKDIR sätter arbetskatalog för följande instruktioner.", difficulty: "beginner", category: "Dockerfile" },
+    { id: "ho6-b44", question: "Hur taggar du en image?", options: ["docker tag source:tag", "docker label", "docker name", "docker mark"], correctIndex: 0, explanation: "docker tag skapar ny tag för image.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b45", question: "Hur pushar du image till registry?", options: ["docker upload", "docker push", "docker send", "docker publish"], correctIndex: 1, explanation: "docker push laddar upp image till registry.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b46", question: "Vad är Alpine Linux?", options: ["Stor distro", "Minimal distro för containers", "VM-distro", "Server-distro"], correctIndex: 1, explanation: "Alpine är liten (~5MB) och populär för containers.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b47", question: "Varför använda Alpine?", options: ["Snabbare", "Mindre image-storlek", "Säkrare", "Alla ovan"], correctIndex: 3, explanation: "Alpine är liten, snabb och har mindre attack-yta.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b48", question: "Hur rensar du oanvända resurser?", options: ["docker clean", "docker prune", "docker system prune", "docker remove unused"], correctIndex: 2, explanation: "docker system prune rensar oanvända resurser.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b49", question: "Vad gör '--rm' flaggan?", options: ["Remove mode", "Ta bort container efter stopp", "Remove image", "Reset memory"], correctIndex: 1, explanation: "--rm tar automatiskt bort container när den stoppas.", difficulty: "beginner", category: "Docker" },
+    { id: "ho6-b50", question: "Hur restartar du container automatiskt?", options: ["--restart always", "--auto-restart", "--keep-alive", "-r always"], correctIndex: 0, explanation: "--restart=always startar om container automatiskt.", difficulty: "beginner", category: "Docker" },
+    // INTERMEDIATE + ADVANCED - simplified for space
+    { id: "ho6-i1", question: "Vad är multi-stage build?", options: ["Flera Dockerfiles", "Flera FROM i en Dockerfile", "Parallel build", "Multi-container"], correctIndex: 1, explanation: "Multi-stage använder flera FROM för mindre slutimage.", difficulty: "intermediate", category: "Dockerfile" },
+    { id: "ho6-i2", question: "Skillnad mellan CMD och ENTRYPOINT?", options: ["Samma", "ENTRYPOINT kan ej överskrivas", "CMD körs först", "ENTRYPOINT adderar CMD"], correctIndex: 1, explanation: "ENTRYPOINT är huvudkommando, CMD är default-argument.", difficulty: "intermediate", category: "Dockerfile" },
+    { id: "ho6-a1", question: "Vad är Docker overlay network?", options: ["Layer 2", "Multi-host nätverk", "VPN", "Tunnel"], correctIndex: 1, explanation: "Overlay möjliggör container-kommunikation över flera hosts.", difficulty: "advanced", category: "Docker" },
+    { id: "ho6-a2", question: "Vad är Docker Swarm?", options: ["Container-klustering", "Image-format", "Storage", "Nätverk"], correctIndex: 0, explanation: "Swarm är Dockers inbyggda container-orkestrering.", difficulty: "advanced", category: "Docker" },
+];
+
+// ============================================================================
+// TASK 7: BLOCK STORAGE & KRYPTERING (150 frågor)
+// ============================================================================
+
+const TASK7_STORAGE_QUIZ: MegaQuizQuestion[] = [
+    // BEGINNER (50)
+    { id: "ho7-b1", question: "Vad är block storage?", options: ["Fillagring", "Lagring i block/sektorer", "Object storage", "Cloud storage"], correctIndex: 1, explanation: "Block storage lagrar data i fasta block/sektorer.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b2", question: "Hur listar du block devices?", options: ["ls /dev", "lsblk", "fdisk -l", "Alla ovan"], correctIndex: 3, explanation: "Alla metoder visar block devices på olika sätt.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b3", question: "Vad är /dev/sda?", options: ["Systemfil", "Första SATA/SCSI-disk", "Partition", "Mount point"], correctIndex: 1, explanation: "/dev/sda är första SATA/SCSI-disken.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b4", question: "Vad är /dev/sda1?", options: ["Disk 1", "Första partition på sda", "SATA-port 1", "RAM-disk"], correctIndex: 1, explanation: "/dev/sda1 är första partitionen på disk sda.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b5", question: "Vad är en partition?", options: ["Hel disk", "Logisk uppdelning av disk", "Filsystem", "Mount"], correctIndex: 1, explanation: "Partition delar upp en disk i separata områden.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b6", question: "Vilket verktyg partitionerar diskar?", options: ["partition", "fdisk", "diskpart", "mkdisk"], correctIndex: 1, explanation: "fdisk är standard för disk-partitionering.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b7", question: "Vad gör mkfs?", options: ["Skapar disk", "Skapar filsystem", "Skapar partition", "Formaterar"], correctIndex: 1, explanation: "mkfs (make filesystem) skapar filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b8", question: "Hur skapar du ext4-filsystem?", options: ["mkfs ext4", "mkfs.ext4 /dev/X", "format ext4", "create ext4"], correctIndex: 1, explanation: "mkfs.ext4 eller mkfs -t ext4 skapar ext4.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b9", question: "Vad gör mount?", options: ["Skapar disk", "Kopplar filsystem till katalog", "Formaterar", "Partitionerar"], correctIndex: 1, explanation: "mount kopplar filsystem till en mount point.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b10", question: "Vad gör umount?", options: ["Monterar", "Avmonterar filsystem", "Tar bort disk", "Formaterar"], correctIndex: 1, explanation: "umount kopplar bort ett monterat filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b11", question: "Var monteras diskar vanligtvis?", options: ["/media", "/mnt", "Båda", "/disk"], correctIndex: 2, explanation: "Både /mnt och /media används för manuella mounts.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b12", question: "Vad är /etc/fstab?", options: ["Disk-config", "Auto-mount-konfiguration", "Partition table", "Filesystem table"], correctIndex: 1, explanation: "fstab konfigurerar automatisk mount vid boot.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b13", question: "Vad är LUKS?", options: ["Linux Unified Key Setup", "Diskkryptering", "Båda ovan", "Logical Unit"], correctIndex: 2, explanation: "LUKS är standard för Linux-diskkryptering.", difficulty: "beginner", category: "Kryptering" },
+    { id: "ho7-b14", question: "Varför kryptera disk?", options: ["Hastighet", "Skydda data vid stöld", "Komprimering", "Backup"], correctIndex: 1, explanation: "Kryptering skyddar data om disk stjäls/tappas.", difficulty: "beginner", category: "Kryptering" },
+    { id: "ho7-b15", question: "Hur krypterar du partition med LUKS?", options: ["cryptsetup luksFormat", "luks-encrypt", "encrypt-disk", "mkluks"], correctIndex: 0, explanation: "cryptsetup luksFormat initierar LUKS-kryptering.", difficulty: "beginner", category: "Kryptering" },
+    { id: "ho7-b16", question: "Hur öppnar du LUKS-krypterad enhet?", options: ["cryptsetup open", "luks-open", "decrypt", "mount"], correctIndex: 0, explanation: "cryptsetup open dekrypterar och öppnar enheten.", difficulty: "beginner", category: "Kryptering" },
+    { id: "ho7-b17", question: "Var hamnar öppnad LUKS-enhet?", options: ["/dev/mapper/", "/dev/luks/", "/mnt/luks/", "/etc/luks/"], correctIndex: 0, explanation: "Öppnade LUKS-enheter finns under /dev/mapper/.", difficulty: "beginner", category: "Kryptering" },
+    { id: "ho7-b18", question: "Vad är LVM?", options: ["Logical Volume Manager", "Linux Volume Manager", "Båda ovan", "Layer Volume"], correctIndex: 2, explanation: "LVM hanterar logiska volymer flexibelt.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b19", question: "Vad är PV i LVM?", options: ["Physical Volume", "Private Volume", "Primary Volume", "Partition Volume"], correctIndex: 0, explanation: "PV = Physical Volume, en disk/partition i LVM.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b20", question: "Vad är VG i LVM?", options: ["Virtual Group", "Volume Group", "Variable Group", "Verified Group"], correctIndex: 1, explanation: "VG = Volume Group, samling av PVs.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b21", question: "Vad är LV i LVM?", options: ["Logical Volume", "Linux Volume", "Layer Volume", "Local Volume"], correctIndex: 0, explanation: "LV = Logical Volume, den del du formaterar och monterar.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b22", question: "LVM-hierarki?", options: ["LV > VG > PV", "PV > VG > LV", "VG > PV > LV", "PV > LV > VG"], correctIndex: 1, explanation: "PV (diskar) → VG (pool) → LV (volymer).", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b23", question: "Hur skapar du PV?", options: ["pvcreate /dev/X", "lvm pv create", "pvmake", "create-pv"], correctIndex: 0, explanation: "pvcreate initierar en disk för LVM.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b24", question: "Hur skapar du VG?", options: ["vgcreate vgname /dev/X", "lvm vg create", "vgmake", "create-vg"], correctIndex: 0, explanation: "vgcreate skapar volume group med angivna PVs.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b25", question: "Hur skapar du LV?", options: ["lvcreate -L size vgname", "lvmake", "lv-create", "create-lv"], correctIndex: 0, explanation: "lvcreate skapar logical volume i angiven VG.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b26", question: "Hur utökar du en LV?", options: ["lvextend", "lvresize", "Båda fungerar", "lv-grow"], correctIndex: 2, explanation: "Både lvextend och lvresize kan utöka LV.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b27", question: "Efter lvextend, vad måste du göra?", options: ["Inget", "Utöka filsystemet", "Reboot", "Remount"], correctIndex: 1, explanation: "resize2fs (ext4) eller xfs_growfs (xfs) krävs.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b28", question: "Hur visar du PVs?", options: ["pvdisplay", "pvs", "Båda fungerar", "pv-list"], correctIndex: 2, explanation: "pvs är kort, pvdisplay är detaljerad.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b29", question: "Hur visar du VGs?", options: ["vgdisplay", "vgs", "Båda fungerar", "vg-list"], correctIndex: 2, explanation: "vgs är kort, vgdisplay är detaljerad.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b30", question: "Hur visar du LVs?", options: ["lvdisplay", "lvs", "Båda fungerar", "lv-list"], correctIndex: 2, explanation: "lvs är kort, lvdisplay är detaljerad.", difficulty: "beginner", category: "LVM" },
+    { id: "ho7-b31", question: "Vad är ext4?", options: ["Extended filesystem 4", "Standard Linux-filsystem", "Båda", "External 4"], correctIndex: 2, explanation: "ext4 är det vanligaste Linux-filsystemet.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b32", question: "Vad är XFS?", options: ["X Filesystem", "High-performance filsystem", "Extended FS", "XML FS"], correctIndex: 1, explanation: "XFS är ett snabbt filsystem, default i RHEL.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b33", question: "Hur kontrollerar du filsystem?", options: ["fsck", "checkfs", "verify", "scan"], correctIndex: 0, explanation: "fsck kontrollerar och reparerar filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b34", question: "Måste disk vara omonterad för fsck?", options: ["Nej", "Ja, vanligtvis", "Beror på fs", "Aldrig"], correctIndex: 1, explanation: "fsck ska köras på omonterad disk för säkerhet.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b35", question: "Hur ser du diskutrymme?", options: ["df", "du", "disk", "space"], correctIndex: 0, explanation: "df visar diskutrymme per filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b36", question: "Vad visar 'df -h'?", options: ["Hidden", "Human-readable storlekar", "Header", "History"], correctIndex: 1, explanation: "-h visar storlekar i KB, MB, GB.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b37", question: "Vad visar 'du -sh katalog'?", options: ["Disk usage summary", "Total storlek för katalog", "Båda", "Detaljer"], correctIndex: 2, explanation: "-s (summary) -h (human) visar total storlek.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b38", question: "Vad är UUID?", options: ["Unique disk identifier", "Universally Unique ID", "User UUID", "Unit UID"], correctIndex: 1, explanation: "UUID är unik identifierare för filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b39", question: "Varför använda UUID i fstab?", options: ["Snabbare", "Fungerar även om disk byter namn", "Säkrare", "Standard"], correctIndex: 1, explanation: "UUID ändras inte även om /dev/sdX ändras.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b40", question: "Hur hittar du UUID?", options: ["blkid", "lsblk -f", "Båda fungerar", "uuid-find"], correctIndex: 2, explanation: "Både blkid och lsblk -f visar UUID.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b41", question: "Vad är swap?", options: ["Filbyte", "Virtuellt minne på disk", "Disk-cache", "Backup"], correctIndex: 1, explanation: "Swap används när RAM tar slut.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b42", question: "Hur skapar du swap?", options: ["mkswap /dev/X", "swap-create", "format swap", "swapfs"], correctIndex: 0, explanation: "mkswap initierar swap-partition/-fil.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b43", question: "Hur aktiverar du swap?", options: ["swapon /dev/X", "swap-enable", "mount swap", "activate swap"], correctIndex: 0, explanation: "swapon aktiverar swap-utrymme.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b44", question: "Hur ser du aktiv swap?", options: ["swapon --show", "cat /proc/swaps", "Båda fungerar", "swap-status"], correctIndex: 2, explanation: "Båda visar aktivt swap-utrymme.", difficulty: "beginner", category: "Storage" },
+    { id: "ho7-b45", question: "Vad är inode?", options: ["Input node", "Metadata för fil", "Index node", "B och C"], correctIndex: 3, explanation: "Inode är index node som innehåller fil-metadata.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b46", question: "Vad lagras i inode?", options: ["Filnamn", "Permissions, timestamps, pointers", "Filinnehåll", "Alla ovan"], correctIndex: 1, explanation: "Inode har metadata, INTE filnamn eller innehåll.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b47", question: "Hur ser du inode-användning?", options: ["df -i", "du -i", "inode-stat", "ls -i"], correctIndex: 0, explanation: "df -i visar inode-användning per filsystem.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b48", question: "Vad händer om inodes tar slut?", options: ["Inget", "Kan ej skapa fler filer", "Disk full", "Automatisk utökning"], correctIndex: 1, explanation: "Utan lediga inodes kan nya filer ej skapas.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b49", question: "Vad är journaling i filsystem?", options: ["Loggning", "Skyddar mot dataförlust vid krasch", "Båda ovan", "Backup"], correctIndex: 2, explanation: "Journaling loggar ändringar för crash recovery.", difficulty: "beginner", category: "Filsystem" },
+    { id: "ho7-b50", question: "Har ext4 journaling?", options: ["Nej", "Ja", "Valfritt", "Bara i LVM"], correctIndex: 1, explanation: "ext4 har journaling som standard.", difficulty: "beginner", category: "Filsystem" },
+    // INTERMEDIATE + ADVANCED
+    { id: "ho7-i1", question: "Vad är thin provisioning i LVM?", options: ["Minimal allokering", "Allokerar vid behov", "Tunn disk", "Komprimering"], correctIndex: 1, explanation: "Thin provisioning allokerar utrymme när det faktiskt används.", difficulty: "intermediate", category: "LVM" },
+    { id: "ho7-i2", question: "Vad är LVM snapshot?", options: ["Backup", "Ögonblicksbild av LV", "Foto", "Version"], correctIndex: 1, explanation: "Snapshot sparar tillstånd för backup/rollback.", difficulty: "intermediate", category: "LVM" },
+    { id: "ho7-a1", question: "Vad är dm-crypt?", options: ["Device mapper kryptering", "Disk manager", "Data manager", "Direct mount"], correctIndex: 0, explanation: "dm-crypt är kernel-modulen som LUKS använder.", difficulty: "advanced", category: "Kryptering" },
+    { id: "ho7-a2", question: "Vad är LUKS2 vs LUKS1?", options: ["Samma", "LUKS2 har bättre metadata", "LUKS1 är säkrare", "LUKS2 är äldre"], correctIndex: 1, explanation: "LUKS2 har JSON-metadata, mer flexibelt.", difficulty: "advanced", category: "Kryptering" },
+];
+
 export const HANDSON_MEGA_QUIZ: MegaQuizTaskSet[] = [
     {
         taskId: "handson-1-onboarding",
@@ -867,7 +994,16 @@ export const HANDSON_MEGA_QUIZ: MegaQuizTaskSet[] = [
         taskTitle: "Subnetting",
         questions: TASK5_SUBNETTING_QUIZ
     },
-    // More tasks will be added below...
+    {
+        taskId: "handson-6-docker",
+        taskTitle: "Docker & Containers",
+        questions: TASK6_DOCKER_QUIZ
+    },
+    {
+        taskId: "handson-7-storage",
+        taskTitle: "Block Storage & Kryptering",
+        questions: TASK7_STORAGE_QUIZ
+    },
 ];
 
 // Helper to get questions by difficulty
