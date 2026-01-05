@@ -1011,7 +1011,7 @@ def get_system_stats(
     now = datetime.now(timezone.utc)
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     week_ago = now - timedelta(days=7)
-    thirty_min_ago = now - timedelta(minutes=30)
+    five_min_ago = now - timedelta(minutes=5)  # Match frontend: online = active within 5 min
 
     # User stats
     total_users = len(users)
@@ -1026,7 +1026,7 @@ def get_system_stats(
     for u in users:
         last_activity = getattr(u, 'last_activity_at', None)
         if last_activity:
-            if last_activity >= thirty_min_ago:
+            if last_activity >= five_min_ago:
                 online_now += 1
             if last_activity >= today_start:
                 active_today += 1
