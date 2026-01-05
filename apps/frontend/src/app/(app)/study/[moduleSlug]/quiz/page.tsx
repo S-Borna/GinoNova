@@ -35,7 +35,7 @@ interface LocalQuizQuestion {
 
 // Helper to get all mega quiz questions flattened
 function getAllMegaQuiz(): LocalQuizQuestion[] {
-    return HANDSON_MEGA_QUIZ.flatMap(task => 
+    return HANDSON_MEGA_QUIZ.flatMap(task =>
         task.questions.map(q => ({
             ...q,
             options: q.options as string[]
@@ -147,16 +147,19 @@ function QuizContent() {
 
             // Filter by difficulty if specified
             if (difficultyFilter !== 'all') {
-                // Map difficulty filter to question difficulty
+                // Map difficulty filter to question difficulty values
+                // G = Grundläggande (beginner), VG = Väl Godkänd (intermediate/advanced)
+                // Also support direct difficulty values from mega-quiz
                 const difficultyMap: Record<string, string[]> = {
-                    'beginner': ['G', 'beginner'],
-                    'intermediate': ['VG', 'intermediate'],
-                    'advanced': ['VG', 'advanced']
+                    'beginner': ['G', 'beginner', 'easy'],
+                    'intermediate': ['VG', 'intermediate', 'medium'],
+                    'advanced': ['advanced', 'hard', 'expert']
                 }
                 const validDifficulties = difficultyMap[difficultyFilter] || []
-                localData = localData.filter(q => 
-                    validDifficulties.includes(q.difficulty || 'G')
-                )
+                localData = localData.filter(q => {
+                    const qDifficulty = (q.difficulty || 'G').toLowerCase().trim()
+                    return validDifficulties.some(d => d.toLowerCase() === qDifficulty)
+                })
             }
 
             if (localData.length === 0) {
