@@ -227,13 +227,19 @@ function LevelDistribution({ data }: { data: Array<{ level: number; count: numbe
 export default function AdminV2Analytics() {
     const [data, setData] = useState<AnalyticsData | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>("30d")
 
     const fetchAnalytics = useCallback(async () => {
         const token = getToken()
-        if (!token) return
+        if (!token) {
+            setError("Not authenticated - please log in")
+            setLoading(false)
+            return
+        }
 
         setLoading(true)
+        setError(null)
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/analytics?range=${timeRange}`, {
@@ -241,8 +247,16 @@ export default function AdminV2Analytics() {
             })
 
             if (res.ok) {
-                setData(await res.json())
+                const json = await res.json()
+                setData(json)
+            } else {
+                const errorText = await res.text()
+                console.error("Analytics API error:", res.status, errorText)
+                setError(`API error: ${res.status} - ${errorText}`)
             }
+        } catch (err) {
+            console.error("Analytics fetch error:", err)
+            setError(`Network error: ${err instanceof Error ? err.message : String(err)}`)
         } finally {
             setLoading(false)
         }
@@ -451,8 +465,9 @@ export default function AdminV2Analytics() {
                     </div>
                 </>
             ) : (
-                <div className="text-center py-12 text-zinc-500">
-                    Failed to load analytics data
+                <div className="text-center py-12">
+                    <p className="text-zinc-500 mb-2">Failed to load analytics data</p>
+                    {error && <p className="text-red-400 text-sm">{error}</p>}
                 </div>
             )}
         </div>

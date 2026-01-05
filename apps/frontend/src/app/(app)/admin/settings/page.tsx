@@ -421,6 +421,7 @@ function FeatureSettings({ settings, onChange }: {
 export default function AdminV2Settings() {
     const [settings, setSettings] = useState<Settings | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [saving, setSaving] = useState(false)
     const [hasChanges, setHasChanges] = useState(false)
     const [activeTab, setActiveTab] = useState<TabId>("general")
@@ -428,9 +429,14 @@ export default function AdminV2Settings() {
 
     const fetchSettings = useCallback(async () => {
         const token = getToken()
-        if (!token) return
+        if (!token) {
+            setError("Not authenticated - please log in")
+            setLoading(false)
+            return
+        }
 
         setLoading(true)
+        setError(null)
 
         try {
             const res = await fetch(`${API_BASE_URL}/api/admin/settings`, {
@@ -438,9 +444,17 @@ export default function AdminV2Settings() {
             })
 
             if (res.ok) {
-                setSettings(await res.json())
+                const json = await res.json()
+                setSettings(json)
                 setHasChanges(false)
+            } else {
+                const errorText = await res.text()
+                console.error("Settings API error:", res.status, errorText)
+                setError(`API error: ${res.status} - ${errorText}`)
             }
+        } catch (err) {
+            console.error("Settings fetch error:", err)
+            setError(`Network error: ${err instanceof Error ? err.message : String(err)}`)
         } finally {
             setLoading(false)
         }
@@ -609,8 +623,9 @@ export default function AdminV2Settings() {
                     </div>
                 </div>
             ) : (
-                <div className="text-center py-12 text-zinc-500">
-                    Failed to load settings
+                <div className="text-center py-12">
+                    <p className="text-zinc-500 mb-2">Failed to load settings</p>
+                    {error && <p className="text-red-400 text-sm">{error}</p>}
                 </div>
             )}
 

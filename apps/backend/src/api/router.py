@@ -52,7 +52,8 @@ api_router.include_router(progress_router, prefix="/progress", tags=["progress"]
 api_router.include_router(dashboard_router, prefix="/dashboard", tags=["dashboard"])
 api_router.include_router(ai_router, prefix="/ai", tags=["ai"])
 api_router.include_router(data_router, tags=["data"])
-api_router.include_router(admin_router, prefix="/admin", tags=["admin"])
+# Legacy admin routes (v1) for system management - seed, migrations, etc.
+api_router.include_router(admin_router, prefix="/admin-system", tags=["admin-system"])
 api_router.include_router(profile_router, prefix="/profile", tags=["profile"])
 api_router.include_router(billing_router, tags=["billing"])
 api_router.include_router(certificates_router, tags=["certificates"])
