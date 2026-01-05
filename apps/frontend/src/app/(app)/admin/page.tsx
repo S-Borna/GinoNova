@@ -251,13 +251,15 @@ export default function AdminPage() {
     const [users, setUsers] = useState<User[]>([])
     const [stats, setStats] = useState<Stats | null>(null)
     const [loading, setLoading] = useState(true)
+    const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [search, setSearch] = useState("")
     const [filter, setFilter] = useState<"all" | "online" | "inactive">("all")
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
 
-    const fetchData = useCallback(async () => {
+    const fetchData = useCallback(async (isRefresh = false) => {
+        if (isRefresh) setRefreshing(true)
         try {
             const token = getToken()
             if (!token) {
@@ -268,8 +270,11 @@ export default function AdminPage() {
 
             const headers = { Authorization: `Bearer ${token}` }
 
-            // Fetch users
-            const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100`, { headers })
+            // Fetch users with cache busting
+            const usersRes = await fetch(`${API_BASE_URL}/api/admin/users?per_page=100&_t=${Date.now()}`, { 
+                headers,
+                cache: 'no-store'
+            })
             
             if (usersRes.status === 403) {
                 router.push("/dashboard")
@@ -287,7 +292,10 @@ export default function AdminPage() {
 
             // Fetch stats (optional, don't fail if this fails)
             try {
-                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats`, { headers })
+                const statsRes = await fetch(`${API_BASE_URL}/api/admin/stats?_t=${Date.now()}`, { 
+                    headers,
+                    cache: 'no-store'
+                })
                 if (statsRes.ok) {
                     setStats(await statsRes.json())
                 }
@@ -301,6 +309,7 @@ export default function AdminPage() {
             setError(err instanceof Error ? err.message : "Kunde inte ladda data")
         } finally {
             setLoading(false)
+            setRefreshing(false)
         }
     }, [router])
 
@@ -310,8 +319,9 @@ export default function AdminPage() {
             router.push("/dashboard")
             return
         }
-        fetchData()
-        const interval = setInterval(fetchData, 30000)
+        fetchData(false)
+        // Auto-refresh every 15 seconds for real-time online status
+        const interval = setInterval(() => fetchData(false), 15000)
         return () => clearInterval(interval)
     }, [user, authLoading, isAdmin, router, fetchData])
 
@@ -409,11 +419,12 @@ export default function AdminPage() {
                         <Button 
                             variant="outline" 
                             size="sm" 
-                            onClick={fetchData}
+                            onClick={() => fetchData(true)}
+                            disabled={refreshing}
                             className="border-zinc-700"
                         >
-                            <RefreshCw className="w-4 h-4 mr-2" />
-                            Uppdatera
+                            <RefreshCw className={cn("w-4 h-4 mr-2", refreshing && "animate-spin")} />
+                            {refreshing ? "Laddar..." : "Uppdatera"}
                         </Button>
                     </div>
                 </div>
