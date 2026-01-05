@@ -50,7 +50,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    questionSource: 'doe25' | 'handson' | 'linux-commands' | 'all' // Which question sources to include
+    selectedSources: ('doe25' | 'handson' | 'linux-commands')[] // Multi-select question sources
 }
 
 interface QuizResult {
@@ -70,7 +70,7 @@ const DEFAULT_SETTINGS: SimulatorSettings = {
     includeVG: true,
     showTimer: true,
     gradingMode: 'live',
-    questionSource: 'doe25' // Default to DOE25 only for best exam prep
+    selectedSources: ['doe25'] // Default to DOE25 only for best exam prep
 }
 
 // Shuffle array helper
@@ -190,20 +190,20 @@ export default function TentaSimulatorPage() {
         return ALL_LINUX_COMMAND_QUESTIONS.map(convertLinuxCommandQuestion)
     }, [])
 
-    // Get filtered questions based on source setting
+    // Get filtered questions based on selected sources
     const allQuestions = useMemo(() => {
-        switch (settings.questionSource) {
-            case 'doe25':
-                return doe25Questions
-            case 'handson':
-                return handsonQuestions
-            case 'linux-commands':
-                return linuxCommandsQuestions
-            case 'all':
-            default:
-                return [...doe25Questions, ...handsonQuestions, ...linuxCommandsQuestions]
+        const questions: SimulatorQuestion[] = []
+        if (settings.selectedSources.includes('doe25')) {
+            questions.push(...doe25Questions)
         }
-    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, settings.questionSource])
+        if (settings.selectedSources.includes('handson')) {
+            questions.push(...handsonQuestions)
+        }
+        if (settings.selectedSources.includes('linux-commands')) {
+            questions.push(...linuxCommandsQuestions)
+        }
+        return questions
+    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, settings.selectedSources])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -227,14 +227,12 @@ export default function TentaSimulatorPage() {
                 includeVG = true
             }
 
-            // Parse source param
-            let questionSource: 'doe25' | 'handson' | 'linux-commands' | 'all' = 'doe25'
-            if (sourceParam === 'handson') {
-                questionSource = 'handson'
-            } else if (sourceParam === 'linux-commands') {
-                questionSource = 'linux-commands'
-            } else if (sourceParam === 'all') {
-                questionSource = 'all'
+            // Parse source param (comma-separated for multi-select)
+            let selectedSources: ('doe25' | 'handson' | 'linux-commands')[] = ['doe25']
+            if (sourceParam) {
+                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands')[]
+                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands'].includes(s))
+                if (selectedSources.length === 0) selectedSources = ['doe25']
             }
 
             const newSettings: SimulatorSettings = {
@@ -244,27 +242,16 @@ export default function TentaSimulatorPage() {
                 gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end',
                 includeG,
                 includeVG,
-                questionSource
+                selectedSources
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
 
-            // Get questions based on source
-            let sourceQuestions: SimulatorQuestion[]
-            switch (questionSource) {
-                case 'doe25':
-                    sourceQuestions = doe25Questions
-                    break
-                case 'handson':
-                    sourceQuestions = handsonQuestions
-                    break
-                case 'linux-commands':
-                    sourceQuestions = linuxCommandsQuestions
-                    break
-                case 'all':
-                default:
-                    sourceQuestions = [...doe25Questions, ...handsonQuestions, ...linuxCommandsQuestions]
-            }
+            // Get questions based on selected sources
+            let sourceQuestions: SimulatorQuestion[] = []
+            if (selectedSources.includes('doe25')) sourceQuestions.push(...doe25Questions)
+            if (selectedSources.includes('handson')) sourceQuestions.push(...handsonQuestions)
+            if (selectedSources.includes('linux-commands')) sourceQuestions.push(...linuxCommandsQuestions)
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -511,70 +498,85 @@ export default function TentaSimulatorPage() {
                     </p>
                 </div>
 
-                {/* Question Source Selection */}
+                {/* Question Source Selection - Multi-select */}
                 <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Frågekälla</label>
-                    <div className="grid grid-cols-2 gap-3 mb-3">
+                    <label className="block text-sm text-zinc-400 mb-3">Frågekälla (välj en eller flera)</label>
+                    <div className="grid grid-cols-3 gap-3">
                         <button
-                            onClick={() => setSettings(s => ({ ...s, questionSource: 'doe25' }))}
+                            onClick={() => setSettings(s => {
+                                const sources = s.selectedSources.includes('doe25')
+                                    ? s.selectedSources.filter(src => src !== 'doe25')
+                                    : [...s.selectedSources, 'doe25'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['doe25'] }
+                            })}
                             className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.questionSource === 'doe25'
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                settings.selectedSources.includes('doe25')
                                     ? "bg-purple-500/20 border-purple-500 text-purple-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
+                            {settings.selectedSources.includes('doe25') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
                             <span className="text-lg">🎓</span>
                             <span className="text-sm font-medium">DOE25</span>
                             <span className="text-xs opacity-70">{doe25Questions.length} frågor</span>
                         </button>
                         <button
-                            onClick={() => setSettings(s => ({ ...s, questionSource: 'handson' }))}
+                            onClick={() => setSettings(s => {
+                                const sources = s.selectedSources.includes('handson')
+                                    ? s.selectedSources.filter(src => src !== 'handson')
+                                    : [...s.selectedSources, 'handson'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
+                            })}
                             className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.questionSource === 'handson'
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                settings.selectedSources.includes('handson')
                                     ? "bg-emerald-500/20 border-emerald-500 text-emerald-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
+                            {settings.selectedSources.includes('handson') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
                             <span className="text-lg">🔧</span>
                             <span className="text-sm font-medium">Hands-On</span>
                             <span className="text-xs opacity-70">{handsonQuestions.length} frågor</span>
                         </button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
                         <button
-                            onClick={() => setSettings(s => ({ ...s, questionSource: 'linux-commands' }))}
+                            onClick={() => setSettings(s => {
+                                const sources = s.selectedSources.includes('linux-commands')
+                                    ? s.selectedSources.filter(src => src !== 'linux-commands')
+                                    : [...s.selectedSources, 'linux-commands'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
+                            })}
                             className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.questionSource === 'linux-commands'
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                settings.selectedSources.includes('linux-commands')
                                     ? "bg-orange-500/20 border-orange-500 text-orange-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
+                            {settings.selectedSources.includes('linux-commands') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
                             <span className="text-lg">💻</span>
                             <span className="text-sm font-medium">Linux Kommandon</span>
                             <span className="text-xs opacity-70">{linuxCommandsQuestions.length} frågor</span>
                         </button>
-                        <button
-                            onClick={() => setSettings(s => ({ ...s, questionSource: 'all' }))}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.questionSource === 'all'
-                                    ? "bg-gradient-to-r from-purple-500/20 to-orange-500/20 border-yellow-500 text-yellow-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            <span className="text-lg">🔀</span>
-                            <span className="text-sm font-medium">Alla</span>
-                            <span className="text-xs opacity-70">{doe25Questions.length + handsonQuestions.length + linuxCommandsQuestions.length} frågor</span>
-                        </button>
                     </div>
                     <p className="text-xs text-zinc-500 mt-2">
-                        {settings.questionSource === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
-                        {settings.questionSource === 'handson' && "Praktiska frågor från Hands-On modulen"}
-                        {settings.questionSource === 'linux-commands' && "🔥 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
-                        {settings.questionSource === 'all' && "Kombinerat frågepaket från alla källor"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "Praktiska frågor från Hands-On modulen"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "🔥 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
+                        {settings.selectedSources.length > 1 && `Kombinerat: ${settings.selectedSources.length} källor valda (${allQuestions.length} frågor)`}
                     </p>
                 </div>
 
@@ -615,7 +617,7 @@ export default function TentaSimulatorPage() {
                         VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
                     </span>
                     <span className="text-zinc-500 ml-auto">
-                        Källa: {settings.questionSource === 'doe25' ? '🎓 DOE25' : settings.questionSource === 'handson' ? '🔧 Hands-On' : '🔀 Alla'}
+                        Källa: {settings.selectedSources.map(s => s === 'doe25' ? '🎓' : s === 'handson' ? '🔧' : '💻').join(' ')}
                     </span>
                 </div>
             </div>
