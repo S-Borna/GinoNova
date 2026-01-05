@@ -269,29 +269,70 @@ export default function StudyPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="mb-8"
+                    className="mb-10"
                 >
                     <Link href="/study/tenta-simulator">
                         <div className={cn(
-                            "relative overflow-hidden rounded-2xl p-6",
-                            "bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-orange-500/20",
-                            "border border-purple-500/30",
-                            "hover:border-purple-500/50 transition-all group cursor-pointer"
+                            "relative overflow-hidden rounded-3xl p-8",
+                            "bg-gradient-to-r from-orange-500/20 via-red-500/20 to-purple-500/20",
+                            "border-2 border-orange-500/40",
+                            "hover:border-orange-400/60 hover:scale-[1.01] transition-all duration-300 group cursor-pointer",
+                            "shadow-lg shadow-orange-500/10"
                         )}>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl">
+                            {/* Animated background pattern */}
+                            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+                            
+                            <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-5">
+                                    <motion.div 
+                                        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-purple-500 flex items-center justify-center text-3xl shadow-xl shadow-orange-500/30"
+                                        animate={{ 
+                                            rotate: [0, -5, 5, 0],
+                                            scale: [1, 1.05, 1]
+                                        }}
+                                        transition={{ 
+                                            duration: 3, 
+                                            repeat: Infinity,
+                                            ease: "easeInOut"
+                                        }}
+                                    >
                                         🎯
-                                    </div>
+                                    </motion.div>
                                     <div>
-                                        <h3 className="text-lg font-bold text-white mb-1">Tenta-Simulator</h3>
-                                        <p className="text-zinc-400 text-sm">Öva under tentaförhållanden med tidspressad quiz</p>
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <h3 className="text-2xl font-black text-white">Tenta-Simulator</h3>
+                                            <span className="px-2 py-0.5 rounded-full bg-orange-500/30 text-orange-300 text-xs font-bold uppercase tracking-wide">
+                                                Hot 🔥
+                                            </span>
+                                        </div>
+                                        <p className="text-zinc-300 text-base">
+                                            Öva under <span className="text-orange-400 font-semibold">realistiska tentaförhållanden</span> med tidspressad quiz
+                                        </p>
+                                        <div className="flex items-center gap-4 mt-3">
+                                            <span className="flex items-center gap-1.5 text-sm text-zinc-400">
+                                                <Clock className="w-4 h-4 text-orange-400" />
+                                                Tidspressad
+                                            </span>
+                                            <span className="flex items-center gap-1.5 text-sm text-zinc-400">
+                                                <Zap className="w-4 h-4 text-yellow-400" />
+                                                XP Boost
+                                            </span>
+                                            <span className="flex items-center gap-1.5 text-sm text-zinc-400">
+                                                <Trophy className="w-4 h-4 text-purple-400" />
+                                                Leaderboard
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <ChevronRight className="w-6 h-6 text-purple-400 group-hover:translate-x-1 transition-transform" />
+                                <div className="flex items-center gap-2">
+                                    <span className="text-orange-400 font-bold text-sm hidden sm:block group-hover:text-orange-300">Starta nu</span>
+                                    <ChevronRight className="w-8 h-8 text-orange-400 group-hover:translate-x-2 transition-transform" />
+                                </div>
                             </div>
-                            {/* Decorative glow */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl" />
+                            
+                            {/* Decorative glows */}
+                            <div className="absolute top-0 right-0 w-48 h-48 bg-orange-500/20 rounded-full blur-3xl" />
+                            <div className="absolute bottom-0 left-1/4 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl" />
                         </div>
                     </Link>
                 </motion.div>
@@ -303,10 +344,16 @@ export default function StudyPage() {
                     transition={{ delay: 0.2 }}
                     className="mb-8"
                 >
-                    <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                        <GraduationCap className="w-6 h-6 text-purple-400" />
-                        Välj modul
-                    </h2>
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl font-black text-white mb-2 flex items-center justify-center gap-3">
+                            <span className="text-3xl">📚</span>
+                            Välj din studieväg
+                        </h2>
+                        <p className="text-zinc-400 max-w-lg mx-auto">
+                            Varje modul innehåller <span className="text-purple-400 font-semibold">flashcards</span> för memorering 
+                            och <span className="text-emerald-400 font-semibold">quiz</span> för att testa dina kunskaper
+                        </p>
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {STUDY_MODULES.map((module, index) => {
