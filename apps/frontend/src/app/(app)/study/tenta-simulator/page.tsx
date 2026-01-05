@@ -28,6 +28,7 @@ import {
 // Import quiz data
 import { DOE25_TASK_QUIZ, type TaskQuizQuestion } from "@/data/doe25-task-quiz"
 import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-quiz"
+import { ALL_LINUX_COMMAND_QUESTIONS, type LinuxCommandQuestion } from "@/data/linux-commands-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
@@ -38,7 +39,7 @@ interface SimulatorQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'doe25' | 'handson'
+    source: 'doe25' | 'handson' | 'linux-commands'
     scenario?: string // Optional scenario context
 }
 
@@ -49,7 +50,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    questionSource: 'doe25' | 'handson' | 'all' // Which question sources to include
+    questionSource: 'doe25' | 'handson' | 'linux-commands' | 'all' // Which question sources to include
 }
 
 interface QuizResult {
@@ -135,6 +136,23 @@ function convertHandsOnQuestion(q: MegaQuizQuestion): SimulatorQuestion {
     }
 }
 
+// Convert Linux Commands question to SimulatorQuestion (map difficulty)
+function convertLinuxCommandQuestion(q: LinuxCommandQuestion): SimulatorQuestion {
+    // Map: beginner/intermediate → G, advanced → VG
+    const difficulty: 'G' | 'VG' = q.difficulty === 'advanced' ? 'VG' : 'G'
+    
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options as [string, string, string, string],
+        correctIndex: q.correctIndex as 0 | 1 | 2 | 3,
+        explanation: q.explanation,
+        difficulty,
+        category: q.category,
+        source: 'linux-commands'
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -167,6 +185,11 @@ export default function TentaSimulatorPage() {
         )
     }, [])
 
+    // Get Linux Commands questions
+    const linuxCommandsQuestions = useMemo(() => {
+        return ALL_LINUX_COMMAND_QUESTIONS.map(convertLinuxCommandQuestion)
+    }, [])
+
     // Get filtered questions based on source setting
     const allQuestions = useMemo(() => {
         switch (settings.questionSource) {
@@ -174,11 +197,13 @@ export default function TentaSimulatorPage() {
                 return doe25Questions
             case 'handson':
                 return handsonQuestions
+            case 'linux-commands':
+                return linuxCommandsQuestions
             case 'all':
             default:
-                return [...doe25Questions, ...handsonQuestions]
+                return [...doe25Questions, ...handsonQuestions, ...linuxCommandsQuestions]
         }
-    }, [doe25Questions, handsonQuestions, settings.questionSource])
+    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, settings.questionSource])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -203,9 +228,11 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param
-            let questionSource: 'doe25' | 'handson' | 'all' = 'doe25'
+            let questionSource: 'doe25' | 'handson' | 'linux-commands' | 'all' = 'doe25'
             if (sourceParam === 'handson') {
                 questionSource = 'handson'
+            } else if (sourceParam === 'linux-commands') {
+                questionSource = 'linux-commands'
             } else if (sourceParam === 'all') {
                 questionSource = 'all'
             }
@@ -231,9 +258,12 @@ export default function TentaSimulatorPage() {
                 case 'handson':
                     sourceQuestions = handsonQuestions
                     break
+                case 'linux-commands':
+                    sourceQuestions = linuxCommandsQuestions
+                    break
                 case 'all':
                 default:
-                    sourceQuestions = [...doe25Questions, ...handsonQuestions]
+                    sourceQuestions = [...doe25Questions, ...handsonQuestions, ...linuxCommandsQuestions]
             }
 
             // Auto-start the quiz
@@ -257,7 +287,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions])
+    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions, linuxCommandsQuestions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {
@@ -484,7 +514,7 @@ export default function TentaSimulatorPage() {
                 {/* Question Source Selection */}
                 <div className="mb-6">
                     <label className="block text-sm text-zinc-400 mb-3">Frågekälla</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 gap-3 mb-3">
                         <button
                             onClick={() => setSettings(s => ({ ...s, questionSource: 'doe25' }))}
                             className={cn(
@@ -511,23 +541,39 @@ export default function TentaSimulatorPage() {
                             <span className="text-sm font-medium">Hands-On</span>
                             <span className="text-xs opacity-70">{handsonQuestions.length} frågor</span>
                         </button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, questionSource: 'linux-commands' }))}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.questionSource === 'linux-commands'
+                                    ? "bg-orange-500/20 border-orange-500 text-orange-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            <span className="text-lg">💻</span>
+                            <span className="text-sm font-medium">Linux Kommandon</span>
+                            <span className="text-xs opacity-70">{linuxCommandsQuestions.length} frågor</span>
+                        </button>
                         <button
                             onClick={() => setSettings(s => ({ ...s, questionSource: 'all' }))}
                             className={cn(
                                 "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
                                 settings.questionSource === 'all'
-                                    ? "bg-gradient-to-r from-purple-500/20 to-emerald-500/20 border-yellow-500 text-yellow-300"
+                                    ? "bg-gradient-to-r from-purple-500/20 to-orange-500/20 border-yellow-500 text-yellow-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
                             <span className="text-lg">🔀</span>
                             <span className="text-sm font-medium">Alla</span>
-                            <span className="text-xs opacity-70">{doe25Questions.length + handsonQuestions.length} frågor</span>
+                            <span className="text-xs opacity-70">{doe25Questions.length + handsonQuestions.length + linuxCommandsQuestions.length} frågor</span>
                         </button>
                     </div>
                     <p className="text-xs text-zinc-500 mt-2">
                         {settings.questionSource === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
                         {settings.questionSource === 'handson' && "Praktiska frågor från Hands-On modulen"}
+                        {settings.questionSource === 'linux-commands' && "🔥 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
                         {settings.questionSource === 'all' && "Kombinerat frågepaket från alla källor"}
                     </p>
                 </div>
