@@ -1,13 +1,14 @@
 # 🎵 Music Widget Setup Guide
 
-## Pure Last.fm - No Spotify API Needed!
+## Pure Last.fm - No Spotify API Needed
 
 This widget shows what you're currently listening to using Last.fm scrobbles.
 **Zero Spotify API hassle** - just a free Last.fm API key!
 
 ### Why Last.fm?
+
 - ✅ Free API key (instant, no approval)
-- ✅ Real-time via Spotify scrobbling  
+- ✅ Real-time via Spotify scrobbling
 - ✅ Works today (Spotify API is blocked for new apps)
 - ✅ Beautiful custom vinyl-style widget
 
@@ -35,7 +36,7 @@ LASTFM_API_KEY=your_api_key_here
 LASTFM_USERNAME=your_lastfm_username
 ```
 
-### Step 4: Restart & Enjoy!
+### Step 4: Restart & Enjoy
 
 ```bash
 npm run dev
@@ -51,7 +52,7 @@ Go to `/pulse` - your music widget is live! 🎶
 // Mini - for TopBar
 <NowPlayingWidget variant="mini" />
 
-// Compact - for sidebar/cards  
+// Compact - for sidebar/cards
 <NowPlayingWidget variant="compact" />
 
 // Full - for dedicated sections
@@ -95,10 +96,12 @@ Go to `/pulse` - your music widget is live! 🎶
 ## Troubleshooting
 
 **Widget shows "Inget spelas"**
+
 - Make sure Spotify is connected to Last.fm
 - Check your scrobbles at last.fm/user/[username]
 - Verify LASTFM_USERNAME is correct
 
 **Album art missing**
+
 - Some tracks don't have art in Last.fm
 - Fallback gradient is shown instead

@@ -62,16 +62,19 @@ npm run dev
 ## Felsökning
 
 ### "Offline" visas trots att jag spelar musik
+
 - Kontrollera att du spelar på samma konto som du autade med
 - Spotify Premium krävs för "currently playing" API
 - Vänta ~15 sekunder för nästa poll
 
 ### Token fungerar inte
+
 - Generera ny refresh token via `/api/spotify/auth`
 - Kontrollera att Client ID och Secret stämmer
 - Kolla att Redirect URI i Spotify Dashboard matchar
 
 ### 403 Forbidden
+
 - Kolla att alla scopes finns:
   - `user-read-currently-playing`
   - `user-read-recently-played`

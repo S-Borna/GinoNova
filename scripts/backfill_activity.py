@@ -22,20 +22,20 @@ def main():
     if len(sys.argv) < 2:
         print(__doc__)
         sys.exit(1)
-    
+
     token = sys.argv[1]
     use_local = "--local" in sys.argv
-    
+
     base_url = LOCAL_URL if use_local else PROD_URL
-    
+
     print(f"🔄 Running backfill against {base_url}...")
-    
+
     try:
         response = requests.post(
             f"{base_url}/api/admin/backfill-activity",
             headers={"Authorization": f"Bearer {token}"}
         )
-        
+
         if response.status_code == 200:
             data = response.json()
             print(f"✅ Success!")
