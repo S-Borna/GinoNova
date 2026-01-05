@@ -176,7 +176,7 @@ function FeatureTable({ data }: { data: AIUsageData["by_feature"] }) {
                 <thead>
                     <tr className="text-left text-xs text-zinc-400 border-b border-zinc-800">
                         <th className="py-3 px-4 font-medium">Feature</th>
-                        <th 
+                        <th
                             className="py-3 px-4 font-medium cursor-pointer hover:text-white transition"
                             onClick={() => toggleSort("requests")}
                         >
@@ -184,7 +184,7 @@ function FeatureTable({ data }: { data: AIUsageData["by_feature"] }) {
                                 Requests <SortIcon field="requests" />
                             </span>
                         </th>
-                        <th 
+                        <th
                             className="py-3 px-4 font-medium cursor-pointer hover:text-white transition"
                             onClick={() => toggleSort("tokens")}
                         >
@@ -192,7 +192,7 @@ function FeatureTable({ data }: { data: AIUsageData["by_feature"] }) {
                                 Tokens <SortIcon field="tokens" />
                             </span>
                         </th>
-                        <th 
+                        <th
                             className="py-3 px-4 font-medium cursor-pointer hover:text-white transition"
                             onClick={() => toggleSort("cost")}
                         >
@@ -223,7 +223,7 @@ function FeatureTable({ data }: { data: AIUsageData["by_feature"] }) {
 
 function ModelBreakdown({ data }: { data: AIUsageData["by_model"] }) {
     const total = data.reduce((sum, d) => sum + d.requests, 0) || 1
-    
+
     const modelColors: Record<string, string> = {
         "gpt-4": "from-purple-500 to-purple-600",
         "gpt-4-turbo": "from-blue-500 to-blue-600",
@@ -238,7 +238,7 @@ function ModelBreakdown({ data }: { data: AIUsageData["by_model"] }) {
             {data.map((model, i) => {
                 const percentage = (model.requests / total) * 100
                 const colorClass = modelColors[model.model] || modelColors.default
-                
+
                 return (
                     <div key={i}>
                         <div className="flex items-center justify-between mb-2">
@@ -248,7 +248,7 @@ function ModelBreakdown({ data }: { data: AIUsageData["by_model"] }) {
                             </span>
                         </div>
                         <div className="h-3 bg-zinc-800 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className={cn("h-full rounded-full bg-gradient-to-r", colorClass)}
                                 style={{ width: `${percentage}%` }}
                             />
@@ -268,7 +268,7 @@ function TopUsersTable({ data }: { data: AIUsageData["top_users"] }) {
     return (
         <div className="space-y-3">
             {data.slice(0, 10).map((user, i) => (
-                <div 
+                <div
                     key={user.user_id}
                     className="flex items-center justify-between p-3 bg-zinc-800/30 rounded-lg hover:bg-zinc-800/50 transition"
                 >
@@ -309,7 +309,7 @@ function ErrorsSection({ data }: { data: AIUsageData["errors"] }) {
     return (
         <div className="space-y-3">
             {data.map((error, i) => (
-                <div 
+                <div
                     key={i}
                     className="flex items-center justify-between p-4 bg-red-500/10 border border-red-500/20 rounded-xl"
                 >
