@@ -2,11 +2,13 @@
 
 /**
  * Tenta-Simulator - Exam Prep Mode
+ * Updated: 2026-01-05 - Added Linux Commands + Multi-select
  *
  * Combines quizzes and flashcards in a timed exam-like environment
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
- * - Random questions from DOE25 + Hands-On (~1600 questions)
+ * - Random questions from DOE25 + Hands-On + Linux Commands (~2000 questions)
+ * - Multi-select question sources
  * - Mix of G and VG difficulty
  * - Live grading OR grading at end
  * - Progress tracking and scoring
