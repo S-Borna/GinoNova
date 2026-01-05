@@ -287,7 +287,7 @@ export default function AdminV2Dashboard() {
                     value={stats?.online_users || 0}
                     label="Online Now"
                     trend={stats?.online_trend}
-                    trendLabel="from 5m ago"
+                    trendLabel="active last 10m"
                     color="green"
                     loading={loading}
                 />

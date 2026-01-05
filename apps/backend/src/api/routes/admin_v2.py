@@ -270,12 +270,12 @@ async def get_overview_stats(
     today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     yesterday_start = today_start - timedelta(days=1)
     week_ago = now - timedelta(days=7)
-    five_min_ago = now - timedelta(minutes=5)
+    ten_min_ago = now - timedelta(minutes=10)  # Match get_user_status() timeout
     day_ago = now - timedelta(hours=24)
 
-    # Online users (active in last 5 minutes)
+    # Online users (active in last 10 minutes) - matches get_user_status()
     online_users = db.query(func.count(User.id)).filter(
-        User.last_activity_at >= five_min_ago
+        User.last_activity_at >= ten_min_ago
     ).scalar() or 0
 
     # Total users
