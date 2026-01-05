@@ -116,11 +116,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
     }, [])
 
-    // Heartbeat: Update last_activity_at every 5 minutes for online status tracking
+    // Heartbeat: Update last_activity_at for online status tracking
     useEffect(() => {
         if (!user) return
         
-        // Refresh immediately on mount (updates last_activity_at)
         const heartbeat = async () => {
             try {
                 await getMe()
@@ -129,9 +128,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
             }
         }
         
-        // Then every 5 minutes
-        const interval = setInterval(heartbeat, 5 * 60 * 1000)
-        return () => clearInterval(interval)
+        // Send heartbeat immediately on mount
+        heartbeat()
+        
+        // Then every 2 minutes (admin panel refreshes every 15s, 10min timeout)
+        const interval = setInterval(heartbeat, 2 * 60 * 1000)
+        
+        // Also send heartbeat when window regains focus
+        const handleFocus = () => heartbeat()
+        window.addEventListener('focus', handleFocus)
+        
+        return () => {
+            clearInterval(interval)
+            window.removeEventListener('focus', handleFocus)
+        }
     }, [user])
 
     const login = useCallback(async (email: string, password: string) => {
