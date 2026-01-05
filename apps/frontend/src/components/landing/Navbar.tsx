@@ -124,8 +124,8 @@ export function Navbar() {
                         </Link>
 
                         {/* Last.fm Now Playing - Desktop */}
-                        <div className="hidden md:block">
-                            <LastFmNowPlaying variant="mini" />
+                        <div className="hidden lg:block">
+                            <LastFmNowPlaying variant="compact" />
                         </div>
 
                         {/* Countdown Timer - Desktop */}

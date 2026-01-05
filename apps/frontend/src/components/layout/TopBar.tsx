@@ -497,7 +497,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 {/* Right side */}
                 <div className="flex items-center gap-3">
                     {/* Last.fm Now Playing */}
-                    <LastFmNowPlaying variant="mini" />
+                    <LastFmNowPlaying variant="compact" className="hidden lg:flex" />
 
                     {/* DOE25 Tenta Countdown */}
                     <TentaCountdown variant="compact" />
