@@ -745,16 +745,16 @@ async def get_user_ai_usage_detail(
 
 @router.get("/analytics")
 async def get_combined_analytics(
-    range: str = Query("30d"),
+    time_range: str = Query("30d", alias="range"),
     db: Session = Depends(get_db),
     admin: UserPublic = Depends(require_admin)
 ):
     """Get combined analytics data for the dashboard"""
     # Parse time range
     days = 30
-    if range == "7d":
+    if time_range == "7d":
         days = 7
-    elif range == "90d":
+    elif time_range == "90d":
         days = 90
 
     now = datetime.now(timezone.utc)
@@ -990,16 +990,16 @@ async def get_top_users(
 
 @router.get("/ai-usage")
 async def get_combined_ai_usage(
-    range: str = Query("30d"),
+    time_range: str = Query("30d", alias="range"),
     db: Session = Depends(get_db),
     admin: UserPublic = Depends(require_admin)
 ):
     """Get combined AI usage data for the dashboard"""
     # Parse time range
     days = 30
-    if range == "7d":
+    if time_range == "7d":
         days = 7
-    elif range == "90d":
+    elif time_range == "90d":
         days = 90
 
     now = datetime.now(timezone.utc)
