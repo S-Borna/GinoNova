@@ -38,7 +38,9 @@ import {
     Star,
     X,
     Trash2,
+    Music2,
 } from "lucide-react"
+import { SpotifyEmbed } from "@/components/tickers/SpotifyEmbed"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 
@@ -612,6 +614,22 @@ export default function PulsePage() {
                         <WeeklySessionCard />
                         <FavoritesCard />
                     </div>
+
+                    {/* ============================================================
+                        NOW PLAYING - Spotify Widget
+                        ============================================================ */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="relative"
+                    >
+                        <div className="flex items-center gap-3 mb-3">
+                            <Music2 className="w-5 h-5 text-emerald-400" />
+                            <h2 className="text-lg font-semibold">Now Playing</h2>
+                        </div>
+                        <SpotifyEmbed variant="compact" />
+                    </motion.div>
 
                     {/* ============================================================
                         SNABBKNAPPAR (3 rutor) — Cosmic styled

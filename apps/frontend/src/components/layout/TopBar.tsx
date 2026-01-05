@@ -33,7 +33,7 @@ import {
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
 import { TentaCountdown } from "@/components/ui/tenta-countdown"
-import { LastFmNowPlaying } from "@/components/lastfm/LastFmNowPlaying"
+import { SpotifyNowPlaying } from "@/components/spotify/SpotifyNowPlaying"
 
 /* ============================================================================
    TYPES
@@ -496,8 +496,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3">
-                    {/* Last.fm Now Playing */}
-                    <LastFmNowPlaying variant="compact" className="hidden lg:flex" />
+                    {/* Spotify Now Playing */}
+                    <SpotifyNowPlaying variant="compact" className="hidden lg:flex" />
 
                     {/* DOE25 Tenta Countdown */}
                     <TentaCountdown variant="compact" />
