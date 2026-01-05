@@ -109,7 +109,7 @@ def seed_content():
     # Kolla om PostgreSQL är tillgängligt
     from .db.database import is_db_configured, get_db_context
     use_postgres = is_db_configured()
-    
+
     # Hämta befintliga moduler (använd PostgreSQL om tillgängligt)
     if use_postgres:
         from .db import models
@@ -136,7 +136,7 @@ def seed_content():
             existing_track = get_track_by_slug(track_data["slug"])
             if existing_track:
                 existing_track_id = existing_track.id
-        
+
         if existing_track_id:
             track_id_map[track_data["slug"]] = existing_track_id
         else:
@@ -175,7 +175,7 @@ def seed_content():
         # Hitta hands-on modulen specifikt (använd PostgreSQL om tillgängligt)
         hands_on_module = None
         hands_on_module_id = None
-        
+
         if use_postgres:
             # Hämta från PostgreSQL
             from .db import models
@@ -191,7 +191,7 @@ def seed_content():
             hands_on_module = get_module_by_slug("hands-on-lab")
             if hands_on_module:
                 hands_on_module_id = hands_on_module.id
-        
+
         if hands_on_module_id:
             # Hitta hands-on modulen i content
             hands_on_data = next((m for m in modules_to_seed if m.get("slug") == "hands-on-lab"), None)
@@ -199,7 +199,7 @@ def seed_content():
                 logger.info("🔄 Updating Hands-On Lab module tasks...")
                 tasks_updated = 0
                 tasks_created = 0
-                
+
                 if use_postgres:
                     # Använd PostgreSQL direkt
                     from .db import models
@@ -564,6 +564,6 @@ def well_known_health():
 
 app.include_router(api_router, prefix="/api")
 
-# Admin v2 routes
-from .api.routes.admin_v2 import router as admin_v2_router
-app.include_router(admin_v2_router, prefix="/api/admin-v2", tags=["admin-v2"])
+# Admin routes (v2)
+from .api.routes.admin_v2 import router as admin_router
+app.include_router(admin_router, prefix="/api/admin", tags=["admin"])

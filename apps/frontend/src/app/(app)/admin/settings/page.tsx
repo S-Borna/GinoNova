@@ -433,7 +433,7 @@ export default function AdminV2Settings() {
         setLoading(true)
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin-v2/settings`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/settings`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 
@@ -457,7 +457,7 @@ export default function AdminV2Settings() {
         setSaving(true)
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin-v2/settings`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/settings`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`,
