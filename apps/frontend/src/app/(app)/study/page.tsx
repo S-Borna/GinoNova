@@ -28,7 +28,8 @@ import {
     ChevronDown,
     Check,
     Square,
-    Shuffle
+    Shuffle,
+    Award
 } from "lucide-react"
 
 // Import module data
@@ -131,6 +132,7 @@ export default function StudyPage() {
     const [tentaTime, setTentaTime] = useState<number>(90)
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
+    const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -311,7 +313,7 @@ export default function StudyPage() {
                                             </span>
                                         </div>
                                         <p className="text-zinc-300 text-lg">
-                                            Realistisk tentaövning med <span className="text-orange-400 font-bold">DOE25-frågor</span>
+                                            <span className="text-emerald-400 font-bold">1600+ frågor</span> från DOE25 + Hands-On
                                         </p>
                                     </div>
                                 </div>
@@ -408,8 +410,54 @@ export default function StudyPage() {
                                 </div>
                             </div>
 
+                            {/* G/VG Difficulty Selection */}
+                            <div className="bg-black/30 rounded-2xl p-5 border border-yellow-500/20 mb-6">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Award className="w-5 h-5 text-yellow-400" />
+                                    <span className="text-white font-bold">Betygsnivå</span>
+                                </div>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button
+                                        onClick={() => setTentaDifficulty('G')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaDifficulty === 'G'
+                                                ? "bg-green-500 text-white shadow-lg shadow-green-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">G</span>
+                                        <span className="text-xs opacity-70 font-normal">Godkänt</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setTentaDifficulty('VG')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaDifficulty === 'VG'
+                                                ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">VG</span>
+                                        <span className="text-xs opacity-70 font-normal">Väl Godkänt</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setTentaDifficulty('both')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaDifficulty === 'both'
+                                                ? "bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg shadow-yellow-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">G+VG</span>
+                                        <span className="text-xs opacity-70 font-normal">Mixad</span>
+                                    </button>
+                                </div>
+                            </div>
+
                             {/* Start button */}
-                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}`}>
+                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
