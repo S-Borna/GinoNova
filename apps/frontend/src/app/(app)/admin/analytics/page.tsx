@@ -113,6 +113,9 @@ function BarChart({ data, xKey, yKey, label }: {
     label: string
 }) {
     const maxValue = Math.max(...data.map(d => Number(d[yKey]) || 0), 1)
+    
+    // Show only every nth label based on data length
+    const showEveryN = data.length > 10 ? Math.ceil(data.length / 5) : 1
 
     return (
         <div>
@@ -120,19 +123,35 @@ function BarChart({ data, xKey, yKey, label }: {
                 {data.map((item, i) => {
                     const value = Number(item[yKey]) || 0
                     const height = (value / maxValue) * 100
+                    const dateStr = String(item[xKey])
+                    // Format date nicely: "2026-01-05" -> "5 jan"
+                    const formattedDate = (() => {
+                        try {
+                            const d = new Date(dateStr)
+                            return d.toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })
+                        } catch {
+                            return dateStr.slice(-5) // fallback: "01-05"
+                        }
+                    })()
+                    const showLabel = i % showEveryN === 0 || i === data.length - 1
+                    
                     return (
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                             <div
                                 className="w-full bg-purple-500 rounded-t opacity-80 hover:opacity-100 transition cursor-pointer relative group"
                                 style={{ height: `${height}%`, minHeight: value > 0 ? 4 : 0 }}
                             >
-                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-800 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                    {value.toLocaleString()}
+                                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-zinc-800 px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-10">
+                                    {formattedDate}: {value.toLocaleString()}
                                 </div>
                             </div>
-                            <span className="text-[10px] text-zinc-500 truncate w-full text-center">
-                                {String(item[xKey])}
-                            </span>
+                            {showLabel ? (
+                                <span className="text-[10px] text-zinc-500 whitespace-nowrap">
+                                    {formattedDate}
+                                </span>
+                            ) : (
+                                <span className="text-[10px] text-transparent">.</span>
+                            )}
                         </div>
                     )
                 })}
