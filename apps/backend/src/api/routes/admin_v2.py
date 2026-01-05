@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 from src.core.deps import get_current_user
 from src.db.database import get_db
 from src.db.models import User
+from src.schemas.user import UserPublic
 
 router = APIRouter()
 
@@ -183,7 +184,7 @@ class UpdatePermissionsRequest(BaseModel):
 # HELPER FUNCTIONS
 # =============================================================================
 
-def require_admin(current_user: User = Depends(get_current_user)) -> User:
+def require_admin(current_user: UserPublic = Depends(get_current_user)) -> UserPublic:
     """Middleware to require admin access"""
     if not current_user.is_admin:
         raise HTTPException(
@@ -253,7 +254,7 @@ def user_to_response(user: User) -> UserResponse:
 @router.get("/stats/overview", response_model=OverviewStats)
 async def get_overview_stats(
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get dashboard overview statistics"""
     now = datetime.now(timezone.utc)
@@ -321,7 +322,7 @@ async def get_overview_stats(
 async def get_activity_stats(
     days: int = Query(7, ge=1, le=90),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get activity statistics for the last N days"""
     now = datetime.now(timezone.utc)
@@ -360,7 +361,7 @@ async def get_activity_stats(
 @router.get("/stats/system-health", response_model=SystemHealth)
 async def get_system_health(
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get system health status"""
     import time
@@ -405,7 +406,7 @@ async def get_users(
     sort: str = Query("last_activity", regex="^(last_activity|created|email|xp)$"),
     order: str = Query("desc", regex="^(asc|desc)$"),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get paginated list of users with filtering and sorting"""
     now = datetime.now(timezone.utc)
@@ -483,7 +484,7 @@ async def get_users(
 async def get_user(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get detailed user information"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -498,7 +499,7 @@ async def update_user(
     user_id: UUID,
     data: UpdateUserRequest,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Update user information"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -523,7 +524,7 @@ async def update_user(
 async def delete_user(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Delete a user permanently"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -545,7 +546,7 @@ async def ban_user(
     user_id: UUID,
     data: BanRequest,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Ban a user (sets is_active to False)"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -571,7 +572,7 @@ async def ban_user(
 async def unban_user(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Unban a user (sets is_active to True)"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -589,7 +590,7 @@ async def unban_user(
 async def force_logout_user(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Force logout a user by setting force_logout_at"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -608,7 +609,7 @@ async def force_logout_user(
 async def toggle_admin(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Toggle admin status for a user"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -631,7 +632,7 @@ async def update_permissions(
     user_id: UUID,
     data: UpdatePermissionsRequest,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Update user permissions"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -653,7 +654,7 @@ async def update_permissions(
 async def get_user_activity(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get user's recent activity"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -685,7 +686,7 @@ async def get_user_activity(
 async def get_user_learning(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get user's learning progress"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -704,7 +705,7 @@ async def get_user_learning(
 async def get_user_ai_usage_detail(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get user's AI usage statistics"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -737,7 +738,7 @@ async def get_user_ai_usage_detail(
 async def get_combined_analytics(
     range: str = Query("30d"),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get combined analytics data for the dashboard"""
     # Parse time range
@@ -853,7 +854,7 @@ async def get_combined_analytics(
 async def get_user_growth(
     days: int = Query(30, ge=7, le=365),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get user growth data over time"""
     now = datetime.now(timezone.utc)
@@ -889,7 +890,7 @@ async def get_user_growth(
 async def get_activity_heatmap(
     days: int = Query(30, ge=7, le=90),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get activity heatmap data (day of week vs hour)"""
     now = datetime.now(timezone.utc)
@@ -926,7 +927,7 @@ async def get_activity_heatmap(
 async def get_top_users(
     limit: int = Query(10, ge=5, le=50),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get top users by various metrics"""
     now = datetime.now(timezone.utc)
@@ -991,7 +992,7 @@ async def get_top_users(
 async def get_combined_ai_usage(
     range: str = Query("30d"),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get combined AI usage data for the dashboard"""
     # Parse time range
@@ -1046,7 +1047,7 @@ async def get_combined_ai_usage(
 @router.get("/ai-usage/overview", response_model=AIUsageOverview)
 async def get_ai_usage_overview(
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get AI usage overview statistics"""
     # This would need an ai_usage_logs table to be accurate
@@ -1067,7 +1068,7 @@ async def get_ai_usage_by_user(
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=10, le=100),
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get AI usage grouped by user"""
     # This would need an ai_usage_logs table to be accurate
@@ -1082,7 +1083,7 @@ async def get_ai_usage_by_user(
 async def get_user_ai_usage(
     user_id: UUID,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get AI usage for a specific user"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -1106,7 +1107,7 @@ async def get_user_ai_usage(
 @router.get("/settings")
 async def get_settings(
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Get admin settings"""
     # Return full settings structure that frontend expects
@@ -1154,7 +1155,7 @@ async def get_settings(
 async def update_settings(
     settings: dict,
     db: Session = Depends(get_db),
-    admin: User = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin)
 ):
     """Update admin settings"""
     # This would need a settings table to persist changes
