@@ -656,16 +656,3 @@ export function getAllHandsOnFlashcards(): TaskFlashcardSet[] {
 export function getTotalHandsOnFlashcardCount(): number {
     return HANDSON_TASK_FLASHCARDS.reduce((total, set) => total + set.flashcards.length, 0);
 }
-
-// Helper functions
-export function getHandsOnFlashcardsByTaskId(taskId: string): TaskFlashcardSet | undefined {
-    return HANDSON_TASK_FLASHCARDS.find(set => set.taskId === taskId);
-}
-
-export function getAllHandsOnFlashcards(): TaskFlashcardSet[] {
-    return HANDSON_TASK_FLASHCARDS;
-}
-
-export function getTotalHandsOnFlashcardCount(): number {
-    return HANDSON_TASK_FLASHCARDS.reduce((total, set) => total + set.flashcards.length, 0);
-}
