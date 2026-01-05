@@ -175,7 +175,7 @@ function QuizContent() {
                 correct: q.correctIndex,
                 explanation: q.explanation,
                 module_slug: moduleSlug,
-                lesson_title: q.category
+                lesson_title: q.category || 'Quiz'
             }))
 
             // Shuffle (always shuffle for better experience, especially important when limiting count)
