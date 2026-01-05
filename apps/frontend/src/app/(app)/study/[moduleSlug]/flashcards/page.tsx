@@ -44,12 +44,14 @@ function FlashcardsContent() {
     const moduleSlug = params?.moduleSlug as string || ""
 
     const [flashcards, setFlashcards] = useState<Flashcard[]>([])
+    const [allFlashcardsRaw, setAllFlashcardsRaw] = useState<Flashcard[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isFlipped, setIsFlipped] = useState(false)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
     const [isShuffled, setIsShuffled] = useState(false)
+    const [difficultyFilter, setDifficultyFilter] = useState<'all' | 'G' | 'VG'>('all')
 
     // Star modal
     const [showStarModal, setShowStarModal] = useState(false)
@@ -121,6 +123,9 @@ function FlashcardsContent() {
                 })
             }
 
+            // Store raw flashcards for filtering
+            setAllFlashcardsRaw(allFlashcards)
+
             // Shuffle if requested
             if (shouldShuffle) {
                 allFlashcards = shuffleArray([...allFlashcards])
@@ -133,6 +138,24 @@ function FlashcardsContent() {
             setLoading(false)
         }
     }
+
+    // Apply difficulty filter when it changes
+    useEffect(() => {
+        if (allFlashcardsRaw.length === 0) return
+        
+        let filtered = allFlashcardsRaw
+        if (difficultyFilter !== 'all') {
+            filtered = allFlashcardsRaw.filter(fc => fc.difficulty === difficultyFilter)
+        }
+        
+        if (isShuffled) {
+            filtered = shuffleArray([...filtered])
+        }
+        
+        setFlashcards(filtered)
+        setCurrentIndex(0)
+        setIsFlipped(false)
+    }, [difficultyFilter, allFlashcardsRaw, isShuffled])
 
     function shuffleArray<T>(array: T[]): T[] {
         const shuffled = [...array]
@@ -257,6 +280,43 @@ function FlashcardsContent() {
                     </div>
                 </div>
 
+                {/* G/VG Filter */}
+                <div className="flex gap-2 mb-4">
+                    <button
+                        onClick={() => setDifficultyFilter('all')}
+                        className={cn(
+                            "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                            difficultyFilter === 'all'
+                                ? "bg-yellow-500/20 border border-yellow-500 text-yellow-300"
+                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                        )}
+                    >
+                        Alla ({allFlashcardsRaw.length})
+                    </button>
+                    <button
+                        onClick={() => setDifficultyFilter('G')}
+                        className={cn(
+                            "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                            difficultyFilter === 'G'
+                                ? "bg-green-500/20 border border-green-500 text-green-300"
+                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                        )}
+                    >
+                        G ({allFlashcardsRaw.filter(f => f.difficulty === 'G').length})
+                    </button>
+                    <button
+                        onClick={() => setDifficultyFilter('VG')}
+                        className={cn(
+                            "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                            difficultyFilter === 'VG'
+                                ? "bg-purple-500/20 border border-purple-500 text-purple-300"
+                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                        )}
+                    >
+                        VG ({allFlashcardsRaw.filter(f => f.difficulty === 'VG').length})
+                    </button>
+                </div>
+
                 {/* Progress Bar */}
                 <div className="w-full h-1 bg-zinc-800 rounded-full mb-8">
                     <div
@@ -283,6 +343,17 @@ function FlashcardsContent() {
                             isFlipped && "rotate-y-180 opacity-0"
                         )}
                     >
+                        {/* G/VG Badge */}
+                        {currentCard.difficulty && (
+                            <div className={cn(
+                                "absolute top-4 right-4 px-2 py-1 rounded text-xs font-semibold",
+                                currentCard.difficulty === 'VG' 
+                                    ? "bg-purple-500/30 text-purple-300 border border-purple-500/50" 
+                                    : "bg-green-500/30 text-green-300 border border-green-500/50"
+                            )}>
+                                {currentCard.difficulty}
+                            </div>
+                        )}
                         <p className="text-sm text-purple-400 mb-4">Fråga</p>
                         <p className="text-xl text-center font-medium">
                             {currentCard.front}

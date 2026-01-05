@@ -325,33 +325,52 @@ export default function TentaSimulatorPage() {
                     </div>
                 </div>
 
-                {/* Difficulty */}
+                {/* Difficulty - G/VG Selection */}
                 <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Svårighetsgrad</label>
-                    <div className="flex gap-3">
+                    <label className="block text-sm text-zinc-400 mb-3">Betygsnivå</label>
+                    <div className="grid grid-cols-3 gap-3">
                         <button
-                            onClick={() => setSettings(s => ({ ...s, includeG: !s.includeG }))}
+                            onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: false }))}
                             className={cn(
-                                "flex-1 py-3 px-4 rounded-xl border transition-all",
-                                settings.includeG
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.includeG && !settings.includeVG
                                     ? "bg-green-500/20 border-green-500 text-green-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
-                            G-nivå
+                            <span className="text-lg font-bold">G</span>
+                            <span className="text-xs opacity-70">Godkänt</span>
                         </button>
                         <button
-                            onClick={() => setSettings(s => ({ ...s, includeVG: !s.includeVG }))}
+                            onClick={() => setSettings(s => ({ ...s, includeG: false, includeVG: true }))}
                             className={cn(
-                                "flex-1 py-3 px-4 rounded-xl border transition-all",
-                                settings.includeVG
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                !settings.includeG && settings.includeVG
                                     ? "bg-purple-500/20 border-purple-500 text-purple-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
-                            VG-nivå
+                            <span className="text-lg font-bold">VG</span>
+                            <span className="text-xs opacity-70">Väl Godkänt</span>
+                        </button>
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: true }))}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
+                                settings.includeG && settings.includeVG
+                                    ? "bg-gradient-to-r from-green-500/20 to-purple-500/20 border-yellow-500 text-yellow-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            <span className="text-lg font-bold">G+VG</span>
+                            <span className="text-xs opacity-70">Mixad</span>
                         </button>
                     </div>
+                    <p className="text-xs text-zinc-500 mt-2">
+                        {settings.includeG && !settings.includeVG && "Fokus på grundläggande förståelse för G-nivå"}
+                        {!settings.includeG && settings.includeVG && "Avancerade frågor för högre betyg"}
+                        {settings.includeG && settings.includeVG && "Blandade frågor för fullständig tentaförberedelse"}
+                    </p>
                 </div>
 
                 {/* Timer toggle */}
@@ -372,11 +391,24 @@ export default function TentaSimulatorPage() {
                 </div>
             </div>
 
-            {/* Stats preview */}
+            {/* Stats preview - Show available questions per level */}
             <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-4 mb-8">
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between text-sm mb-2">
                     <span className="text-zinc-500">Tillgängliga frågor:</span>
-                    <span className="text-zinc-300">{allQuestions.length} st</span>
+                    <span className="text-zinc-300">
+                        {allQuestions.filter(q => 
+                            (settings.includeG && q.difficulty === 'G') || 
+                            (settings.includeVG && q.difficulty === 'VG')
+                        ).length} st
+                    </span>
+                </div>
+                <div className="flex gap-4 text-xs">
+                    <span className="text-green-400">
+                        G: {allQuestions.filter(q => q.difficulty === 'G').length}
+                    </span>
+                    <span className="text-purple-400">
+                        VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
+                    </span>
                 </div>
             </div>
 
@@ -675,6 +707,26 @@ export default function TentaSimulatorPage() {
             return acc
         }, {} as Record<string, { correct: number; total: number }>)
 
+        // Calculate G/VG stats
+        const gStats = results.reduce((acc, result) => {
+            const question = questions.find(q => q.id === result.questionId)
+            if (!question || question.difficulty !== 'G') return acc
+            acc.total++
+            if (result.correct) acc.correct++
+            return acc
+        }, { correct: 0, total: 0 })
+
+        const vgStats = results.reduce((acc, result) => {
+            const question = questions.find(q => q.id === result.questionId)
+            if (!question || question.difficulty !== 'VG') return acc
+            acc.total++
+            if (result.correct) acc.correct++
+            return acc
+        }, { correct: 0, total: 0 })
+
+        const gPercentage = gStats.total > 0 ? Math.round((gStats.correct / gStats.total) * 100) : 0
+        const vgPercentage = vgStats.total > 0 ? Math.round((vgStats.correct / vgStats.total) * 100) : 0
+
         return (
             <div className="max-w-3xl mx-auto">
                 {/* Score card */}
@@ -694,6 +746,52 @@ export default function TentaSimulatorPage() {
                     <p className="text-2xl text-zinc-400 mb-4">{score.percentage}%</p>
                     <p className={cn("text-lg", gradeInfo.color)}>{gradeInfo.message}</p>
                 </div>
+
+                {/* G/VG Stats - NEW */}
+                {(gStats.total > 0 || vgStats.total > 0) && (
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                        {gStats.total > 0 && (
+                            <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-green-400 font-semibold text-lg">G-nivå</span>
+                                    <span className={cn(
+                                        "text-2xl font-bold",
+                                        gPercentage >= 60 ? "text-green-400" : "text-red-400"
+                                    )}>
+                                        {gPercentage}%
+                                    </span>
+                                </div>
+                                <div className="h-2 bg-green-900/30 rounded-full overflow-hidden mb-2">
+                                    <div 
+                                        className="h-full bg-green-500 transition-all"
+                                        style={{ width: `${gPercentage}%` }}
+                                    />
+                                </div>
+                                <p className="text-green-300/70 text-sm">{gStats.correct}/{gStats.total} rätt</p>
+                            </div>
+                        )}
+                        {vgStats.total > 0 && (
+                            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-purple-400 font-semibold text-lg">VG-nivå</span>
+                                    <span className={cn(
+                                        "text-2xl font-bold",
+                                        vgPercentage >= 60 ? "text-purple-400" : "text-red-400"
+                                    )}>
+                                        {vgPercentage}%
+                                    </span>
+                                </div>
+                                <div className="h-2 bg-purple-900/30 rounded-full overflow-hidden mb-2">
+                                    <div 
+                                        className="h-full bg-purple-500 transition-all"
+                                        style={{ width: `${vgPercentage}%` }}
+                                    />
+                                </div>
+                                <p className="text-purple-300/70 text-sm">{vgStats.correct}/{vgStats.total} rätt</p>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4 mb-8">
