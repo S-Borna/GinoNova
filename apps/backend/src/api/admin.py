@@ -551,7 +551,7 @@ def list_all_users(
     response: Response,
     current_user: CurrentUser,
     page: int = Query(1, ge=1),
-    per_page: int = Query(20, ge=1, le=100),
+    per_page: int = Query(20, ge=1, le=500),
     search: Optional[str] = Query(None, description="Search by email or name"),
     status: Optional[str] = Query(None, pattern="^(active|inactive|all)$"),
 ) -> AdminUsersListResponse:
