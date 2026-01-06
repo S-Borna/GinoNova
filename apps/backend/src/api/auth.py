@@ -30,15 +30,15 @@ def get_client_ip(request: Request) -> str:
     if forwarded_for:
         # X-Forwarded-For can be comma-separated list, first is original client
         return forwarded_for.split(",")[0].strip()
-    
+
     real_ip = request.headers.get("X-Real-IP")
     if real_ip:
         return real_ip.strip()
-    
+
     # Fallback to direct client IP
     if request.client:
         return request.client.host
-    
+
     return None
 
 # === LOCKDOWN MODE ===
@@ -97,7 +97,7 @@ def register(user_data: UserCreate, request: Request):
     # TODO: Add rate limit - limiter.limit("5/minute")
     try:
         user = user_service.create_user(user_data)
-        
+
         # Save registration IP
         if client_ip:
             user_repository.update_user(user.id, registration_ip=client_ip, last_login_ip=client_ip)

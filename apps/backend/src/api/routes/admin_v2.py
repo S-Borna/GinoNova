@@ -345,7 +345,7 @@ async def get_users_by_ip(
     users = db.query(User).filter(
         (User.registration_ip == ip_address) | (User.last_login_ip == ip_address)
     ).order_by(User.created_at.desc()).all()
-    
+
     return {
         "ip_address": ip_address,
         "users": [user_to_response(u) for u in users],
@@ -363,7 +363,7 @@ async def get_duplicate_ips(
     Returns IPs with 2+ accounts for investigation.
     """
     from sqlalchemy import func as sqlfunc
-    
+
     # Find registration IPs used by multiple accounts
     duplicates = db.query(
         User.registration_ip,
@@ -377,7 +377,7 @@ async def get_duplicate_ips(
     ).order_by(
         sqlfunc.count(User.id).desc()
     ).all()
-    
+
     results = []
     for ip, count in duplicates:
         # Get user details for each IP
@@ -396,7 +396,7 @@ async def get_duplicate_ips(
                 for u in users
             ]
         })
-    
+
     return {
         "duplicate_ips": results,
         "total": len(results)

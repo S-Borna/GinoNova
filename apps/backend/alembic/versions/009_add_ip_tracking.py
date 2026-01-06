@@ -19,7 +19,7 @@ def upgrade() -> None:
     # Add IP tracking columns
     op.add_column('users', sa.Column('registration_ip', sa.String(45), nullable=True))
     op.add_column('users', sa.Column('last_login_ip', sa.String(45), nullable=True))
-    
+
     # Index on registration_ip for duplicate detection
     op.create_index('ix_users_registration_ip', 'users', ['registration_ip'])
 
