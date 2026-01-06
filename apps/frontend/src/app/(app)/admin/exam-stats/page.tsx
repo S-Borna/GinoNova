@@ -368,9 +368,9 @@ export default function AdminExamStatsPage() {
                                     <div className={cn(
                                         "w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold",
                                         i === 0 ? "bg-yellow-500/20 text-yellow-400" :
-                                        i === 1 ? "bg-zinc-400/20 text-zinc-300" :
-                                        i === 2 ? "bg-orange-500/20 text-orange-400" :
-                                        "bg-zinc-700 text-zinc-400"
+                                            i === 1 ? "bg-zinc-400/20 text-zinc-300" :
+                                                i === 2 ? "bg-orange-500/20 text-orange-400" :
+                                                    "bg-zinc-700 text-zinc-400"
                                     )}>
                                         {i + 1}
                                     </div>

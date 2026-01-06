@@ -113,7 +113,7 @@ function BarChart({ data, xKey, yKey, label }: {
     label: string
 }) {
     const maxValue = Math.max(...data.map(d => Number(d[yKey]) || 0), 1)
-    
+
     // Show only every nth label based on data length
     const showEveryN = data.length > 10 ? Math.ceil(data.length / 5) : 1
 
@@ -134,7 +134,7 @@ function BarChart({ data, xKey, yKey, label }: {
                         }
                     })()
                     const showLabel = i % showEveryN === 0 || i === data.length - 1
-                    
+
                     return (
                         <div key={i} className="flex-1 flex flex-col items-center gap-1">
                             <div

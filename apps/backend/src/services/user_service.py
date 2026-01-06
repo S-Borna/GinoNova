@@ -93,11 +93,11 @@ class UserService:
         if not user:
             raise InvalidCredentialsError("Invalid email or password")
 
-        # OAuth users don't have password_hash - they must use OAuth login
-        if not user.password_hash:
+        # OAuth users don't have hashed_password - they must use OAuth login
+        if not user.hashed_password:
             raise InvalidCredentialsError("Invalid email or password")
 
-        if not verify_password(login_data.password, user.password_hash):
+        if not verify_password(login_data.password, user.hashed_password):
             raise InvalidCredentialsError("Invalid email or password")
 
         return user
