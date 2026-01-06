@@ -88,12 +88,12 @@ const authOptions: NextAuthOptions = {
                     console.error("OAuth backend error:", error)
                 }
             }
-            
+
             // REFRESH BACKEND TOKEN if it's older than 12 hours
             // Backend tokens expire in 24h, so refresh at 12h to be safe
             const tokenAge = Date.now() - (token.tokenIssuedAt as number || 0)
             const TWELVE_HOURS = 12 * 60 * 60 * 1000
-            
+
             if (token.backendUser && tokenAge > TWELVE_HOURS) {
                 console.log("[NextAuth] Refreshing backend token for:", (token.backendUser as any)?.email)
                 try {
@@ -122,7 +122,7 @@ const authOptions: NextAuthOptions = {
                     console.error("[NextAuth] Failed to refresh backend token:", error)
                 }
             }
-            
+
             return token
         },
         async session({ session, token }) {

@@ -459,14 +459,17 @@ export default function AdminV2Users() {
             })
 
             if (!res.ok) {
-                const data = await res.json().catch(() => ({}))
-                throw new Error(data.detail || `HTTP ${res.status}`)
+                const data = await res.json().catch(() => null)
+                const errorMsg = data?.detail || data?.message || `HTTP ${res.status}`
+                throw new Error(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg))
             }
 
-            setToast({ message: `Action completed successfully`, type: "success" })
+            const result = await res.json().catch(() => ({}))
+            setToast({ message: result.message || `Action completed successfully`, type: "success" })
             fetchUsers() // Refresh
         } catch (err) {
-            setToast({ message: `Failed: ${err instanceof Error ? err.message : "Unknown error"}`, type: "error" })
+            const errorMessage = err instanceof Error ? err.message : String(err)
+            setToast({ message: `Failed: ${errorMessage}`, type: "error" })
         } finally {
             setActionLoading(false)
             setConfirmDialog(null)

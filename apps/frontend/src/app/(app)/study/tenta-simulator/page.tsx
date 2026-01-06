@@ -488,12 +488,12 @@ export default function TentaSimulatorPage() {
 
         // Check if this is the last question - AUTO-SAVE immediately!
         const isLastQuestion = currentIndex >= questions.length - 1
-        
+
         if (isLastQuestion) {
             // LAST QUESTION: Auto-save with complete results and go to results phase
             console.log('[AutoSave] Last question answered - saving exam result automatically')
             saveExamResult(newResults, questions, examStartTime)
-            
+
             // Show feedback briefly for live mode, then go to results
             if (settings.gradingMode === 'live') {
                 setShowLiveFeedback(true)
@@ -1272,14 +1272,14 @@ export default function TentaSimulatorPage() {
                         {results.map((result, idx) => {
                             const question = questions.find(q => q.id === result.questionId)
                             if (!question) return null
-                            
+
                             return (
                                 <div
                                     key={result.questionId}
                                     className={cn(
                                         "rounded-xl p-4",
-                                        result.correct 
-                                            ? "bg-green-500/10 border border-green-500/20" 
+                                        result.correct
+                                            ? "bg-green-500/10 border border-green-500/20"
                                             : "bg-red-500/10 border border-red-500/20"
                                     )}
                                 >

@@ -4,7 +4,7 @@ Phase 1.4: Register, Login with JWT, standardized errors, rate-limit placeholder
 Phase OAuth: Google, GitHub, Discord OAuth support
 """
 import os
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
 from uuid import uuid4
 from datetime import datetime, timezone
 
@@ -21,6 +21,25 @@ from ..core.exceptions import (
 from ..db import user_repository
 
 auth_router = APIRouter()
+
+
+def get_client_ip(request: Request) -> str:
+    """Get client IP from request, handling proxies/load balancers."""
+    # Check common proxy headers
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        # X-Forwarded-For can be comma-separated list, first is original client
+        return forwarded_for.split(",")[0].strip()
+    
+    real_ip = request.headers.get("X-Real-IP")
+    if real_ip:
+        return real_ip.strip()
+    
+    # Fallback to direct client IP
+    if request.client:
+        return request.client.host
+    
+    return None
 
 # === LOCKDOWN MODE ===
 # Set LOCKDOWN_MODE=true to block all auth except allowed emails
@@ -54,7 +73,7 @@ def auth_status():
 
 
 @auth_router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
-def register(user_data: UserCreate):
+def register(user_data: UserCreate, request: Request):
     """
     Register a new user.
 
@@ -72,9 +91,16 @@ def register(user_data: UserCreate):
     # Check lockdown mode - block new registrations except allowed emails
     check_lockdown(user_data.email)
 
+    # Get client IP for tracking
+    client_ip = get_client_ip(request)
+
     # TODO: Add rate limit - limiter.limit("5/minute")
     try:
         user = user_service.create_user(user_data)
+        
+        # Save registration IP
+        if client_ip:
+            user_repository.update_user(user.id, registration_ip=client_ip, last_login_ip=client_ip)
 
         # Log registration activity for admin dashboard
         try:
@@ -84,7 +110,7 @@ def register(user_data: UserCreate):
                 user_id=str(user.id),
                 user_email=user.email,
                 user_name=user.full_name,
-                details="New user via email/password registration"
+                details=f"New user via email/password registration (IP: {client_ip or 'unknown'})"
             )
         except Exception as e:
             print(f"[ActivityLog] Failed to log registration: {e}")
@@ -114,7 +140,7 @@ def register(user_data: UserCreate):
 
 
 @auth_router.post("/login", response_model=TokenResponse)
-def login(login_data: UserLogin):
+def login(login_data: UserLogin, request: Request):
     """
     Login with email and password.
 
@@ -127,6 +153,9 @@ def login(login_data: UserLogin):
     # Check lockdown mode - block logins except allowed emails
     check_lockdown(login_data.email)
 
+    # Get client IP
+    client_ip = get_client_ip(request)
+
     # TODO: Add rate limit - limiter.limit("10/minute")
     try:
         user = user_service.authenticate_user(login_data)
@@ -136,10 +165,13 @@ def login(login_data: UserLogin):
     if not user:
         raise_unauthorized("Incorrect email or password")
 
-    # Update last_activity_at AND last_login_at on login
+    # Update last_activity_at, last_login_at, and last_login_ip
     from ..db import user_repository
     now = datetime.now(timezone.utc)
-    user_repository.update_user(user.id, last_activity_at=now, last_login_at=now)
+    update_data = {"last_activity_at": now, "last_login_at": now}
+    if client_ip:
+        update_data["last_login_ip"] = client_ip
+    user_repository.update_user(user.id, **update_data)
 
     # Log login activity for admin dashboard
     try:
@@ -149,7 +181,7 @@ def login(login_data: UserLogin):
             user_id=str(user.id),
             user_email=user.email,
             user_name=user.full_name,
-            details="Email/password login"
+            details=f"Email/password login (IP: {client_ip or 'unknown'})"
         )
     except Exception as e:
         print(f"[ActivityLog] Failed to log login: {e}")
@@ -264,7 +296,7 @@ def dev_reset_password(data: DevPasswordReset):
 # === OAUTH ENDPOINTS ===
 
 @auth_router.post("/oauth", response_model=OAuthTokenResponse)
-def oauth_login(oauth_data: OAuthRequest):
+def oauth_login(oauth_data: OAuthRequest, request: Request):
     """
     OAuth login/register endpoint.
 
@@ -284,6 +316,9 @@ def oauth_login(oauth_data: OAuthRequest):
     """
     # Check lockdown mode - block OAuth logins except allowed emails
     check_lockdown(oauth_data.email)
+
+    # Get client IP
+    client_ip = get_client_ip(request)
 
     from ..db import user_repository
     from ..db.database import is_db_configured, get_db_context
@@ -307,10 +342,12 @@ def oauth_login(oauth_data: OAuthRequest):
                         # Update avatar if provided and not already set
                         if oauth_data.avatar and not user.avatar_url:
                             user.avatar_url = oauth_data.avatar
-                        # Update last_activity_at AND last_login_at on OAuth login
+                        # Update last_activity_at, last_login_at, and last_login_ip
                         now = datetime.now(timezone.utc)
                         user.last_activity_at = now
                         user.last_login_at = now
+                        if client_ip:
+                            user.last_login_ip = client_ip
                         user.updated_at = now
                         db.flush()
                         db.refresh(user)
@@ -323,7 +360,7 @@ def oauth_login(oauth_data: OAuthRequest):
                     user_id=str(existing_user.id),
                     user_email=existing_user.email,
                     user_name=existing_user.full_name,
-                    details=f"{oauth_data.provider.capitalize()} OAuth login",
+                    details=f"{oauth_data.provider.capitalize()} OAuth login (IP: {client_ip or 'unknown'})",
                     oauth_provider=oauth_data.provider
                 )
             except Exception as e:
@@ -364,6 +401,8 @@ def oauth_login(oauth_data: OAuthRequest):
                     oauth_provider=oauth_data.provider,
                     oauth_provider_id=oauth_data.provider_id,
                     avatar_url=oauth_data.avatar,
+                    registration_ip=client_ip,
+                    last_login_ip=client_ip,
                     is_active=True,
                     is_admin=False,
                     created_at=now,
@@ -382,7 +421,7 @@ def oauth_login(oauth_data: OAuthRequest):
                         user_id=str(db_user.id),
                         user_email=db_user.email,
                         user_name=db_user.full_name,
-                        details=f"New user via {oauth_data.provider.capitalize()} OAuth",
+                        details=f"New user via {oauth_data.provider.capitalize()} OAuth (IP: {client_ip or 'unknown'})",
                         oauth_provider=oauth_data.provider
                     )
                 except Exception as e:

@@ -33,6 +33,10 @@ class User(Base):
     website_url = Column(String(255), nullable=True)
     timezone = Column(String(50), default="UTC")
 
+    # IP Tracking
+    registration_ip = Column(String(45), nullable=True, index=True)  # IPv6 max length
+    last_login_ip = Column(String(45), nullable=True)
+
     # Status
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
