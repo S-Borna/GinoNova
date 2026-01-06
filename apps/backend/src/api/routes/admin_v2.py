@@ -708,9 +708,9 @@ async def delete_user(
 @router.post("/users/{user_id}/ban")
 async def ban_user(
     user_id: UUID,
-    data: BanRequest,
     db: Session = Depends(get_db),
-    admin: UserPublic = Depends(require_admin)
+    admin: UserPublic = Depends(require_admin),
+    data: Optional[BanRequest] = None
 ):
     """Ban a user (sets is_active to False)"""
     user = db.query(User).filter(User.id == user_id).first()
@@ -729,7 +729,8 @@ async def ban_user(
 
     db.commit()
 
-    return {"ok": True, "message": f"User {user.email} has been banned", "reason": data.reason}
+    reason = data.reason if data else None
+    return {"ok": True, "message": f"User {user.email} has been banned", "reason": reason}
 
 
 @router.post("/users/{user_id}/unban")
