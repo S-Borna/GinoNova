@@ -16,7 +16,7 @@
  */
 
 import * as React from "react"
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
@@ -26,6 +26,9 @@ import {
     Trophy, Brain, RotateCcw, Play, Pause, Target,
     Zap, Award, BookOpen, AlertTriangle
 } from "lucide-react"
+import { getToken } from "@/lib/auth"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Import quiz data
 import { DOE25_TASK_QUIZ, type TaskQuizQuestion } from "@/data/doe25-task-quiz"
@@ -172,6 +175,8 @@ export default function TentaSimulatorPage() {
     const [showLiveFeedback, setShowLiveFeedback] = useState(false)
     const [hasAutoStarted, setHasAutoStarted] = useState(false)
     const [showAbortModal, setShowAbortModal] = useState(false)
+    const [examStartTime, setExamStartTime] = useState<Date | null>(null)
+    const hasSubmittedResult = useRef(false)
 
     // Get DOE25 questions
     const doe25Questions = useMemo(() => {
@@ -273,6 +278,8 @@ export default function TentaSimulatorPage() {
                 setResults([])
                 setTimeRemaining(newSettings.duration * 60)
                 setQuestionStartTime(Date.now())
+                setExamStartTime(new Date())
+                hasSubmittedResult.current = false
                 setPhase('quiz')
             }, 100)
         }
@@ -293,6 +300,71 @@ export default function TentaSimulatorPage() {
         return sliced.map(q => shuffleQuestionOptions(q))
     }, [allQuestions, settings])
 
+    // Save exam result to backend
+    const saveExamResult = useCallback(async (
+        finalResults: QuizResult[],
+        examQuestions: SimulatorQuestion[],
+        startTime: Date | null
+    ) => {
+        // Prevent duplicate submissions
+        if (hasSubmittedResult.current) return
+        hasSubmittedResult.current = true
+
+        const token = getToken()
+        if (!token || finalResults.length === 0) return
+
+        try {
+            // Calculate G/VG stats
+            const gStats = finalResults.reduce((acc, result) => {
+                const question = examQuestions.find(q => q.id === result.questionId)
+                if (!question || question.difficulty !== 'G') return acc
+                acc.total++
+                if (result.correct) acc.correct++
+                return acc
+            }, { correct: 0, total: 0 })
+
+            const vgStats = finalResults.reduce((acc, result) => {
+                const question = examQuestions.find(q => q.id === result.questionId)
+                if (!question || question.difficulty !== 'VG') return acc
+                acc.total++
+                if (result.correct) acc.correct++
+                return acc
+            }, { correct: 0, total: 0 })
+
+            const correctCount = finalResults.filter(r => r.correct).length
+            const totalTime = finalResults.reduce((a, r) => a + r.timeSpent, 0)
+            const scorePercent = Math.round((correctCount / finalResults.length) * 100)
+
+            const payload = {
+                duration_minutes: settings.duration,
+                question_count: examQuestions.length,
+                sources: settings.selectedSources,
+                correct_answers: correctCount,
+                wrong_answers: finalResults.filter(r => !r.correct).length,
+                skipped_answers: examQuestions.length - finalResults.length,
+                score_percent: scorePercent,
+                g_correct: gStats.correct,
+                g_total: gStats.total,
+                vg_correct: vgStats.correct,
+                vg_total: vgStats.total,
+                time_spent_seconds: totalTime,
+                started_at: startTime?.toISOString() || new Date().toISOString()
+            }
+
+            await fetch(`${API_BASE_URL}/api/exam/submit`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+        } catch (err) {
+            // Silent fail - don't interrupt user experience
+            console.error('Failed to save exam result:', err)
+        }
+    }, [settings])
+
     // Timer effect
     useEffect(() => {
         if (phase !== 'quiz' || isPaused || timeRemaining <= 0) return
@@ -300,7 +372,8 @@ export default function TentaSimulatorPage() {
         const timer = setInterval(() => {
             setTimeRemaining(prev => {
                 if (prev <= 1) {
-                    // Time's up - go to results
+                    // Time's up - save & go to results
+                    saveExamResult(results, questions, examStartTime)
                     setPhase('results')
                     return 0
                 }
@@ -309,7 +382,7 @@ export default function TentaSimulatorPage() {
         }, 1000)
 
         return () => clearInterval(timer)
-    }, [phase, isPaused, timeRemaining])
+    }, [phase, isPaused, timeRemaining, results, questions, examStartTime, saveExamResult])
 
     // Format time
     const formatTime = (seconds: number) => {
@@ -327,6 +400,8 @@ export default function TentaSimulatorPage() {
         setResults([])
         setTimeRemaining(settings.duration * 60)
         setQuestionStartTime(Date.now())
+        setExamStartTime(new Date())
+        hasSubmittedResult.current = false
         setPhase('quiz')
     }
 
@@ -364,6 +439,9 @@ export default function TentaSimulatorPage() {
             setSelectedAnswer(null)
             setQuestionStartTime(Date.now())
         } else {
+            // Last question - save results then show results phase
+            // results state now contains all answers including the last one
+            saveExamResult(results, questions, examStartTime)
             setPhase('results')
         }
     }
@@ -372,6 +450,7 @@ export default function TentaSimulatorPage() {
     const abortExam = () => {
         setShowAbortModal(false)
         setShowLiveFeedback(false)
+        saveExamResult(results, questions, examStartTime)
         setPhase('results')
     }
 
