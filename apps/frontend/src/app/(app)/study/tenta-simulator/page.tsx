@@ -34,6 +34,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.co
 import { DOE25_TASK_QUIZ, type TaskQuizQuestion } from "@/data/doe25-task-quiz"
 import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-quiz"
 import { ALL_LINUX_COMMAND_QUESTIONS, type LinuxCommandQuestion } from "@/data/linux-commands-quiz"
+import { ALL_TENTAISH_QUESTIONS, type TentaishQuestion } from "@/data/tentaish-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
@@ -44,7 +45,7 @@ interface SimulatorQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'doe25' | 'handson' | 'linux-commands'
+    source: 'doe25' | 'handson' | 'linux-commands' | 'tentaish'
     scenario?: string // Optional scenario context
 }
 
@@ -55,7 +56,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('doe25' | 'handson' | 'linux-commands')[] // Multi-select question sources
+    selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[] // Multi-select question sources
 }
 
 interface QuizResult {
@@ -158,6 +159,21 @@ function convertLinuxCommandQuestion(q: LinuxCommandQuestion): SimulatorQuestion
     }
 }
 
+// Convert Tentaish question to SimulatorQuestion
+function convertTentaishQuestion(q: TentaishQuestion): SimulatorQuestion {
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        category: q.category,
+        source: 'tentaish',
+        scenario: q.scenario
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -197,6 +213,11 @@ export default function TentaSimulatorPage() {
         return ALL_LINUX_COMMAND_QUESTIONS.map(convertLinuxCommandQuestion)
     }, [])
 
+    // Get Tentaish questions
+    const tentaishQuestions = useMemo(() => {
+        return ALL_TENTAISH_QUESTIONS.map(convertTentaishQuestion)
+    }, [])
+
     // Get filtered questions based on selected sources
     const allQuestions = useMemo(() => {
         const questions: SimulatorQuestion[] = []
@@ -209,8 +230,11 @@ export default function TentaSimulatorPage() {
         if (settings.selectedSources.includes('linux-commands')) {
             questions.push(...linuxCommandsQuestions)
         }
+        if (settings.selectedSources.includes('tentaish')) {
+            questions.push(...tentaishQuestions)
+        }
         return questions
-    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, settings.selectedSources])
+    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions, settings.selectedSources])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -235,10 +259,10 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param (comma-separated for multi-select)
-            let selectedSources: ('doe25' | 'handson' | 'linux-commands')[] = ['doe25']
+            let selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[] = ['doe25']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands')[]
-                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands'].includes(s))
+                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
+                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands', 'tentaish'].includes(s))
                 if (selectedSources.length === 0) selectedSources = ['doe25']
             }
 
@@ -259,6 +283,7 @@ export default function TentaSimulatorPage() {
             if (selectedSources.includes('doe25')) sourceQuestions.push(...doe25Questions)
             if (selectedSources.includes('handson')) sourceQuestions.push(...handsonQuestions)
             if (selectedSources.includes('linux-commands')) sourceQuestions.push(...linuxCommandsQuestions)
+            if (selectedSources.includes('tentaish')) sourceQuestions.push(...tentaishQuestions)
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -283,7 +308,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions, linuxCommandsQuestions])
+    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {
@@ -582,12 +607,12 @@ export default function TentaSimulatorPage() {
                 {/* Question Source Selection - Multi-select */}
                 <div className="mb-6">
                     <label className="block text-sm text-zinc-400 mb-3">Frågekälla (välj en eller flera)</label>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <button
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('doe25')
                                     ? s.selectedSources.filter(src => src !== 'doe25')
-                                    : [...s.selectedSources, 'doe25'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                    : [...s.selectedSources, 'doe25'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['doe25'] }
                             })}
                             className={cn(
@@ -610,7 +635,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('handson')
                                     ? s.selectedSources.filter(src => src !== 'handson')
-                                    : [...s.selectedSources, 'handson'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                    : [...s.selectedSources, 'handson'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
                             })}
                             className={cn(
@@ -633,7 +658,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('linux-commands')
                                     ? s.selectedSources.filter(src => src !== 'linux-commands')
-                                    : [...s.selectedSources, 'linux-commands'] as ('doe25' | 'handson' | 'linux-commands')[]
+                                    : [...s.selectedSources, 'linux-commands'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
                             })}
                             className={cn(
@@ -652,11 +677,35 @@ export default function TentaSimulatorPage() {
                             <span className="text-sm font-medium">Linux Kommandon</span>
                             <span className="text-xs opacity-70">{linuxCommandsQuestions.length} frågor</span>
                         </button>
+                        <button
+                            onClick={() => setSettings(s => {
+                                const sources = s.selectedSources.includes('tentaish')
+                                    ? s.selectedSources.filter(src => src !== 'tentaish')
+                                    : [...s.selectedSources, 'tentaish'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['tentaish'] }
+                            })}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                settings.selectedSources.includes('tentaish')
+                                    ? "bg-cyan-500/20 border-cyan-500 text-cyan-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            {settings.selectedSources.includes('tentaish') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-cyan-500 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
+                            <span className="text-lg">📝</span>
+                            <span className="text-sm font-medium">Tentaish</span>
+                            <span className="text-xs opacity-70">{tentaishQuestions.length} frågor</span>
+                        </button>
                     </div>
                     <p className="text-xs text-zinc-500 mt-2">
                         {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
                         {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "Praktiska frågor från Hands-On modulen"}
                         {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "🔥 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'tentaish' && "📝 Tentaish - komplett tentaöversikt: filsystem, användare, SSH, Docker, disk & nätverk"}
                         {settings.selectedSources.length > 1 && `Kombinerat: ${settings.selectedSources.length} källor valda (${allQuestions.length} frågor)`}
                     </p>
                 </div>
@@ -698,7 +747,7 @@ export default function TentaSimulatorPage() {
                         VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
                     </span>
                     <span className="text-zinc-500 ml-auto">
-                        Källa: {settings.selectedSources.map(s => s === 'doe25' ? '🎓' : s === 'handson' ? '🔧' : '💻').join(' ')}
+                        Källa: {settings.selectedSources.map(s => s === 'doe25' ? '🎓' : s === 'handson' ? '🔧' : s === 'tentaish' ? '📝' : '💻').join(' ')}
                     </span>
                 </div>
             </div>
