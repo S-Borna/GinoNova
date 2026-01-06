@@ -32,17 +32,17 @@ class ExamResultCreate(BaseModel):
     include_g: bool = True
     include_vg: bool = True
     grading_mode: str = "live"
-    
+
     correct_answers: int
     wrong_answers: int
     skipped_answers: int = 0
     score_percent: float
-    
+
     g_correct: int = 0
     g_total: int = 0
     vg_correct: int = 0
     vg_total: int = 0
-    
+
     time_spent_seconds: int
     started_at: Optional[datetime] = None
     completed: bool = True
@@ -129,11 +129,11 @@ async def submit_exam_result(
         completed_at=datetime.now(timezone.utc),
         completed=data.completed
     )
-    
+
     db.add(exam_result)
     db.commit()
     db.refresh(exam_result)
-    
+
     return ExamResultResponse(
         id=str(exam_result.id),
         user_id=str(exam_result.user_id),
@@ -164,7 +164,7 @@ async def get_my_exam_results(
     results = db.query(ExamResult).filter(
         ExamResult.user_id == current_user.id
     ).order_by(desc(ExamResult.completed_at)).limit(limit).all()
-    
+
     return [
         ExamResultResponse(
             id=str(r.id),
@@ -197,7 +197,7 @@ async def get_my_exam_stats(
         ExamResult.user_id == current_user.id,
         ExamResult.completed == True
     ).all()
-    
+
     if not results:
         return {
             "total_exams": 0,
@@ -208,17 +208,17 @@ async def get_my_exam_stats(
             "avg_time_minutes": 0,
             "improvement_trend": []
         }
-    
+
     total_questions = sum(r.question_count for r in results)
     total_correct = sum(r.correct_answers for r in results)
     avg_score = sum(r.score_percent for r in results) / len(results)
     best_score = max(r.score_percent for r in results)
     avg_time = sum(r.time_spent_seconds for r in results) / len(results) / 60
-    
+
     # Get last 10 scores for trend
     recent = sorted(results, key=lambda x: x.completed_at)[-10:]
     improvement_trend = [{"date": r.completed_at.isoformat(), "score": r.score_percent} for r in recent]
-    
+
     return {
         "total_exams": len(results),
         "avg_score": round(avg_score, 1),

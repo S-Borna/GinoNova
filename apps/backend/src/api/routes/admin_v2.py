@@ -1570,7 +1570,7 @@ async def get_exam_stats(
             ExamResult.completed_at >= start_date,
             ExamResult.completed == True
         ).all()
-        
+
         for (score,) in all_scores:
             if score < 20:
                 score_distribution["0-20"] += 1
@@ -1596,7 +1596,7 @@ async def get_exam_stats(
         for i in range(min(days, 14) - 1, -1, -1):
             day_start = (now - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
             day_end = day_start + timedelta(days=1)
-            
+
             day_count = db.query(func.count(ExamResult.id)).filter(
                 and_(
                     ExamResult.completed_at >= day_start,
@@ -1604,7 +1604,7 @@ async def get_exam_stats(
                     ExamResult.completed == True
                 )
             ).scalar() or 0
-            
+
             day_avg = db.query(func.avg(ExamResult.score_percent)).filter(
                 and_(
                     ExamResult.completed_at >= day_start,
@@ -1687,7 +1687,7 @@ async def get_user_exam_stats(
 
     total_questions = sum(r.question_count for r in results)
     total_correct = sum(r.correct_answers for r in results)
-    
+
     return {
         "user_id": str(user_id),
         "email": user.email,
