@@ -46,6 +46,7 @@ import { HANDSON_MODULE } from "@/data/handson-module"
 import { DOE25_TASK_FLASHCARDS } from "@/data/doe25-task-flashcards"
 import { LINUX247_TASK_FLASHCARDS } from "@/data/linux247-task-flashcards"
 import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
+import { TENTAISH_STATS } from "@/data/tentaish-quiz"
 
 /* ============================================================================
    TYPES
@@ -521,7 +522,7 @@ export default function StudyPage() {
                                     >
                                         <span className="text-2xl">📝</span>
                                         <span className="text-xs font-medium">Tentaish</span>
-                                        <span className="text-[10px] opacity-70 font-normal">100 frågor</span>
+                                        <span className="text-[10px] opacity-70 font-normal">{TENTAISH_STATS.totalQuestions} frågor</span>
                                     </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
