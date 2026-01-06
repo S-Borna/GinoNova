@@ -133,7 +133,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux'>('doe25')
+    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux' | 'tentaish'>('doe25')
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -463,7 +463,7 @@ export default function StudyPage() {
                                     <BookOpen className="w-5 h-5 text-cyan-400" />
                                     <span className="text-white font-bold">Frågekälla</span>
                                 </div>
-                                <div className="grid grid-cols-3 gap-3">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                     <button
                                         onClick={() => setTentaSource('doe25')}
                                         className={cn(
@@ -503,11 +503,25 @@ export default function StudyPage() {
                                         <span className="text-xs font-medium">Linux Kommandon</span>
                                         <span className="text-[10px] opacity-70 font-normal">350+ frågor</span>
                                     </button>
+                                    <button
+                                        onClick={() => setTentaSource('tentaish')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'tentaish'
+                                                ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">📝</span>
+                                        <span className="text-xs font-medium">Tentaish</span>
+                                        <span className="text-[10px] opacity-70 font-normal">100 frågor</span>
+                                    </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
                                     {tentaSource === 'doe25' && "✨ Rekommenderat för tentan"}
                                     {tentaSource === 'handson' && "Praktiska frågor"}
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
+                                    {tentaSource === 'tentaish' && "📝 Komplett tentaöversikt"}
                                 </p>
                             </div>
 
