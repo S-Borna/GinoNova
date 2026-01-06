@@ -6,6 +6,8 @@ Complete admin functionality with real-time stats, user management, analytics
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List, Literal
 from uuid import UUID
+from collections import deque
+import threading
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
@@ -18,6 +20,56 @@ from src.db.models import User, AIUsageLog, ExamResult
 from src.schemas.user import UserPublic
 
 router = APIRouter()
+
+
+# =============================================================================
+# ADMIN ACTIVITY LOG - In-memory activity tracking for admin notifications
+# =============================================================================
+
+# Thread-safe activity log (max 100 entries)
+_activity_log: deque = deque(maxlen=100)
+_activity_lock = threading.Lock()
+
+
+class ActivityLogEntry(BaseModel):
+    id: str
+    timestamp: datetime
+    type: str  # login, registration, exam_completed, etc.
+    user_email: str
+    user_name: Optional[str] = None
+    user_id: str
+    details: Optional[str] = None
+    oauth_provider: Optional[str] = None
+
+
+def add_activity_log(
+    activity_type: str,
+    user_id: str,
+    user_email: str,
+    user_name: Optional[str] = None,
+    details: Optional[str] = None,
+    oauth_provider: Optional[str] = None
+):
+    """Add an activity to the admin activity log"""
+    import uuid
+    entry = {
+        "id": str(uuid.uuid4()),
+        "timestamp": datetime.now(timezone.utc),
+        "type": activity_type,
+        "user_id": user_id,
+        "user_email": user_email,
+        "user_name": user_name,
+        "details": details,
+        "oauth_provider": oauth_provider
+    }
+    with _activity_lock:
+        _activity_log.appendleft(entry)
+
+
+def get_activity_log(limit: int = 50) -> List[dict]:
+    """Get the most recent activity log entries"""
+    with _activity_lock:
+        return list(_activity_log)[:limit]
 
 
 # =============================================================================
@@ -259,6 +311,22 @@ def user_to_response(user: User) -> UserResponse:
 # =============================================================================
 # DASHBOARD STATS ENDPOINTS
 # =============================================================================
+
+@router.get("/activity-log")
+async def get_admin_activity_log(
+    limit: int = Query(50, ge=1, le=100),
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Get recent activity log for admin dashboard.
+    Shows logins, registrations, exam completions, etc.
+    """
+    entries = get_activity_log(limit)
+    return {
+        "activities": entries,
+        "total": len(entries)
+    }
+
 
 @router.get("/stats/overview", response_model=OverviewStats)
 async def get_overview_stats(

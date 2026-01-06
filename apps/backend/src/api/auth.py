@@ -76,6 +76,19 @@ def register(user_data: UserCreate):
     try:
         user = user_service.create_user(user_data)
 
+        # Log registration activity for admin dashboard
+        try:
+            from .routes.admin_v2 import add_activity_log
+            add_activity_log(
+                activity_type="registration",
+                user_id=str(user.id),
+                user_email=user.email,
+                user_name=user.full_name,
+                details="New user via email/password registration"
+            )
+        except Exception as e:
+            print(f"[ActivityLog] Failed to log registration: {e}")
+
         # Generate JWT token
         access_token = create_access_token(
             user_id=user.id,
@@ -127,6 +140,19 @@ def login(login_data: UserLogin):
     from ..db import user_repository
     now = datetime.now(timezone.utc)
     user_repository.update_user(user.id, last_activity_at=now, last_login_at=now)
+
+    # Log login activity for admin dashboard
+    try:
+        from .routes.admin_v2 import add_activity_log
+        add_activity_log(
+            activity_type="login",
+            user_id=str(user.id),
+            user_email=user.email,
+            user_name=user.full_name,
+            details="Email/password login"
+        )
+    except Exception as e:
+        print(f"[ActivityLog] Failed to log login: {e}")
 
     # Generate JWT token
     access_token = create_access_token(
@@ -289,6 +315,20 @@ def oauth_login(oauth_data: OAuthRequest):
                         db.flush()
                         db.refresh(user)
 
+            # Log OAuth login activity for admin dashboard
+            try:
+                from .routes.admin_v2 import add_activity_log
+                add_activity_log(
+                    activity_type="login",
+                    user_id=str(existing_user.id),
+                    user_email=existing_user.email,
+                    user_name=existing_user.full_name,
+                    details=f"{oauth_data.provider.capitalize()} OAuth login",
+                    oauth_provider=oauth_data.provider
+                )
+            except Exception as e:
+                print(f"[ActivityLog] Failed to log OAuth login: {e}")
+
             access_token = create_access_token(
                 user_id=existing_user.id,
                 email=existing_user.email,
@@ -333,6 +373,20 @@ def oauth_login(oauth_data: OAuthRequest):
                 db.add(db_user)
                 db.flush()
                 db.refresh(db_user)
+
+                # Log new OAuth registration for admin dashboard
+                try:
+                    from .routes.admin_v2 import add_activity_log
+                    add_activity_log(
+                        activity_type="registration",
+                        user_id=str(db_user.id),
+                        user_email=db_user.email,
+                        user_name=db_user.full_name,
+                        details=f"New user via {oauth_data.provider.capitalize()} OAuth",
+                        oauth_provider=oauth_data.provider
+                    )
+                except Exception as e:
+                    print(f"[ActivityLog] Failed to log OAuth registration: {e}")
 
                 access_token = create_access_token(
                     user_id=db_user.id,
