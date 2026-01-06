@@ -1710,3 +1710,33 @@ async def get_user_exam_stats(
             "completed_at": r.completed_at.isoformat() if r.completed_at else None
         } for r in results[:20]]
     }
+
+
+@router.delete("/exam-stats/user/{user_id}")
+async def delete_user_exam_results(
+    user_id: UUID,
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """Delete all exam results for a specific user (admin only)"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Count before delete
+    count = db.query(ExamResult).filter(ExamResult.user_id == user_id).count()
+    
+    if count == 0:
+        return {"ok": True, "message": f"No exam results found for {user.full_name or user.email}", "deleted": 0}
+
+    # Delete all exam results for this user
+    db.query(ExamResult).filter(ExamResult.user_id == user_id).delete()
+    db.commit()
+
+    return {
+        "ok": True,
+        "message": f"Deleted {count} exam result(s) for {user.full_name or user.email}",
+        "deleted": count,
+        "user_email": user.email,
+        "user_name": user.full_name
+    }

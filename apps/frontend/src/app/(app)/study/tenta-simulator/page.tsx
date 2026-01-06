@@ -407,7 +407,7 @@ export default function TentaSimulatorPage() {
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }))
                 console.error('[ExamResult] Server error:', response.status, errorData)
-                
+
                 if (response.status === 401) {
                     console.error('[ExamResult] Auth token expired or invalid - result NOT saved!')
                     // Don't reset hasSubmittedResult - token won't magically become valid

@@ -17,7 +17,8 @@ import {
     Target,
     Award,
     BarChart3,
-    Calendar
+    Calendar,
+    Trash2
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -207,6 +208,7 @@ export default function AdminExamStatsPage() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [timeRange, setTimeRange] = useState<TimeRange>("30d")
+    const [deleting, setDeleting] = useState<string | null>(null)
 
     const fetchData = useCallback(async () => {
         const token = getToken()
@@ -237,6 +239,38 @@ export default function AdminExamStatsPage() {
             setLoading(false)
         }
     }, [timeRange])
+
+    const deleteUserResults = async (userId: string, userName: string) => {
+        if (!confirm(`Är du säker på att du vill ta bort alla tentaresultat för ${userName}?`)) {
+            return
+        }
+
+        const token = getToken()
+        if (!token) return
+
+        setDeleting(userId)
+        try {
+            const res = await fetch(
+                `${API_BASE_URL}/api/admin/exam-stats/user/${userId}`,
+                {
+                    method: 'DELETE',
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            )
+
+            if (!res.ok) {
+                throw new Error(`Failed to delete: ${res.status}`)
+            }
+
+            const result = await res.json()
+            alert(result.message)
+            fetchData() // Refresh data
+        } catch (err) {
+            alert(err instanceof Error ? err.message : "Kunde inte ta bort")
+        } finally {
+            setDeleting(null)
+        }
+    }
 
     useEffect(() => {
         fetchData()
@@ -391,6 +425,18 @@ export default function AdminExamStatsPage() {
                                         </div>
                                         <div className="text-xs text-zinc-500">snitt</div>
                                     </div>
+                                    <button
+                                        onClick={() => deleteUserResults(user.user_id, user.full_name || user.email)}
+                                        disabled={deleting === user.user_id}
+                                        className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                                        title="Ta bort alla resultat"
+                                    >
+                                        {deleting === user.user_id ? (
+                                            <RefreshCw className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <Trash2 className="w-4 h-4" />
+                                        )}
+                                    </button>
                                 </div>
                             ))}
                         </div>

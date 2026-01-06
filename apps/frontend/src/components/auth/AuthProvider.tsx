@@ -92,7 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             } catch (err) {
                 // FIXED: Distinguish between auth errors and network errors
                 const isNetworkError = err instanceof TypeError && err.message.includes('fetch')
-                
+
                 if (isNetworkError) {
                     // Network error - don't log out user, keep token for retry
                     console.warn('[Auth] Network error validating token - keeping session')

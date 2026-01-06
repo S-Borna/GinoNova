@@ -279,8 +279,8 @@ export function SearchBar({ className = "" }: { className?: string }) {
                       onClick={() => handleSelect(result.url)}
                       onMouseEnter={() => setSelectedIndex(index)}
                       className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${selectedIndex === index
-                          ? "bg-indigo-500/10 border-l-2 border-indigo-500"
-                          : "hover:bg-gray-800/50 border-l-2 border-transparent"
+                        ? "bg-indigo-500/10 border-l-2 border-indigo-500"
+                        : "hover:bg-gray-800/50 border-l-2 border-transparent"
                         }`}
                     >
                       {/* Icon */}
