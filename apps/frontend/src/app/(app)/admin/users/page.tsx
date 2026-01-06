@@ -444,30 +444,40 @@ export default function AdminV2Users() {
 
     const executeAction = async (action: string, endpoint: string, method = "POST", body?: object) => {
         const token = getToken()
-        if (!token) return
+        if (!token) {
+            setToast({ message: "Not authenticated", type: "error" })
+            return
+        }
 
         setActionLoading(true)
 
         try {
+            console.log(`[Admin] Executing ${method} ${API_BASE_URL}${endpoint}`, body)
+            
             const res = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
-                body: body ? JSON.stringify(body) : undefined
+                body: JSON.stringify(body || {})
             })
+
+            console.log(`[Admin] Response status: ${res.status}`)
 
             if (!res.ok) {
                 const data = await res.json().catch(() => null)
+                console.error(`[Admin] Error response:`, data)
                 const errorMsg = data?.detail || data?.message || `HTTP ${res.status}`
                 throw new Error(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg))
             }
 
             const result = await res.json().catch(() => ({}))
+            console.log(`[Admin] Success:`, result)
             setToast({ message: result.message || `Action completed successfully`, type: "success" })
             fetchUsers() // Refresh
         } catch (err) {
+            console.error(`[Admin] Action failed:`, err)
             const errorMessage = err instanceof Error ? err.message : String(err)
             setToast({ message: `Failed: ${errorMessage}`, type: "error" })
         } finally {
@@ -525,7 +535,7 @@ export default function AdminV2Users() {
                         isOpen: true,
                         title: "Unban User",
                         description: `Unban ${user.email}? They will be able to access the platform again.`,
-                        action: () => executeAction(action, `/api/admin/users/${user.id}/unban`),
+                        action: () => executeAction(action, `/api/admin/users/${user.id}/unban`, "POST", {}),
                         confirmLabel: "Unban User",
                         confirmColor: "green"
                     })
@@ -546,7 +556,7 @@ export default function AdminV2Users() {
                     isOpen: true,
                     title: "⚠️ Delete User Permanently",
                     description: `DELETE ${user.email} PERMANENTLY?\n\nThis action cannot be undone. All user data will be lost.`,
-                    action: () => executeAction(action, `/api/admin/users/${user.id}`, "DELETE"),
+                    action: () => executeAction(action, `/api/admin/users/${user.id}`, "DELETE", {}),
                     confirmLabel: "Delete Forever",
                     confirmColor: "red"
                 })
