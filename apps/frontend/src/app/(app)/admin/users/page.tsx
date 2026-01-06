@@ -534,7 +534,7 @@ export default function AdminV2Users() {
                         isOpen: true,
                         title: "🚫 Ban User",
                         description: `Ban ${user.email}?\n\nThis will immediately log them out and prevent future logins.`,
-                        action: () => executeAction(action, `/api/admin/users/${user.id}/ban`),
+                        action: () => executeAction(action, `/api/admin/users/${user.id}/ban`, "POST", {}),
                         confirmLabel: "Ban User",
                         confirmColor: "red"
                     })
