@@ -1,13 +1,20 @@
 "use client"
 
 /**
- * Tenta-Simulator - Exam Prep Mode
- * Updated: 2026-01-05 - Added Linux Commands + Multi-select
+ * Tenta-Simulator - Quiz Engine (INTE HUVUDSIDAN!)
+ * 
+ * ⚠️ VIKTIGT: Detta är QUIZ-MOTORN, inte setup-sidan!
+ * → Huvudsidan för val av inställningar är: /study/page.tsx (Studyroom)
+ * → Vid ändringar av frågekällor: UPPDATERA study/page.tsx FÖRST!
+ * 
+ * Denna sida:
+ * - Tar emot inställningar via URL-params från Studyroom
+ * - Kör själva quizzen med timer, frågor, resultat
+ * - Har en backup setup-vy om man går hit direkt (utan params)
  *
- * Combines quizzes and flashcards in a timed exam-like environment
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
- * - Random questions from DOE25 + Hands-On + Linux Commands (~2000 questions)
+ * - Random questions from DOE25 + Hands-On + Linux Commands + Tentaish
  * - Multi-select question sources
  * - Mix of G and VG difficulty
  * - Live grading OR grading at end
