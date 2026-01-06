@@ -73,7 +73,7 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                     </Link>
                     <h1 className="text-xl font-bold flex items-center gap-2">
                         <Shield className="w-6 h-6 text-purple-500" />
-                        Admin v2
+                        Admin
                     </h1>
                 </div>
 
