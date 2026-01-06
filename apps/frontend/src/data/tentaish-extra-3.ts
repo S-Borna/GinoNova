@@ -1,7 +1,7 @@
 /**
  * TENTAISH EXPANSION - 200 NYA QUIZ-FRÅGOR
  * Moment 3: Docker & Disk/LUKS-kryptering
- * 
+ *
  * Skapad: 2026-01-06
  */
 

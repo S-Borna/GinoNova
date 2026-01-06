@@ -45,6 +45,8 @@ interface UserDetail {
     is_active: boolean
     is_verified: boolean
     oauth_provider: string | null
+    registration_ip: string | null
+    last_login_ip: string | null
     created_at: string
     last_activity_at: string | null
     total_xp: number
@@ -189,6 +191,14 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
                                 ? new Date(user.last_activity_at).toLocaleString("sv-SE")
                                 : "Never"}
                         </span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-zinc-800">
+                        <span className="text-zinc-400">Registration IP</span>
+                        <span className="font-mono text-xs">{user.registration_ip || "Unknown"}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-zinc-800">
+                        <span className="text-zinc-400">Last Login IP</span>
+                        <span className="font-mono text-xs">{user.last_login_ip || "Unknown"}</span>
                     </div>
                 </div>
             </div>

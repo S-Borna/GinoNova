@@ -142,7 +142,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const heartbeat = async () => {
             // Try localStorage token first
             let token = getToken()
-            
+
             // If no localStorage token, try to get from NextAuth session
             if (!token && session?.accessToken) {
                 token = session.accessToken
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 storeToken(token)
                 console.log('[Heartbeat] Using NextAuth session token')
             }
-            
+
             if (!token) {
                 console.warn('[Heartbeat] No token found in localStorage or session')
                 return

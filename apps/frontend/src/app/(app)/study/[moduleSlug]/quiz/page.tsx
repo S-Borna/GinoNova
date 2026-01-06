@@ -92,7 +92,7 @@ function QuizContent() {
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
     const [showHint, setShowHint] = useState(false)
-    
+
     // Store all answers for results review
     const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number; correct: boolean }[]>([])
 
@@ -213,14 +213,14 @@ function QuizContent() {
         if (isCorrect) {
             setScore(prev => prev + 1)
         }
-        
+
         // Store answer for results review
         setAnswers(prev => [...prev, {
             questionId: questions[currentIndex].id,
             selectedIndex: selectedAnswer,
             correct: isCorrect
         }])
-        
+
         setShowResult(true)
     }
 
@@ -304,7 +304,7 @@ function QuizContent() {
                             }
                         </p>
                     </div>
-                    
+
                     {/* Detailed Results - Question by Question */}
                     <div className="mb-8">
                         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
@@ -315,14 +315,14 @@ function QuizContent() {
                             {answers.map((answer, idx) => {
                                 const question = questions.find(q => q.id === answer.questionId)
                                 if (!question) return null
-                                
+
                                 return (
                                     <div
                                         key={answer.questionId}
                                         className={cn(
                                             "rounded-xl p-4",
-                                            answer.correct 
-                                                ? "bg-emerald-500/10 border border-emerald-500/20" 
+                                            answer.correct
+                                                ? "bg-emerald-500/10 border border-emerald-500/20"
                                                 : "bg-red-500/10 border border-red-500/20"
                                         )}
                                     >

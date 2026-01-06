@@ -100,6 +100,8 @@ class UserResponse(BaseModel):
     is_active: bool = True
     is_verified: bool = False
     oauth_provider: Optional[str] = None
+    registration_ip: Optional[str] = None
+    last_login_ip: Optional[str] = None
     created_at: datetime
     last_activity_at: Optional[datetime] = None
     total_xp: int = 0
@@ -287,6 +289,8 @@ def user_to_response(user: User) -> UserResponse:
         is_active=user.is_active,
         is_verified=getattr(user, 'is_verified', False),
         oauth_provider=getattr(user, 'oauth_provider', None),
+        registration_ip=getattr(user, 'registration_ip', None),
+        last_login_ip=getattr(user, 'last_login_ip', None),
         created_at=user.created_at,
         last_activity_at=last_activity,
         total_xp=getattr(user, 'total_xp', 0) or 0,
@@ -325,6 +329,77 @@ async def get_admin_activity_log(
     return {
         "activities": entries,
         "total": len(entries)
+    }
+
+
+@router.get("/users/by-ip/{ip_address}")
+async def get_users_by_ip(
+    ip_address: str,
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Find all users registered from or last logged in from a specific IP.
+    Useful for detecting multiple accounts from the same person.
+    """
+    users = db.query(User).filter(
+        (User.registration_ip == ip_address) | (User.last_login_ip == ip_address)
+    ).order_by(User.created_at.desc()).all()
+    
+    return {
+        "ip_address": ip_address,
+        "users": [user_to_response(u) for u in users],
+        "total": len(users)
+    }
+
+
+@router.get("/users/duplicate-ips")
+async def get_duplicate_ips(
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Find all IPs that have registered multiple accounts.
+    Returns IPs with 2+ accounts for investigation.
+    """
+    from sqlalchemy import func as sqlfunc
+    
+    # Find registration IPs used by multiple accounts
+    duplicates = db.query(
+        User.registration_ip,
+        sqlfunc.count(User.id).label('account_count')
+    ).filter(
+        User.registration_ip.isnot(None)
+    ).group_by(
+        User.registration_ip
+    ).having(
+        sqlfunc.count(User.id) > 1
+    ).order_by(
+        sqlfunc.count(User.id).desc()
+    ).all()
+    
+    results = []
+    for ip, count in duplicates:
+        # Get user details for each IP
+        users = db.query(User).filter(User.registration_ip == ip).all()
+        results.append({
+            "ip_address": ip,
+            "account_count": count,
+            "users": [
+                {
+                    "id": str(u.id),
+                    "email": u.email,
+                    "full_name": u.full_name,
+                    "created_at": u.created_at.isoformat() if u.created_at else None,
+                    "is_active": u.is_active
+                }
+                for u in users
+            ]
+        })
+    
+    return {
+        "duplicate_ips": results,
+        "total": len(results)
     }
 
 
@@ -1793,7 +1868,7 @@ async def delete_user_exam_results(
 
     # Count before delete
     count = db.query(ExamResult).filter(ExamResult.user_id == user_id).count()
-    
+
     if count == 0:
         return {"ok": True, "message": f"No exam results found for {user.full_name or user.email}", "deleted": 0}
 

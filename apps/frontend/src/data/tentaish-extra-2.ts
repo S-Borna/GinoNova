@@ -1,7 +1,7 @@
 /**
  * TENTAISH EXPANSION - 200 NYA QUIZ-FRÅGOR
  * Moment 2: Pakethantering & SSH/Brandvägg
- * 
+ *
  * Skapad: 2026-01-06
  */
 
