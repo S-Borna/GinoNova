@@ -471,9 +471,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
             "border-b border-neutral-200/50 dark:border-neutral-800/50",
             className
         )}>
-            <div className="h-full px-4 flex items-center justify-between gap-4">
+            <div className="h-full px-4 flex items-center gap-4">
                 {/* Left side */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 shrink-0">
                     {/* Mobile menu button */}
                     {showMenuButton && (
                         <button
@@ -494,10 +494,22 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     <SearchBar />
                 </div>
 
+                {/* Center - Motivational Message (fills available space) */}
+                <div className="hidden lg:flex flex-1 items-center justify-center min-w-0">
+                    <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 via-purple-500 to-pink-500 rounded-xl blur-md opacity-40 group-hover:opacity-60 transition-opacity duration-500 animate-pulse" />
+                        <div className="relative px-6 py-2 bg-gradient-to-r from-neutral-900/90 to-neutral-800/90 dark:from-neutral-800/90 dark:to-neutral-900/90 rounded-xl border border-pink-500/20">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-300 to-pink-400 font-semibold text-lg tracking-wide whitespace-nowrap">
+                                Lycka till imorgon ❤️
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Right side */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 shrink-0 ml-auto">
                     {/* Spotify Now Playing */}
-                    <SpotifyNowPlaying variant="compact" className="hidden lg:flex" />
+                    <SpotifyNowPlaying variant="compact" className="hidden xl:flex" />
 
                     {/* DOE25 Tenta Countdown */}
                     <TentaCountdown variant="compact" />
