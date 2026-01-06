@@ -482,29 +482,47 @@ export default function TentaSimulatorPage() {
             timeSpent
         }
 
-        setResults(prev => [...prev, result])
+        // Create the new results array INCLUDING current answer
+        const newResults = [...results, result]
+        setResults(newResults)
 
-        // If live grading, show feedback before moving to next
-        if (settings.gradingMode === 'live') {
-            setShowLiveFeedback(true)
+        // Check if this is the last question - AUTO-SAVE immediately!
+        const isLastQuestion = currentIndex >= questions.length - 1
+        
+        if (isLastQuestion) {
+            // LAST QUESTION: Auto-save with complete results and go to results phase
+            console.log('[AutoSave] Last question answered - saving exam result automatically')
+            saveExamResult(newResults, questions, examStartTime)
+            
+            // Show feedback briefly for live mode, then go to results
+            if (settings.gradingMode === 'live') {
+                setShowLiveFeedback(true)
+                // Auto-transition to results after showing feedback
+                setTimeout(() => {
+                    setShowLiveFeedback(false)
+                    setPhase('results')
+                }, 1500)
+            } else {
+                setPhase('results')
+            }
         } else {
-            // End grading - move to next question immediately
-            moveToNextQuestion()
+            // Not last question - show feedback or move to next
+            if (settings.gradingMode === 'live') {
+                setShowLiveFeedback(true)
+            } else {
+                moveToNextQuestion()
+            }
         }
     }
 
-    // Move to next question (called after live feedback or directly in end mode)
+    // Move to next question (called after live feedback)
     const moveToNextQuestion = () => {
         setShowLiveFeedback(false)
+        // Only move if not last question (last question handled in submitAnswer)
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1)
             setSelectedAnswer(null)
             setQuestionStartTime(Date.now())
-        } else {
-            // Last question - save results then show results phase
-            // results state now contains all answers including the last one
-            saveExamResult(results, questions, examStartTime)
-            setPhase('results')
         }
     }
 

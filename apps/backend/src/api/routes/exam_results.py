@@ -134,6 +134,20 @@ async def submit_exam_result(
     db.commit()
     db.refresh(exam_result)
 
+    # Log exam completion for admin dashboard
+    try:
+        from .admin_v2 import add_activity_log
+        sources_str = ", ".join(data.sources) if data.sources else "unknown"
+        add_activity_log(
+            activity_type="exam_completed",
+            user_id=str(current_user.id),
+            user_email=current_user.email,
+            user_name=getattr(current_user, 'full_name', None),
+            details=f"Score: {data.score_percent}% ({data.correct_answers}/{data.question_count}) - Sources: {sources_str}"
+        )
+    except Exception as e:
+        print(f"[ActivityLog] Failed to log exam completion: {e}")
+
     return ExamResultResponse(
         id=str(exam_result.id),
         user_id=str(exam_result.user_id),
