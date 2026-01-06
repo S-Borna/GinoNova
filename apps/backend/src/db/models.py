@@ -351,3 +351,50 @@ class AIUsageLog(Base):
         Index('ix_ai_usage_week_year', 'year', 'week_number'),
     )
 
+
+class ExamResult(Base):
+    """
+    Exam/Tenta Simulation Results - Tracks every completed exam simulation
+    Used for progress tracking and admin analytics
+    """
+    __tablename__ = "exam_results"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+
+    # Exam configuration
+    duration_minutes = Column(Integer, nullable=False)  # How long the exam was set for
+    question_count = Column(Integer, nullable=False)  # Total questions in exam
+    sources = Column(JSON, default=list)  # ['doe25', 'handson', 'linux-commands']
+    include_g = Column(Boolean, default=True)
+    include_vg = Column(Boolean, default=True)
+    grading_mode = Column(String(20), default='live')  # 'live' or 'end'
+
+    # Results
+    correct_answers = Column(Integer, default=0)
+    wrong_answers = Column(Integer, default=0)
+    skipped_answers = Column(Integer, default=0)
+    score_percent = Column(Float, default=0.0)  # 0-100
+
+    # G/VG breakdown
+    g_correct = Column(Integer, default=0)
+    g_total = Column(Integer, default=0)
+    vg_correct = Column(Integer, default=0)
+    vg_total = Column(Integer, default=0)
+
+    # Time tracking
+    time_spent_seconds = Column(Integer, default=0)  # Actual time spent
+    started_at = Column(DateTime, nullable=True)
+    completed_at = Column(DateTime, default=datetime.utcnow)
+
+    # Status
+    completed = Column(Boolean, default=True)  # False if abandoned
+
+    # Relationships
+    user = relationship("User", backref="exam_results")
+
+    __table_args__ = (
+        Index('ix_exam_results_user_id', 'user_id'),
+        Index('ix_exam_results_completed_at', 'completed_at'),
+        Index('ix_exam_results_score', 'score_percent'),
+    )

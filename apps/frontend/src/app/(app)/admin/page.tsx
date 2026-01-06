@@ -20,7 +20,8 @@ import {
     RefreshCw,
     ArrowRight,
     CheckCircle,
-    AlertTriangle
+    AlertTriangle,
+    Trophy
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -395,6 +396,16 @@ export default function AdminV2Dashboard() {
                         <div className="flex items-center gap-3">
                             <Database className="w-5 h-5 text-green-400" />
                             <span>Settings</span>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition" />
+                    </Link>
+                    <Link
+                        href="/admin/exam-stats"
+                        className="flex items-center justify-between p-4 bg-zinc-800/50 rounded-lg hover:bg-zinc-800 transition group"
+                    >
+                        <div className="flex items-center gap-3">
+                            <Trophy className="w-5 h-5 text-yellow-400" />
+                            <span>Exam Stats</span>
                         </div>
                         <ArrowRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition" />
                     </Link>

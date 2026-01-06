@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from src.core.deps import get_current_user
 from src.db.database import get_db
-from src.db.models import User, AIUsageLog
+from src.db.models import User, AIUsageLog, ExamResult
 from src.schemas.user import UserPublic
 
 router = APIRouter()
@@ -1446,3 +1446,267 @@ async def update_settings(
     # This would need a settings table to persist changes
     # For now, just accept and acknowledge
     return {"ok": True, "message": "Settings updated"}
+
+
+# =============================================================================
+# EXAM STATS ENDPOINTS (Admin)
+# =============================================================================
+
+@router.get("/exam-stats")
+async def get_exam_stats(
+    time_range: str = Query("30d", alias="range"),
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """Get comprehensive exam statistics for admin dashboard"""
+    days = 30
+    if time_range == "7d":
+        days = 7
+    elif time_range == "90d":
+        days = 90
+
+    now = datetime.now(timezone.utc)
+    start_date = now - timedelta(days=days)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    week_ago = now - timedelta(days=7)
+
+    try:
+        # Total exams in period
+        total_exams = db.query(func.count(ExamResult.id)).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).scalar() or 0
+
+        total_exams_today = db.query(func.count(ExamResult.id)).filter(
+            ExamResult.completed_at >= today_start,
+            ExamResult.completed == True
+        ).scalar() or 0
+
+        total_exams_week = db.query(func.count(ExamResult.id)).filter(
+            ExamResult.completed_at >= week_ago,
+            ExamResult.completed == True
+        ).scalar() or 0
+
+        # Total questions answered
+        total_questions = db.query(func.sum(ExamResult.question_count)).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).scalar() or 0
+
+        # Average score
+        avg_score = db.query(func.avg(ExamResult.score_percent)).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).scalar() or 0.0
+
+        # Average time
+        avg_time_seconds = db.query(func.avg(ExamResult.time_spent_seconds)).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).scalar() or 0
+
+        # Unique users who took exams
+        unique_users = db.query(func.count(func.distinct(ExamResult.user_id))).filter(
+            ExamResult.completed_at >= start_date
+        ).scalar() or 0
+
+        # Top performers (highest avg score, min 2 exams)
+        top_performers_data = db.query(
+            ExamResult.user_id,
+            func.count(ExamResult.id).label('exam_count'),
+            func.avg(ExamResult.score_percent).label('avg_score'),
+            func.max(ExamResult.score_percent).label('best_score'),
+            func.sum(ExamResult.question_count).label('total_questions'),
+            func.sum(ExamResult.correct_answers).label('total_correct'),
+            func.avg(ExamResult.time_spent_seconds).label('avg_time'),
+            func.max(ExamResult.completed_at).label('last_exam')
+        ).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).group_by(ExamResult.user_id).having(
+            func.count(ExamResult.id) >= 1
+        ).order_by(desc('avg_score')).limit(10).all()
+
+        top_performers = []
+        for tp in top_performers_data:
+            user = db.query(User).filter(User.id == tp.user_id).first()
+            if user:
+                top_performers.append({
+                    "user_id": str(tp.user_id),
+                    "email": user.email,
+                    "full_name": user.full_name,
+                    "total_exams": tp.exam_count,
+                    "avg_score": round(tp.avg_score or 0, 1),
+                    "best_score": round(tp.best_score or 0, 1),
+                    "total_questions": tp.total_questions or 0,
+                    "total_correct": tp.total_correct or 0,
+                    "avg_time_minutes": round((tp.avg_time or 0) / 60, 1),
+                    "last_exam_at": tp.last_exam.isoformat() if tp.last_exam else None
+                })
+
+        # Recent exams
+        recent_exams_data = db.query(ExamResult).filter(
+            ExamResult.completed == True
+        ).order_by(desc(ExamResult.completed_at)).limit(10).all()
+
+        recent_exams = []
+        for exam in recent_exams_data:
+            user = db.query(User).filter(User.id == exam.user_id).first()
+            recent_exams.append({
+                "id": str(exam.id),
+                "user_email": user.email if user else "Unknown",
+                "user_name": user.full_name if user else None,
+                "score_percent": round(exam.score_percent, 1),
+                "correct_answers": exam.correct_answers,
+                "question_count": exam.question_count,
+                "time_spent_minutes": round(exam.time_spent_seconds / 60, 1),
+                "sources": exam.sources or [],
+                "completed_at": exam.completed_at.isoformat() if exam.completed_at else None
+            })
+
+        # Score distribution
+        score_distribution = {"0-20": 0, "20-40": 0, "40-60": 0, "60-80": 0, "80-100": 0}
+        all_scores = db.query(ExamResult.score_percent).filter(
+            ExamResult.completed_at >= start_date,
+            ExamResult.completed == True
+        ).all()
+        
+        for (score,) in all_scores:
+            if score < 20:
+                score_distribution["0-20"] += 1
+            elif score < 40:
+                score_distribution["20-40"] += 1
+            elif score < 60:
+                score_distribution["40-60"] += 1
+            elif score < 80:
+                score_distribution["60-80"] += 1
+            else:
+                score_distribution["80-100"] += 1
+
+        # By source (which question sources are most used)
+        # This requires parsing the JSON sources field - simplified for now
+        by_source = [
+            {"source": "doe25", "count": 0, "avg_score": 0},
+            {"source": "handson", "count": 0, "avg_score": 0},
+            {"source": "linux-commands", "count": 0, "avg_score": 0}
+        ]
+
+        # Daily exams chart
+        exams_by_day = []
+        for i in range(min(days, 14) - 1, -1, -1):
+            day_start = (now - timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
+            day_end = day_start + timedelta(days=1)
+            
+            day_count = db.query(func.count(ExamResult.id)).filter(
+                and_(
+                    ExamResult.completed_at >= day_start,
+                    ExamResult.completed_at < day_end,
+                    ExamResult.completed == True
+                )
+            ).scalar() or 0
+            
+            day_avg = db.query(func.avg(ExamResult.score_percent)).filter(
+                and_(
+                    ExamResult.completed_at >= day_start,
+                    ExamResult.completed_at < day_end,
+                    ExamResult.completed == True
+                )
+            ).scalar() or 0
+
+            exams_by_day.append({
+                "date": day_start.strftime("%Y-%m-%d"),
+                "count": day_count,
+                "avg_score": round(day_avg, 1)
+            })
+
+    except Exception as e:
+        # If table doesn't exist yet, return zeros
+        return {
+            "total_exams": 0,
+            "total_exams_today": 0,
+            "total_exams_week": 0,
+            "total_questions_answered": 0,
+            "avg_score": 0,
+            "avg_time_minutes": 0,
+            "unique_users": 0,
+            "top_performers": [],
+            "recent_exams": [],
+            "score_distribution": {"0-20": 0, "20-40": 0, "40-60": 0, "60-80": 0, "80-100": 0},
+            "by_source": [],
+            "exams_by_day": [],
+            "error": str(e)
+        }
+
+    return {
+        "total_exams": total_exams,
+        "total_exams_today": total_exams_today,
+        "total_exams_week": total_exams_week,
+        "total_questions_answered": total_questions,
+        "avg_score": round(avg_score, 1),
+        "avg_time_minutes": round(avg_time_seconds / 60, 1) if avg_time_seconds else 0,
+        "unique_users": unique_users,
+        "top_performers": top_performers,
+        "recent_exams": recent_exams,
+        "score_distribution": score_distribution,
+        "by_source": by_source,
+        "exams_by_day": exams_by_day
+    }
+
+
+@router.get("/exam-stats/user/{user_id}")
+async def get_user_exam_stats(
+    user_id: UUID,
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """Get exam statistics for a specific user"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    results = db.query(ExamResult).filter(
+        ExamResult.user_id == user_id,
+        ExamResult.completed == True
+    ).order_by(desc(ExamResult.completed_at)).all()
+
+    if not results:
+        return {
+            "user_id": str(user_id),
+            "email": user.email,
+            "full_name": user.full_name,
+            "total_exams": 0,
+            "avg_score": 0,
+            "best_score": 0,
+            "worst_score": 0,
+            "total_questions": 0,
+            "total_correct": 0,
+            "accuracy_percent": 0,
+            "avg_time_minutes": 0,
+            "exams": []
+        }
+
+    total_questions = sum(r.question_count for r in results)
+    total_correct = sum(r.correct_answers for r in results)
+    
+    return {
+        "user_id": str(user_id),
+        "email": user.email,
+        "full_name": user.full_name,
+        "total_exams": len(results),
+        "avg_score": round(sum(r.score_percent for r in results) / len(results), 1),
+        "best_score": round(max(r.score_percent for r in results), 1),
+        "worst_score": round(min(r.score_percent for r in results), 1),
+        "total_questions": total_questions,
+        "total_correct": total_correct,
+        "accuracy_percent": round(total_correct / total_questions * 100, 1) if total_questions > 0 else 0,
+        "avg_time_minutes": round(sum(r.time_spent_seconds for r in results) / len(results) / 60, 1),
+        "exams": [{
+            "id": str(r.id),
+            "score_percent": round(r.score_percent, 1),
+            "correct": r.correct_answers,
+            "total": r.question_count,
+            "time_minutes": round(r.time_spent_seconds / 60, 1),
+            "sources": r.sources or [],
+            "completed_at": r.completed_at.isoformat() if r.completed_at else None
+        } for r in results[:20]]
+    }
