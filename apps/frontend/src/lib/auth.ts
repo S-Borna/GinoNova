@@ -3,7 +3,8 @@
  * Phase 1.4: JWT authentication with email normalization and validation
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+// FIXED: Consistent API URL - production fallback for deployed environment
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 const TOKEN_KEY = "auth_token"
 
 // Validation constants

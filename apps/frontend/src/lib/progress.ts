@@ -4,7 +4,7 @@
  * Phase A.5: XP, Level, and Progress Calculations
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Types
 export type ProgressStatus = "not_started" | "in_progress" | "completed"

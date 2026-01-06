@@ -3,7 +3,7 @@
  * Phase 6.0: Dashboard Foundation
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Types matching backend response
 export interface DashboardUser {

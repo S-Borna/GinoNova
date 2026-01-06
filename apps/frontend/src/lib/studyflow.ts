@@ -3,7 +3,7 @@
  * Phase 4.0: Studyflow Foundation with standardized error handling
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Types matching backend schemas
 export interface StudyflowPublic {

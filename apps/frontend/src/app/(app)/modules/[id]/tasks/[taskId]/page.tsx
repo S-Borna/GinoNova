@@ -383,7 +383,7 @@ export default function TaskDetailPage() {
     const [isCompleted, setIsCompleted] = useState(false)
     const [taskProgress, setTaskProgress] = useState<any>(null)
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
     const token = getToken()
 
     // Check if task has interactive content blocks

@@ -8,7 +8,7 @@
  * - Denna sida visas i sidomenyn under "Studyroom"
  * - Här väljer användaren inställningar (tid, frågor, källa)
  * - Klick på "Starta" skickar till /study/tenta-simulator med URL-params
- * 
+ *
  * Vid ändringar av frågekällor (t.ex. nya quiz-moduler):
  * → Uppdatera DENNA FIL FÖRST (study/page.tsx)
  * → tenta-simulator/page.tsx används för själva quiz-körningen

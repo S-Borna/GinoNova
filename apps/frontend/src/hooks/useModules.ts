@@ -12,6 +12,9 @@ import { useQuery } from "@tanstack/react-query"
 import { queryKeys } from "@/lib/queryClient"
 import { api } from "@/lib/api/client"
 
+// FIXED: Use consistent API URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
+
 /* ============================================================================
    TYPES
    ============================================================================ */
@@ -159,8 +162,8 @@ export function useModules() {
         queryKey: queryKeys.modules,
         queryFn: async () => {
             try {
-                // Direct fetch to backend - CORRECT URL without /v1/
-                const response = await fetch("http://localhost:8000/api/modules/")
+                // FIXED: Use consistent API URL
+                const response = await fetch(`${API_BASE_URL}/api/modules/`)
                 if (!response.ok) {
                     console.warn("Modules API unavailable, using mock data")
                     return MOCK_MODULES

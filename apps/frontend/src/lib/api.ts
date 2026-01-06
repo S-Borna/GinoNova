@@ -3,7 +3,7 @@ export interface SystemInfo {
     version: string
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 export async function getSystemInfo(): Promise<SystemInfo> {
     const res = await fetch(`${API_BASE_URL}/api/system/info`)

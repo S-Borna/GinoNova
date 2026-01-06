@@ -89,7 +89,7 @@ function useSearch(query: string) {
       setError(null)
 
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.ginonova.com'
         const res = await fetch(
           `${apiUrl}/api/search?q=${encodeURIComponent(debouncedQuery)}&limit=10`
         )
