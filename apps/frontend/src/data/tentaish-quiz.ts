@@ -1248,6 +1248,15 @@ const SUBNETTING_QUIZ: TentaishQuestion[] = [
 ]
 
 // =============================================================================
+// IMPORT EXTRA QUESTIONS (200 nya frågor)
+// =============================================================================
+
+import { FILSYSTEM_EXTRA, ANVANDARE_EXTRA } from './tentaish-extra-1'
+import { PAKET_EXTRA, SSH_EXTRA } from './tentaish-extra-2'
+import { DOCKER_EXTRA, DISK_EXTRA } from './tentaish-extra-3'
+import { SUBNETTING_EXTRA } from './tentaish-extra-4'
+
+// =============================================================================
 // EXPORT
 // =============================================================================
 
@@ -1255,37 +1264,37 @@ export const TENTAISH_QUIZ: TentaishQuizSet[] = [
     {
         taskId: 'filsystem',
         taskTitle: 'Filsystem & Grundläggande',
-        questions: FILSYSTEM_QUIZ
+        questions: [...FILSYSTEM_QUIZ, ...FILSYSTEM_EXTRA]
     },
     {
         taskId: 'anvandare',
         taskTitle: 'Användarhantering & Permissions',
-        questions: ANVANDARE_QUIZ
+        questions: [...ANVANDARE_QUIZ, ...ANVANDARE_EXTRA]
     },
     {
         taskId: 'paket',
         taskTitle: 'Pakethantering (APT/DNF)',
-        questions: PAKET_QUIZ
+        questions: [...PAKET_QUIZ, ...PAKET_EXTRA]
     },
     {
         taskId: 'ssh',
         taskTitle: 'SSH & Brandvägg',
-        questions: SSH_QUIZ
+        questions: [...SSH_QUIZ, ...SSH_EXTRA]
     },
     {
         taskId: 'docker',
         taskTitle: 'Docker & Containers',
-        questions: DOCKER_QUIZ
+        questions: [...DOCKER_QUIZ, ...DOCKER_EXTRA]
     },
     {
         taskId: 'disk',
         taskTitle: 'Disk & LUKS-kryptering',
-        questions: DISK_QUIZ
+        questions: [...DISK_QUIZ, ...DISK_EXTRA]
     },
     {
         taskId: 'subnetting',
         taskTitle: 'Subnetting & Nätverk',
-        questions: SUBNETTING_QUIZ
+        questions: [...SUBNETTING_QUIZ, ...SUBNETTING_EXTRA]
     }
 ]
 
