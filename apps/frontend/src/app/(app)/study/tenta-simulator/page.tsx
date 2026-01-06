@@ -1244,6 +1244,58 @@ export default function TentaSimulatorPage() {
                         </div>
                     )}
 
+                {/* Question-by-question results - NEW */}
+                <div className="mb-8">
+                    <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-green-400" />
+                        Dina svar
+                    </h2>
+                    <div className="space-y-3">
+                        {results.map((result, idx) => {
+                            const question = questions.find(q => q.id === result.questionId)
+                            if (!question) return null
+                            
+                            return (
+                                <div
+                                    key={result.questionId}
+                                    className={cn(
+                                        "rounded-xl p-4",
+                                        result.correct 
+                                            ? "bg-green-500/10 border border-green-500/20" 
+                                            : "bg-red-500/10 border border-red-500/20"
+                                    )}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <span className={cn(
+                                            "flex-shrink-0 mt-0.5",
+                                            result.correct ? "text-green-400" : "text-red-400"
+                                        )}>
+                                            {result.correct ? (
+                                                <CheckCircle className="w-5 h-5" />
+                                            ) : (
+                                                <XCircle className="w-5 h-5" />
+                                            )}
+                                        </span>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-white font-medium mb-1">
+                                                {idx + 1}. {question.question}
+                                            </p>
+                                            <p className="text-zinc-400 text-sm">
+                                                Ditt svar: {question.options[result.selectedIndex]}
+                                            </p>
+                                            {!result.correct && (
+                                                <p className="text-red-400 text-sm mt-1">
+                                                    Rätt svar: {question.options[question.correctIndex]}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                </div>
+
                 {/* Actions */}
                 <div className="flex gap-4">
                     <button
@@ -1251,7 +1303,7 @@ export default function TentaSimulatorPage() {
                         className="flex-1 py-4 rounded-xl border border-zinc-700 text-zinc-300 hover:border-zinc-600 flex items-center justify-center gap-2"
                     >
                         <BookOpen className="w-5 h-5" />
-                        Granska svar
+                        Detaljerad granskning
                     </button>
                     <button
                         onClick={() => setPhase('setup')}

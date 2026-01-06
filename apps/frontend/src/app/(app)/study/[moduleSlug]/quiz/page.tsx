@@ -92,6 +92,9 @@ function QuizContent() {
     const [error, setError] = useState<string | null>(null)
     const [moduleTitle, setModuleTitle] = useState("")
     const [showHint, setShowHint] = useState(false)
+    
+    // Store all answers for results review
+    const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number; correct: boolean }[]>([])
 
     // Star modal
     const [showStarModal, setShowStarModal] = useState(false)
@@ -210,6 +213,14 @@ function QuizContent() {
         if (isCorrect) {
             setScore(prev => prev + 1)
         }
+        
+        // Store answer for results review
+        setAnswers(prev => [...prev, {
+            questionId: questions[currentIndex].id,
+            selectedIndex: selectedAnswer,
+            correct: isCorrect
+        }])
+        
         setShowResult(true)
     }
 
@@ -228,6 +239,7 @@ function QuizContent() {
         setShowResult(false)
         setScore(0)
         setShowHint(false)
+        setAnswers([])
     }
 
     if (loading) {
@@ -266,54 +278,24 @@ function QuizContent() {
         return (
             <div className="min-h-screen bg-zinc-950 text-white p-8">
                 <div className="max-w-2xl mx-auto">
-                    {/* Current Question Result */}
-                    <div className="mb-8">
-                        <div className={cn(
-                            "p-6 rounded-xl mb-4",
-                            isCorrect
-                                ? "bg-emerald-500/10 border border-emerald-500/30"
-                                : "bg-red-500/10 border border-red-500/30"
-                        )}>
-                            <div className="flex items-center gap-2 mb-2">
-                                {isCorrect ? (
-                                    <CheckCircle className="w-5 h-5 text-emerald-400" />
-                                ) : (
-                                    <XCircle className="w-5 h-5 text-red-400" />
-                                )}
-                                <span className={isCorrect ? "text-emerald-400" : "text-red-400"}>
-                                    {isCorrect ? "Rätt!" : "Fel"}
-                                </span>
-                            </div>
-                            {questions[currentIndex].explanation && (
-                                <p className="text-sm text-zinc-400">
-                                    {questions[currentIndex].explanation}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
                     {/* Final Score */}
-                    <div className="text-center py-12">
-                        <h1 className="text-3xl font-bold mb-4">Quiz Klart!</h1>
-
+                    <div className="text-center py-8">
                         <div className={cn(
-                            "w-32 h-32 rounded-full mx-auto mb-6",
-                            "flex items-center justify-center",
-                            "text-4xl font-bold",
+                            "text-6xl font-bold mb-2",
                             finalPercentage >= 80
-                                ? "bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/30"
+                                ? "text-emerald-400"
                                 : finalPercentage >= 60
-                                    ? "bg-yellow-500/20 text-yellow-400 border-2 border-yellow-500/30"
-                                    : "bg-red-500/20 text-red-400 border-2 border-red-500/30"
+                                    ? "text-yellow-400"
+                                    : "text-red-400"
                         )}>
                             {finalPercentage}%
                         </div>
 
                         <p className="text-xl text-zinc-300 mb-2">
-                            {finalScore} av {questions.length} rätt
+                            Du fick {finalScore} av {questions.length} rätt
                         </p>
 
-                        <p className="text-zinc-500 mb-8">
+                        <p className="text-zinc-500 mb-6">
                             {finalPercentage >= 80
                                 ? "Utmärkt! Du har koll på materialet! 🎉"
                                 : finalPercentage >= 60
@@ -321,29 +303,82 @@ function QuizContent() {
                                     : "Fortsätt öva! Du kommer dit! 💪"
                             }
                         </p>
-
-                        <div className="flex gap-4 justify-center">
-                            <button
-                                onClick={resetQuiz}
-                                className={cn(
-                                    "flex items-center gap-2 px-6 py-3 rounded-lg",
-                                    "bg-zinc-800 hover:bg-zinc-700 transition-colors"
-                                )}
-                            >
-                                <RotateCcw className="w-4 h-4" />
-                                Försök igen
-                            </button>
-                            <Link
-                                href="/study"
-                                prefetch={false}
-                                className={cn(
-                                    "flex items-center gap-2 px-6 py-3 rounded-lg",
-                                    "bg-blue-600 hover:bg-blue-500 transition-colors"
-                                )}
-                            >
-                                Tillbaka till Studyroom
-                            </Link>
+                    </div>
+                    
+                    {/* Detailed Results - Question by Question */}
+                    <div className="mb-8">
+                        <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                            <CheckCircle className="w-5 h-5 text-emerald-400" />
+                            Dina svar
+                        </h2>
+                        <div className="space-y-3">
+                            {answers.map((answer, idx) => {
+                                const question = questions.find(q => q.id === answer.questionId)
+                                if (!question) return null
+                                
+                                return (
+                                    <div
+                                        key={answer.questionId}
+                                        className={cn(
+                                            "rounded-xl p-4",
+                                            answer.correct 
+                                                ? "bg-emerald-500/10 border border-emerald-500/20" 
+                                                : "bg-red-500/10 border border-red-500/20"
+                                        )}
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <span className={cn(
+                                                "flex-shrink-0 mt-0.5",
+                                                answer.correct ? "text-emerald-400" : "text-red-400"
+                                            )}>
+                                                {answer.correct ? (
+                                                    <CheckCircle className="w-5 h-5" />
+                                                ) : (
+                                                    <XCircle className="w-5 h-5" />
+                                                )}
+                                            </span>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-white font-medium mb-1">
+                                                    {idx + 1}. {question.question}
+                                                </p>
+                                                <p className="text-zinc-400 text-sm">
+                                                    Ditt svar: {question.options[answer.selectedIndex]}
+                                                </p>
+                                                {!answer.correct && (
+                                                    <p className="text-red-400 text-sm mt-1">
+                                                        Rätt svar: {question.options[question.correct]}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
                         </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-4 justify-center">
+                        <button
+                            onClick={resetQuiz}
+                            className={cn(
+                                "flex items-center gap-2 px-6 py-3 rounded-lg",
+                                "bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                            )}
+                        >
+                            <RotateCcw className="w-4 h-4" />
+                            Försök igen
+                        </button>
+                        <Link
+                            href="/study"
+                            prefetch={false}
+                            className={cn(
+                                "flex items-center gap-2 px-6 py-3 rounded-lg",
+                                "bg-blue-600 hover:bg-blue-500 transition-colors"
+                            )}
+                        >
+                            Tillbaka till Studyroom
+                        </Link>
                     </div>
                 </div>
             </div>
