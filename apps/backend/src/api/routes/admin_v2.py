@@ -690,7 +690,7 @@ async def delete_user(
     db: Session = Depends(get_db),
     admin: UserPublic = Depends(require_admin)
 ):
-    """Delete a user permanently"""
+    """Delete a user permanently - cascades to related data"""
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -699,10 +699,33 @@ async def delete_user(
     if user.id == admin.id:
         raise HTTPException(status_code=400, detail="Cannot delete yourself")
 
-    db.delete(user)
-    db.commit()
-
-    return {"ok": True, "message": "User deleted successfully"}
+    try:
+        # Delete related data first (foreign key constraints)
+        # Progress
+        from src.db.models import Progress
+        db.query(Progress).filter(Progress.user_id == user_id).delete()
+        
+        # Exam results
+        db.query(ExamResult).filter(ExamResult.user_id == user_id).delete()
+        
+        # AI Usage logs
+        db.query(AIUsageLog).filter(AIUsageLog.user_id == user_id).delete()
+        
+        # Bookmarks (if exists)
+        try:
+            from src.db.models import Bookmark
+            db.query(Bookmark).filter(Bookmark.user_id == user_id).delete()
+        except Exception:
+            pass
+        
+        # Now delete the user
+        db.delete(user)
+        db.commit()
+        
+        return {"ok": True, "message": f"User {user.email} deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete user: {str(e)}")
 
 
 @router.post("/users/{user_id}/ban")
