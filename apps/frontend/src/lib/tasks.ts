@@ -4,7 +4,7 @@
  * Phase 4.0: Added task_tier and parent_task_id for related tasks (fördjupning)
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Difficulty type
 export type DifficultyLevel = "easy" | "medium" | "hard"

@@ -2,11 +2,11 @@
 
 /**
  * Tenta-Simulator - Quiz Engine (INTE HUVUDSIDAN!)
- * 
+ *
  * ⚠️ VIKTIGT: Detta är QUIZ-MOTORN, inte setup-sidan!
  * → Huvudsidan för val av inställningar är: /study/page.tsx (Studyroom)
  * → Vid ändringar av frågekällor: UPPDATERA study/page.tsx FÖRST!
- * 
+ *
  * Denna sida:
  * - Tar emot inställningar via URL-params från Studyroom
  * - Kör själva quizzen med timer, frågor, resultat
@@ -343,7 +343,11 @@ export default function TentaSimulatorPage() {
         hasSubmittedResult.current = true
 
         const token = getToken()
-        if (!token || finalResults.length === 0) return
+        if (!token || finalResults.length === 0) {
+            console.warn('[ExamResult] Skipped: no token or no results')
+            hasSubmittedResult.current = false // Allow retry if conditions change
+            return
+        }
 
         try {
             // Calculate G/VG stats
@@ -367,10 +371,14 @@ export default function TentaSimulatorPage() {
             const totalTime = finalResults.reduce((a, r) => a + r.timeSpent, 0)
             const scorePercent = Math.round((correctCount / finalResults.length) * 100)
 
+            // FIXED: Include ALL required fields for backend
             const payload = {
                 duration_minutes: settings.duration,
                 question_count: examQuestions.length,
                 sources: settings.selectedSources,
+                include_g: settings.includeG,
+                include_vg: settings.includeVG,
+                grading_mode: settings.gradingMode,
                 correct_answers: correctCount,
                 wrong_answers: finalResults.filter(r => !r.correct).length,
                 skipped_answers: examQuestions.length - finalResults.length,
@@ -380,10 +388,13 @@ export default function TentaSimulatorPage() {
                 vg_correct: vgStats.correct,
                 vg_total: vgStats.total,
                 time_spent_seconds: totalTime,
-                started_at: startTime?.toISOString() || new Date().toISOString()
+                started_at: startTime?.toISOString() || new Date().toISOString(),
+                completed: true
             }
 
-            await fetch(`${API_BASE_URL}/api/exam/submit`, {
+            console.log('[ExamResult] Submitting result...', { questionCount: payload.question_count, score: payload.score_percent })
+
+            const response = await fetch(`${API_BASE_URL}/api/exam/submit`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -391,9 +402,28 @@ export default function TentaSimulatorPage() {
                 },
                 body: JSON.stringify(payload)
             })
+
+            // FIXED: Actually check response status!
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }))
+                console.error('[ExamResult] Server error:', response.status, errorData)
+                
+                if (response.status === 401) {
+                    console.error('[ExamResult] Auth token expired or invalid - result NOT saved!')
+                    // Don't reset hasSubmittedResult - token won't magically become valid
+                } else {
+                    // For other errors, allow retry
+                    hasSubmittedResult.current = false
+                }
+                return
+            }
+
+            const result = await response.json()
+            console.log('[ExamResult] ✓ Saved successfully! ID:', result.id)
         } catch (err) {
-            // Silent fail - don't interrupt user experience
-            console.error('Failed to save exam result:', err)
+            // Network error - allow retry
+            hasSubmittedResult.current = false
+            console.error('[ExamResult] Network error - will allow retry:', err)
         }
     }, [settings])
 

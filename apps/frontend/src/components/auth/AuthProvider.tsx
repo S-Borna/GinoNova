@@ -89,9 +89,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
             try {
                 const userData = await getMe()
                 setUser(userData)
-            } catch {
-                // Token invalid or expired
-                setUser(null)
+            } catch (err) {
+                // FIXED: Distinguish between auth errors and network errors
+                const isNetworkError = err instanceof TypeError && err.message.includes('fetch')
+                
+                if (isNetworkError) {
+                    // Network error - don't log out user, keep token for retry
+                    console.warn('[Auth] Network error validating token - keeping session')
+                    // User stays null but we don't remove token - they can retry
+                } else {
+                    // Token actually invalid (401/403) - clear it
+                    console.warn('[Auth] Token invalid or expired - logging out')
+                    setUser(null)
+                    // Import removeToken if needed, or just leave user null
+                }
             } finally {
                 setLoading(false)
             }
@@ -110,15 +121,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
         try {
             const userData = await getMe()
             setUser(userData)
-        } catch {
-            // Token invalid or expired
-            setUser(null)
+        } catch (err) {
+            // FIXED: Only clear user on actual auth errors, not network issues
+            const isNetworkError = err instanceof TypeError && err.message.includes('fetch')
+            if (!isNetworkError) {
+                setUser(null)
+            } else {
+                console.warn('[Auth] Network error during refresh - keeping session')
+            }
         }
     }, [])
 
     // Heartbeat: Update last_activity_at for online status tracking
     useEffect(() => {
         if (!user) return
+
+        // FIXED: Use environment variable consistently
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
         const heartbeat = async () => {
             const token = getToken()
@@ -129,7 +148,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
             try {
                 // Call backend /me endpoint to update last_activity_at
-                const response = await fetch(`https://api.ginonova.com/api/auth/me`, {
+                const response = await fetch(`${API_URL}/api/auth/me`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

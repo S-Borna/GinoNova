@@ -1,6 +1,7 @@
 """
 JWT Token handling - Creation and validation
 """
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 from uuid import UUID
@@ -11,9 +12,14 @@ from jose import JWTError, jwt
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_HOURS = 24
 
-# Secret key - in production, use a secure random key from environment
-# TODO: Move to settings in production
-SECRET_KEY = "devops-hub-secret-key-change-in-production-abc123xyz789"
+# CRITICAL: Secret key MUST be read from environment in production
+# Support both JWT_SECRET_KEY and JWT_SECRET for backwards compatibility
+SECRET_KEY = os.getenv("JWT_SECRET_KEY") or os.getenv("JWT_SECRET", "devops-hub-secret-key-change-in-production-abc123xyz789")
+
+# Log warning if using default key
+if SECRET_KEY == "devops-hub-secret-key-change-in-production-abc123xyz789":
+    import logging
+    logging.warning("⚠️  JWT using default SECRET_KEY - set JWT_SECRET_KEY or JWT_SECRET in production!")
 
 
 def create_access_token(
