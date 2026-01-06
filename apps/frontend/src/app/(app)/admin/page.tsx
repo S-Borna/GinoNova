@@ -21,7 +21,11 @@ import {
     ArrowRight,
     CheckCircle,
     AlertTriangle,
-    Trophy
+    Trophy,
+    Bell,
+    LogIn,
+    UserCheck,
+    FileCheck
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -57,6 +61,17 @@ interface SystemHealth {
     database: { status: string; latency_ms: number }
     api: { status: string; latency_ms: number }
     openai: { status: string; rate_limit_percent: number }
+}
+
+interface ActivityLogEntry {
+    id: string
+    timestamp: string
+    type: "login" | "registration" | "exam_completed"
+    user_email: string
+    user_name: string | null
+    user_id: string
+    details: string | null
+    oauth_provider: string | null
 }
 
 // Components
@@ -187,10 +202,108 @@ function ActivityChart({ data, loading }: { data: ActivityData[], loading: boole
     )
 }
 
+function ActivityFeed({ activities, loading }: { activities: ActivityLogEntry[], loading: boolean }) {
+    const getIcon = (type: string) => {
+        switch (type) {
+            case "login":
+                return <LogIn className="w-4 h-4 text-green-400" />
+            case "registration":
+                return <UserCheck className="w-4 h-4 text-blue-400" />
+            case "exam_completed":
+                return <FileCheck className="w-4 h-4 text-yellow-400" />
+            default:
+                return <Activity className="w-4 h-4 text-zinc-400" />
+        }
+    }
+
+    const getTypeLabel = (type: string) => {
+        switch (type) {
+            case "login":
+                return "logged in"
+            case "registration":
+                return "registered"
+            case "exam_completed":
+                return "completed exam"
+            default:
+                return type
+        }
+    }
+
+    const formatTime = (timestamp: string) => {
+        const date = new Date(timestamp)
+        const now = new Date()
+        const diffMs = now.getTime() - date.getTime()
+        const diffMins = Math.floor(diffMs / 60000)
+        const diffHours = Math.floor(diffMs / 3600000)
+
+        if (diffMins < 1) return "just now"
+        if (diffMins < 60) return `${diffMins}m ago`
+        if (diffHours < 24) return `${diffHours}h ago`
+        return date.toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+    }
+
+    if (loading) {
+        return (
+            <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="animate-pulse flex items-center gap-3">
+                        <div className="w-8 h-8 bg-zinc-700 rounded-full" />
+                        <div className="flex-1">
+                            <div className="h-4 w-32 bg-zinc-700 rounded mb-1" />
+                            <div className="h-3 w-24 bg-zinc-700 rounded" />
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
+    if (!activities.length) {
+        return (
+            <div className="text-center py-8 text-zinc-500">
+                <Bell className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p>No recent activity</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-3 max-h-80 overflow-y-auto">
+            {activities.map((entry) => (
+                <div key={entry.id} className="flex items-start gap-3 p-2 rounded-lg hover:bg-zinc-800/50 transition">
+                    <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center flex-shrink-0">
+                        {getIcon(entry.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-sm">
+                            <span className="font-medium text-white">
+                                {entry.user_name || entry.user_email.split('@')[0]}
+                            </span>
+                            <span className="text-zinc-400"> {getTypeLabel(entry.type)}</span>
+                        </p>
+                        <div className="flex items-center gap-2 text-xs text-zinc-500">
+                            <span>{formatTime(entry.timestamp)}</span>
+                            {entry.oauth_provider && entry.oauth_provider !== "refresh" && (
+                                <span className="px-1.5 py-0.5 bg-zinc-800 rounded text-zinc-400">
+                                    {entry.oauth_provider}
+                                </span>
+                            )}
+                        </div>
+                        {entry.details && entry.type === "exam_completed" && (
+                            <p className="text-xs text-zinc-500 mt-1 truncate">{entry.details}</p>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
 // Main Component
 export default function AdminV2Dashboard() {
     const [stats, setStats] = useState<OverviewStats | null>(null)
     const [activity, setActivity] = useState<ActivityData[]>([])
+    const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([])
     const [health, setHealth] = useState<SystemHealth | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -210,10 +323,11 @@ export default function AdminV2Dashboard() {
             // Fetch all data in parallel
             const fetchOptions = { headers: { Authorization: `Bearer ${token}` } }
 
-            const [statsRes, activityRes, healthRes] = await Promise.all([
+            const [statsRes, activityRes, healthRes, activityLogRes] = await Promise.all([
                 fetch(`${API_BASE_URL}/api/admin/stats/overview`, fetchOptions),
                 fetch(`${API_BASE_URL}/api/admin/stats/activity?days=7`, fetchOptions),
-                fetch(`${API_BASE_URL}/api/admin/stats/system-health`, fetchOptions)
+                fetch(`${API_BASE_URL}/api/admin/stats/system-health`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/activity-log?limit=20`, fetchOptions)
             ])
 
             if (statsRes.ok) {
@@ -235,6 +349,13 @@ export default function AdminV2Dashboard() {
                 setHealth(healthData)
             } else {
                 console.error("Health API error:", healthRes.status, await healthRes.text())
+            }
+
+            if (activityLogRes.ok) {
+                const activityLogData = await activityLogRes.json()
+                setActivityLog(activityLogData.activities || [])
+            } else {
+                console.error("Activity Log API error:", activityLogRes.status)
             }
 
             setLastUpdated(new Date())
@@ -353,6 +474,20 @@ export default function AdminV2Dashboard() {
                         />
                     </div>
                 </div>
+            </div>
+
+            {/* Activity Feed */}
+            <div className="bg-zinc-900/50 rounded-xl border border-zinc-800 p-5 mb-8">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <Bell className="w-5 h-5 text-purple-400" />
+                        <h2 className="font-semibold">Live Activity Feed</h2>
+                    </div>
+                    <span className="text-xs text-zinc-500">
+                        Auto-updates every 30s
+                    </span>
+                </div>
+                <ActivityFeed activities={activityLog} loading={loading} />
             </div>
 
             {/* Quick Actions */}
