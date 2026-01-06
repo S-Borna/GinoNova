@@ -140,9 +140,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
         const heartbeat = async () => {
-            const token = getToken()
+            // Try localStorage token first
+            let token = getToken()
+            
+            // If no localStorage token, try to get from NextAuth session
+            if (!token && session?.accessToken) {
+                token = session.accessToken
+                // Also store it in localStorage for other API calls
+                storeToken(token)
+                console.log('[Heartbeat] Using NextAuth session token')
+            }
+            
             if (!token) {
-                console.warn('[Heartbeat] No token found')
+                console.warn('[Heartbeat] No token found in localStorage or session')
                 return
             }
 
@@ -155,6 +165,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 })
                 if (!response.ok) {
                     console.warn('[Heartbeat] Failed:', response.status)
+                    // If 401, token is expired - try to refresh from session
+                    if (response.status === 401 && session?.accessToken) {
+                        console.log('[Heartbeat] Token expired, refreshing from session')
+                        storeToken(session.accessToken)
+                    }
                 }
             } catch (err) {
                 console.warn('[Heartbeat] Error:', err)
