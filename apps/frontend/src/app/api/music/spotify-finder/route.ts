@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server'
 
 /**
  * Spotify Track Finder API
- * 
+ *
  * Uses Deezer + Songlink to find Spotify track ID.
  * NO SPOTIFY API KEYS NEEDED!
- * 
+ *
  * Flow: Track name → Deezer → Songlink → Spotify embed URL
  */
 
@@ -23,14 +23,14 @@ export async function GET(request: Request) {
     }
 
     const cacheKey = `${track}-${artist}`.toLowerCase()
-    
+
     // Check cache
     const cached = trackCache.get(cacheKey)
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return NextResponse.json({ 
+        return NextResponse.json({
             spotifyId: cached.spotifyId,
             embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0`,
-            cached: true 
+            cached: true
         })
     }
 
@@ -38,13 +38,13 @@ export async function GET(request: Request) {
         // Step 1: Search Deezer for track ID
         const query = encodeURIComponent(`${track} ${artist}`)
         const deezerRes = await fetch(`https://api.deezer.com/search?q=${query}&limit=1`)
-        
+
         if (!deezerRes.ok) {
             throw new Error('Deezer search failed')
         }
 
         const deezerData = await deezerRes.json()
-        
+
         if (!deezerData.data || deezerData.data.length === 0) {
             return NextResponse.json({ error: 'Track not found on Deezer' }, { status: 404 })
         }
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
         }
 
         const songlinkData = await songlinkRes.json()
-        
+
         // Extract Spotify ID
         const spotifyEntity = songlinkData.linksByPlatform?.spotify
         if (!spotifyEntity) {
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
         // Cache result
         trackCache.set(cacheKey, { spotifyId, timestamp: Date.now() })
 
-        return NextResponse.json({ 
+        return NextResponse.json({
             spotifyId,
             embedUrl: `https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0`,
             cached: false
@@ -86,7 +86,7 @@ export async function GET(request: Request) {
 
     } catch (error) {
         console.error('[Spotify Finder] Error:', error)
-        return NextResponse.json({ 
+        return NextResponse.json({
             error: 'Failed to find track',
             details: error instanceof Error ? error.message : 'Unknown'
         }, { status: 500 })

@@ -2,7 +2,7 @@
 
 /**
  * Spotify Live Player Widget
- * 
+ *
  * Shows what Said is listening to with REAL Spotify embed.
  * NO API KEYS NEEDED - uses Deezer + Songlink to find Spotify track.
  */
@@ -11,9 +11,9 @@ import * as React from "react"
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { 
-    Music, 
-    Volume2, 
+import {
+    Music,
+    Volume2,
     VolumeX,
     Radio,
     Headphones,
@@ -51,28 +51,26 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
             if (res.ok) {
                 const data = await res.json()
                 if (data.track) {
-                    const newTrack = {
-                        isPlaying: data.isPlaying,
-                        name: data.track.name,
-                        artist: data.track.artist,
-                        album: data.track.album,
-                        albumArt: data.track.albumArt,
-                    }
-                    
-                    const newKey = `${newTrack.name}-${newTrack.artist}`
-                    
-                    // Only update if track changed
+                    const newKey = `${data.track.name}-${data.track.artist}`
+
+                    // Only update if track actually changed (prevent re-renders)
                     if (newKey !== lastTrackKey) {
-                        setTrack(newTrack)
+                        setTrack({
+                            isPlaying: data.isPlaying,
+                            name: data.track.name,
+                            artist: data.track.artist,
+                            album: data.track.album,
+                            albumArt: data.track.albumArt,
+                        })
                         setLastTrackKey(newKey)
                         setEmbedUrl(null) // Reset embed for new track
-                    } else if (track) {
-                        // Just update isPlaying status
-                        setTrack(prev => prev ? { ...prev, isPlaying: data.isPlaying } : null)
                     }
+                    // Don't update state if track is the same - prevents iframe reload
                 } else {
-                    setTrack(null)
-                    setEmbedUrl(null)
+                    if (track !== null) {
+                        setTrack(null)
+                        setEmbedUrl(null)
+                    }
                 }
             }
         } catch (error) {
@@ -85,7 +83,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     // Fetch Spotify embed URL
     const fetchSpotifyEmbed = useCallback(async () => {
         if (!track?.name || !track?.artist || embedUrl) return
-        
+
         setEmbedLoading(true)
         try {
             const res = await fetch(
@@ -207,7 +205,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     onClick={(e) => { e.stopPropagation(); toggleMute(); }}
                     className={cn(
                         "p-2 rounded-full transition-colors",
-                        isMuted 
+                        isMuted
                             ? "bg-zinc-800 hover:bg-zinc-700 text-zinc-400"
                             : "bg-green-500 hover:bg-green-400 text-black"
                     )}
@@ -217,20 +215,20 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 </button>
             </motion.div>
 
-            {/* Expanded Spotify Player */}
+            {/* Expanded Spotify Player - Flyout to the left */}
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        initial={{ opacity: 0, x: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
                         className={cn(
-                            "absolute top-full left-0 right-0 mt-2 z-50",
+                            "absolute top-0 right-full mr-2 z-50",
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900 border border-zinc-800",
                             "shadow-2xl shadow-black/50",
-                            "min-w-[300px]"
+                            "w-[320px]"
                         )}
                     >
                         {/* Header */}
@@ -253,6 +251,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         <div className="relative" style={{ height: isMuted ? 100 : 152 }}>
                             {!isMuted && embedUrl ? (
                                 <iframe
+                                    key={embedUrl}
                                     src={embedUrl}
                                     width="100%"
                                     height="152"
