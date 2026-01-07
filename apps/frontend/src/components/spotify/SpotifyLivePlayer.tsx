@@ -1,10 +1,9 @@
 "use client"
 
 /**
- * Spotify Live Player Widget
+ * Spotify Live Player - ONE CLICK TO PLAY
  * 
- * SIMPLE: Click widget → Music starts playing
- * NO flyout, NO extra buttons, just ONE CLICK
+ * Klicka widgeten → Musik spelas DIREKT i dina högtalare
  */
 
 import * as React from "react"
@@ -17,7 +16,8 @@ import {
     Radio,
     Headphones,
     Loader2,
-    Play
+    Play,
+    Square
 } from "lucide-react"
 
 interface Track {
@@ -35,10 +35,11 @@ interface SpotifyLivePlayerProps {
 export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
-    const [isPlayingOnWebsite, setIsPlayingOnWebsite] = useState(false)
+    const [musicPlaying, setMusicPlaying] = useState(false) // Is music playing on website?
     const [embedUrl, setEmbedUrl] = useState<string | null>(null)
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
+    const iframeRef = React.useRef<HTMLIFrameElement>(null)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -101,30 +102,33 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     useEffect(() => {
         fetchNowPlaying()
-        // STOP polling completely when playing to prevent music interruption
-        if (!isPlayingOnWebsite) {
+        // Poll every 30 seconds UNLESS music is playing (to avoid interruption)
+        if (!musicPlaying) {
             const interval = setInterval(fetchNowPlaying, 30000)
             return () => clearInterval(interval)
         }
-    }, [isPlayingOnWebsite]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [musicPlaying]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Fetch embed when user starts playing
+    // Auto-fetch embed when track changes
     useEffect(() => {
-        if (isPlayingOnWebsite && track && !embedUrl && !embedLoading) {
+        if (track && !embedUrl && !embedLoading) {
             fetchSpotifyEmbed()
         }
-    }, [isPlayingOnWebsite, track, embedUrl, embedLoading, fetchSpotifyEmbed])
+    }, [track, embedUrl, embedLoading, fetchSpotifyEmbed])
 
-    // Handle widget click - START MUSIC IMMEDIATELY
-    const handleWidgetClick = () => {
-        if (!isPlayingOnWebsite && track) {
-            setIsPlayingOnWebsite(true)
-            // Fetch embed if not already loaded
+    // Handle widget click - PLAY MUSIC NOW
+    const handleWidgetClick = async () => {
+        if (!track) return
+
+        if (!musicPlaying) {
+            // START PLAYING
             if (!embedUrl && !embedLoading) {
-                fetchSpotifyEmbed()
+                await fetchSpotifyEmbed()
             }
-        } else if (isPlayingOnWebsite) {
-            setIsPlayingOnWebsite(false)
+            setMusicPlaying(true)
+        } else {
+            // STOP PLAYING
+            setMusicPlaying(false)
         }
     }
 
@@ -159,21 +163,23 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     return (
         <div className={cn("relative", className)}>
-            {/* Hidden Spotify Embed - Plays music in background */}
-            {isPlayingOnWebsite && embedUrl && (
+            {/* SPOTIFY EMBED - Plays music when clicked */}
+            {musicPlaying && embedUrl && (
                 <iframe
+                    ref={iframeRef}
                     key={embedUrl}
                     src={`${embedUrl}&autoplay=1`}
-                    width="0"
-                    height="0"
+                    width="300"
+                    height="80"
                     frameBorder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="eager"
-                    style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
+                    className="absolute top-0 left-0 opacity-0 pointer-events-none"
+                    style={{ zIndex: -1 }}
                 />
             )}
 
-            {/* Main Widget - ONE CLICK TO PLAY */}
+            {/* WIDGET - Click to play */}
             <motion.div
                 className={cn(
                     "flex items-center gap-2 px-2 py-1.5 rounded-xl cursor-pointer",
@@ -181,7 +187,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
                     "h-[56px] w-[280px]",
-                    isPlayingOnWebsite && "border-green-500/60 shadow-lg shadow-green-500/20"
+                    musicPlaying && "border-green-500/60 shadow-lg shadow-green-500/20 ring-2 ring-green-500/30"
                 )}
                 onClick={handleWidgetClick}
                 whileHover={{ scale: 1.02 }}
@@ -200,12 +206,12 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             <Music className="w-5 h-5 text-zinc-500" />
                         </div>
                     )}
-                    {/* Only show Spotify indicator if ACTUALLY playing on Spotify */}
-                    {track.isPlaying && !isPlayingOnWebsite && (
+                    {/* Spotify playing indicator */}
+                    {track.isPlaying && !musicPlaying && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                     )}
-                    {/* Playing from website indicator */}
-                    {isPlayingOnWebsite && (
+                    {/* Website playing indicator */}
+                    {musicPlaying && (
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
                             <Volume2 className="w-2.5 h-2.5 text-black" />
                         </div>
@@ -215,20 +221,17 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 {/* Track Info */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1">
-                        {isPlayingOnWebsite ? (
-                            // Playing on website
+                        {musicPlaying ? (
                             <>
                                 <Volume2 className="w-2.5 h-2.5 text-green-400 animate-pulse" />
-                                <span className="text-[10px] text-green-500 font-bold animate-pulse">🔊 SPELAR HÄR</span>
+                                <span className="text-[10px] text-green-500 font-bold animate-pulse">🔊 SPELAR NU</span>
                             </>
                         ) : track.isPlaying ? (
-                            // Playing on YOUR Spotify right now
                             <>
                                 <Radio className="w-2.5 h-2.5 text-green-400 animate-pulse" />
-                                <span className="text-[10px] text-green-400 font-medium">LIVE NU</span>
+                                <span className="text-[10px] text-green-400 font-medium">LIVE</span>
                             </>
                         ) : (
-                            // Not playing - just last played
                             <>
                                 <Headphones className="w-2.5 h-2.5 text-zinc-500" />
                                 <span className="text-[10px] text-zinc-500 font-medium">Senaste</span>
@@ -242,17 +245,17 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     <p className="text-[10px] text-zinc-400 truncate leading-tight">{track.artist}</p>
                 </div>
 
-                {/* Play/Stop indicator */}
+                {/* Play/Stop Button */}
                 <div className={cn(
-                    "p-1.5 rounded-full flex-shrink-0 transition-colors",
-                    isPlayingOnWebsite 
+                    "p-1.5 rounded-full flex-shrink-0 transition-all",
+                    musicPlaying 
                         ? "bg-green-500 text-black animate-pulse"
-                        : "bg-zinc-800 text-zinc-400"
+                        : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
                 )}>
                     {embedLoading ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : isPlayingOnWebsite ? (
-                        <Volume2 className="w-3.5 h-3.5" />
+                    ) : musicPlaying ? (
+                        <Square className="w-3.5 h-3.5" fill="currentColor" />
                     ) : (
                         <Play className="w-3.5 h-3.5" fill="currentColor" />
                     )}
