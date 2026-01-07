@@ -8,7 +8,7 @@
 
 import * as React from "react"
 import { useState, useEffect, useCallback } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     Music,
@@ -17,7 +17,8 @@ import {
     Headphones,
     Loader2,
     Play,
-    Square
+    Square,
+    X
 } from "lucide-react"
 
 interface Track {
@@ -246,27 +247,54 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 </div>
             </motion.div>
 
-            {/* SPOTIFY EMBED - Shows UNDER widget when playing */}
-            {musicPlaying && embedUrl && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="w-[280px] rounded-xl overflow-hidden"
-                >
-                    <iframe
-                        ref={iframeRef}
-                        key={embedUrl}
-                        src={`${embedUrl}&autoplay=1`}
-                        width="100%"
-                        height="152"
-                        frameBorder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="eager"
-                        style={{ borderRadius: '12px' }}
-                    />
-                </motion.div>
-            )}
+            {/* SPOTIFY EMBED - Flyout to the RIGHT */}
+            <AnimatePresence>
+                {musicPlaying && embedUrl && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className={cn(
+                            "absolute top-0 left-full ml-3 z-50",
+                            "rounded-xl overflow-hidden",
+                            "bg-zinc-900/95 backdrop-blur-xl",
+                            "border border-zinc-800/50",
+                            "shadow-2xl shadow-black/50",
+                            "w-[320px]"
+                        )}
+                    >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-800/50">
+                            <div className="flex items-center gap-2">
+                                <Volume2 className="w-4 h-4 text-green-500" />
+                                <span className="text-xs font-medium text-white">Spelar från Spotify</span>
+                            </div>
+                            <button
+                                onClick={() => setMusicPlaying(false)}
+                                className="p-1 rounded-lg hover:bg-zinc-800 transition-colors"
+                            >
+                                <X className="w-4 h-4 text-zinc-400" />
+                            </button>
+                        </div>
+
+                        {/* Spotify Embed */}
+                        <div className="p-2">
+                            <iframe
+                                ref={iframeRef}
+                                key={embedUrl}
+                                src={`${embedUrl}&autoplay=1`}
+                                width="100%"
+                                height="152"
+                                frameBorder="0"
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="eager"
+                                style={{ borderRadius: '8px' }}
+                            />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }
