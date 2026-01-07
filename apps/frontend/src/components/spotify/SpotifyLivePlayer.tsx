@@ -103,12 +103,10 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     useEffect(() => {
         fetchNowPlaying()
-        // Poll every 30 seconds UNLESS music is playing (to avoid interruption)
-        if (!musicPlaying) {
-            const interval = setInterval(fetchNowPlaying, 30000)
-            return () => clearInterval(interval)
-        }
-    }, [musicPlaying]) // eslint-disable-line react-hooks/exhaustive-deps
+        // Poll every 30 seconds ALWAYS (even when music playing in flyout)
+        const interval = setInterval(fetchNowPlaying, 30000)
+        return () => clearInterval(interval)
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Auto-fetch embed when track changes
     useEffect(() => {
@@ -163,8 +161,8 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     }
 
     return (
-        <div className={cn("flex flex-col gap-2", className)}>
-            {/* WIDGET - Click to play */}
+        <div className={cn("relative", className)}>
+            {/* WIDGET - Always visible, continues updating */}
             <motion.div
                 className={cn(
                     "flex items-center gap-2 px-2 py-1.5 rounded-xl cursor-pointer",
@@ -172,7 +170,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
                     "h-[56px] w-[280px]",
-                    musicPlaying && "border-green-500/60 shadow-lg shadow-green-500/20 ring-2 ring-green-500/30"
+                    musicPlaying && "border-green-500/60 shadow-lg shadow-green-500/20"
                 )}
                 onClick={handleWidgetClick}
                 whileHover={{ scale: 1.02 }}
@@ -192,26 +190,15 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         </div>
                     )}
                     {/* Spotify playing indicator */}
-                    {track.isPlaying && !musicPlaying && (
+                    {track.isPlaying && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                    )}
-                    {/* Website playing indicator */}
-                    {musicPlaying && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
-                            <Volume2 className="w-2.5 h-2.5 text-black" />
-                        </div>
                     )}
                 </div>
 
                 {/* Track Info */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1">
-                        {musicPlaying ? (
-                            <>
-                                <Volume2 className="w-2.5 h-2.5 text-green-400 animate-pulse" />
-                                <span className="text-[10px] text-green-500 font-bold animate-pulse">🔊 SPELAR NU</span>
-                            </>
-                        ) : track.isPlaying ? (
+                        {track.isPlaying ? (
                             <>
                                 <Radio className="w-2.5 h-2.5 text-green-400 animate-pulse" />
                                 <span className="text-[10px] text-green-400 font-medium">LIVE</span>
@@ -230,24 +217,20 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     <p className="text-[10px] text-zinc-400 truncate leading-tight">{track.artist}</p>
                 </div>
 
-                {/* Play/Stop Button */}
+                {/* Play Button */}
                 <div className={cn(
                     "p-1.5 rounded-full flex-shrink-0 transition-all",
-                    musicPlaying
-                        ? "bg-green-500 text-black animate-pulse"
-                        : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
+                    "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
                 )}>
                     {embedLoading ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : musicPlaying ? (
-                        <Square className="w-3.5 h-3.5" fill="currentColor" />
                     ) : (
                         <Play className="w-3.5 h-3.5" fill="currentColor" />
                     )}
                 </div>
             </motion.div>
 
-            {/* SPOTIFY EMBED - Flyout to the RIGHT */}
+            {/* SPOTIFY PLAYER - Flyout to the LEFT (right for user) */}
             <AnimatePresence>
                 {musicPlaying && embedUrl && (
                     <motion.div
@@ -265,13 +248,16 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         )}
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-800/50">
+                        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-800/50 bg-zinc-900/50">
                             <div className="flex items-center gap-2">
-                                <Volume2 className="w-4 h-4 text-green-500" />
+                                <Volume2 className="w-4 h-4 text-green-500 animate-pulse" />
                                 <span className="text-xs font-medium text-white">Spelar från Spotify</span>
                             </div>
                             <button
-                                onClick={() => setMusicPlaying(false)}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setMusicPlaying(false)
+                                }}
                                 className="p-1 rounded-lg hover:bg-zinc-800 transition-colors"
                             >
                                 <X className="w-4 h-4 text-zinc-400" />
