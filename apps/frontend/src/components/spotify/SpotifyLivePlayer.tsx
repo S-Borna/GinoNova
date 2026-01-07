@@ -1,20 +1,14 @@
 "use client"
 
 /**
- * Music Live Player Widget
+ * Spotify Live Player Widget
  * 
- * Shows what Said is listening to AND plays it via Deezer preview.
- * NO API KEYS NEEDED - Deezer API is completely free!
- * 
- * Features:
- * - Shows current track from Last.fm
- * - Click to expand player
- * - Plays 30-second preview via Deezer
- * - Volume control
+ * Shows what Said is listening to with REAL Spotify embed.
+ * NO API KEYS NEEDED - uses Deezer + Songlink to find Spotify track.
  */
 
 import * as React from "react"
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { 
@@ -24,8 +18,6 @@ import {
     Radio,
     Headphones,
     X,
-    Play,
-    Pause,
     Loader2
 } from "lucide-react"
 
@@ -37,11 +29,6 @@ interface Track {
     albumArt: string | null
 }
 
-interface DeezerTrack {
-    previewUrl: string
-    albumArt: string
-}
-
 interface SpotifyLivePlayerProps {
     className?: string
 }
@@ -50,10 +37,10 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [deezerTrack, setDeezerTrack] = useState<DeezerTrack | null>(null)
-    const [audioLoading, setAudioLoading] = useState(false)
-    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const [isMuted, setIsMuted] = useState(true)
+    const [embedUrl, setEmbedUrl] = useState<string | null>(null)
+    const [embedLoading, setEmbedLoading] = useState(false)
+    const [lastTrackKey, setLastTrackKey] = useState<string>("")
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -72,15 +59,20 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         albumArt: data.track.albumArt,
                     }
                     
+                    const newKey = `${newTrack.name}-${newTrack.artist}`
+                    
                     // Only update if track changed
-                    if (!track || track.name !== newTrack.name || track.artist !== newTrack.artist) {
+                    if (newKey !== lastTrackKey) {
                         setTrack(newTrack)
-                        setDeezerTrack(null) // Reset for new track
-                        setIsPlaying(false)
+                        setLastTrackKey(newKey)
+                        setEmbedUrl(null) // Reset embed for new track
+                    } else if (track) {
+                        // Just update isPlaying status
+                        setTrack(prev => prev ? { ...prev, isPlaying: data.isPlaying } : null)
                     }
                 } else {
                     setTrack(null)
-                    setDeezerTrack(null)
+                    setEmbedUrl(null)
                 }
             }
         } catch (error) {
@@ -88,30 +80,29 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
         } finally {
             setLoading(false)
         }
-    }, [track])
+    }, [lastTrackKey, track])
 
-    // Fetch Deezer preview when play is clicked
-    const fetchDeezerPreview = useCallback(async () => {
-        if (!track?.name || !track?.artist) return null
+    // Fetch Spotify embed URL
+    const fetchSpotifyEmbed = useCallback(async () => {
+        if (!track?.name || !track?.artist || embedUrl) return
         
-        setAudioLoading(true)
+        setEmbedLoading(true)
         try {
             const res = await fetch(
-                `/api/music/deezer-track?track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(track.artist)}`
+                `/api/music/spotify-finder?track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(track.artist)}`
             )
             if (res.ok) {
                 const data = await res.json()
-                if (data.track?.previewUrl) {
-                    return data.track
+                if (data.embedUrl) {
+                    setEmbedUrl(data.embedUrl)
                 }
             }
         } catch (e) {
-            console.error('Failed to get Deezer track:', e)
+            console.error('Failed to get Spotify embed:', e)
         } finally {
-            setAudioLoading(false)
+            setEmbedLoading(false)
         }
-        return null
-    }, [track])
+    }, [track, embedUrl])
 
     useEffect(() => {
         fetchNowPlaying()
@@ -119,50 +110,18 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
         return () => clearInterval(interval)
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Setup audio element
+    // Fetch embed when unmuted
     useEffect(() => {
-        audioRef.current = new Audio()
-        audioRef.current.volume = 0.7
-        
-        audioRef.current.onended = () => setIsPlaying(false)
-        audioRef.current.onpause = () => setIsPlaying(false)
-        audioRef.current.onplay = () => setIsPlaying(true)
-        
-        return () => {
-            if (audioRef.current) {
-                audioRef.current.pause()
-                audioRef.current = null
-            }
+        if (!isMuted && track && !embedUrl && !embedLoading) {
+            fetchSpotifyEmbed()
         }
-    }, [])
+    }, [isMuted, track, embedUrl, embedLoading, fetchSpotifyEmbed])
 
-    const togglePlay = async () => {
-        if (!audioRef.current) return
-
-        if (isPlaying) {
-            audioRef.current.pause()
-            setIsPlaying(false)
-            return
-        }
-
-        // Fetch Deezer preview if not already loaded
-        let preview = deezerTrack
-        if (!preview) {
-            preview = await fetchDeezerPreview()
-            if (preview) {
-                setDeezerTrack(preview)
-            }
-        }
-
-        if (preview?.previewUrl) {
-            audioRef.current.src = preview.previewUrl
-            try {
-                await audioRef.current.play()
-                setIsPlaying(true)
-                if (!isExpanded) setIsExpanded(true)
-            } catch (e) {
-                console.error('Playback failed:', e)
-            }
+    const toggleMute = () => {
+        const newMuted = !isMuted
+        setIsMuted(newMuted)
+        if (!newMuted && !isExpanded) {
+            setIsExpanded(true)
         }
     }
 
@@ -213,7 +172,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 <div className="relative">
                     {track.albumArt ? (
                         <img
-                            src={deezerTrack?.albumArt || track.albumArt}
+                            src={track.albumArt}
                             alt={track.album || 'Album'}
                             className="w-10 h-10 rounded-md object-cover"
                         />
@@ -243,29 +202,22 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
 
-                {/* Play/Pause Button */}
+                {/* Mute/Unmute */}
                 <button
-                    onClick={(e) => { e.stopPropagation(); togglePlay(); }}
-                    disabled={audioLoading}
+                    onClick={(e) => { e.stopPropagation(); toggleMute(); }}
                     className={cn(
                         "p-2 rounded-full transition-colors",
-                        isPlaying 
-                            ? "bg-green-500 hover:bg-green-400 text-black"
-                            : "bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white"
+                        isMuted 
+                            ? "bg-zinc-800 hover:bg-zinc-700 text-zinc-400"
+                            : "bg-green-500 hover:bg-green-400 text-black"
                     )}
-                    title={isPlaying ? "Pausa" : "Lyssna med Said"}
+                    title={isMuted ? "Lyssna med Said" : "Tysta"}
                 >
-                    {audioLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : isPlaying ? (
-                        <Pause className="w-4 h-4" fill="currentColor" />
-                    ) : (
-                        <Play className="w-4 h-4" fill="currentColor" />
-                    )}
+                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                 </button>
             </motion.div>
 
-            {/* Expanded Player */}
+            {/* Expanded Spotify Player */}
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
@@ -278,15 +230,15 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900 border border-zinc-800",
                             "shadow-2xl shadow-black/50",
-                            "min-w-[280px]"
+                            "min-w-[300px]"
                         )}
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/50 border-b border-zinc-700/50">
                             <div className="flex items-center gap-2">
-                                {isPlaying && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
+                                {!isMuted && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
                                 <span className="text-xs text-zinc-400">
-                                    {isPlaying ? '♪ Spelar nu' : 'Lyssna med Said'}
+                                    {isMuted ? 'Tryck för att lyssna' : 'Lyssna med Said'}
                                 </span>
                             </div>
                             <button
@@ -297,73 +249,35 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             </button>
                         </div>
 
-                        {/* Player Content */}
-                        <div className="p-4">
-                            <div className="flex gap-4 items-center">
-                                {/* Album Art */}
-                                <div className="relative">
-                                    {(deezerTrack?.albumArt || track.albumArt) ? (
-                                        <img
-                                            src={deezerTrack?.albumArt || track.albumArt!}
-                                            alt={track.album || 'Album'}
-                                            className={cn(
-                                                "w-16 h-16 rounded-lg object-cover shadow-lg",
-                                                isPlaying && "animate-pulse"
-                                            )}
-                                        />
-                                    ) : (
-                                        <div className="w-16 h-16 rounded-lg bg-zinc-800 flex items-center justify-center">
-                                            <Music className="w-6 h-6 text-zinc-500" />
-                                        </div>
-                                    )}
+                        {/* Spotify Embed */}
+                        <div className="relative" style={{ height: isMuted ? 100 : 152 }}>
+                            {!isMuted && embedUrl ? (
+                                <iframe
+                                    src={embedUrl}
+                                    width="100%"
+                                    height="152"
+                                    frameBorder="0"
+                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                    loading="lazy"
+                                    style={{ borderRadius: '0 0 12px 12px' }}
+                                />
+                            ) : !isMuted && embedLoading ? (
+                                <div className="flex flex-col items-center justify-center h-full p-4">
+                                    <Loader2 className="w-6 h-6 text-green-400 animate-spin mb-2" />
+                                    <p className="text-sm text-zinc-400">Laddar Spotify...</p>
                                 </div>
-                                
-                                {/* Track Info */}
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-base font-semibold text-white truncate">{track.name}</p>
-                                    <p className="text-sm text-zinc-400 truncate">{track.artist}</p>
-                                    {track.album && (
-                                        <p className="text-xs text-zinc-500 truncate mt-0.5">{track.album}</p>
-                                    )}
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                                    <VolumeX className="w-6 h-6 text-zinc-500 mb-2" />
+                                    <p className="text-sm text-zinc-400">Spelaren är tystad</p>
+                                    <button
+                                        onClick={toggleMute}
+                                        className="mt-2 px-4 py-1.5 text-xs font-medium text-black bg-green-500 rounded-full hover:bg-green-400"
+                                    >
+                                        ▶ Spela på Spotify
+                                    </button>
                                 </div>
-                            </div>
-
-                            {/* Play Button */}
-                            <button
-                                onClick={togglePlay}
-                                disabled={audioLoading}
-                                className={cn(
-                                    "w-full mt-4 py-3 px-4 rounded-xl font-semibold",
-                                    "flex items-center justify-center gap-2 transition-all",
-                                    isPlaying 
-                                        ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                                        : "bg-green-500 hover:bg-green-400 text-black"
-                                )}
-                            >
-                                {audioLoading ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        Laddar...
-                                    </>
-                                ) : isPlaying ? (
-                                    <>
-                                        <Pause className="w-5 h-5" fill="currentColor" />
-                                        Pausa
-                                    </>
-                                ) : (
-                                    <>
-                                        <Play className="w-5 h-5" fill="currentColor" />
-                                        Spela preview
-                                    </>
-                                )}
-                            </button>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="px-4 py-2 bg-zinc-800/30 border-t border-zinc-700/50">
-                            <p className="text-xs text-zinc-500 text-center">
-                                30 sek förhandslyssning via Deezer
-                            </p>
+                            )}
                         </div>
                     </motion.div>
                 )}

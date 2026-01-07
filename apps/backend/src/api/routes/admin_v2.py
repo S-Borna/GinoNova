@@ -704,24 +704,24 @@ async def delete_user(
         # Progress
         from src.db.models import Progress
         db.query(Progress).filter(Progress.user_id == user_id).delete()
-        
+
         # Exam results
         db.query(ExamResult).filter(ExamResult.user_id == user_id).delete()
-        
+
         # AI Usage logs
         db.query(AIUsageLog).filter(AIUsageLog.user_id == user_id).delete()
-        
+
         # Bookmarks (if exists)
         try:
             from src.db.models import Bookmark
             db.query(Bookmark).filter(Bookmark.user_id == user_id).delete()
         except Exception:
             pass
-        
+
         # Now delete the user
         db.delete(user)
         db.commit()
-        
+
         return {"ok": True, "message": f"User {user.email} deleted successfully"}
     except Exception as e:
         db.rollback()
