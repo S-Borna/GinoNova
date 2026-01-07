@@ -2,7 +2,7 @@
 
 /**
  * Spotify Live Player - ONE CLICK TO PLAY
- * 
+ *
  * Klicka widgeten → Musik spelas DIREKT i dina högtalare
  */
 
@@ -10,8 +10,8 @@ import * as React from "react"
 import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { 
-    Music, 
+import {
+    Music,
     Volume2,
     Radio,
     Headphones,
@@ -51,7 +51,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 const data = await res.json()
                 if (data.track) {
                     const newKey = `${data.track.name}-${data.track.artist}`
-                    
+
                     // Only update if track actually changed (prevent re-renders)
                     if (newKey !== lastTrackKey) {
                         setTrack({
@@ -81,7 +81,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     // Fetch Spotify embed URL
     const fetchSpotifyEmbed = useCallback(async () => {
         if (!track?.name || !track?.artist || embedUrl) return
-        
+
         setEmbedLoading(true)
         try {
             const res = await fetch(
@@ -162,23 +162,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     }
 
     return (
-        <div className={cn("relative", className)}>
-            {/* SPOTIFY EMBED - Plays music when clicked */}
-            {musicPlaying && embedUrl && (
-                <iframe
-                    ref={iframeRef}
-                    key={embedUrl}
-                    src={`${embedUrl}&autoplay=1`}
-                    width="300"
-                    height="80"
-                    frameBorder="0"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                    loading="eager"
-                    className="absolute top-0 left-0 opacity-0 pointer-events-none"
-                    style={{ zIndex: -1 }}
-                />
-            )}
-
+        <div className={cn("flex flex-col gap-2", className)}>
             {/* WIDGET - Click to play */}
             <motion.div
                 className={cn(
@@ -248,7 +232,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 {/* Play/Stop Button */}
                 <div className={cn(
                     "p-1.5 rounded-full flex-shrink-0 transition-all",
-                    musicPlaying 
+                    musicPlaying
                         ? "bg-green-500 text-black animate-pulse"
                         : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700"
                 )}>
@@ -261,6 +245,28 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                     )}
                 </div>
             </motion.div>
+
+            {/* SPOTIFY EMBED - Shows UNDER widget when playing */}
+            {musicPlaying && embedUrl && (
+                <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="w-[280px] rounded-xl overflow-hidden"
+                >
+                    <iframe
+                        ref={iframeRef}
+                        key={embedUrl}
+                        src={`${embedUrl}&autoplay=1`}
+                        width="100%"
+                        height="152"
+                        frameBorder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="eager"
+                        style={{ borderRadius: '12px' }}
+                    />
+                </motion.div>
+            )}
         </div>
     )
 }
