@@ -247,7 +247,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         exit={{ opacity: 0, x: 20, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className={cn(
-                            "fixed top-4 right-[320px] z-40",
+                            "absolute right-full mr-3 top-1/2 -translate-y-1/2 z-40",
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
