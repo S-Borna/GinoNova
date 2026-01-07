@@ -3,29 +3,25 @@
 /**
  * Spotify Live Player Widget
  * 
- * Shows what Said is currently listening to AND lets users play it!
- * Uses Spotify Embed (no app registration needed).
+ * Shows what Said is currently listening to.
+ * Click to open the track in Spotify (no API needed!)
  * 
  * Features:
  * - Shows current track from Last.fm scrobbles
- * - Click to expand mini Spotify player
- * - Users can play/pause the same music
- * - Mute button to stop playback
+ * - Click to open in Spotify app/web
+ * - No Spotify API registration required
  */
 
 import * as React from "react"
-import { useState, useEffect, useRef, useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { 
     Music, 
-    Volume2, 
-    VolumeX, 
-    Play, 
-    Pause, 
-    X,
     Radio,
-    Headphones
+    Headphones,
+    X,
+    Play
 } from "lucide-react"
 
 interface SpotifyTrack {
@@ -49,9 +45,6 @@ export function SpotifyLivePlayer({
     const [track, setTrack] = useState<SpotifyTrack | null>(null)
     const [loading, setLoading] = useState(true)
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isMuted, setIsMuted] = useState(true) // Start muted by default
-    const [embedUrl, setEmbedUrl] = useState<string | null>(null)
-    const iframeRef = useRef<HTMLIFrameElement>(null)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -62,25 +55,16 @@ export function SpotifyLivePlayer({
             if (res.ok) {
                 const data = await res.json()
                 if (data.track) {
-                    const newTrack: SpotifyTrack = {
+                    setTrack({
                         isPlaying: data.isPlaying,
                         name: data.track.name,
                         artist: data.track.artist,
                         album: data.track.album,
                         albumArt: data.track.albumArt,
                         spotifyUrl: data.track.spotifyUrl
-                    }
-                    setTrack(newTrack)
-                    
-                    // Build Spotify embed URL for this track
-                    if (newTrack.name && newTrack.artist) {
-                        const query = encodeURIComponent(`${newTrack.name} ${newTrack.artist}`)
-                        // Spotify embed with search - auto-finds the track
-                        setEmbedUrl(`https://open.spotify.com/embed/search/${query}?utm_source=generator&theme=0`)
-                    }
+                    })
                 } else {
                     setTrack(null)
-                    setEmbedUrl(null)
                 }
             }
         } catch (error) {
@@ -96,11 +80,18 @@ export function SpotifyLivePlayer({
         return () => clearInterval(interval)
     }, [fetchNowPlaying])
 
-    // Toggle playback (mute/unmute the iframe)
-    const toggleMute = () => {
-        setIsMuted(!isMuted)
-        if (!isExpanded && !isMuted) {
-            setIsExpanded(true) // Expand when unmuting
+    // Build Spotify search URL (works without API!)
+    const getSpotifySearchUrl = () => {
+        if (!track?.name || !track?.artist) return null
+        const query = encodeURIComponent(`${track.name} ${track.artist}`)
+        return `https://open.spotify.com/search/${query}`
+    }
+
+    // Open in Spotify
+    const openInSpotify = () => {
+        const url = track?.spotifyUrl || getSpotifySearchUrl()
+        if (url) {
+            window.open(url, '_blank', 'noopener,noreferrer')
         }
     }
 
@@ -187,29 +178,15 @@ export function SpotifyLivePlayer({
                     </p>
                 </div>
 
-                {/* Play/Mute Button */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        toggleMute()
-                    }}
-                    className={cn(
-                        "p-2 rounded-full transition-colors",
-                        isMuted 
-                            ? "bg-zinc-800 hover:bg-zinc-700 text-zinc-400"
-                            : "bg-green-500/20 hover:bg-green-500/30 text-green-400"
-                    )}
-                    title={isMuted ? "Click to listen" : "Mute"}
-                >
-                    {isMuted ? (
-                        <VolumeX className="w-4 h-4" />
-                    ) : (
-                        <Volume2 className="w-4 h-4" />
-                    )}
-                </button>
+                {/* Spotify Icon */}
+                <div className="p-2 rounded-full bg-green-500/20 text-green-400">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                    </svg>
+                </div>
             </motion.div>
 
-            {/* Expanded Player */}
+            {/* Expanded Panel */}
             <AnimatePresence>
                 {isExpanded && (
                     <motion.div
@@ -229,54 +206,72 @@ export function SpotifyLivePlayer({
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                                 <span className="text-xs text-zinc-400">
-                                    Listening with Said
+                                    Said lyssnar på
                                 </span>
                             </div>
                             <button
-                                onClick={() => setIsExpanded(false)}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setIsExpanded(false)
+                                }}
                                 className="p-1 rounded-full hover:bg-zinc-700/50 text-zinc-400 hover:text-white"
                             >
                                 <X className="w-4 h-4" />
                             </button>
                         </div>
 
-                        {/* Spotify Embed - Only load when not muted */}
-                        <div className="relative" style={{ height: isMuted ? 80 : 152 }}>
-                            {!isMuted && embedUrl ? (
-                                <iframe
-                                    ref={iframeRef}
-                                    src={embedUrl}
-                                    width="100%"
-                                    height="152"
-                                    frameBorder="0"
-                                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                    loading="lazy"
-                                    className="rounded-b-xl"
-                                />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                                    <VolumeX className="w-6 h-6 text-zinc-500 mb-2" />
-                                    <p className="text-sm text-zinc-400">Player muted</p>
-                                    <button
-                                        onClick={toggleMute}
-                                        className="mt-2 px-4 py-1.5 text-xs font-medium text-green-400 bg-green-500/10 rounded-full hover:bg-green-500/20 transition-colors"
-                                    >
-                                        Click to listen
-                                    </button>
+                        {/* Track Details */}
+                        <div className="p-4">
+                            <div className="flex gap-4">
+                                {/* Large Album Art */}
+                                {track.albumArt ? (
+                                    <img
+                                        src={track.albumArt}
+                                        alt={track.album || 'Album'}
+                                        className="w-20 h-20 rounded-lg object-cover shadow-lg"
+                                    />
+                                ) : (
+                                    <div className="w-20 h-20 rounded-lg bg-zinc-800 flex items-center justify-center">
+                                        <Music className="w-8 h-8 text-zinc-500" />
+                                    </div>
+                                )}
+                                
+                                {/* Track Info */}
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-lg font-semibold text-white truncate">
+                                        {track.name}
+                                    </p>
+                                    <p className="text-sm text-zinc-400 truncate">
+                                        {track.artist}
+                                    </p>
+                                    {track.album && (
+                                        <p className="text-xs text-zinc-500 truncate mt-1">
+                                            {track.album}
+                                        </p>
+                                    )}
                                 </div>
-                            )}
+                            </div>
+
+                            {/* Open in Spotify Button */}
+                            <button
+                                onClick={openInSpotify}
+                                className={cn(
+                                    "w-full mt-4 py-3 px-4 rounded-xl",
+                                    "bg-green-500 hover:bg-green-400 text-black font-semibold",
+                                    "flex items-center justify-center gap-2",
+                                    "transition-colors"
+                                )}
+                            >
+                                <Play className="w-5 h-5" fill="currentColor" />
+                                Lyssna på Spotify
+                            </button>
                         </div>
 
                         {/* Footer */}
-                        <div className="px-3 py-2 bg-zinc-800/30 border-t border-zinc-700/50">
-                            <a
-                                href={track.spotifyUrl || '#'}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-zinc-500 hover:text-green-400 transition-colors"
-                            >
-                                Open in Spotify →
-                            </a>
+                        <div className="px-4 py-3 bg-zinc-800/30 border-t border-zinc-700/50">
+                            <p className="text-xs text-zinc-500 text-center">
+                                Öppnas i Spotify-appen eller webbspelaren
+                            </p>
                         </div>
                     </motion.div>
                 )}
