@@ -41,6 +41,9 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
     const iframeRef = React.useRef<HTMLIFrameElement>(null)
+    
+    // SEPARATE state for flyout - won't change when widget updates!
+    const [flyoutEmbedUrl, setFlyoutEmbedUrl] = useState<string | null>(null)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -124,10 +127,15 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
             if (!embedUrl && !embedLoading) {
                 await fetchSpotifyEmbed()
             }
+            // Save current embed URL to flyout (won't change when widget updates)
+            if (embedUrl) {
+                setFlyoutEmbedUrl(embedUrl)
+            }
             setMusicPlaying(true)
         } else {
             // STOP PLAYING
             setMusicPlaying(false)
+            setFlyoutEmbedUrl(null)
         }
     }
 
@@ -230,54 +238,47 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 </div>
             </motion.div>
 
-            {/* SPOTIFY PLAYER - Flyout to the LEFT (right for user) */}
+            {/* SPOTIFY PLAYER - Flyout to the LEFT */}
             <AnimatePresence>
-                {musicPlaying && embedUrl && (
+                {musicPlaying && flyoutEmbedUrl && (
                     <motion.div
-                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
+                        initial={{ opacity: 0, x: 20, scale: 0.95 }}
                         animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
+                        exit={{ opacity: 0, x: 20, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className={cn(
-                            "absolute top-0 left-full ml-3 z-50",
+                            "absolute top-0 right-full mr-3 z-50",
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
                             "shadow-2xl shadow-black/50",
-                            "w-[320px]"
+                            "h-[80px] w-[280px]"
                         )}
                     >
-                        {/* Header */}
-                        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-800/50 bg-zinc-900/50">
-                            <div className="flex items-center gap-2">
-                                <Volume2 className="w-4 h-4 text-green-500 animate-pulse" />
-                                <span className="text-xs font-medium text-white">Spelar från Spotify</span>
-                            </div>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    setMusicPlaying(false)
-                                }}
-                                className="p-1 rounded-lg hover:bg-zinc-800 transition-colors"
-                            >
-                                <X className="w-4 h-4 text-zinc-400" />
-                            </button>
-                        </div>
+                        {/* Close button - compact */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                setMusicPlaying(false)
+                                setFlyoutEmbedUrl(null)
+                            }}
+                            className="absolute top-1 right-1 z-10 p-0.5 rounded-md bg-zinc-800/80 hover:bg-zinc-700 transition-colors"
+                        >
+                            <X className="w-3 h-3 text-zinc-400" />
+                        </button>
 
-                        {/* Spotify Embed */}
-                        <div className="p-2">
-                            <iframe
-                                ref={iframeRef}
-                                key={embedUrl}
-                                src={`${embedUrl}&autoplay=1`}
-                                width="100%"
-                                height="152"
-                                frameBorder="0"
-                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                loading="eager"
-                                style={{ borderRadius: '8px' }}
-                            />
-                        </div>
+                        {/* Spotify Embed - compact, same size as widget */}
+                        <iframe
+                            ref={iframeRef}
+                            key={flyoutEmbedUrl}
+                            src={`${flyoutEmbedUrl}&autoplay=1`}
+                            width="100%"
+                            height="80"
+                            frameBorder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="eager"
+                            style={{ borderRadius: '12px' }}
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
