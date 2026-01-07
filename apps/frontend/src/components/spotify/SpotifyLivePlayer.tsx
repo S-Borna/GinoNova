@@ -41,7 +41,6 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [embedUrl, setEmbedUrl] = useState<string | null>(null)
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
-    const [isPollingEnabled, setIsPollingEnabled] = useState(true)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -105,14 +104,12 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     useEffect(() => {
         fetchNowPlaying()
-        // Only poll if enabled (prevent interrupting playback)
-        const interval = setInterval(() => {
-            if (isPollingEnabled) {
-                fetchNowPlaying()
-            }
-        }, 30000) // Increased to 30 sec to reduce interruptions
-        return () => clearInterval(interval)
-    }, [isPollingEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
+        // STOP polling completely when embed is active to prevent music interruption
+        if (!embedUrl || isMuted) {
+            const interval = setInterval(fetchNowPlaying, 30000)
+            return () => clearInterval(interval)
+        }
+    }, [embedUrl, isMuted]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Fetch embed when unmuted OR when track changes
     useEffect(() => {
@@ -167,64 +164,74 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     return (
         <div className={cn("relative", className)}>
-            {/* Main Widget */}
+{/* Main Widget - Kompakt, samma storlek som flyout */}
             <motion.div
                 className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer",
+                    "flex items-center gap-2 px-2 py-1.5 rounded-xl cursor-pointer",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
-                    "transition-all duration-200"
+                    "transition-all duration-200",
+                    "h-[56px] w-[280px]"
                 )}
                 onClick={() => setIsExpanded(!isExpanded)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
             >
-                {/* Album Art */}
-                <div className="relative">
+                {/* Album Art - smaller */}
+                <div className="relative flex-shrink-0">
                     {track.albumArt ? (
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-10 h-10 rounded-md object-cover"
+                            className="w-12 h-12 rounded-md object-cover"
                         />
                     ) : (
-                        <div className="w-10 h-10 rounded-md bg-zinc-800 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-md bg-zinc-800 flex items-center justify-center">
                             <Music className="w-5 h-5 text-zinc-500" />
                         </div>
                     )}
                     {track.isPlaying && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                     )}
+                    {/* Playing from website indicator */}
+                    {!isMuted && embedUrl && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                            <Volume2 className="w-2.5 h-2.5 text-black" />
+                        </div>
+                    )}
                 </div>
 
-                {/* Track Info */}
+                {/* Track Info - compact */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
                         {track.isPlaying ? (
-                            <Radio className="w-3 h-3 text-green-400 animate-pulse" />
+                            <Radio className="w-2.5 h-2.5 text-green-400 animate-pulse" />
                         ) : (
-                            <Headphones className="w-3 h-3 text-zinc-400" />
+                            <Headphones className="w-2.5 h-2.5 text-zinc-400" />
                         )}
-                        <span className="text-xs text-green-400 font-medium">
-                            {track.isPlaying ? 'LIVE' : 'Recently'}
+                        <span className="text-[10px] text-green-400 font-medium">
+                            {track.isPlaying ? 'LIVE' : 'Recent'}
                         </span>
+                        {!isMuted && embedUrl && (
+                            <span className="text-[10px] text-green-500 font-bold ml-1">🔊 WEB</span>
+                        )}
                     </div>
-                    <p className="text-sm font-medium text-white truncate">{track.name}</p>
-                    <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
+                    <p className="text-xs font-medium text-white truncate leading-tight">{track.name}</p>
+                    <p className="text-[10px] text-zinc-400 truncate leading-tight">{track.artist}</p>
                 </div>
 
-                {/* Mute/Unmute */}
+                {/* Mute/Unmute - smaller */}
                 <button
                     onClick={(e) => { e.stopPropagation(); toggleMute(); }}
                     className={cn(
-                        "p-2 rounded-full transition-colors",
-                        isMuted
+                        "p-1.5 rounded-full transition-colors flex-shrink-0",
+                        isMuted 
                             ? "bg-zinc-800 hover:bg-zinc-700 text-zinc-400"
                             : "bg-green-500 hover:bg-green-400 text-black"
                     )}
                     title={isMuted ? "Lyssna med Said" : "Tysta"}
                 >
-                    {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                 </button>
             </motion.div>
 
