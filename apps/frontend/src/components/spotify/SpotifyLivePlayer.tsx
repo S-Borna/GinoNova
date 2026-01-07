@@ -37,10 +37,11 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isMuted, setIsMuted] = useState(true)
+    const [isMuted, setIsMuted] = useState(false) // Start unmuted for autoplay
     const [embedUrl, setEmbedUrl] = useState<string | null>(null)
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
+    const [isPollingEnabled, setIsPollingEnabled] = useState(true)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -104,16 +105,28 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     useEffect(() => {
         fetchNowPlaying()
-        const interval = setInterval(fetchNowPlaying, 15000)
+        // Only poll if enabled (prevent interrupting playback)
+        const interval = setInterval(() => {
+            if (isPollingEnabled) {
+                fetchNowPlaying()
+            }
+        }, 30000) // Increased to 30 sec to reduce interruptions
         return () => clearInterval(interval)
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [isPollingEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Fetch embed when unmuted
+    // Fetch embed when unmuted OR when track changes
     useEffect(() => {
         if (!isMuted && track && !embedUrl && !embedLoading) {
             fetchSpotifyEmbed()
         }
     }, [isMuted, track, embedUrl, embedLoading, fetchSpotifyEmbed])
+
+    // Auto-expand and unmute when track is loaded
+    useEffect(() => {
+        if (track && embedUrl && !isExpanded) {
+            setIsExpanded(true)
+        }
+    }, [track, embedUrl, isExpanded])
 
     const toggleMute = () => {
         const newMuted = !isMuted
@@ -228,52 +241,34 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900 border border-zinc-800",
                             "shadow-2xl shadow-black/50",
-                            "w-[320px]"
+                            "w-[280px] h-[56px]"
                         )}
                     >
-                        {/* Header */}
-                        <div className="flex items-center justify-between px-3 py-2 bg-zinc-800/50 border-b border-zinc-700/50">
-                            <div className="flex items-center gap-2">
-                                {!isMuted && <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />}
-                                <span className="text-xs text-zinc-400">
-                                    {isMuted ? 'Tryck för att lyssna' : 'Lyssna med Said'}
-                                </span>
-                            </div>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setIsExpanded(false); }}
-                                className="p-1 rounded-full hover:bg-zinc-700/50 text-zinc-400 hover:text-white"
-                            >
-                                <X className="w-4 h-4" />
-                            </button>
-                        </div>
-
-                        {/* Spotify Embed */}
-                        <div className="relative" style={{ height: isMuted ? 100 : 152 }}>
+                        {/* Compact Spotify Embed - No header, just player */}
+                        <div className="relative h-[56px]">
                             {!isMuted && embedUrl ? (
                                 <iframe
                                     key={embedUrl}
-                                    src={embedUrl}
+                                    src={`${embedUrl}&autoplay=1`}
                                     width="100%"
-                                    height="152"
+                                    height="80"
                                     frameBorder="0"
                                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                    loading="lazy"
-                                    style={{ borderRadius: '0 0 12px 12px' }}
+                                    loading="eager"
+                                    style={{ borderRadius: '12px' }}
                                 />
                             ) : !isMuted && embedLoading ? (
-                                <div className="flex flex-col items-center justify-center h-full p-4">
-                                    <Loader2 className="w-6 h-6 text-green-400 animate-spin mb-2" />
-                                    <p className="text-sm text-zinc-400">Laddar Spotify...</p>
+                                <div className="flex items-center justify-center h-full">
+                                    <Loader2 className="w-5 h-5 text-green-400 animate-spin" />
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-                                    <VolumeX className="w-6 h-6 text-zinc-500 mb-2" />
-                                    <p className="text-sm text-zinc-400">Spelaren är tystad</p>
+                                <div className="flex items-center justify-center h-full px-3">
                                     <button
                                         onClick={toggleMute}
-                                        className="mt-2 px-4 py-1.5 text-xs font-medium text-black bg-green-500 rounded-full hover:bg-green-400"
+                                        className="px-4 py-2 text-xs font-medium text-black bg-green-500 rounded-full hover:bg-green-400 flex items-center gap-2"
                                     >
-                                        ▶ Spela på Spotify
+                                        <Volume2 className="w-4 h-4" />
+                                        Spela
                                     </button>
                                 </div>
                             )}
