@@ -106,8 +106,8 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     useEffect(() => {
         fetchNowPlaying()
-        // Poll every 5 seconds ALWAYS (even when music playing in flyout)
-        const interval = setInterval(fetchNowPlaying, 5000)
+        // Poll every 15 seconds - balance between speed and stability
+        const interval = setInterval(fetchNowPlaying, 15000)
         return () => clearInterval(interval)
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
