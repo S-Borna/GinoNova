@@ -200,7 +200,8 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             <Music className="w-5 h-5 text-zinc-500" />
                         </div>
                     )}
-                    {track.isPlaying && (
+                    {/* Only show Spotify indicator if ACTUALLY playing on Spotify */}
+                    {track.isPlaying && !isPlayingOnWebsite && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                     )}
                     {/* Playing from website indicator */}
@@ -214,19 +215,28 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 {/* Track Info */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1">
-                        {track.isPlaying ? (
-                            <Radio className="w-2.5 h-2.5 text-green-400 animate-pulse" />
-                        ) : (
-                            <Headphones className="w-2.5 h-2.5 text-zinc-400" />
-                        )}
-                        <span className="text-[10px] text-green-400 font-medium">
-                            {track.isPlaying ? 'LIVE' : 'Recent'}
-                        </span>
                         {isPlayingOnWebsite ? (
-                            <span className="text-[10px] text-green-500 font-bold ml-1 animate-pulse">🔊 SPELAR</span>
-                        ) : embedLoading ? (
+                            // Playing on website
+                            <>
+                                <Volume2 className="w-2.5 h-2.5 text-green-400 animate-pulse" />
+                                <span className="text-[10px] text-green-500 font-bold animate-pulse">🔊 SPELAR HÄR</span>
+                            </>
+                        ) : track.isPlaying ? (
+                            // Playing on YOUR Spotify right now
+                            <>
+                                <Radio className="w-2.5 h-2.5 text-green-400 animate-pulse" />
+                                <span className="text-[10px] text-green-400 font-medium">LIVE NU</span>
+                            </>
+                        ) : (
+                            // Not playing - just last played
+                            <>
+                                <Headphones className="w-2.5 h-2.5 text-zinc-500" />
+                                <span className="text-[10px] text-zinc-500 font-medium">Senaste</span>
+                            </>
+                        )}
+                        {embedLoading && (
                             <span className="text-[10px] text-zinc-400 ml-1">⏳</span>
-                        ) : null}
+                        )}
                     </div>
                     <p className="text-xs font-medium text-white truncate leading-tight">{track.name}</p>
                     <p className="text-[10px] text-zinc-400 truncate leading-tight">{track.artist}</p>
