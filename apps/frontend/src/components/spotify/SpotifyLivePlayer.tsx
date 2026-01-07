@@ -252,7 +252,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
                             "shadow-2xl shadow-black/50",
-                            "h-[80px] w-[280px]"
+                            "h-[112px] w-[280px]"
                         )}
                     >
                         {/* Close button - compact */}
@@ -267,13 +267,13 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             <X className="w-3 h-3 text-zinc-400" />
                         </button>
 
-                        {/* Spotify Embed - 80px = allt innehåll syns, ingen scroll */}
+                        {/* Spotify Embed - 112px = full height, ingen intern scroll */}
                         <iframe
                             ref={iframeRef}
                             key={flyoutEmbedUrl}
                             src={`${flyoutEmbedUrl}&autoplay=1`}
                             width="100%"
-                            height="80"
+                            height="112"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                             loading="eager"
