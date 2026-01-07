@@ -32,7 +32,7 @@ import {
     Clock
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
-import { SpotifyNowPlaying } from "@/components/spotify/SpotifyNowPlaying"
+import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 
 /* ============================================================================
    TYPES
@@ -498,8 +498,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                 {/* Right side */}
                 <div className="flex items-center gap-3 shrink-0 ml-auto">
-                    {/* Spotify Now Playing */}
-                    <SpotifyNowPlaying variant="compact" className="hidden xl:flex" />
+                    {/* Spotify Live Player - Listen with Said */}
+                    <SpotifyLivePlayer className="hidden xl:flex" />
 
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}

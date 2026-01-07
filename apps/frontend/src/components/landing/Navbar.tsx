@@ -28,7 +28,7 @@ import {
     Sparkles,
 } from "lucide-react"
 // TentaCountdown removed
-import { SpotifyNowPlaying } from "@/components/spotify/SpotifyNowPlaying"
+import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -97,9 +97,9 @@ export function Navbar() {
                         )}
                     >
 
-                        {/* Spotify Now Playing - Desktop */}
+                        {/* Spotify Live Player - Desktop */}
                         <div className="hidden lg:block">
-                            <SpotifyNowPlaying variant="compact" />
+                            <SpotifyLivePlayer />
                         </div>
 
                         {/* Mobile menu button */}
