@@ -27,7 +27,7 @@ import {
     ChevronRight,
     Sparkles,
 } from "lucide-react"
-import { TentaCountdown } from "@/components/ui/tenta-countdown"
+// TentaCountdown removed
 import { SpotifyNowPlaying } from "@/components/spotify/SpotifyNowPlaying"
 
 /* ============================================================================
@@ -97,40 +97,9 @@ export function Navbar() {
                         )}
                     >
 
-                        {/* DOE25 Tenta Card - Free Access */}
-                        <Link href="/modules" className="hidden md:block group">
-                            <motion.div
-                                className={cn(
-                                    "relative flex items-center gap-3",
-                                    "px-5 py-2.5 rounded-xl",
-                                    "bg-gradient-to-r from-emerald-500/20 via-cyan-500/15 to-emerald-500/20",
-                                    "border border-emerald-400/40",
-                                    "shadow-[0_0_20px_rgba(16,185,129,0.2)]",
-                                    "hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]",
-                                    "transition-all duration-300"
-                                )}
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <div className="flex items-center gap-2">
-                                    <span className="text-2xl">📚</span>
-                                    <div>
-                                        <div className="text-sm font-bold text-emerald-300">DOE25 Tenta</div>
-                                        <div className="text-xs text-emerald-400/70">Gratis • Ingen inlogg</div>
-                                    </div>
-                                </div>
-                                <Sparkles className="w-4 h-4 text-emerald-400" />
-                            </motion.div>
-                        </Link>
-
                         {/* Spotify Now Playing - Desktop */}
                         <div className="hidden lg:block">
                             <SpotifyNowPlaying variant="compact" />
-                        </div>
-
-                        {/* Countdown Timer - Desktop */}
-                        <div className="hidden md:block">
-                            <TentaCountdown variant="compact" />
                         </div>
 
                         {/* Mobile menu button */}
@@ -184,32 +153,7 @@ export function Navbar() {
                                     "shadow-[0_20px_60px_rgba(139,92,246,0.2)]"
                                 )}
                             >
-                                {/* DOE25 Tenta Card - Mobile */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 }}
-                                >
-                                    <Link href="/modules" className="block">
-                                        <div
-                                            className={cn(
-                                                "flex items-center justify-between p-5 rounded-xl",
-                                                "bg-gradient-to-r from-emerald-500/20 via-cyan-500/15 to-emerald-500/20",
-                                                "border border-emerald-400/40",
-                                                "shadow-[0_0_20px_rgba(16,185,129,0.2)]"
-                                            )}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-3xl">📚</span>
-                                                <div>
-                                                    <div className="text-lg font-bold text-emerald-300">DOE25 Tenta</div>
-                                                    <div className="text-sm text-emerald-400/70">Gratis • Ingen inlogg krävs</div>
-                                                </div>
-                                            </div>
-                                            <ChevronRight className="w-5 h-5 text-emerald-400" />
-                                        </div>
-                                    </Link>
-                                </motion.div>
+                                {/* Mobile menu content placeholder */}
                             </div>
                         </motion.div>
                     </>
