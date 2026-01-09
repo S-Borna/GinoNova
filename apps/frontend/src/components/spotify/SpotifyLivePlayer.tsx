@@ -143,13 +143,13 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (loading) {
         return (
             <div className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
+                "flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-900/50 border border-zinc-800 h-10",
                 className
             )}>
-                <div className="w-8 h-8 rounded-md bg-zinc-800 animate-pulse" />
-                <div className="flex-1 space-y-1">
-                    <div className="h-3 w-20 bg-zinc-800 rounded animate-pulse" />
-                    <div className="h-2 w-14 bg-zinc-800 rounded animate-pulse" />
+                <div className="w-8 h-8 rounded bg-zinc-800 animate-pulse" />
+                <div className="space-y-1">
+                    <div className="h-2.5 w-16 bg-zinc-800 rounded animate-pulse" />
+                    <div className="h-2 w-12 bg-zinc-800 rounded animate-pulse" />
                 </div>
             </div>
         )
@@ -159,7 +159,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (!track?.name) {
         return (
             <div className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
+                "flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-900/50 border border-zinc-800 h-10",
                 className
             )}>
                 <Music className="w-4 h-4 text-zinc-500" />
@@ -173,11 +173,11 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
             {/* WIDGET - Always visible, continues updating */}
             <motion.div
                 className={cn(
-                    "flex items-center gap-2 px-2 py-1.5 rounded-xl cursor-pointer",
+                    "flex items-center gap-1.5 px-2 py-1 rounded-lg cursor-pointer",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
-                    "h-[56px] w-[280px]",
+                    "h-10",
                     musicPlaying && "border-green-500/60 shadow-lg shadow-green-500/20"
                 )}
                 onClick={handleWidgetClick}
@@ -190,11 +190,11 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-12 h-12 rounded-md object-cover"
+                            className="w-8 h-8 rounded object-cover"
                         />
                     ) : (
-                        <div className="w-12 h-12 rounded-md bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-5 h-5 text-zinc-500" />
+                        <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+                            <Music className="w-4 h-4 text-zinc-500" />
                         </div>
                     )}
                     {/* Spotify playing indicator */}
@@ -247,37 +247,25 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         exit={{ opacity: 0, x: 20, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className={cn(
-                            "absolute right-full mr-3 top-1/2 -translate-y-1/2 z-40",
-                            "rounded-xl overflow-hidden",
+                            "absolute right-full mr-2 top-1/2 -translate-y-1/2 z-40",
+                            "rounded-lg overflow-hidden",
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
-                            "shadow-2xl shadow-black/50",
-                            "h-[152px] w-[280px]"
+                            "shadow-xl shadow-black/40",
+                            "h-[80px] w-[300px]"
                         )}
                     >
-                        {/* Close button - compact */}
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                setMusicPlaying(false)
-                                setFlyoutEmbedUrl(null)
-                            }}
-                            className="absolute top-1 right-1 z-10 p-0.5 rounded-md bg-zinc-800/80 hover:bg-zinc-700 transition-colors"
-                        >
-                            <X className="w-3 h-3 text-zinc-400" />
-                        </button>
-
-                        {/* Spotify Embed - 152px = spotify native track height, ingen white space */}
+                        {/* Spotify Embed - 80px compact mode */}
                         <iframe
                             ref={iframeRef}
                             key={flyoutEmbedUrl}
                             src={`${flyoutEmbedUrl}&autoplay=1`}
                             width="100%"
-                            height="152"
+                            height="80"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                             loading="eager"
-                            style={{ borderRadius: '12px' }}
+                            style={{ borderRadius: '8px' }}
                         />
                     </motion.div>
                 )}
