@@ -41,7 +41,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
     const iframeRef = React.useRef<HTMLIFrameElement>(null)
-    
+
     // SEPARATE state for flyout - won't change when widget updates!
     const [flyoutEmbedUrl, setFlyoutEmbedUrl] = useState<string | null>(null)
 
@@ -252,7 +252,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
                             "shadow-2xl shadow-black/50",
-                            "h-[112px] w-[280px]"
+                            "h-[152px] w-[280px]"
                         )}
                     >
                         {/* Close button - compact */}
@@ -267,13 +267,13 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             <X className="w-3 h-3 text-zinc-400" />
                         </button>
 
-                        {/* Spotify Embed - 112px = full height, ingen intern scroll */}
+                        {/* Spotify Embed - 152px = spotify native track height, ingen white space */}
                         <iframe
                             ref={iframeRef}
                             key={flyoutEmbedUrl}
                             src={`${flyoutEmbedUrl}&autoplay=1`}
                             width="100%"
-                            height="112"
+                            height="152"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                             loading="eager"
