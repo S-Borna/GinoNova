@@ -141,7 +141,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux' | 'tentaish'>('doe25')
+    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux' | 'tentaish' | 'linux-tenta' | 'omtenta'>('doe25')
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -471,7 +471,7 @@ export default function StudyPage() {
                                     <BookOpen className="w-5 h-5 text-cyan-400" />
                                     <span className="text-white font-bold">Frågekälla</span>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                                     <button
                                         onClick={() => setTentaSource('doe25')}
                                         className={cn(
@@ -524,12 +524,40 @@ export default function StudyPage() {
                                         <span className="text-xs font-medium">Tentaish</span>
                                         <span className="text-[10px] opacity-70 font-normal">{TENTAISH_STATS.totalQuestions} frågor</span>
                                     </button>
+                                    <button
+                                        onClick={() => setTentaSource('linux-tenta')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1 col-span-2 sm:col-span-1",
+                                            tentaSource === 'linux-tenta'
+                                                ? "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">🎯</span>
+                                        <span className="text-xs font-medium">Linux Tentan</span>
+                                        <span className="text-[10px] opacity-70 font-normal">20 frågor</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setTentaSource('omtenta')}
+                                        className={cn(
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1 col-span-2 sm:col-span-1",
+                                            tentaSource === 'omtenta'
+                                                ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30"
+                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                        )}
+                                    >
+                                        <span className="text-2xl">📚</span>
+                                        <span className="text-xs font-medium">Inför Omtenta</span>
+                                        <span className="text-[10px] opacity-70 font-normal">250 frågor</span>
+                                    </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
                                     {tentaSource === 'doe25' && "✨ Rekommenderat för tentan"}
                                     {tentaSource === 'handson' && "Praktiska frågor"}
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
                                     {tentaSource === 'tentaish' && "📝 Komplett tentaöversikt"}
+                                    {tentaSource === 'linux-tenta' && "🎯 Original tentafrågor"}
+                                    {tentaSource === 'omtenta' && "📚 Komplett förberedelse inför omtenta"}
                                 </p>
                             </div>
 
