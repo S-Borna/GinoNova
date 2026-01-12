@@ -43,20 +43,21 @@ import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-qu
 import { ALL_LINUX_COMMAND_QUESTIONS, type LinuxCommandQuestion } from "@/data/linux-commands-quiz"
 import { ALL_TENTAISH_QUESTIONS, type TentaishQuestion } from "@/data/tentaish-quiz"
 import { ALL_LINUX_TENTA_QUESTIONS, type LinuxTentaQuestion } from "@/data/linux-tenta-quiz"
-import { ALL_OMTENTA_QUESTIONS, type OmtentaQuestion } from "@/data/omtenta-linux-quiz"
 import { ALL_OMTENTA_V2_QUESTIONS, type OmtentaV2Question } from "@/data/omtenta-v2-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
     id: string
     question: string
-    options: [string, string, string, string]
-    correctIndex: 0 | 1 | 2 | 3
+    options: string[]
+    correctIndex?: 0 | 1 | 2 | 3  // For single-select (legacy)
+    correctIndices: number[]       // For multi-select support
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta' | 'omtenta-v2'
+    source: 'doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta'
     scenario?: string // Optional scenario context
+    isMultiSelect: boolean
 }
 
 interface SimulatorSettings {
@@ -66,14 +67,16 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta' | 'omtenta-v2')[] // Multi-select question sources
+    selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[] // Multi-select question sources
 }
 
 interface QuizResult {
     questionId: string
     correct: boolean
-    selectedIndex: number
-    correctIndex: number
+    selectedIndex?: number         // Legacy single-select
+    selectedIndices: number[]      // Multi-select support
+    correctIndex?: number          // Legacy single-select
+    correctIndices: number[]       // Multi-select support
     timeSpent: number
 }
 
@@ -99,24 +102,27 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffled
 }
 
-// Shuffle options within a question and update correctIndex
+// Shuffle options within a question and update correctIndices
 function shuffleQuestionOptions(question: SimulatorQuestion): SimulatorQuestion {
     // Create array of option objects with their original index
     const optionsWithIndex = question.options.map((option, index) => ({
         option,
-        wasCorrect: index === question.correctIndex
+        wasCorrect: question.correctIndices.includes(index)
     }))
 
     // Shuffle the options
     const shuffledOptions = shuffleArray(optionsWithIndex)
 
-    // Find new correct index
-    const newCorrectIndex = shuffledOptions.findIndex(o => o.wasCorrect) as 0 | 1 | 2 | 3
+    // Find new correct indices
+    const newCorrectIndices = shuffledOptions
+        .map((o, idx) => o.wasCorrect ? idx : -1)
+        .filter(idx => idx !== -1)
 
     return {
         ...question,
-        options: shuffledOptions.map(o => o.option) as [string, string, string, string],
-        correctIndex: newCorrectIndex
+        options: shuffledOptions.map(o => o.option),
+        correctIndices: newCorrectIndices,
+        correctIndex: newCorrectIndices[0] as 0 | 1 | 2 | 3 | undefined
     }
 }
 
@@ -127,11 +133,13 @@ function convertDOE25Question(q: TaskQuizQuestion): SimulatorQuestion {
         question: q.question,
         options: q.options,
         correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
         explanation: q.explanation,
-        difficulty: q.difficulty, // Already 'G' | 'VG'
+        difficulty: q.difficulty,
         category: q.category,
         source: 'doe25',
-        scenario: q.scenario // Include if present
+        scenario: q.scenario,
+        isMultiSelect: false
     }
 }
 
@@ -145,10 +153,12 @@ function convertHandsOnQuestion(q: MegaQuizQuestion): SimulatorQuestion {
         question: q.question,
         options: q.options,
         correctIndex: q.correctIndex as 0 | 1 | 2 | 3,
+        correctIndices: [q.correctIndex],
         explanation: q.explanation,
         difficulty,
         category: q.category,
-        source: 'handson'
+        source: 'handson',
+        isMultiSelect: false
     }
 }
 
@@ -160,12 +170,14 @@ function convertLinuxCommandQuestion(q: LinuxCommandQuestion): SimulatorQuestion
     return {
         id: q.id,
         question: q.question,
-        options: q.options as [string, string, string, string],
+        options: q.options as string[],
         correctIndex: q.correctIndex as 0 | 1 | 2 | 3,
+        correctIndices: [q.correctIndex],
         explanation: q.explanation,
         difficulty,
         category: q.category,
-        source: 'linux-commands'
+        source: 'linux-commands',
+        isMultiSelect: false
     }
 }
 
@@ -176,11 +188,13 @@ function convertTentaishQuestion(q: TentaishQuestion): SimulatorQuestion {
         question: q.question,
         options: q.options,
         correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
         explanation: q.explanation,
         difficulty: q.difficulty,
         category: q.category,
         source: 'tentaish',
-        scenario: q.scenario
+        scenario: q.scenario,
+        isMultiSelect: false
     }
 }
 
@@ -191,44 +205,30 @@ function convertLinuxTentaQuestion(q: LinuxTentaQuestion): SimulatorQuestion {
         question: q.question,
         options: q.options,
         correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
         explanation: q.explanation,
         difficulty: q.difficulty,
         category: q.category,
         source: 'linux-tenta',
-        scenario: q.scenario
+        scenario: q.scenario,
+        isMultiSelect: false
     }
 }
 
-// Convert Omtenta question to SimulatorQuestion
-function convertOmtentaQuestion(q: OmtentaQuestion): SimulatorQuestion {
+// Convert Omtenta question to SimulatorQuestion (FULL multi-select support)
+function convertOmtentaQuestion(q: OmtentaV2Question): SimulatorQuestion {
+    const isMulti = q.correctIndices.length > 1
     return {
         id: q.id,
-        question: q.question,
+        question: isMulti ? `${q.question} (Välj ${q.correctIndices.length} svar)` : q.question,
         options: q.options,
-        correctIndex: q.correctIndex,
+        correctIndex: isMulti ? undefined : q.correctIndices[0] as 0 | 1 | 2 | 3,
+        correctIndices: q.correctIndices,
         explanation: q.explanation,
         difficulty: q.difficulty,
         category: q.category,
-        source: 'omtenta'
-    }
-}
-
-// Convert Omtenta V2 question to SimulatorQuestion (only single-select questions with 4 options)
-function convertOmtentaV2Question(q: OmtentaV2Question): SimulatorQuestion | null {
-    // Skip multi-select questions (simulator doesn't support them)
-    if (q.correctIndices.length > 1) return null
-    // Skip questions with != 4 options
-    if (q.options.length !== 4) return null
-    
-    return {
-        id: q.id,
-        question: q.question,
-        options: q.options as [string, string, string, string],
-        correctIndex: q.correctIndices[0] as 0 | 1 | 2 | 3,
-        explanation: q.explanation,
-        difficulty: q.difficulty,
-        category: q.category,
-        source: 'omtenta-v2'
+        source: 'omtenta',
+        isMultiSelect: isMulti
     }
 }
 
@@ -242,6 +242,7 @@ export default function TentaSimulatorPage() {
     const [questions, setQuestions] = useState<SimulatorQuestion[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]) // Multi-select support
     const [results, setResults] = useState<QuizResult[]>([])
     const [timeRemaining, setTimeRemaining] = useState(0)
     const [questionStartTime, setQuestionStartTime] = useState(0)
@@ -281,16 +282,9 @@ export default function TentaSimulatorPage() {
         return ALL_LINUX_TENTA_QUESTIONS.map(convertLinuxTentaQuestion)
     }, [])
 
-    // Get Omtenta questions (all study material)
+    // Get Omtenta questions (770 questions from 14 source files, WITH multi-select support)
     const omtentaQuestions = useMemo(() => {
-        return ALL_OMTENTA_QUESTIONS.map(convertOmtentaQuestion)
-    }, [])
-
-    // Get Omtenta V2 questions (770 questions from 14 source files, single-select only)
-    const omtentaV2Questions = useMemo(() => {
-        return ALL_OMTENTA_V2_QUESTIONS
-            .map(convertOmtentaV2Question)
-            .filter((q): q is SimulatorQuestion => q !== null)
+        return ALL_OMTENTA_V2_QUESTIONS.map(convertOmtentaQuestion)
     }, [])
 
     // Get filtered questions based on selected sources
@@ -314,11 +308,8 @@ export default function TentaSimulatorPage() {
         if (settings.selectedSources.includes('omtenta')) {
             questions.push(...omtentaQuestions)
         }
-        if (settings.selectedSources.includes('omtenta-v2')) {
-            questions.push(...omtentaV2Questions)
-        }
         return questions
-    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions, linuxTentaQuestions, omtentaQuestions, omtentaV2Questions, settings.selectedSources])
+    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions, linuxTentaQuestions, omtentaQuestions, settings.selectedSources])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -343,10 +334,10 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param (comma-separated for multi-select)
-            let selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta' | 'omtenta-v2')[] = ['doe25']
+            let selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[] = ['doe25']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta' | 'omtenta-v2')[]
-                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands', 'tentaish', 'linux-tenta', 'omtenta', 'omtenta-v2'].includes(s))
+                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[]
+                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands', 'tentaish', 'linux-tenta', 'omtenta'].includes(s))
                 if (selectedSources.length === 0) selectedSources = ['doe25']
             }
 
@@ -370,7 +361,6 @@ export default function TentaSimulatorPage() {
             if (selectedSources.includes('tentaish')) sourceQuestions.push(...tentaishQuestions)
             if (selectedSources.includes('linux-tenta')) sourceQuestions.push(...linuxTentaQuestions)
             if (selectedSources.includes('omtenta')) sourceQuestions.push(...omtentaQuestions)
-            if (selectedSources.includes('omtenta-v2')) sourceQuestions.push(...omtentaV2Questions)
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -539,6 +529,7 @@ export default function TentaSimulatorPage() {
         setQuestions(prepared)
         setCurrentIndex(0)
         setSelectedAnswer(null)
+        setSelectedAnswers([])
         setResults([])
         setTimeRemaining(settings.duration * 60)
         setQuestionStartTime(Date.now())
@@ -547,18 +538,48 @@ export default function TentaSimulatorPage() {
         setPhase('quiz')
     }
 
+    // Toggle answer for multi-select
+    const toggleAnswer = (idx: number) => {
+        const currentQuestion = questions[currentIndex]
+        if (currentQuestion.isMultiSelect) {
+            setSelectedAnswers(prev => 
+                prev.includes(idx) 
+                    ? prev.filter(i => i !== idx)
+                    : [...prev, idx]
+            )
+        } else {
+            setSelectedAnswer(idx)
+        }
+    }
+
+    // Check if multi-select answer is correct
+    const checkMultiSelectAnswer = (selected: number[], correct: number[]): boolean => {
+        if (selected.length !== correct.length) return false
+        const sortedSelected = [...selected].sort((a, b) => a - b)
+        const sortedCorrect = [...correct].sort((a, b) => a - b)
+        return sortedSelected.every((val, idx) => val === sortedCorrect[idx])
+    }
+
     // Submit answer
     const submitAnswer = () => {
-        if (selectedAnswer === null) return
-
         const currentQuestion = questions[currentIndex]
+        const isMulti = currentQuestion.isMultiSelect
+        
+        // Check if answer is selected
+        if (isMulti && selectedAnswers.length === 0) return
+        if (!isMulti && selectedAnswer === null) return
+
         const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000)
 
         const result: QuizResult = {
             questionId: currentQuestion.id,
-            correct: selectedAnswer === currentQuestion.correctIndex,
-            selectedIndex: selectedAnswer,
-            correctIndex: currentQuestion.correctIndex,
+            correct: isMulti 
+                ? checkMultiSelectAnswer(selectedAnswers, currentQuestion.correctIndices)
+                : selectedAnswer === currentQuestion.correctIndices[0],
+            selectedIndex: isMulti ? undefined : selectedAnswer!,
+            selectedIndices: isMulti ? selectedAnswers : [selectedAnswer!],
+            correctIndex: isMulti ? undefined : currentQuestion.correctIndices[0],
+            correctIndices: currentQuestion.correctIndices,
             timeSpent
         }
 
@@ -602,6 +623,7 @@ export default function TentaSimulatorPage() {
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(prev => prev + 1)
             setSelectedAnswer(null)
+            setSelectedAnswers([])
             setQuestionStartTime(Date.now())
         }
     }
@@ -1042,15 +1064,16 @@ export default function TentaSimulatorPage() {
                 {/* Options */}
                 <div className="space-y-3 mb-6">
                     {currentQuestion.options.map((option, idx) => {
-                        const isSelected = selectedAnswer === idx
-                        const isCorrectOption = idx === currentQuestion.correctIndex
+                        const isMulti = currentQuestion.isMultiSelect
+                        const isSelected = isMulti ? selectedAnswers.includes(idx) : selectedAnswer === idx
+                        const isCorrectOption = currentQuestion.correctIndices.includes(idx)
                         const showAsCorrect = showLiveFeedback && isCorrectOption
                         const showAsWrong = showLiveFeedback && isSelected && !isCorrectOption
 
                         return (
                             <motion.button
                                 key={idx}
-                                onClick={() => !showLiveFeedback && setSelectedAnswer(idx)}
+                                onClick={() => !showLiveFeedback && toggleAnswer(idx)}
                                 disabled={showLiveFeedback}
                                 animate={showAsCorrect ? { scale: [1, 1.02, 1] } : showAsWrong ? { x: [0, -5, 5, 0] } : {}}
                                 transition={{ duration: 0.3 }}
@@ -1065,7 +1088,8 @@ export default function TentaSimulatorPage() {
                             >
                                 <div className="flex items-center gap-4">
                                     <span className={cn(
-                                        "w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm",
+                                        "w-8 h-8 flex items-center justify-center font-semibold text-sm",
+                                        isMulti ? "rounded-md" : "rounded-full",
                                         showAsCorrect && "bg-green-500 text-white",
                                         showAsWrong && "bg-red-500 text-white",
                                         !showLiveFeedback && isSelected && "bg-purple-500 text-white",
@@ -1074,6 +1098,7 @@ export default function TentaSimulatorPage() {
                                     )}>
                                         {showAsCorrect ? <CheckCircle className="w-5 h-5" /> :
                                             showAsWrong ? <XCircle className="w-5 h-5" /> :
+                                                isMulti && isSelected ? <CheckCircle className="w-5 h-5" /> :
                                                 String.fromCharCode(65 + idx)}
                                     </span>
                                     <span>{option}</span>
@@ -1123,10 +1148,10 @@ export default function TentaSimulatorPage() {
                 {!showLiveFeedback ? (
                     <button
                         onClick={submitAnswer}
-                        disabled={selectedAnswer === null}
+                        disabled={currentQuestion.isMultiSelect ? selectedAnswers.length === 0 : selectedAnswer === null}
                         className={cn(
                             "w-full py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all",
-                            selectedAnswer !== null
+                            (currentQuestion.isMultiSelect ? selectedAnswers.length > 0 : selectedAnswer !== null)
                                 ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
                                 : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                         )}
@@ -1379,11 +1404,11 @@ export default function TentaSimulatorPage() {
                                                 {idx + 1}. {question.question}
                                             </p>
                                             <p className="text-zinc-400 text-sm">
-                                                Ditt svar: {question.options[result.selectedIndex]}
+                                                Ditt svar: {result.selectedIndices.map(i => question.options[i]).join(', ')}
                                             </p>
                                             {!result.correct && (
                                                 <p className="text-red-400 text-sm mt-1">
-                                                    Rätt svar: {question.options[question.correctIndex]}
+                                                    Rätt svar: {result.correctIndices.map(i => question.options[i]).join(', ')}
                                                 </p>
                                             )}
                                         </div>
