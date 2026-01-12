@@ -47,6 +47,8 @@ import { DOE25_TASK_FLASHCARDS } from "@/data/doe25-task-flashcards"
 import { LINUX247_TASK_FLASHCARDS } from "@/data/linux247-task-flashcards"
 import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 import { TENTAISH_STATS } from "@/data/tentaish-quiz"
+import { OMTENTA_MODULE } from "@/data/omtenta-module"
+import { OMTENTA_TASK_FLASHCARDS } from "@/data/omtenta-task-flashcards"
 
 /* ============================================================================
    TYPES
@@ -61,7 +63,7 @@ interface StudyModule {
     taskCount: number
     flashcardCount: number
     quizCount: number
-    color: 'purple' | 'emerald'
+    color: 'purple' | 'emerald' | 'amber'
     progress?: number
     tasks: { id: string; title: string; flashcardCount: number }[]
 }
@@ -114,6 +116,22 @@ const STUDY_MODULES: StudyModule[] = [
         quizCount: HANDSON_MODULE.tasks.length * 20,
         color: 'purple',
         tasks: HANDSON_TASK_FLASHCARDS.map(t => ({
+            id: t.taskId,
+            title: t.taskTitle,
+            flashcardCount: t.flashcards.length
+        }))
+    },
+    {
+        id: 'omtenta-linux',
+        slug: 'omtenta-linux',
+        title: 'Inför Omtenta Linux',
+        description: 'Komplett förberedelse för Linux-omtentan',
+        icon: '📚',
+        taskCount: OMTENTA_MODULE.tasks.length,
+        flashcardCount: 350,
+        quizCount: 350,
+        color: 'amber',
+        tasks: OMTENTA_TASK_FLASHCARDS.map(t => ({
             id: t.taskId,
             title: t.taskTitle,
             flashcardCount: t.flashcards.length
@@ -548,7 +566,7 @@ export default function StudyPage() {
                                     >
                                         <span className="text-2xl">📚</span>
                                         <span className="text-xs font-medium">Inför Omtenta</span>
-                                        <span className="text-[10px] opacity-70 font-normal">250 frågor</span>
+                                        <span className="text-[10px] opacity-70 font-normal">350 frågor</span>
                                     </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
@@ -644,7 +662,9 @@ export default function StudyPage() {
                                         isSelected
                                             ? module.color === 'purple'
                                                 ? "bg-purple-500/10 border-purple-500/50"
-                                                : "bg-emerald-500/10 border-emerald-500/50"
+                                                : module.color === 'amber'
+                                                    ? "bg-amber-500/10 border-amber-500/50"
+                                                    : "bg-emerald-500/10 border-emerald-500/50"
                                             : "bg-zinc-900/50 border-zinc-800/50 hover:border-zinc-700"
                                     )}
                                 >
@@ -655,7 +675,9 @@ export default function StudyPage() {
                                                 "absolute inset-0 rounded-2xl -z-10",
                                                 module.color === 'purple'
                                                     ? "bg-gradient-to-br from-purple-500/20 to-transparent"
-                                                    : "bg-gradient-to-br from-emerald-500/20 to-transparent"
+                                                    : module.color === 'amber'
+                                                        ? "bg-gradient-to-br from-amber-500/20 to-transparent"
+                                                        : "bg-gradient-to-br from-emerald-500/20 to-transparent"
                                             )}
                                         />
                                     )}
@@ -667,7 +689,9 @@ export default function StudyPage() {
                                             isSelected
                                                 ? module.color === 'purple'
                                                     ? "bg-purple-500/30 shadow-lg shadow-purple-500/20"
-                                                    : "bg-emerald-500/30 shadow-lg shadow-emerald-500/20"
+                                                    : module.color === 'amber'
+                                                        ? "bg-amber-500/30 shadow-lg shadow-amber-500/20"
+                                                        : "bg-emerald-500/30 shadow-lg shadow-emerald-500/20"
                                                 : "bg-zinc-800"
                                         )}>
                                             {module.icon}
@@ -678,7 +702,7 @@ export default function StudyPage() {
                                                 <h3 className={cn(
                                                     "text-xl font-bold transition-colors",
                                                     isSelected
-                                                        ? module.color === 'purple' ? "text-purple-300" : "text-emerald-300"
+                                                        ? module.color === 'purple' ? "text-purple-300" : module.color === 'amber' ? "text-amber-300" : "text-emerald-300"
                                                         : "text-white group-hover:text-zinc-200"
                                                 )}>
                                                     {module.title}
@@ -686,7 +710,7 @@ export default function StudyPage() {
                                                 {isSelected && (
                                                     <CheckSquare className={cn(
                                                         "w-5 h-5",
-                                                        module.color === 'purple' ? "text-purple-400" : "text-emerald-400"
+                                                        module.color === 'purple' ? "text-purple-400" : module.color === 'amber' ? "text-amber-400" : "text-emerald-400"
                                                     )} />
                                                 )}
                                             </div>
@@ -714,7 +738,7 @@ export default function StudyPage() {
                                                 <div className="mt-4">
                                                     <div className="flex items-center justify-between text-xs mb-1">
                                                         <span className="text-zinc-500">Progress</span>
-                                                        <span className={module.color === 'purple' ? "text-purple-400" : "text-emerald-400"}>
+                                                        <span className={module.color === 'purple' ? "text-purple-400" : module.color === 'amber' ? "text-amber-400" : "text-emerald-400"}>
                                                             {moduleProgress}/{module.taskCount} tasks
                                                         </span>
                                                     </div>
@@ -724,7 +748,9 @@ export default function StudyPage() {
                                                                 "h-full rounded-full",
                                                                 module.color === 'purple'
                                                                     ? "bg-gradient-to-r from-purple-500 to-pink-500"
-                                                                    : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                                                                    : module.color === 'amber'
+                                                                        ? "bg-gradient-to-r from-amber-500 to-orange-500"
+                                                                        : "bg-gradient-to-r from-emerald-500 to-teal-500"
                                                             )}
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${progressPercent}%` }}
@@ -738,7 +764,7 @@ export default function StudyPage() {
                                         <ChevronRight className={cn(
                                             "w-6 h-6 shrink-0 transition-all",
                                             isSelected
-                                                ? module.color === 'purple' ? "text-purple-400" : "text-emerald-400"
+                                                ? module.color === 'purple' ? "text-purple-400" : module.color === 'amber' ? "text-amber-400" : "text-emerald-400"
                                                 : "text-zinc-600 group-hover:text-zinc-400"
                                         )} />
                                     </div>
@@ -847,7 +873,9 @@ export default function StudyPage() {
                                                                 isTaskSelected
                                                                     ? currentModule.color === 'purple'
                                                                         ? "bg-purple-500/10 border-purple-500/40"
-                                                                        : "bg-emerald-500/10 border-emerald-500/40"
+                                                                        : currentModule.color === 'amber'
+                                                                            ? "bg-amber-500/10 border-amber-500/40"
+                                                                            : "bg-emerald-500/10 border-emerald-500/40"
                                                                     : "bg-zinc-800/30 border-zinc-700/30 hover:border-zinc-600"
                                                             )}
                                                         >
@@ -856,7 +884,9 @@ export default function StudyPage() {
                                                                 isTaskSelected
                                                                     ? currentModule.color === 'purple'
                                                                         ? "bg-purple-500"
-                                                                        : "bg-emerald-500"
+                                                                        : currentModule.color === 'amber'
+                                                                            ? "bg-amber-500"
+                                                                            : "bg-emerald-500"
                                                                     : "bg-zinc-700"
                                                             )}>
                                                                 {isTaskSelected && <Check className="w-3 h-3 text-white" />}
