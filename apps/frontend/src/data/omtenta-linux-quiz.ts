@@ -1,13 +1,14 @@
 /**
  * INFÖR OMTENTA LINUX - Huvudfil
- * Samlar alla ~300 quiz-frågor för omtenta-förberedelse
+ * Samlar alla 350 quiz-frågor för omtenta-förberedelse
  * 
  * Struktur:
- * - omtenta-ssh-brandvagg.ts: 50 frågor
- * - omtenta-storage-docker.ts: 100 frågor (50+50)
- * - omtenta-user-filsystem.ts: 100 frågor (50+50)
+ * - omtenta-ssh-brandvagg.ts: 50 frågor (SSH & Brandvägg)
+ * - omtenta-storage-docker.ts: 100 frågor (Block Storage + Docker)
+ * - omtenta-user-filsystem.ts: 100 frågor (Användarhantering + Filsystem)
+ * - omtenta-paket-subnetting.ts: 100 frågor (Pakethantering + Subnetting)
  * 
- * Total: 250 frågor
+ * Total: 350 frågor
  * 
  * Skapad: 2026-01-12
  */
@@ -15,6 +16,7 @@
 import { SSH_BRANDVAGG_QUESTIONS, type OmtentaQuestion } from './omtenta-ssh-brandvagg'
 import { STORAGE_QUESTIONS, DOCKER_QUESTIONS } from './omtenta-storage-docker'
 import { ANVANDARHANTERING_QUESTIONS, FILSYSTEM_QUESTIONS } from './omtenta-user-filsystem'
+import { PAKETHANTERING_QUESTIONS, SUBNETTING_QUESTIONS } from './omtenta-paket-subnetting'
 
 // Re-export type
 export type { OmtentaQuestion }
@@ -25,7 +27,9 @@ export const ALL_OMTENTA_QUESTIONS: OmtentaQuestion[] = [
     ...STORAGE_QUESTIONS,
     ...DOCKER_QUESTIONS,
     ...ANVANDARHANTERING_QUESTIONS,
-    ...FILSYSTEM_QUESTIONS
+    ...FILSYSTEM_QUESTIONS,
+    ...PAKETHANTERING_QUESTIONS,
+    ...SUBNETTING_QUESTIONS
 ]
 
 // Stats
@@ -39,6 +43,8 @@ export const OMTENTA_STATS = {
         storage: STORAGE_QUESTIONS.length,
         docker: DOCKER_QUESTIONS.length,
         anvandarhantering: ANVANDARHANTERING_QUESTIONS.length,
-        filsystem: FILSYSTEM_QUESTIONS.length
+        filsystem: FILSYSTEM_QUESTIONS.length,
+        pakethantering: PAKETHANTERING_QUESTIONS.length,
+        subnetting: SUBNETTING_QUESTIONS.length
     }
 }
