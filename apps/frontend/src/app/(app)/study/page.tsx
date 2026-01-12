@@ -471,7 +471,7 @@ export default function StudyPage() {
                                     <BookOpen className="w-5 h-5 text-cyan-400" />
                                     <span className="text-white font-bold">Frågekälla</span>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                     <button
                                         onClick={() => setTentaSource('doe25')}
                                         className={cn(
@@ -527,7 +527,7 @@ export default function StudyPage() {
                                     <button
                                         onClick={() => setTentaSource('linux-tenta')}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1 col-span-2 sm:col-span-1",
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'linux-tenta'
                                                 ? "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30"
                                                 : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
@@ -540,7 +540,7 @@ export default function StudyPage() {
                                     <button
                                         onClick={() => setTentaSource('omtenta')}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1 col-span-2 sm:col-span-1",
+                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'omtenta'
                                                 ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30"
                                                 : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
