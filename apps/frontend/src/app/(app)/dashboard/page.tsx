@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils"
 import { getDashboardSummary, DashboardSummary } from "@/lib/dashboard"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { AIRecommendations } from "@/components/dashboard/AIRecommendations"
 
 // 🛡️ SECURITY: Disable prefetching on all links
 const SecureLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) => (
@@ -859,6 +860,9 @@ export default function DashboardPage() {
                             delay={0.4}
                         />
                     </div>
+
+                    {/* AI-Powered Recommendations */}
+                    <AIRecommendations />
 
                     {/* Quick Actions + XP Progress */}
                     <div className="grid lg:grid-cols-3 gap-6">
