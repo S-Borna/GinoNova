@@ -438,7 +438,7 @@ MODULE = {
     "description": "Master Python for DevOps automation: AWS boto3, log parsing, API interactions, CLI tools. Used by 92% of DevOps teams daily.",
     "icon": "🐍",
     "category": "tools",
-    "difficulty": "intermediate",
+    "difficulty": "rookie",
     "estimated_hours": 6,
     "tasks": [PYTHON_FUNDAMENTALS_DEVOPS],
 }

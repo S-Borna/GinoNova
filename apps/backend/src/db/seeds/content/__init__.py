@@ -45,8 +45,12 @@ from .kubernetes_fundamentals import MODULE as KUBERNETES_MODULE
 from .prompt_engineering_devops import MODULE as PROMPT_ENGINEERING_MODULE
 from .cicd_pipelines_advanced import MODULE as CICD_ADVANCED_MODULE
 from .cloud_aws_fundamentals import MODULE as AWS_FUNDAMENTALS_MODULE
+from .cloud_azure_fundamentals import MODULE as AZURE_FUNDAMENTALS_MODULE
+from .cloud_gcp_fundamentals import MODULE as GCP_FUNDAMENTALS_MODULE
+from .cloud_multicloud_architecture import MODULE as MULTICLOUD_MODULE
 from .terraform_iac import MODULE as TERRAFORM_MODULE
 from .python_for_devops import MODULE as PYTHON_DEVOPS_MODULE
+from .config_ansible_automation import MODULE as ANSIBLE_MODULE
 
 # =============================================================================
 # ALL MODULES — Lista med alla moduler som ska visas
@@ -60,8 +64,18 @@ ALL_MODULES: list[dict] = [
     # Core DevOps Skills (Job-ready content)
     KUBERNETES_MODULE,
     CICD_ADVANCED_MODULE,
+
+    # Cloud Platforms
     AWS_FUNDAMENTALS_MODULE,
+    AZURE_FUNDAMENTALS_MODULE,
+    GCP_FUNDAMENTALS_MODULE,
+    MULTICLOUD_MODULE,
+
+    # Infrastructure as Code
     TERRAFORM_MODULE,
+
+    # Configuration Management
+    ANSIBLE_MODULE,
 
     # Tools & Languages
     PYTHON_DEVOPS_MODULE,
