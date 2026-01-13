@@ -45,6 +45,8 @@ from .kubernetes_fundamentals import MODULE as KUBERNETES_MODULE
 from .prompt_engineering_devops import MODULE as PROMPT_ENGINEERING_MODULE
 from .cicd_pipelines_advanced import MODULE as CICD_ADVANCED_MODULE
 from .cloud_aws_fundamentals import MODULE as AWS_FUNDAMENTALS_MODULE
+from .terraform_iac import MODULE as TERRAFORM_MODULE
+from .python_for_devops import MODULE as PYTHON_DEVOPS_MODULE
 
 # =============================================================================
 # ALL MODULES — Lista med alla moduler som ska visas
@@ -55,10 +57,14 @@ ALL_MODULES: list[dict] = [
     DOE25_TENTAPLUGG_MODULE,
     HANDS_ON_MODULE,
 
-    # New DevOps modules (Job-ready content)
+    # Core DevOps Skills (Job-ready content)
     KUBERNETES_MODULE,
     CICD_ADVANCED_MODULE,
     AWS_FUNDAMENTALS_MODULE,
+    TERRAFORM_MODULE,
+
+    # Tools & Languages
+    PYTHON_DEVOPS_MODULE,
     PROMPT_ENGINEERING_MODULE,
 ]
 
