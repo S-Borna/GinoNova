@@ -51,6 +51,36 @@ from .cloud_multicloud_architecture import MODULE as MULTICLOUD_MODULE
 from .terraform_iac import MODULE as TERRAFORM_MODULE
 from .python_for_devops import MODULE as PYTHON_DEVOPS_MODULE
 from .config_ansible_automation import MODULE as ANSIBLE_MODULE
+from .monitoring_prometheus import MODULE as PROMETHEUS_MODULE
+from .monitoring_grafana import MODULE as GRAFANA_MODULE
+from .monitoring_elk_stack import MODULE as ELK_STACK_MODULE
+from .monitoring_datadog import MODULE as DATADOG_MODULE
+
+# Database modules
+from .database_postgresql import MODULE as POSTGRESQL_MODULE
+from .database_redis import MODULE as REDIS_MODULE
+from .database_mongodb import MODULE as MONGODB_MODULE
+
+# Messaging modules
+from .messaging_kafka import MODULE as KAFKA_MODULE
+from .messaging_rabbitmq import MODULE as RABBITMQ_MODULE
+
+# Networking modules
+from .networking_istio import MODULE as ISTIO_MODULE
+from .networking_nginx import MODULE as NGINX_MODULE
+
+# Security modules
+from .security_devsecops import MODULE as DEVSECOPS_MODULE
+from .security_vault import MODULE as VAULT_MODULE
+
+# CI/CD Advanced modules
+from .cicd_jenkins_advanced import MODULE as JENKINS_ADVANCED_MODULE
+from .cicd_gitlab_ci import MODULE as GITLAB_CI_MODULE
+from .cicd_argocd import MODULE as ARGOCD_MODULE
+
+# Language modules
+from .languages_go_devops import MODULE as GO_DEVOPS_MODULE
+from .languages_yaml_json import MODULE as YAML_JSON_MODULE
 
 # =============================================================================
 # ALL MODULES — Lista med alla moduler som ska visas
@@ -80,6 +110,36 @@ ALL_MODULES: list[dict] = [
     # Tools & Languages
     PYTHON_DEVOPS_MODULE,
     PROMPT_ENGINEERING_MODULE,
+    GO_DEVOPS_MODULE,
+    YAML_JSON_MODULE,
+
+    # Monitoring & Observability
+    PROMETHEUS_MODULE,
+    GRAFANA_MODULE,
+    ELK_STACK_MODULE,
+    DATADOG_MODULE,
+
+    # Databases
+    POSTGRESQL_MODULE,
+    REDIS_MODULE,
+    MONGODB_MODULE,
+
+    # Messaging
+    KAFKA_MODULE,
+    RABBITMQ_MODULE,
+
+    # Networking & Service Mesh
+    ISTIO_MODULE,
+    NGINX_MODULE,
+
+    # Security
+    DEVSECOPS_MODULE,
+    VAULT_MODULE,
+
+    # CI/CD Advanced
+    JENKINS_ADVANCED_MODULE,
+    GITLAB_CI_MODULE,
+    ARGOCD_MODULE,
 ]
 
 
