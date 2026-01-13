@@ -1,7 +1,7 @@
 /**
  * INFÖR OMTENTA LINUX - Del 2: Block Storage, Kryptering & Docker
  * 100 quiz-frågor
- * 
+ *
  * Skapad: 2026-01-12
  */
 

@@ -2,7 +2,7 @@
 
 /**
  * Omtenta V2 Flashcards - Linux Exam Prep
- * 
+ *
  * Features:
  * - 770 flashcards (7 ämnen × 110 kort)
  * - Topic selector (välj vilka ämnen)
@@ -66,7 +66,7 @@ export default function OmtentaV2FlashcardsPage() {
 
     // Toggle topic selection
     const toggleTopic = (topicId: FlashcardTopic) => {
-        setSelectedTopics(prev => 
+        setSelectedTopics(prev =>
             prev.includes(topicId)
                 ? prev.filter(t => t !== topicId)
                 : [...prev, topicId]
@@ -287,8 +287,8 @@ export default function OmtentaV2FlashcardsPage() {
                                         cardCount === count
                                             ? "bg-green-500 text-white"
                                             : count !== 'ALLA' && count > availableCards
-                                            ? "bg-slate-700/30 text-slate-500 cursor-not-allowed"
-                                            : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                                ? "bg-slate-700/30 text-slate-500 cursor-not-allowed"
+                                                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                                     )}
                                 >
                                     {count === 'ALLA' ? 'ALLA' : count}
@@ -328,7 +328,7 @@ export default function OmtentaV2FlashcardsPage() {
 
                     {/* Progress Bar */}
                     <div className="h-2 bg-slate-700 rounded-full mb-6 overflow-hidden">
-                        <div 
+                        <div
                             className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300"
                             style={{ width: `${((currentIndex + 1) / cards.length) * 100}%` }}
                         />
@@ -342,7 +342,7 @@ export default function OmtentaV2FlashcardsPage() {
                     </div>
 
                     {/* Flashcard */}
-                    <div 
+                    <div
                         onClick={flipCard}
                         className="relative cursor-pointer perspective-1000 mb-6"
                         style={{ perspective: '1000px' }}
@@ -354,7 +354,7 @@ export default function OmtentaV2FlashcardsPage() {
                             style={{ transformStyle: 'preserve-3d' }}
                         >
                             {/* Front (Question) */}
-                            <div 
+                            <div
                                 className={cn(
                                     "absolute inset-0 w-full h-full bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl border border-slate-600 p-8 flex flex-col items-center justify-center text-center",
                                     "backface-hidden"
@@ -374,12 +374,12 @@ export default function OmtentaV2FlashcardsPage() {
                             </div>
 
                             {/* Back (Answer) */}
-                            <div 
+                            <div
                                 className={cn(
                                     "absolute inset-0 w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-2xl border border-purple-500/30 p-8 flex flex-col items-center justify-center text-center",
                                     "backface-hidden"
                                 )}
-                                style={{ 
+                                style={{
                                     backfaceVisibility: 'hidden',
                                     transform: 'rotateY(180deg)'
                                 }}
@@ -420,7 +420,7 @@ export default function OmtentaV2FlashcardsPage() {
                             disabled={currentIndex === 0}
                             className={cn(
                                 "p-3 rounded-xl transition-all",
-                                currentIndex === 0 
+                                currentIndex === 0
                                     ? "bg-slate-700/50 text-slate-500 cursor-not-allowed"
                                     : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                             )}
@@ -444,8 +444,8 @@ export default function OmtentaV2FlashcardsPage() {
 
                     {/* Keyboard hints */}
                     <div className="mt-6 text-center text-xs text-slate-500">
-                        <span className="px-2 py-1 bg-slate-800 rounded">Space</span> Vänd • 
-                        <span className="px-2 py-1 bg-slate-800 rounded mx-1">←</span> Kunde inte • 
+                        <span className="px-2 py-1 bg-slate-800 rounded">Space</span> Vänd •
+                        <span className="px-2 py-1 bg-slate-800 rounded mx-1">←</span> Kunde inte •
                         <span className="px-2 py-1 bg-slate-800 rounded">→</span> Kunde
                     </div>
                 </div>
@@ -492,7 +492,7 @@ export default function OmtentaV2FlashcardsPage() {
 
                         {/* Progress Bar */}
                         <div className="h-4 bg-slate-700 rounded-full overflow-hidden mb-8">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-1000"
                                 style={{ width: `${percentage}%` }}
                             />

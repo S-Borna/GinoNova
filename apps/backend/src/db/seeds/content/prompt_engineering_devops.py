@@ -975,3 +975,16 @@ PROMPT_ENGINEERING_MODULES = [
     PROMPT_FUNDAMENTALS,
     # More modules will be added...
 ]
+
+# MODULE export för kompatibilitet med systemet
+MODULE = {
+    "name": "Prompt Engineering for DevOps",
+    "slug": "prompt-engineering-devops",
+    "description": "Master AI-assisted DevOps with the TRIPOD framework. 10x your productivity with ChatGPT, Claude, and Copilot. The emerging skill that gives you a competitive edge.",
+    "icon": "🤖",
+    "order_index": 13,
+    "category": "devops",
+    "difficulty": "beginner",
+    "estimated_hours": 4,
+    "tasks": PROMPT_ENGINEERING_MODULES
+}

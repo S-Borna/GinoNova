@@ -1,7 +1,7 @@
 /**
  * INFÖR OMTENTA LINUX - Del 1: SSH & Brandvägg
  * 50 quiz-frågor baserade på SSH & Brandvägg materialet
- * 
+ *
  * Skapad: 2026-01-12
  */
 

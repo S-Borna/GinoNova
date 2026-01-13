@@ -4,12 +4,12 @@
  * för kompatibilitet med flashcard-modulen
  */
 
-import { 
-    ALL_FLASHCARDS, 
-    FLASHCARDS_BY_TOPIC, 
+import {
+    ALL_FLASHCARDS,
+    FLASHCARDS_BY_TOPIC,
     FLASHCARD_TOPICS,
     type OmtentaV2Flashcard,
-    type FlashcardTopic 
+    type FlashcardTopic
 } from './omtenta-v2-flashcards'
 
 // Re-use TaskFlashcard interface from existing module

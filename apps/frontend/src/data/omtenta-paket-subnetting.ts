@@ -1,7 +1,7 @@
 /**
  * INFÖR OMTENTA - Pakethantering & SSH-nycklar + Subnetting
  * 100 frågor (50 + 50)
- * 
+ *
  * Baserat på:
  * - Handson - Pakethantering & SSH-nycklar.md
  * - Handson - Subnetting.md

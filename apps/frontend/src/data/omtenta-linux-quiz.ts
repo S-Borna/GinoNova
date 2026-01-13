@@ -1,15 +1,15 @@
 /**
  * INFÖR OMTENTA LINUX - Huvudfil
  * Samlar alla 350 quiz-frågor för omtenta-förberedelse
- * 
+ *
  * Struktur:
  * - omtenta-ssh-brandvagg.ts: 50 frågor (SSH & Brandvägg)
  * - omtenta-storage-docker.ts: 100 frågor (Block Storage + Docker)
  * - omtenta-user-filsystem.ts: 100 frågor (Användarhantering + Filsystem)
  * - omtenta-paket-subnetting.ts: 100 frågor (Pakethantering + Subnetting)
- * 
+ *
  * Total: 350 frågor
- * 
+ *
  * Skapad: 2026-01-12
  */
 

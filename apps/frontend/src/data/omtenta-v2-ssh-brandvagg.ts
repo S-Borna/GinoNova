@@ -1,11 +1,11 @@
 /**
  * OMTENTA V2 - SSH & Brandvägg (110 frågor)
  * EXAKT spegling av Omtenta/SSH_Brandvagg_Quiz_110.md
- * 
+ *
  * OBS: Inkluderar multi-select frågor (choose X)
  */
 
-export type OmtentaV2Topic = 
+export type OmtentaV2Topic =
     | 'ssh-brandvagg'
     | 'pakethantering-bash'
     | 'docker-containers'

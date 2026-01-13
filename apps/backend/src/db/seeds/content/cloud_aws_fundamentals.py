@@ -759,3 +759,16 @@ AWS_MODULES = [
     CLOUD_CONCEPTS_AWS,
     # More modules...
 ]
+
+# MODULE export för kompatibilitet med systemet
+MODULE = {
+    "name": "AWS Cloud Fundamentals",
+    "slug": "aws-cloud-fundamentals",
+    "description": "Learn AWS cloud computing - required in 85% of DevOps jobs. Master EC2, S3, RDS, VPC, IAM, and CloudWatch with hands-on exercises.",
+    "icon": "☁️",
+    "order_index": 12,
+    "category": "devops",
+    "difficulty": "beginner",
+    "estimated_hours": 6,
+    "tasks": AWS_MODULES
+}
