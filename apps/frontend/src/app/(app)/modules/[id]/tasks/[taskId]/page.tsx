@@ -467,7 +467,82 @@ export default function TaskDetailPage() {
                 return
             }
 
-            // Fetch task, module, and all tasks in parallel
+            // Try content source API first (for seed-based modules)
+            const contentRes = await fetch(`${API_URL}/api/modules/full/${moduleId}`)
+            
+            if (contentRes.ok) {
+                const contentModule = await contentRes.json()
+                
+                // Find task by slug or title
+                const contentTask = contentModule.tasks?.find((t: any) => 
+                    t.slug === taskId || 
+                    t.title === taskId ||
+                    t.slug === decodeURIComponent(taskId) ||
+                    t.title === decodeURIComponent(taskId)
+                )
+                
+                if (contentTask) {
+                    // Convert to TaskPublic format
+                    const taskData: TaskPublic = {
+                        id: contentTask.slug || contentTask.title,
+                        title: contentTask.title,
+                        description: contentTask.description || "",
+                        content: contentTask.content || "",
+                        order_index: contentTask.order_index || 0,
+                        module_id: moduleId,
+                        difficulty: contentTask.difficulty || "medium",
+                        estimated_minutes: contentTask.estimated_minutes || 30,
+                        xp_reward: contentTask.xp_reward || 100,
+                        task_tier: "standard",
+                        is_active: true,
+                        parent_task_id: null,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }
+
+                    // Module data
+                    const moduleData: ModulePublic = {
+                        id: contentModule.slug || moduleId,
+                        name: contentModule.name || contentModule.title || moduleId,
+                        slug: contentModule.slug || moduleId,
+                        description: contentModule.description || "",
+                        order_index: contentModule.order_index || 0,
+                        difficulty: contentModule.difficulty || "intermediate",
+                        estimated_hours: contentModule.estimated_hours || 4,
+                        prerequisites: [],
+                        is_active: true,
+                        track_id: contentModule.category || "devops",
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }
+
+                    // All tasks for navigation
+                    const allContentTasks: TaskPublic[] = (contentModule.tasks || []).map((t: any, idx: number) => ({
+                        id: t.slug || t.title,
+                        title: t.title,
+                        description: t.description || "",
+                        content: t.content || "",
+                        order_index: t.order_index ?? idx,
+                        module_id: moduleId,
+                        difficulty: t.difficulty || "medium",
+                        estimated_minutes: t.estimated_minutes || 30,
+                        xp_reward: t.xp_reward || 100,
+                        task_tier: "standard",
+                        is_active: true,
+                        parent_task_id: null,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    }))
+
+                    setTask(taskData)
+                    setModule(moduleData)
+                    setAllTasks(allContentTasks)
+                    setLoading(false)
+                    return
+                }
+            }
+
+            // Fallback to database API
             const [taskResult, moduleResult, tasksResult] = await Promise.all([
                 getTask(taskId),
                 getModule(moduleId),
