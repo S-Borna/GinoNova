@@ -884,3 +884,16 @@ KUBERNETES_MODULES = [
     K8S_ARCHITECTURE,
     # More modules will be added...
 ]
+
+# MODULE export för kompatibilitet med systemet
+MODULE = {
+    "name": "Kubernetes Fundamentals",
+    "slug": "kubernetes-fundamentals",
+    "description": "Master container orchestration with Kubernetes - the #1 most requested DevOps skill. Prepares you for 95% of DevOps job interviews.",
+    "icon": "☸️",
+    "order_index": 10,
+    "category": "devops",
+    "difficulty": "intermediate",
+    "estimated_hours": 8,
+    "tasks": KUBERNETES_MODULES
+}

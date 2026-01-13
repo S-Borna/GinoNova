@@ -2,7 +2,7 @@
 
 /**
  * Omtenta V2 Quiz - Linux Exam Prep
- * 
+ *
  * Features:
  * - 770 frågor (7 ämnen × 110 frågor)
  * - Topic selector (välj vilka ämnen)
@@ -90,7 +90,7 @@ export default function OmtentaV2Page() {
     // Start quiz
     const startQuiz = useCallback(() => {
         const quizQuestions = getQuizQuestions(selectedTopics, questionCount)
-        
+
         // Shuffle options within each question
         const preparedQuestions = quizQuestions.map(q => {
             const optionsWithIndex = q.options.map((opt, idx) => ({
@@ -98,13 +98,13 @@ export default function OmtentaV2Page() {
                 originalIndex: idx
             }))
             const shuffled = shuffleArray(optionsWithIndex)
-            
+
             // Map old indices to new indices for correctIndices
             const indexMap = new Map<number, number>()
             shuffled.forEach((item, newIdx) => {
                 indexMap.set(item.originalIndex, newIdx)
             })
-            
+
             return {
                 ...q,
                 options: shuffled.map(item => item.option),
@@ -125,7 +125,7 @@ export default function OmtentaV2Page() {
 
     // Toggle topic selection
     const toggleTopic = (topicId: OmtentaV2Topic) => {
-        setSelectedTopics(prev => 
+        setSelectedTopics(prev =>
             prev.includes(topicId)
                 ? prev.filter(t => t !== topicId)
                 : [...prev, topicId]
@@ -308,8 +308,8 @@ export default function OmtentaV2Page() {
                                         questionCount === count
                                             ? "bg-green-500 text-white"
                                             : count !== 'ALLA' && count > availableQuestions
-                                            ? "bg-slate-700/30 text-slate-500 cursor-not-allowed"
-                                            : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                                                ? "bg-slate-700/30 text-slate-500 cursor-not-allowed"
+                                                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                                     )}
                                 >
                                     {count === 'ALLA' ? 'ALLA' : count}
@@ -416,7 +416,7 @@ export default function OmtentaV2Page() {
 
                     {/* Progress Bar */}
                     <div className="h-2 bg-slate-700 rounded-full mb-6 overflow-hidden">
-                        <div 
+                        <div
                             className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
                             style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
                         />
@@ -579,8 +579,8 @@ export default function OmtentaV2Page() {
                         </h1>
 
                         <p className="text-slate-400 mb-6">
-                            {passed 
-                                ? "Du klarade quizzen!" 
+                            {passed
+                                ? "Du klarade quizzen!"
                                 : "Du behöver minst 70% för att klara quizzen."
                             }
                         </p>
@@ -608,10 +608,10 @@ export default function OmtentaV2Page() {
 
                         {/* Progress Bar */}
                         <div className="h-4 bg-slate-700 rounded-full overflow-hidden mb-8">
-                            <div 
+                            <div
                                 className={cn(
                                     "h-full transition-all duration-1000",
-                                    passed 
+                                    passed
                                         ? "bg-gradient-to-r from-green-500 to-emerald-500"
                                         : "bg-gradient-to-r from-red-500 to-orange-500"
                                 )}
@@ -648,7 +648,7 @@ export default function OmtentaV2Page() {
                                     return q?.topic === topic.id
                                 })
                                 if (topicResults.length === 0) return null
-                                
+
                                 const topicCorrect = topicResults.filter(r => r.correct).length
                                 const topicPercentage = Math.round((topicCorrect / topicResults.length) * 100)
 
@@ -662,7 +662,7 @@ export default function OmtentaV2Page() {
                                                 </span>
                                             </div>
                                             <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
-                                                <div 
+                                                <div
                                                     className={cn(
                                                         "h-full",
                                                         topicPercentage >= 70 ? "bg-green-500" : "bg-red-500"

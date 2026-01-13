@@ -542,8 +542,8 @@ export default function TentaSimulatorPage() {
     const toggleAnswer = (idx: number) => {
         const currentQuestion = questions[currentIndex]
         if (currentQuestion.isMultiSelect) {
-            setSelectedAnswers(prev => 
-                prev.includes(idx) 
+            setSelectedAnswers(prev =>
+                prev.includes(idx)
                     ? prev.filter(i => i !== idx)
                     : [...prev, idx]
             )
@@ -564,7 +564,7 @@ export default function TentaSimulatorPage() {
     const submitAnswer = () => {
         const currentQuestion = questions[currentIndex]
         const isMulti = currentQuestion.isMultiSelect
-        
+
         // Check if answer is selected
         if (isMulti && selectedAnswers.length === 0) return
         if (!isMulti && selectedAnswer === null) return
@@ -573,7 +573,7 @@ export default function TentaSimulatorPage() {
 
         const result: QuizResult = {
             questionId: currentQuestion.id,
-            correct: isMulti 
+            correct: isMulti
                 ? checkMultiSelectAnswer(selectedAnswers, currentQuestion.correctIndices)
                 : selectedAnswer === currentQuestion.correctIndices[0],
             selectedIndex: isMulti ? undefined : selectedAnswer!,
@@ -1099,7 +1099,7 @@ export default function TentaSimulatorPage() {
                                         {showAsCorrect ? <CheckCircle className="w-5 h-5" /> :
                                             showAsWrong ? <XCircle className="w-5 h-5" /> :
                                                 isMulti && isSelected ? <CheckCircle className="w-5 h-5" /> :
-                                                String.fromCharCode(65 + idx)}
+                                                    String.fromCharCode(65 + idx)}
                                     </span>
                                     <span>{option}</span>
                                 </div>

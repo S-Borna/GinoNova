@@ -720,3 +720,16 @@ CICD_MODULES = [
     ADVANCED_GH_ACTIONS,
     # More modules...
 ]
+
+# MODULE export för kompatibilitet med systemet
+MODULE = {
+    "name": "CI/CD Pipelines Advanced",
+    "slug": "cicd-pipelines-advanced",
+    "description": "Master advanced CI/CD with GitHub Actions - required in 90% of DevOps jobs. Build production-ready pipelines with matrix builds, caching, and blue-green deployments.",
+    "icon": "🔄",
+    "order_index": 11,
+    "category": "devops",
+    "difficulty": "intermediate",
+    "estimated_hours": 6,
+    "tasks": CICD_MODULES
+}

@@ -41,6 +41,10 @@ from typing import Optional
 from .linux_247 import MODULE as LINUX_247_MODULE
 from .doe25_tentaplugg import MODULE as DOE25_TENTAPLUGG_MODULE
 from .hands_on import MODULE as HANDS_ON_MODULE
+from .kubernetes_fundamentals import MODULE as KUBERNETES_MODULE
+from .cicd_pipelines_advanced import MODULE as CICD_MODULE
+from .cloud_aws_fundamentals import MODULE as AWS_MODULE
+from .prompt_engineering_devops import MODULE as PROMPT_ENGINEERING_MODULE
 
 # =============================================================================
 # ALL MODULES — Lista med alla moduler som ska visas
@@ -49,6 +53,10 @@ ALL_MODULES: list[dict] = [
     LINUX_247_MODULE,
     DOE25_TENTAPLUGG_MODULE,
     HANDS_ON_MODULE,
+    KUBERNETES_MODULE,
+    CICD_MODULE,
+    AWS_MODULE,
+    PROMPT_ENGINEERING_MODULE,
 ]
 
 

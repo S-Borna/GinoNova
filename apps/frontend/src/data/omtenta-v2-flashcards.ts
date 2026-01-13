@@ -14,7 +14,7 @@ import { FILSYSTEM_FLASHCARDS } from './omtenta-v2-flashcards-filsystem'
 export type { OmtentaV2Flashcard }
 
 // Flashcard topic type
-export type FlashcardTopic = 
+export type FlashcardTopic =
     | 'ssh-brandvagg'
     | 'pakethantering-bash'
     | 'docker-containers'
@@ -71,7 +71,7 @@ export function shuffleFlashcards<T>(array: T[]): T[] {
     const shuffled = [...array]
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1))
-        ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+            ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
     return shuffled
 }
@@ -83,10 +83,10 @@ export function getFlashcards(
 ): OmtentaV2Flashcard[] {
     const flashcards = getFlashcardsByTopics(topics)
     const shuffled = shuffleFlashcards(flashcards)
-    
+
     if (count === 'ALLA') {
         return shuffled
     }
-    
+
     return shuffled.slice(0, Math.min(count, shuffled.length))
 }
