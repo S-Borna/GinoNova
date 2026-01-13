@@ -754,8 +754,15 @@ After mastering AWS basics:
 """
 }
 
-# Export modules
-AWS_MODULES = [
-    CLOUD_CONCEPTS_AWS,
-    # More modules...
-]
+# Export as MODULE dict (required format for __init__.py)
+MODULE = {
+    "id": "cloud-aws-fundamentals",
+    "slug": "cloud-aws-fundamentals",
+    "title": "AWS Cloud Fundamentals",
+    "description": "Master Amazon Web Services from zero to production. Learn EC2, S3, VPC, IAM, and cloud architecture. 70% of companies use AWS - essential for DevOps careers.",
+    "icon": "☁️",
+    "category": "devops",
+    "difficulty": "intermediate",
+    "estimated_hours": 10,
+    "tasks": [CLOUD_CONCEPTS_AWS],
+}
