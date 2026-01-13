@@ -144,10 +144,10 @@ ID: i-0987654321fedcba0
 
 ```python
 #!/usr/bin/env python3
-"""
+'''
 Stop all EC2 instances tagged 'Environment=development' to save costs
 Run this at night, start them in the morning
-"""
+'''
 import boto3
 import sys
 
@@ -233,9 +233,9 @@ python3 manage_dev_instances.py start
 
 ```python
 #!/usr/bin/env python3
-"""
+'''
 Backup local directory to S3 with timestamp
-"""
+'''
 import boto3
 import os
 from datetime import datetime
