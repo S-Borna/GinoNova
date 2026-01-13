@@ -24,6 +24,7 @@ import { MobileNav } from "@/components/layout/MobileNav"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { RightSidebar } from "@/components/modules/RightSidebar"
 import { CosmicLockedOverlay } from "@/components/ui/cosmic-locked-overlay"
+import { DallasAssistant } from "@/components/ai/DallasAssistant"
 
 /* ============================================================================
    HOOKS
@@ -178,6 +179,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Cosmic Locked Overlay - Shows on protected pages for non-authenticated users */}
             {showLockedOverlay && <CosmicLockedOverlay />}
+
+            {/* Dallas AI Assistant - Persistent floating assistant on all pages */}
+            <DallasAssistant />
         </div>
     )
 }
