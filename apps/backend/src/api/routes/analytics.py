@@ -2,12 +2,16 @@
 Analytics API Routes - Phase 13
 Event tracking and insights endpoints.
 """
-from fastapi import APIRouter, HTTPException, Query, Request
+from fastapi import APIRouter, HTTPException, Query, Request, Depends
 from pydantic import BaseModel
 from uuid import UUID
 from typing import Optional, List
 from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
 import logging
+
+from src.db.database import get_db
+from src.services.analytics_service import AnalyticsService
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +62,8 @@ class UserAnalyticsResponse(BaseModel):
 async def track_event(
     request: TrackEventRequest,
     req: Request,
-    user_id: Optional[UUID] = Query(None)
+    user_id: Optional[UUID] = Query(None),
+    db: Session = Depends(get_db)
 ):
     """
     Track an analytics event.
@@ -70,41 +75,47 @@ async def track_event(
         logger.warning(f"Unknown event type: {request.event_type}")
         # Still track it, just log warning
 
-    # TODO: Store event in database
-    # event = AnalyticsEvent(
-    #     user_id=user_id,
-    #     event_type=request.event_type,
-    #     event_data=request.event_data,
-    #     session_id=request.session_id,
-    #     ip_address=req.client.host if req.client else None,
-    #     user_agent=req.headers.get("user-agent"),
-    # )
-    # db.add(event)
-    # db.commit()
+    # Store event in database
+    analytics_service = AnalyticsService(db)
+    event = analytics_service.track_event(
+        user_id=user_id,
+        event_type=request.event_type,
+        event_data=request.event_data,
+        session_id=request.session_id,
+        ip_address=req.client.host if req.client else None,
+        user_agent=req.headers.get("user-agent")
+    )
 
     logger.debug(f"Event tracked: {request.event_type} for user {user_id}")
 
-    return {"tracked": True, "event_type": request.event_type}
+    return {"tracked": True, "event_type": request.event_type, "event_id": str(event.id)}
 
 
 @router.get("/user/{user_id}", response_model=UserAnalyticsResponse)
 async def get_user_analytics(
     user_id: UUID,
-    requesting_user: Optional[UUID] = Query(None)
+    requesting_user: Optional[UUID] = Query(None),
+    db: Session = Depends(get_db)
 ):
     """
     Get analytics summary for a user.
     """
     # TODO: Check if requesting_user can view user_id's analytics
+    # For now, users can view their own analytics
 
-    # TODO: Fetch from database
+    analytics_service = AnalyticsService(db)
+    data = analytics_service.get_user_analytics_summary(user_id)
+
+    if not data:
+        raise HTTPException(status_code=404, detail="User not found")
+
     return UserAnalyticsResponse(
-        total_study_hours=0,
-        tasks_completed=0,
-        current_streak=0,
-        longest_streak=0,
-        favorite_time="evening",
-        weekly_activity=[0, 0, 0, 0, 0, 0, 0],  # Sun-Sat
+        total_study_hours=data.get("total_study_hours", 0),
+        tasks_completed=data.get("tasks_completed", 0),
+        current_streak=data.get("current_streak", 0),
+        longest_streak=data.get("longest_streak", 0),
+        favorite_time=data.get("favorite_time", "evening"),
+        weekly_activity=data.get("weekly_activity", [0] * 7)
     )
 
 
@@ -112,7 +123,8 @@ async def get_user_analytics(
 async def get_daily_stats(
     user_id: UUID,
     days: int = Query(30, le=365),
-    requesting_user: Optional[UUID] = Query(None)
+    requesting_user: Optional[UUID] = Query(None),
+    db: Session = Depends(get_db)
 ):
     """
     Get daily statistics for a user.
@@ -121,8 +133,20 @@ async def get_daily_stats(
     end_date = datetime.utcnow().date()
     start_date = end_date - timedelta(days=days)
 
-    # TODO: Fetch from database
+    # Fetch from database
+    analytics_service = AnalyticsService(db)
+    stats = analytics_service.get_daily_stats(user_id, days)
+
     daily_stats = []
+    for stat in stats:
+        daily_stats.append({
+            "date": stat.date.isoformat(),
+            "study_minutes": stat.study_minutes,
+            "tasks_completed": stat.tasks_completed,
+            "xp_earned": stat.xp_earned,
+            "sessions_count": stat.sessions_count,
+            "ai_calls": stat.ai_calls
+        })
 
     return {
         "user_id": str(user_id),
@@ -157,17 +181,19 @@ async def get_user_insights(
 async def get_activity_heatmap(
     user_id: UUID,
     weeks: int = Query(12, le=52),
-    requesting_user: Optional[UUID] = Query(None)
+    requesting_user: Optional[UUID] = Query(None),
+    db: Session = Depends(get_db)
 ):
     """
     Get activity heatmap data (like GitHub contribution graph).
     """
-    # TODO: Generate heatmap data from daily_stats
-    # Format: { "YYYY-MM-DD": count }
+    analytics_service = AnalyticsService(db)
+    heatmap_data = analytics_service.get_activity_heatmap(user_id, weeks)
+
     return {
         "user_id": str(user_id),
         "weeks": weeks,
-        "data": {},
+        "data": heatmap_data,
     }
 
 
@@ -175,23 +201,27 @@ async def get_activity_heatmap(
 async def get_leaderboard(
     period: str = Query("week", regex="^(day|week|month|all)$"),
     metric: str = Query("xp", regex="^(xp|tasks|streak|hours)$"),
-    limit: int = Query(10, le=100)
+    limit: int = Query(10, le=100),
+    db: Session = Depends(get_db)
 ):
     """
     Get leaderboard based on various metrics.
     """
-    # TODO: Query and aggregate from database
+    analytics_service = AnalyticsService(db)
+    leaderboard_data = analytics_service.get_leaderboard(period, metric, limit)
+
     return {
         "period": period,
         "metric": metric,
-        "leaderboard": [],
+        "leaderboard": leaderboard_data,
     }
 
 
 # Admin endpoints
 @router.get("/admin/overview")
 async def get_admin_analytics(
-    admin_user: Optional[UUID] = Query(None)
+    admin_user: Optional[UUID] = Query(None),
+    db: Session = Depends(get_db)
 ):
     """
     Get platform-wide analytics overview.
@@ -199,15 +229,10 @@ async def get_admin_analytics(
     """
     # TODO: Check admin permissions
 
-    return {
-        "total_users": 0,
-        "active_today": 0,
-        "active_this_week": 0,
-        "total_study_hours": 0,
-        "tasks_completed_today": 0,
-        "popular_modules": [],
-        "conversion_rate": 0,  # Free to paid
-    }
+    analytics_service = AnalyticsService(db)
+    overview_data = analytics_service.get_platform_overview()
+
+    return overview_data
 
 
 @router.get("/admin/modules")
