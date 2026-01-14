@@ -154,8 +154,8 @@ export function ModuleCard({
     difficulty = "beginner",
 }: ModuleCardProps) {
     const [isHovered, setIsHovered] = useState(false)
-    const config = statusConfig[status]
-    const diffConfig = difficultyConfig[difficulty]
+    const config = statusConfig[status] || statusConfig.locked
+    const diffConfig = difficultyConfig[difficulty] || difficultyConfig.beginner
     const StatusIcon = config.icon
     const isLocked = status === "locked"
     const isComplete = status === "complete"

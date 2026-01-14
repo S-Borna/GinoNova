@@ -71,7 +71,7 @@ export function TaskFooter({
     const difficultyKey = typeof difficulty === 'number'
         ? difficulty <= 1 ? 'easy' : difficulty <= 2 ? 'medium' : 'hard'
         : difficulty
-    const config = difficultyConfig[difficultyKey]
+    const config = difficultyConfig[difficultyKey] || difficultyConfig.medium
 
     return (
         <div

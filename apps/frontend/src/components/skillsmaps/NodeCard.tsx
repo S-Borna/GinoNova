@@ -276,7 +276,7 @@ export function NodeCard({
     const [isHovered, setIsHovered] = useState(false)
     const [bookmarkLoading, setBookmarkLoading] = useState(false)
 
-    const config = typeConfig[type]
+    const config = typeConfig[type] || typeConfig.concept
     const isComplete = status === "complete"
     const isInProgress = status === "in_progress"
 

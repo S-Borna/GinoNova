@@ -79,7 +79,7 @@ interface ModuleCardProps {
 
 function ModuleCard({ module, index }: ModuleCardProps) {
     const [isExpanded, setIsExpanded] = React.useState(false)
-    const trackConfig = TRACK_CONFIG[module.track]
+    const trackConfig = TRACK_CONFIG[module.track] || TRACK_CONFIG.foundation
     const TrackIcon = trackConfig.icon
 
     return (

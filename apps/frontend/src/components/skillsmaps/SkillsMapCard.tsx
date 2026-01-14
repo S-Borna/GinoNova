@@ -126,8 +126,8 @@ export function SkillsMapCard({
     className,
 }: SkillsMapCardProps) {
     const [isHovered, setIsHovered] = useState(false)
-    const config = statusConfig[status]
-    const diffConfig = difficultyConfig[difficulty]
+    const config = statusConfig[status] || statusConfig.not_started
+    const diffConfig = difficultyConfig[difficulty] || difficultyConfig.intermediate
     const StatusIcon = config.icon
 
     const progress = totalNodes > 0 ? Math.round((completedNodes / totalNodes) * 100) : 0
