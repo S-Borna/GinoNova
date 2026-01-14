@@ -91,7 +91,7 @@ function StatCard({
         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
             <div className={cn(
                 "w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-gradient-to-br",
-                colors[color]
+                colors[color] || colors.purple
             )}>
                 <Icon className="w-5 h-5" />
             </div>

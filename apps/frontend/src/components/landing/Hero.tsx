@@ -121,7 +121,7 @@ function StardustParticles() {
             {particles.map((p) => (
                 <motion.div
                     key={p.id}
-                    className={cn("absolute rounded-full", colorMap[p.color as keyof typeof colorMap])}
+                    className={cn("absolute rounded-full", colorMap[p.color as keyof typeof colorMap] || colorMap.purple)}
                     style={{
                         width: p.size,
                         height: p.size,

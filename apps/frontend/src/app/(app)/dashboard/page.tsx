@@ -555,7 +555,7 @@ function QuickActionCard({ icon, title, description, href, color, delay = 0 }: Q
         },
     }
 
-    const styles = colorMap[color]
+    const styles = colorMap[color] || colorMap.purple
 
     return (
         <motion.div
