@@ -368,7 +368,7 @@ def seed_content():
                             task_order_index = task_data.get("order_index")
                             if task_order_index is None or task_order_index < 1:
                                 task_order_index = idx + 1
-                            
+
                             new_task = models.Task(
                                 module_id=existing_module.id,
                                 title=task_data["title"],

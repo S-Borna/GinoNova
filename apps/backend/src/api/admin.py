@@ -1894,6 +1894,39 @@ def clear_all_data(
     }
 
 
+@admin_router.delete("/modules/{module_slug}")
+def delete_module_by_slug(
+    module_slug: str,
+    response: Response,
+    current_user: CurrentUser,
+) -> dict:
+    """Delete a module by its slug (admin only)."""
+    add_phase_header(response)
+    require_admin(current_user)
+
+    from ..db.database import is_db_configured, get_db_context
+    from ..db import models
+
+    if not is_db_configured():
+        raise HTTPException(status_code=500, detail="Database not configured")
+
+    with get_db_context() as db:
+        module = db.query(models.Module).filter(models.Module.slug == module_slug).first()
+        if not module:
+            raise HTTPException(status_code=404, detail=f"Module '{module_slug}' not found")
+
+        # Delete tasks first
+        tasks_deleted = db.query(models.Task).filter(models.Task.module_id == module.id).delete()
+        db.delete(module)
+        db.commit()
+
+        return {
+            "success": True,
+            "message": f"Deleted module '{module_slug}'",
+            "tasks_deleted": tasks_deleted
+        }
+
+
 class SeedRelatedResponse(BaseModel):
     """Response for seeding related/fördjupning tasks"""
     success: bool
