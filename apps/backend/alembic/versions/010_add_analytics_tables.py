@@ -68,55 +68,57 @@ def upgrade():
         # Create unique index for daily_stats
         op.create_index('ix_daily_stats_user_date', 'daily_stats', ['user_id', 'date'], unique=True)
 
-    # Create user_insights table
-    op.create_table(
-        'user_insights',
-        sa.Column('id', UUID(as_uuid=True), primary_key=True),
-        sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False, unique=True),
-        # Study patterns
-        sa.Column('total_study_hours', sa.Float, default=0),
-        sa.Column('avg_session_length', sa.Integer, default=0),
-        sa.Column('favorite_study_time', sa.String(20), nullable=True),
-        sa.Column('most_active_day', sa.String(10), nullable=True),
-        # Performance
-        sa.Column('strongest_skill', sa.String(100), nullable=True),
-        sa.Column('weakest_skill', sa.String(100), nullable=True),
-        sa.Column('avg_task_completion_time', sa.Integer, nullable=True),
-        sa.Column('accuracy_rate', sa.Float, nullable=True),
-        # Engagement
-        sa.Column('longest_streak', sa.Integer, default=0),
-        sa.Column('current_streak', sa.Integer, default=0),
-        sa.Column('streak_start_date', sa.Date, nullable=True),
-        sa.Column('last_active_date', sa.Date, nullable=True),
-        # Predictions
-        sa.Column('estimated_completion_date', sa.Date, nullable=True),
-        sa.Column('recommended_pace', sa.String(50), nullable=True),
-        # Metadata
-        sa.Column('calculated_at', sa.DateTime, default=datetime.utcnow),
-        sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    )
+    # Create user_insights table (if not exists)
+    if not table_exists('user_insights'):
+        op.create_table(
+            'user_insights',
+            sa.Column('id', UUID(as_uuid=True), primary_key=True),
+            sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False, unique=True),
+            # Study patterns
+            sa.Column('total_study_hours', sa.Float, default=0),
+            sa.Column('avg_session_length', sa.Integer, default=0),
+            sa.Column('favorite_study_time', sa.String(20), nullable=True),
+            sa.Column('most_active_day', sa.String(10), nullable=True),
+            # Performance
+            sa.Column('strongest_skill', sa.String(100), nullable=True),
+            sa.Column('weakest_skill', sa.String(100), nullable=True),
+            sa.Column('avg_task_completion_time', sa.Integer, nullable=True),
+            sa.Column('accuracy_rate', sa.Float, nullable=True),
+            # Engagement
+            sa.Column('longest_streak', sa.Integer, default=0),
+            sa.Column('current_streak', sa.Integer, default=0),
+            sa.Column('streak_start_date', sa.Date, nullable=True),
+            sa.Column('last_active_date', sa.Date, nullable=True),
+            # Predictions
+            sa.Column('estimated_completion_date', sa.Date, nullable=True),
+            sa.Column('recommended_pace', sa.String(50), nullable=True),
+            # Metadata
+            sa.Column('calculated_at', sa.DateTime, default=datetime.utcnow),
+            sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        )
 
-    # Create module_analytics table
-    op.create_table(
-        'module_analytics',
-        sa.Column('id', UUID(as_uuid=True), primary_key=True),
-        sa.Column('module_id', UUID(as_uuid=True), nullable=False, unique=True),
-        sa.Column('module_slug', sa.String(100), nullable=False),
-        # Engagement
-        sa.Column('total_enrollments', sa.Integer, default=0),
-        sa.Column('active_users', sa.Integer, default=0),
-        sa.Column('completions', sa.Integer, default=0),
-        sa.Column('completion_rate', sa.Float, default=0),
-        # Performance
-        sa.Column('avg_completion_time', sa.Float, nullable=True),
-        sa.Column('avg_score', sa.Float, nullable=True),
-        sa.Column('difficulty_rating', sa.Float, nullable=True),
-        # Feedback
-        sa.Column('avg_rating', sa.Float, nullable=True),
-        sa.Column('rating_count', sa.Integer, default=0),
-        # Metadata
-        sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    )
+    # Create module_analytics table (if not exists)
+    if not table_exists('module_analytics'):
+        op.create_table(
+            'module_analytics',
+            sa.Column('id', UUID(as_uuid=True), primary_key=True),
+            sa.Column('module_id', UUID(as_uuid=True), nullable=False, unique=True),
+            sa.Column('module_slug', sa.String(100), nullable=False),
+            # Engagement
+            sa.Column('total_enrollments', sa.Integer, default=0),
+            sa.Column('active_users', sa.Integer, default=0),
+            sa.Column('completions', sa.Integer, default=0),
+            sa.Column('completion_rate', sa.Float, default=0),
+            # Performance
+            sa.Column('avg_completion_time', sa.Float, nullable=True),
+            sa.Column('avg_score', sa.Float, nullable=True),
+            sa.Column('difficulty_rating', sa.Float, nullable=True),
+            # Feedback
+            sa.Column('avg_rating', sa.Float, nullable=True),
+            sa.Column('rating_count', sa.Integer, default=0),
+            # Metadata
+            sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        )
 
 
 def downgrade():

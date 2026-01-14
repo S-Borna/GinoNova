@@ -12,7 +12,50 @@ cd /app/apps/backend
 
 # Check if DATABASE_URL is set
 if [ -n "$DATABASE_URL" ]; then
-    echo "🗄️  PostgreSQL detected - running Alembic migrations..."
+    echo "🗄️  PostgreSQL detected..."
+
+    # =========================================================================
+    # PRE-MIGRATION: Fix missing columns that Alembic missed
+    # This handles cases where alembic_version is ahead of actual schema
+    # =========================================================================
+    echo "🔧 Pre-migration schema check..."
+    python -c "
+import os
+from sqlalchemy import create_engine, text, inspect
+
+db_url = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://')
+engine = create_engine(db_url)
+
+with engine.connect() as conn:
+    inspector = inspect(engine)
+    
+    # Check tasks table columns
+    task_columns = [c['name'] for c in inspector.get_columns('tasks')]
+    
+    # Add task_tier if missing
+    if 'task_tier' not in task_columns:
+        print('⚠️  Adding missing task_tier column...')
+        conn.execute(text(\"\"\"
+            ALTER TABLE tasks 
+            ADD COLUMN task_tier VARCHAR(20) NOT NULL DEFAULT 'standard'
+        \"\"\"))
+        conn.commit()
+        print('✅ task_tier column added')
+    
+    # Add parent_task_id if missing  
+    if 'parent_task_id' not in task_columns:
+        print('⚠️  Adding missing parent_task_id column...')
+        conn.execute(text(\"\"\"
+            ALTER TABLE tasks 
+            ADD COLUMN parent_task_id UUID REFERENCES tasks(id) ON DELETE SET NULL
+        \"\"\"))
+        conn.commit()
+        print('✅ parent_task_id column added')
+
+print('✅ Schema pre-check complete')
+" || echo "⚠️  Pre-migration check skipped"
+
+    echo "🗄️  Running Alembic migrations..."
 
     # Run Alembic migrations using python -m to ensure it's found
     python -m alembic upgrade head || {
