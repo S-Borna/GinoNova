@@ -61,14 +61,14 @@ export default function LandingPage() {
                             {/* Hero Section */}
                             <Hero />
 
+                            {/* Why Choose GinoNova - Competitive Advantage */}
+                            <ComparisonSection />
+
                             {/* Learning Tracks Preview */}
                             <TracksPreview />
 
                             {/* Platform Features */}
                             <Features />
-
-                            {/* Why Choose DevOpsHub - Competitive Advantage */}
-                            <ComparisonSection />
 
                             {/* Final CTA */}
                             <CTASection />
