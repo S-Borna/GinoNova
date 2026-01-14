@@ -37,6 +37,10 @@ import {
     Heart,
     Zap,
     Sparkles,
+    Code2,
+    Trophy,
+    Users,
+    BarChart3,
     type LucideIcon
 } from "lucide-react"
 
@@ -93,11 +97,39 @@ const mainNavItems: NavItem[] = [
         glowColor: "rgba(16, 185, 129, 0.5)"
     },
     {
+        label: "Code Playground",
+        href: "/playground",
+        icon: Code2,
+        gradient: "from-indigo-500 to-purple-600",
+        glowColor: "rgba(99, 102, 241, 0.5)"
+    },
+    {
+        label: "Community",
+        href: "/community",
+        icon: Users,
+        gradient: "from-pink-500 to-rose-600",
+        glowColor: "rgba(236, 72, 153, 0.5)"
+    },
+    {
+        label: "Analytics",
+        href: "/analytics",
+        icon: BarChart3,
+        gradient: "from-cyan-500 to-teal-600",
+        glowColor: "rgba(6, 182, 212, 0.5)"
+    },
+    {
+        label: "Certificates",
+        href: "/certificates",
+        icon: Trophy,
+        gradient: "from-amber-500 to-yellow-600",
+        glowColor: "rgba(245, 158, 11, 0.5)"
+    },
+    {
         label: "SkillsMaps",
         href: "/skillsmaps",
         icon: Map,
-        gradient: "from-amber-500 to-orange-600",
-        glowColor: "rgba(245, 158, 11, 0.5)"
+        gradient: "from-orange-500 to-amber-600",
+        glowColor: "rgba(249, 115, 22, 0.5)"
     },
     {
         label: "FastTrack",
@@ -110,15 +142,15 @@ const mainNavItems: NavItem[] = [
         label: "Studyroom",
         href: "/study",
         icon: Clock,
-        gradient: "from-cyan-500 to-blue-600",
-        glowColor: "rgba(6, 182, 212, 0.5)"
+        gradient: "from-blue-500 to-cyan-600",
+        glowColor: "rgba(59, 130, 246, 0.5)"
     },
     {
         label: "AI Quiz",
         href: "/quiz",
         icon: Brain,
-        gradient: "from-pink-500 to-rose-600",
-        glowColor: "rgba(236, 72, 153, 0.5)"
+        gradient: "from-violet-500 to-purple-600",
+        glowColor: "rgba(139, 92, 246, 0.5)"
     },
     {
         label: "Pulsmätning",
