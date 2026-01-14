@@ -970,21 +970,15 @@ You're debugging a production issue. Which prompt is better?
 """
 }
 
-# Export all modules
-PROMPT_ENGINEERING_MODULES = [
-    PROMPT_FUNDAMENTALS,
-    # More modules will be added...
-]
-
-# MODULE export för kompatibilitet med systemet
+# Export as MODULE dict (required format for __init__.py)
 MODULE = {
-    "name": "Prompt Engineering for DevOps",
+    "id": "prompt-engineering-devops",
     "slug": "prompt-engineering-devops",
-    "description": "Master AI-assisted DevOps with the TRIPOD framework. 10x your productivity with ChatGPT, Claude, and Copilot. The emerging skill that gives you a competitive edge.",
+    "title": "AI Prompt Engineering for DevOps",
+    "description": "10x your productivity with AI. Learn the TRIPOD framework to master ChatGPT, GitHub Copilot, and LLMs for DevOps tasks. Unique competitive advantage - 95% of engineers don't know this yet.",
     "icon": "🤖",
-    "order_index": 13,
     "category": "devops",
     "difficulty": "beginner",
-    "estimated_hours": 4,
-    "tasks": PROMPT_ENGINEERING_MODULES
+    "estimated_hours": 2,
+    "tasks": [PROMPT_FUNDAMENTALS],
 }

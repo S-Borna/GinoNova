@@ -879,21 +879,15 @@ kubectl describe pod webapp-7854ff8877-abc
 """
 }
 
-# Export all modules
-KUBERNETES_MODULES = [
-    K8S_ARCHITECTURE,
-    # More modules will be added...
-]
-
-# MODULE export för kompatibilitet med systemet
+# Export as MODULE dict (required format for __init__.py)
 MODULE = {
-    "name": "Kubernetes Fundamentals",
+    "id": "kubernetes-fundamentals",
     "slug": "kubernetes-fundamentals",
-    "description": "Master container orchestration with Kubernetes - the #1 most requested DevOps skill. Prepares you for 95% of DevOps job interviews.",
+    "title": "Kubernetes Fundamentals",
+    "description": "Master container orchestration with Kubernetes - the #1 most requested DevOps skill. Prepare for 95% of DevOps job interviews.",
     "icon": "☸️",
-    "order_index": 10,
     "category": "devops",
     "difficulty": "intermediate",
-    "estimated_hours": 8,
-    "tasks": KUBERNETES_MODULES
+    "estimated_hours": 12,
+    "tasks": [K8S_ARCHITECTURE],
 }

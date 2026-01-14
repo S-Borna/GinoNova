@@ -23,8 +23,10 @@ import {
     CTASection,
     Footer,
     Navbar,
+    TracksPreview,
 } from "@/components/landing"
 import { CosmicIntro } from "@/components/landing/CosmicIntro"
+import { ComparisonSection } from "@/components/landing/ComparisonSection"
 
 export default function LandingPage() {
     const [showIntro, setShowIntro] = React.useState(true)
@@ -59,8 +61,14 @@ export default function LandingPage() {
                             {/* Hero Section */}
                             <Hero />
 
+                            {/* Learning Tracks Preview */}
+                            <TracksPreview />
+
                             {/* Platform Features */}
                             <Features />
+
+                            {/* Why Choose DevOpsHub - Competitive Advantage */}
+                            <ComparisonSection />
 
                             {/* Final CTA */}
                             <CTASection />

@@ -715,21 +715,15 @@ A: Use `env:` to pass secrets, never `echo` them. GitHub automatically masks reg
 """
 }
 
-# Export modules
-CICD_MODULES = [
-    ADVANCED_GH_ACTIONS,
-    # More modules...
-]
-
-# MODULE export för kompatibilitet med systemet
+# Export as MODULE dict (required format for __init__.py)
 MODULE = {
-    "name": "CI/CD Pipelines Advanced",
+    "id": "cicd-pipelines-advanced",
     "slug": "cicd-pipelines-advanced",
-    "description": "Master advanced CI/CD with GitHub Actions - required in 90% of DevOps jobs. Build production-ready pipelines with matrix builds, caching, and blue-green deployments.",
-    "icon": "🔄",
-    "order_index": 11,
+    "title": "CI/CD Pipelines Advanced",
+    "description": "Build production-grade CI/CD pipelines with GitHub Actions, Jenkins, GitLab CI. Master deployment strategies, security scanning, and automation. Required in 90% of DevOps jobs.",
+    "icon": "🚀",
     "category": "devops",
     "difficulty": "intermediate",
-    "estimated_hours": 6,
-    "tasks": CICD_MODULES
+    "estimated_hours": 8,
+    "tasks": [ADVANCED_GH_ACTIONS],
 }
