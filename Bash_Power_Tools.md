@@ -648,6 +648,137 @@ sed '/^$/d' file.txt
 cat file.txt | tr -s ' ' '\n' | sort | uniq
 ```
 
+## xargs: Bygg och kör kommandon från stdin
+
+xargs tar input från stdin och använder det som argument till ett kommando.
+
+### Grundläggande xargs
+
+```bash
+# Enkel användning
+echo "file1.txt file2.txt file3.txt" | xargs rm
+# rm file1.txt file2.txt file3.txt
+
+# Lista filer och ta bort dem
+find /tmp -name "*.log" | xargs rm
+
+# Med bekräftelse (-p)
+find /tmp -name "*.log" | xargs -p rm
+# Frågar innan varje kommando körs
+```
+
+### xargs med -I (replacement string)
+
+```bash
+# -I {} ersätter {} med input
+find . -name "*.txt" | xargs -I {} cp {} /backup/
+# Kopierar varje .txt-fil till /backup/
+
+# Flera operationer på samma input
+cat files.txt | xargs -I {} sh -c 'echo "Processing {}"; cp {} /backup/'
+
+# Skapa kataloger från lista
+cat dirlist.txt | xargs -I {} mkdir -p /data/{}
+```
+
+### xargs med -n (antal argument per kommando)
+
+```bash
+# -n 1: Kör kommando för varje input (en åt gången)
+echo "a b c d" | xargs -n 1 echo
+# echo a
+# echo b
+# echo c
+# echo d
+
+# -n 2: Två argument åt gången
+echo "a b c d" | xargs -n 2 echo
+# echo a b
+# echo c d
+```
+
+### xargs med -P (parallell exekvering)
+
+```bash
+# -P 4: Kör 4 processer parallellt
+find . -name "*.jpg" | xargs -P 4 -I {} convert {} {}.png
+
+# Snabbare komprimering av många filer
+find /data -name "*.log" | xargs -P 8 gzip
+```
+
+### xargs med -0 (null-terminated)
+
+Används med find -print0 för att hantera filer med mellanslag i namnet.
+
+```bash
+# PROBLEM: Filer med mellanslag bryts
+find . -name "*.txt" | xargs rm
+# Fungerar INTE om filnamn innehåller mellanslag
+
+# LÖSNING: Använd -print0 och -0
+find . -name "*.txt" -print0 | xargs -0 rm
+# -print0: null-separerade filnamn
+# -0: läs null-separerad input
+```
+
+### xargs med -t (verbose/trace)
+
+```bash
+# Visa kommandot innan det körs
+echo "file1 file2" | xargs -t rm
+# rm file1 file2
+# (kör sedan kommandot)
+```
+
+### Praktiska xargs-exempel
+
+```bash
+# Ta bort gamla filer (äldre än 30 dagar)
+find /tmp -type f -mtime +30 -print0 | xargs -0 rm
+
+# Ändra rättigheter på alla scripts
+find /usr/local/bin -name "*.sh" -print0 | xargs -0 chmod +x
+
+# Sök i flera filer parallellt
+find . -name "*.log" -print0 | xargs -0 -P 4 grep -H "ERROR"
+
+# Konvertera alla bilder (parallellt)
+ls *.jpg | xargs -P 8 -I {} convert {} -resize 800x600 small-{}
+
+# Ta backup av filer med rsync
+find /data -name "*.db" -print0 | xargs -0 -I {} rsync -avz {} backup:/backups/
+
+# Räkna rader i alla filer
+find . -name "*.py" | xargs wc -l
+
+# Bygg kommandon med flera argument
+cat users.txt | xargs -I {} useradd -m {}
+```
+
+### xargs vs while read loop
+
+```bash
+# xargs: Snabbare, men svårare med komplexa operationer
+find . -name "*.txt" | xargs rm
+
+# while read: Mer kontroll, enklare för komplexa script
+find . -name "*.txt" | while read file; do
+    echo "Processing $file"
+    rm "$file"
+done
+```
+
+**När använda xargs**:
+- Enkla operationer på många filer
+- När parallellisering är önskvärt (-P)
+- När prestanda är kritiskt
+
+**När använda while read**:
+- Komplexa operationer per fil
+- Behöver flera kommandon per input
+- Behöver variabler och if-satser
+
 ## Viktiga takeaways
 
 - **Redirection**: > (överskriver), >> (appendra), 2> (stderr), &> (båda)
@@ -662,5 +793,6 @@ cat file.txt | tr -s ' ' '\n' | sort | uniq
 - **tr**: Translate; 'a-z' 'A-Z', -d (delete), -s (squeeze)
 - **head/tail**: Visa del av fil; tail -f (follow)
 - **tee**: Skriv till fil OCH stdout
+- **xargs**: Bygg kommandon från stdin; -I {} (replacement), -n (antal), -P (parallellt), -0 (null-terminated)
 - **Regex**: ^ (start), $ (slut), . (any), * (0+), [] (class)
 - **Pipeline power**: Kombinera verktyg för komplexa uppgifter
