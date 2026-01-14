@@ -8,6 +8,7 @@ Create Date: 2026-01-06
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy import inspect
 
 # revision identifiers, used by Alembic.
 revision = '008_add_exam_results'
@@ -16,7 +17,16 @@ branch_labels = None
 depends_on = None
 
 
+def table_exists(table_name):
+    """Check if table exists in database."""
+    bind = op.get_bind()
+    inspector = inspect(bind)
+    return table_name in inspector.get_table_names()
+
+
 def upgrade() -> None:
+    if table_exists('exam_results'):
+        return
     op.create_table(
         'exam_results',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True),
