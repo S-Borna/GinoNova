@@ -12,6 +12,7 @@ PROMPT 4: Sidebar Bookmark System
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy import inspect
 
 
 # revision identifiers, used by Alembic.
@@ -21,8 +22,17 @@ branch_labels = None
 depends_on = None
 
 
+def table_exists(table_name):
+    """Check if table exists in database."""
+    bind = op.get_bind()
+    inspector = inspect(bind)
+    return table_name in inspector.get_table_names()
+
+
 def upgrade():
     """Create bookmarks table."""
+    if table_exists('bookmarks'):
+        return
     op.create_table(
         'bookmarks',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()')),

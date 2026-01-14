@@ -9,6 +9,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from datetime import datetime
+from sqlalchemy import inspect
 
 # revision identifiers, used by Alembic.
 revision = '010'
@@ -17,46 +18,55 @@ branch_labels = None
 depends_on = None
 
 
+def table_exists(table_name):
+    """Check if a table exists in the database."""
+    bind = op.get_bind()
+    inspector = inspect(bind)
+    return table_name in inspector.get_table_names()
+
+
 def upgrade():
-    # Create analytics_events table
-    op.create_table(
-        'analytics_events',
-        sa.Column('id', UUID(as_uuid=True), primary_key=True),
-        sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False),
-        sa.Column('event_type', sa.String(100), nullable=False),
-        sa.Column('event_data', JSON, default=dict),
-        sa.Column('session_id', sa.String(100), nullable=True),
-        sa.Column('ip_address', sa.String(45), nullable=True),
-        sa.Column('user_agent', sa.String(500), nullable=True),
-        sa.Column('created_at', sa.DateTime, default=datetime.utcnow)
-    )
+    # Create analytics_events table (if not exists)
+    if not table_exists('analytics_events'):
+        op.create_table(
+            'analytics_events',
+            sa.Column('id', UUID(as_uuid=True), primary_key=True),
+            sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False),
+            sa.Column('event_type', sa.String(100), nullable=False),
+            sa.Column('event_data', JSON, default=dict),
+            sa.Column('session_id', sa.String(100), nullable=True),
+            sa.Column('ip_address', sa.String(45), nullable=True),
+            sa.Column('user_agent', sa.String(500), nullable=True),
+            sa.Column('created_at', sa.DateTime, default=datetime.utcnow)
+        )
 
-    # Create indexes for analytics_events
-    op.create_index('ix_analytics_user_id', 'analytics_events', ['user_id'])
-    op.create_index('ix_analytics_event_type', 'analytics_events', ['event_type'])
-    op.create_index('ix_analytics_created_at', 'analytics_events', ['created_at'])
-    op.create_index('ix_analytics_user_type_date', 'analytics_events', ['user_id', 'event_type', 'created_at'])
+        # Create indexes for analytics_events
+        op.create_index('ix_analytics_user_id', 'analytics_events', ['user_id'])
+        op.create_index('ix_analytics_event_type', 'analytics_events', ['event_type'])
+        op.create_index('ix_analytics_created_at', 'analytics_events', ['created_at'])
+        op.create_index('ix_analytics_user_type_date', 'analytics_events', ['user_id', 'event_type', 'created_at'])
 
-    # Create daily_stats table
-    op.create_table(
-        'daily_stats',
-        sa.Column('id', UUID(as_uuid=True), primary_key=True),
-        sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False),
-        sa.Column('date', sa.Date, nullable=False),
-        sa.Column('study_minutes', sa.Integer, default=0),
-        sa.Column('tasks_completed', sa.Integer, default=0),
-        sa.Column('tasks_attempted', sa.Integer, default=0),
-        sa.Column('xp_earned', sa.Integer, default=0),
-        sa.Column('sessions_count', sa.Integer, default=0),
-        sa.Column('ai_calls', sa.Integer, default=0),
-        sa.Column('hints_used', sa.Integer, default=0),
-        sa.Column('modules_touched', JSON, default=list),
-        sa.Column('created_at', sa.DateTime, default=datetime.utcnow),
-        sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    )
+    # Create daily_stats table (if not exists)
+    if not table_exists('daily_stats'):
+        op.create_table(
+            'daily_stats',
+            sa.Column('id', UUID(as_uuid=True), primary_key=True),
+            sa.Column('user_id', UUID(as_uuid=True), sa.ForeignKey('users.id'), nullable=False),
+            sa.Column('date', sa.Date, nullable=False),
+            sa.Column('study_minutes', sa.Integer, default=0),
+            sa.Column('tasks_completed', sa.Integer, default=0),
+            sa.Column('tasks_attempted', sa.Integer, default=0),
+            sa.Column('xp_earned', sa.Integer, default=0),
+            sa.Column('sessions_count', sa.Integer, default=0),
+            sa.Column('ai_calls', sa.Integer, default=0),
+            sa.Column('hints_used', sa.Integer, default=0),
+            sa.Column('modules_touched', JSON, default=list),
+            sa.Column('created_at', sa.DateTime, default=datetime.utcnow),
+            sa.Column('updated_at', sa.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+        )
 
-    # Create unique index for daily_stats
-    op.create_index('ix_daily_stats_user_date', 'daily_stats', ['user_id', 'date'], unique=True)
+        # Create unique index for daily_stats
+        op.create_index('ix_daily_stats_user_date', 'daily_stats', ['user_id', 'date'], unique=True)
 
     # Create user_insights table
     op.create_table(

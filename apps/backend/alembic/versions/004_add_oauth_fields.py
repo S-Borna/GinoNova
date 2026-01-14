@@ -7,6 +7,7 @@ Create Date: 2025-12-03
 """
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import inspect
 
 
 # revision identifiers, used by Alembic.
@@ -16,15 +17,28 @@ branch_labels = None
 depends_on = None
 
 
+def column_exists(table_name, column_name):
+    """Check if column exists in table."""
+    bind = op.get_bind()
+    inspector = inspect(bind)
+    columns = [c['name'] for c in inspector.get_columns(table_name)]
+    return column_name in columns
+
+
 def upgrade() -> None:
     # Add OAuth provider fields to users table
-    op.add_column('users', sa.Column('oauth_provider', sa.String(50), nullable=True))
-    op.add_column('users', sa.Column('oauth_provider_id', sa.String(255), nullable=True))
+    if not column_exists('users', 'oauth_provider'):
+        op.add_column('users', sa.Column('oauth_provider', sa.String(50), nullable=True))
+    if not column_exists('users', 'oauth_provider_id'):
+        op.add_column('users', sa.Column('oauth_provider_id', sa.String(255), nullable=True))
 
     # Make hashed_password nullable for OAuth users
-    op.alter_column('users', 'hashed_password',
-                    existing_type=sa.String(255),
-                    nullable=True)
+    try:
+        op.alter_column('users', 'hashed_password',
+                        existing_type=sa.String(255),
+                        nullable=True)
+    except Exception:
+        pass  # Already nullable
 
 
 def downgrade() -> None:

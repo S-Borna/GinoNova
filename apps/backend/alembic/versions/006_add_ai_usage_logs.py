@@ -10,6 +10,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy import inspect
 
 # revision identifiers, used by Alembic.
 revision: str = '006_add_ai_usage_logs'
@@ -18,7 +19,16 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+def table_exists(table_name):
+    """Check if table exists in database."""
+    bind = op.get_bind()
+    inspector = inspect(bind)
+    return table_name in inspector.get_table_names()
+
+
 def upgrade() -> None:
+    if table_exists('ai_usage_logs'):
+        return
     op.create_table(
         'ai_usage_logs',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True),
