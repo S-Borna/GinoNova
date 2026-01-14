@@ -190,8 +190,7 @@ export function DifficultyList({
               backgroundColor: isSelected ? config.color.bg : 'rgba(0, 0, 0, 0.2)',
               borderColor: isSelected ? config.color.border : 'rgba(255, 255, 255, 0.1)',
               color: isSelected ? config.color.text : '#71717a',
-              ringColor: config.color.glow,
-            }}
+            } as React.CSSProperties}
             whileHover={{
               scale: 1.05,
               backgroundColor: config.color.bg,
