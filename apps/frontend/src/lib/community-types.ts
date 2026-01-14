@@ -62,6 +62,13 @@ export interface Category {
     postCount: number
 }
 
+export interface ThreadFormData {
+    title: string
+    content: string
+    categoryId: string
+    tags: string[]
+}
+
 export interface UserProfile {
     id: string
     name: string
