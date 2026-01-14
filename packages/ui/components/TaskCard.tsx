@@ -221,7 +221,7 @@ export function TaskCard({
     className,
 }: TaskCardProps) {
     const [isHovered, setIsHovered] = useState(false)
-    const config = typeConfig[type] || typeConfig.lesson
+    const config = typeConfig[type] || typeConfig.foundation
     const isComplete = status === 'complete'
     const isInProgress = status === 'in_progress'
 

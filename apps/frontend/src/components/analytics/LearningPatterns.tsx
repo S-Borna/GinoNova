@@ -382,9 +382,9 @@ function analyzePatterns(analytics: UserAnalytics) {
   const completedSessions = analytics.sessionHistory.filter(s => s.endTime)
   const avgSessionLength = completedSessions.length > 0
     ? Math.round(completedSessions.reduce((sum, s) => {
-        const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
-        return sum + duration
-      }, 0) / completedSessions.length)
+      const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
+      return sum + duration
+    }, 0) / completedSessions.length)
     : 0
 
   // Determine learning style

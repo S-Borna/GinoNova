@@ -118,7 +118,7 @@ const LEVEL_CONFIG = {
 }
 
 function HintLevel({ level = "medium" }: HintLevelProps) {
-    const config = LEVEL_CONFIG[level] || LEVEL_CONFIG[1]
+    const config = LEVEL_CONFIG[level] || LEVEL_CONFIG.medium
 
     return (
         <span
