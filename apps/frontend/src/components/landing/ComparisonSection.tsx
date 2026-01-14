@@ -275,7 +275,7 @@ export function ComparisonSection() {
                                                 <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-full border border-emerald-500/30">
                                                     <Crown className="w-4 h-4 text-emerald-400" />
                                                     <span className="text-sm font-bold text-emerald-300">
-                                                        DevOpsHub
+                                                        GinoNova
                                                     </span>
                                                 </div>
                                             </div>
