@@ -168,7 +168,21 @@ def seed_content():
                 )
                 track_id_map[track_data["slug"]] = track.id
 
-    # Om data redan finns, uppdatera bara hands-on modulen
+    # Hämta slugs för befintliga moduler
+    existing_slugs = set()
+    if use_postgres:
+        with get_db_context() as db:
+            existing_slugs = {m.slug for m in db.query(models.Module).all()}
+    else:
+        existing_slugs = {m.slug for m in existing_modules} if existing_modules else set()
+    
+    # Filtrera ut moduler som behöver skapas
+    new_modules = [m for m in modules_to_seed if m.get("slug") not in existing_slugs]
+    
+    if new_modules:
+        logger.info(f"🆕 Found {len(new_modules)} NEW modules to create...")
+    
+    # Om det finns befintliga moduler, uppdatera hands-on och lägg till nya
     if existing_modules:
         logger.info(f"📝 Content exists: {len(existing_modules)} modules - checking for updates...")
 
@@ -322,15 +336,20 @@ def seed_content():
                             )
                             tasks_created += 1
                     logger.info(f"✅ Updated Hands-On Lab (in-memory): {tasks_updated} tasks updated, {tasks_created} tasks created")
-                return
             else:
                 logger.info("⚠️  Hands-On Lab module not found in content - skipping update")
-                return
         else:
             logger.info("⚠️  Hands-On Lab module not found in database - will create on next full seed")
-            return
 
-    # Initial seeding - skapa allt från början
+    # Skapa NYA moduler som inte finns i databasen
+    if not new_modules:
+        if existing_modules:
+            logger.info("✅ All modules already exist - no new modules to create")
+            return
+    else:
+        modules_to_seed = new_modules  # Endast seeda nya moduler
+
+    # Seeding - skapa moduler från content
     logger.info(f"🌱 Seeding content: {len(modules_to_seed)} modules...")
 
     # Skapa moduler och tasks
