@@ -1,31 +1,44 @@
-# Docker Compose & Infrastructure as Code (IaC)
+"""
+NOD: Docker Compose och Infrastructure as Code: Orkestrering av komplexa miljöer
+================================================================================
+Hantera multi-container-applikationer med YAML-konfiguration och immutable infrastructure-principer
+"""
 
-Fokus: Hantera komplexa miljöer med en fil
+DOCKER_COMPOSE_NODE = {
+    "title": "Docker Compose och Infrastructure as Code: Orkestrering av komplexa miljöer",
+    "slug": "docker-compose-iac",
+    "description": "Hantera multi-container-applikationer med YAML-konfiguration och immutable infrastructure-principer",
+    "difficulty": "medium",
+    "estimated_minutes": 70,
+    "xp_reward": 150,
+    "order_index": 10,
+    "content": r"""# Docker Compose och Infrastructure as Code: Orkestrering av komplexa miljöer
 
-## YAML Syntax: Indentering och struktur
+Tematiskt fokus: Definiera och hantera hela applikationsmiljöer med en fil
 
-Docker Compose använder YAML-format. Indentering är kritisk!
+## YAML Syntax: Betydelsen av indentering och struktur
+
+Docker Compose baseras på YAML-format. Korrekt indentering är avgörande!
 
 ```yaml
 # docker-compose.yml
-version: "3.8"  # Compose file version
+version: "3.8"  # Compose fil-version
 
-services:       # Alla services definieras här
-  web:          # Service namn
+services:       # Samtliga tjänster definieras här
+  web:          # Tjänstens namn
     image: nginx
     ports:
       - "8080:80"
 ```
 
-**Viktiga regler**:
-
-- Använd spaces, inte tabs
-- Indentering måste vara konsekvent (vanligtvis 2 spaces)
-- Kolon (`:`) följs av space
-- Listor använder bindestreck (`-`)
+**Grundregler**:
+- Använd mellanslag, aldrig tabb-tecken
+- Indentering ska vara enhetlig (typiskt 2 mellanslag)
+- Kolon (`:`) måste följas av mellanslag
+- Listor indikeras med bindestreck (`-`)
 
 ```yaml
-# RÄTT
+# KORREKT
 services:
   web:
     image: nginx
@@ -33,15 +46,15 @@ services:
       - "8080:80"
       - "8443:443"
 
-# FEL (fel indentering)
+# INKORREKT (felaktig indentering)
 services:
 web:
 image: nginx
 ```
 
-## Services: Definiera miljövariabler, nätverk och volymer centralt
+## Services: Centraliserad definition av miljövariabler, nätverk och volymer
 
-### Grundläggande Service Definition
+### Grundläggande tjänstedefinition
 
 ```yaml
 version: "3.8"
@@ -67,19 +80,19 @@ services:
 services:
   app:
     image: myapp
-    # Metod 1: Lista
+    # Alternativ 1: Lista-format
     environment:
       - DB_HOST=db
       - DB_PASSWORD=secret
       - NODE_ENV=production
 
-    # Metod 2: Dictionary
+    # Alternativ 2: Dictionary-format
     environment:
       DB_HOST: db
       DB_PASSWORD: secret
       NODE_ENV: production
 
-    # Metod 3: Fil
+    # Alternativ 3: Från fil
     env_file:
       - .env
       - .env.production
@@ -100,7 +113,7 @@ services:
     networks:
       - backend
 
-# Definiera networks
+# Definiera nätverk
 networks:
   frontend:
     driver: bridge
@@ -115,22 +128,22 @@ services:
   db:
     image: mysql
     volumes:
-      # Named volume
+      # Namngiven volym
       - db_data:/var/lib/mysql
       # Bind mount
       - ./config:/etc/mysql/conf.d
-      # Anonymous volume
+      # Anonym volym
       - /tmp
 
-# Definiera volumes
+# Definiera volymer
 volumes:
   db_data:
     driver: local
 ```
 
-## Orchestration Lite: Använda depends_on för att styra startordning
+## Orchestration Lite: Kontrollera startsekvens med depends_on
 
-`depends_on` säkerställer att services startar i rätt ordning.
+`depends_on` garanterar att tjänster startar i korrekt ordningsföljd.
 
 ```yaml
 services:
@@ -139,7 +152,7 @@ services:
     depends_on:
       - db
       - redis
-    # Web startar EFTER db och redis
+    # Web initieras EFTER db och redis
 
   db:
     image: mysql
@@ -148,10 +161,10 @@ services:
     image: redis
 ```
 
-**OBS**: `depends_on` väntar bara på att containern startar, inte att servicen är redo!
+**OBS**: `depends_on` väntar bara på att containern startar, inte att tjänsten är fullt funktionell!
 
 ```yaml
-# För att vänta på att service är redo, använd healthcheck
+# För att vänta på att tjänsten är fullt funktionell, använd healthcheck
 services:
   web:
     image: nginx
@@ -168,85 +181,85 @@ services:
       retries: 5
 ```
 
-## Lifecycle: docker-compose up -d, down och ps
+## Livscykel: docker-compose up -d, down och ps
 
 ### docker-compose up
 
 ```bash
-# Starta alla services
+# Starta samtliga tjänster
 docker-compose up
 
 # Starta i bakgrunden (-d = detached)
 docker-compose up -d
 
-# Bygga images innan start
+# Bygga images innan uppstart
 docker-compose up --build
 
 # Bygga utan cache
 docker-compose build --no-cache
 
-# Bygga specifik service
+# Bygga specifik tjänst
 docker-compose build web
 
 # Bygga och starta utan cache
 docker-compose build --no-cache
 docker-compose up -d
 
-# Starta specifik service
+# Starta specifik tjänst
 docker-compose up web
 
-# Starta med override file
+# Starta med override-fil
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
 
 ### docker-compose down
 
 ```bash
-# Stoppa och ta bort containers
+# Stoppa och radera containrar
 docker-compose down
 
-# Ta bort även volumes
+# Inkludera borttagning av volymer
 docker-compose down -v
 
-# Ta bort även images
+# Inkludera borttagning av images
 docker-compose down --rmi all
 ```
 
 ### docker-compose ps
 
 ```bash
-# Visa status för alla services
+# Visa tjänststatus
 docker-compose ps
 
-# Detaljerad information
+# Utökad information
 docker-compose ps -a
 ```
 
-### Andra viktiga kommandon
+### Övriga viktiga kommandon
 
 ```bash
-# Se logs
+# Visa loggar
 docker-compose logs
-docker-compose logs -f web  # Följ logs för web service
+docker-compose logs -f web  # Följ loggar för web-tjänsten
 
-# Köra kommando i service
+# Exekvera kommando i tjänst
 docker-compose exec web ls /app
 ```
 
 ### docker-compose exec vs docker exec
 
 ```bash
-# docker-compose exec: Kör i service som definierats i compose-filen
+# docker-compose exec: Kör i tjänst definierad i compose-fil
 docker-compose exec web bash
 
-# docker exec: Kör direkt i container (behöver container-ID/namn)
+# docker exec: Kör direkt i container (kräver container-ID/namn)
 docker exec myapp_web bash
 
-# Skillnad: docker-compose exec använder service-namnet från YAML
-# docker exec använder container-namnet (kan vara annorlunda)
+# Distinktion: docker-compose exec använder tjänstnamnet från YAML
+# docker exec använder container-namnet (kan skilja sig)
 ```
 
-### Starta/stoppa services
+### Starta/stoppa tjänster
 
 ```bash
 docker-compose start
@@ -254,16 +267,16 @@ docker-compose stop
 docker-compose restart web
 ```
 
-### Skala services
+### Skalera tjänster
 
 ```bash
 docker-compose up -d --scale web=3
-# Kör 3 instanser av web service
+# Kör 3 instanser av web-tjänsten
 
-# Eller med docker-compose scale (äldre syntax)
+# Alternativt med docker-compose scale (äldre syntax)
 docker-compose scale web=3
 
-# OBS: Container-namn får suffix (_1, _2, _3) när man skalar
+# OBS: Container-namn får suffix (_1, _2, _3) vid skalning
 # myapp_web_1, myapp_web_2, myapp_web_3
 ```
 
@@ -273,7 +286,7 @@ docker-compose scale web=3
 version: "3.8"
 
 services:
-  # Web server
+  # Webbserver
   web:
     build: .
     container_name: myapp_web
@@ -292,7 +305,7 @@ services:
       - appnet
     restart: unless-stopped
 
-  # Database
+  # Databas
   db:
     image: mysql:8.0
     container_name: myapp_db
@@ -324,7 +337,7 @@ services:
     restart: unless-stopped
     command: redis-server --appendonly yes
 
-  # Worker (background jobs)
+  # Worker (bakgrundsjobb)
   worker:
     build: .
     command: node worker.js
@@ -338,17 +351,17 @@ services:
       - appnet
     restart: unless-stopped
 
-# Networks
+# Nätverk
 networks:
   appnet:
     driver: bridge
 
-  # External network (finns redan, skapas inte av Compose)
+  # Externt nätverk (existerar redan, skapas inte av Compose)
   external_net:
     external: true
     name: existing_network
 
-# Volumes
+# Volymer
 volumes:
   db_data:
     driver: local
@@ -356,34 +369,34 @@ volumes:
     driver: local
 ```
 
-## External Networks vs Compose-created Networks
+## Externa nätverk vs Compose-skapade nätverk
 
-### Compose-created networks: Skapas automatiskt av Docker Compose
+### Compose-skapade nätverk: Skapas automatiskt av Docker Compose
 
 ```yaml
 networks:
   appnet:
     driver: bridge
-# Skapas när du kör docker-compose up
-# Tas bort när du kör docker-compose down (om -v används)
+# Skapas vid docker-compose up
+# Raderas vid docker-compose down (om -v används)
 ```
 
-### External networks: Finns redan, skapas inte av Compose
+### Externa nätverk: Existerar redan, skapas inte av Compose
 
 ```yaml
 networks:
   external_net:
     external: true
     name: existing_network
-# Använder befintligt nätverk
-# Tas INTE bort vid docker-compose down
+# Använder existerande nätverk
+# Raderas INTE vid docker-compose down
 ```
 
-**Användning**: När du vill använda ett nätverk som skapats manuellt eller av annat Compose-projekt.
+**Användningsområden**: När du behöver använda ett nätverk som skapats manuellt eller av ett annat Compose-projekt.
 
-## Environment-Specific Compose Files
+## Miljöspecifika Compose-filer
 
-### docker-compose.yml (Development)
+### docker-compose.yml (Utveckling)
 
 ```yaml
 version: "3.8"
@@ -397,7 +410,7 @@ services:
       - NODE_ENV=development
 ```
 
-### docker-compose.prod.yml (Production)
+### docker-compose.prod.yml (Produktion)
 
 ```yaml
 version: "3.8"
@@ -405,26 +418,26 @@ version: "3.8"
 services:
   web:
     image: myapp:latest
-    # Inga volumes (read-only)
+    # Inga volymer (read-only)
     environment:
       - NODE_ENV=production
     restart: always
 ```
 
 ```bash
-# Development
+# Utveckling
 docker-compose up
 
-# Production
+# Produktion
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
 ### docker-compose.override.yml
 
-Docker Compose läser automatiskt `docker-compose.override.yml` om den finns och mergar den med huvudfilen.
+Docker Compose läser automatiskt `docker-compose.override.yml` om filen existerar och kombinerar den med huvudfilen.
 
 ```yaml
-# docker-compose.yml (huvudfil)
+# docker-compose.yml (primär fil)
 version: "3.8"
 services:
   web:
@@ -432,36 +445,35 @@ services:
     ports:
       - "80:80"
 
-# docker-compose.override.yml (automatiskt laddad)
+# docker-compose.override.yml (laddas automatiskt)
 version: "3.8"
 services:
   web:
     volumes:
-      - ./src:/app/src  # Läggs till i huvudfilen
+      - ./src:/app/src  # Adderas till huvudfilen
     environment:
-      - DEBUG=true      # Läggs till i huvudfilen
+      - DEBUG=true      # Adderas till huvudfilen
 ```
 
-**Användning**:
+**Användningsområden**:
+- Lokal utvecklingsmiljö (bind mounts, debug-portar)
+- Miljöspecifika konfigurationer
+- Överskriver eller kompletterar inställningar från huvudfilen
 
-- Lokal utveckling (bind mounts, debug-portar)
-- Miljöspecifika inställningar
-- Överskriver eller lägger till inställningar från huvudfilen
-
-**Viktigt**: `docker-compose.override.yml` läses automatiskt - du behöver inte ange `-f` flaggan.
+**Viktigt**: `docker-compose.override.yml` laddas automatiskt - ingen `-f` flagga krävs.
 
 ## Immutable Infrastructure
 
-Immutable Infrastructure innebär att containrar är oföränderliga. Istället för att ändra i en körande container, bygger du en ny image och ersätter containern.
+Immutable Infrastructure betyder att containrar är oföränderliga. Istället för att modifiera en körande container, bygger du en ny image och ersätter containern.
 
 ### Koncept
 
 ```bash
-# ❌ DÅLIGT: Ändra i körande container
+# ❌ DÅLIG PRAXIS: Modifiera körande container
 docker exec myapp apt-get install newpackage
 docker exec myapp nano /etc/config
 
-# ✅ BRA: Bygg ny image och ersätt
+# ✅ BRA PRAXIS: Bygg ny image och ersätt
 docker-compose build myapp
 docker-compose up -d --no-deps myapp
 ```
@@ -472,28 +484,27 @@ docker-compose up -d --no-deps myapp
 services:
   web:
     build: .
-    # Om du behöver ändra något:
-    # 1. Ändra Dockerfile eller kod
+    # Vid ändringar:
+    # 1. Modifiera Dockerfile eller källkod
     # 2. docker-compose build web
     # 3. docker-compose up -d --no-deps web
     # Containern ersätts med ny image
 ```
 
 **Fördelar**:
-
-- Reproducerbarhet (samma image = samma resultat)
-- Enklare rollback (använd gammal image)
-- Versionering (varje image är versionerad)
-- Säkerhet (ingen risk för drift i körande containers)
+- Reproducerbarhet (identisk image = identiskt resultat)
+- Enklare rollback (återgå till tidigare image)
+- Versionskontroll (varje image är versionerad)
+- Säkerhet (ingen risk för manuella ändringar i produktionsmiljö)
 
 ## Best Practices
 
 ### 1. Använd .env-filer
 
-Docker Compose läser automatiskt `.env`-filen i samma mapp.
+Docker Compose läser automatiskt `.env`-filen i samma katalog.
 
 ```bash
-# .env (i samma mapp som docker-compose.yml)
+# .env (i samma katalog som docker-compose.yml)
 DB_PASSWORD=secret
 REDIS_PASSWORD=secret
 DB_HOST=db
@@ -512,11 +523,10 @@ services:
 ```
 
 **Viktigt**:
-
 - `.env`-filen läses automatiskt av Docker Compose
 - Använd `${VAR}` syntax i docker-compose.yml
-- `.env` bör INTE committas till git (lägg till i .gitignore)
-- Skapa `.env.example` med placeholder-värden för dokumentation
+- `.env` bör INTE versionshanteras (lägg till i .gitignore)
+- Skapa `.env.example` med exempel-värden för dokumentation
 
 ### 2. Health Checks
 
@@ -531,7 +541,7 @@ services:
       start_period: 40s
 ```
 
-### 3. Resource Limits
+### 3. Resursbegränsningar
 
 ```yaml
 services:
@@ -546,7 +556,7 @@ services:
           memory: 256M
 ```
 
-### 4. Logging Configuration
+### 4. Loggningskonfiguration
 
 ```yaml
 services:
@@ -558,21 +568,24 @@ services:
         max-file: "3"
 ```
 
-## Viktiga takeaways
+## Centrala lärdomar
 
-- **YAML Syntax**: Spaces för indentering, konsekvent struktur
-- **Services**: Definiera miljövariabler, nätverk och volymer centralt
+- **YAML Syntax**: Mellanslag för indentering, enhetlig struktur
+- **Services**: Centraliserad definition av miljövariabler, nätverk och volymer
 - **.env-filen**: Läses automatiskt av Docker Compose, använd `${VAR}` syntax
-- **docker-compose.override.yml**: Läses automatiskt och mergas med huvudfilen (för lokal utveckling)
-- **docker-compose exec vs docker exec**: exec använder service-namn, docker exec använder container-namn
+- **docker-compose.override.yml**: Laddas automatiskt och kombineras med huvudfilen (för lokal utveckling)
+- **docker-compose exec vs docker exec**: exec använder tjänstnamn, docker exec använder container-namn
 - **docker-compose build --no-cache**: Bygga images utan cache
-- **restart: always vs unless-stopped**: always startar alltid, unless-stopped respekterar manuell stoppning
-- **docker-compose scale / --scale**: Skala services till flera instanser
-- **External networks**: Använd befintliga nätverk (tas inte bort vid down)
-- **Immutable Infrastructure**: Bygg ny image istället för att ändra i körande container
-- **depends_on**: Styr startordning (men väntar inte på att service är redo)
+- **restart: always vs unless-stopped**: always startar alltid, unless-stopped respekterar manuell avstängning
+- **docker-compose scale / --scale**: Skalera tjänster till flera instanser
+- **Externa nätverk**: Använd befintliga nätverk (raderas inte vid down)
+- **Immutable Infrastructure**: Bygg ny image istället för att modifiera körande container
+- **depends_on**: Kontrollerar startsekvens (men väntar inte på tjänstens beredskap)
 - **docker-compose up -d**: Starta i bakgrunden
-- **docker-compose down**: Stoppa och ta bort (använd `-v` för volumes, `--rmi all` för images)
-- **docker-compose ps**: Visa status för services i projektet
-- **Multi-file**: Använd olika compose-filer för olika miljöer
-- **Infrastructure as Code**: Hela miljön definierad i versionerade filer
+- **docker-compose down**: Stoppa och radera (använd `-v` för volymer, `--rmi all` för images)
+- **docker-compose ps**: Visa tjänststatus i projektet
+- **Multi-file**: Använd separata compose-filer för olika miljöer
+- **Infrastructure as Code**: Hela miljön definierad i versionshanterade filer
+
+"""
+}

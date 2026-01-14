@@ -1,10 +1,24 @@
-# Networking from a Server Perspective
+"""
+NOD: Nätverk från ett serverperspektiv
+======================================
+Förstå hur servrar kommunicerar med varandra och internet genom nätverksprotokoll
+"""
 
-Fokus: Hur servrar pratar med varandra och internet
+NATVERK_SERVER_NODE = {
+    "title": "Nätverk från ett serverperspektiv",
+    "slug": "natverk-server",
+    "description": "Förstå hur servrar kommunicerar med varandra och internet genom nätverksprotokoll",
+    "difficulty": "medium",
+    "estimated_minutes": 65,
+    "xp_reward": 130,
+    "order_index": 4,
+    "content": r"""# Nätverk från ett serverperspektiv
 
-## IPv4 Fundamentals
+Fokus: Hur servrar kommunicerar med varandra och internet
 
-### Subnätmasker, nätverks-ID vs host-ID
+## IPv4-grunder
+
+### Subnätmasker, nätverks-ID vs värd-ID
 
 En IPv4-adress består av 32 bitar, vanligtvis skrivet som 4 oktetter:
 
@@ -15,48 +29,48 @@ En IPv4-adress består av 32 bitar, vanligtvis skrivet som 4 oktetter:
 Adressen delas upp i två delar:
 
 - **Nätverks-ID**: Identifierar nätverket
-- **Host-ID**: Identifierar datorn i nätverket
+- **Värd-ID**: Identifierar datorn i nätverket
 
-Subnätmasken bestämmer var gränsen går:
+Subnätmasken bestämmer gränsen:
 
 ```bash
 # Exempel: 192.168.1.100/24
 # Subnätmask: 255.255.255.0
 # Nätverks-ID: 192.168.1.0
-# Host-ID: 100
+# Värd-ID: 100
 # Broadcast: 192.168.1.255
 ```
 
 ### Subnetting /24 vs /27 vs /29
 
-CIDR-notation (/24, /27, /29) anger antalet bitar som används för nätverks-ID:
+CIDR-notation (/24, /27, /29) specificerar antalet bitar som används för nätverks-ID:
 
-- **/24**: 24 bitar för nätverk, 8 bitar för hosts
-- **/27**: 27 bitar för nätverk, 5 bitar för hosts
-- **/29**: 29 bitar för nätverk, 3 bitar för hosts
+- **/24**: 24 bitar för nätverk, 8 bitar för värdar
+- **/27**: 27 bitar för nätverk, 5 bitar för värdar
+- **/29**: 29 bitar för nätverk, 3 bitar för värdar
 
-**Beräkna tillgängliga hosts**: 2^(32-n) - 2
+**Beräkna användbara värdar**: 2^(32-n) - 2
 
-- /24: 2^(32-24) - 2 = 2^8 - 2 = 256 - 2 = **254 hosts**
-- /27: 2^(32-27) - 2 = 2^5 - 2 = 32 - 2 = **30 hosts**
-- /29: 2^(32-29) - 2 = 2^3 - 2 = 8 - 2 = **6 hosts**
+- /24: 2^(32-24) - 2 = 2^8 - 2 = 256 - 2 = **254 värdar**
+- /27: 2^(32-27) - 2 = 2^5 - 2 = 32 - 2 = **30 värdar**
+- /29: 2^(32-29) - 2 = 2^3 - 2 = 8 - 2 = **6 värdar**
 
 (Minus 2 eftersom nätverks-ID och broadcast-adress inte kan användas)
 
 ```bash
 # Exempel: 192.168.1.0/24
 # Nätverks-ID: 192.168.1.0
-# Användbara hosts: 192.168.1.1 - 192.168.1.254
+# Användbara värdar: 192.168.1.1 - 192.168.1.254
 # Broadcast: 192.168.1.255
 
 # Exempel: 192.168.1.0/27
 # Nätverks-ID: 192.168.1.0
-# Användbara hosts: 192.168.1.1 - 192.168.1.30
+# Användbara värdar: 192.168.1.1 - 192.168.1.30
 # Broadcast: 192.168.1.31
 
 # Exempel: 10.0.0.48/29
 # Nätverks-ID: 10.0.0.48
-# Användbara hosts: 10.0.0.49 - 10.0.0.54
+# Användbara värdar: 10.0.0.49 - 10.0.0.54
 # Broadcast: 10.0.0.55
 ```
 
@@ -70,7 +84,7 @@ APIPA (Automatic Private IP Addressing) är när en enhet inte kan nå en DHCP-s
 # - Enheten tilldelade sig själv en lokal adress
 # - Ingen internetanslutning (endast lokalt nätverk)
 
-# Lösning: Kontrollera nätverkskabel, DHCP-server, eller sätt statisk IP
+# Lösning: Kontrollera nätverkskabel, DHCP-server, eller tilldela statisk IP
 ```
 
 ### Broadcast-adresser
@@ -78,26 +92,26 @@ APIPA (Automatic Private IP Addressing) är när en enhet inte kan nå en DHCP-s
 Broadcast-adressen är den sista adressen i nätverket och används för att skicka meddelanden till alla i nätverket.
 
 ```bash
-# För /24 nätverk
-# Broadcast = nätverks-ID med alla host-bitar satta till 1
+# För /24-nätverk
+# Broadcast = nätverks-ID med alla värdbitar satta till 1
 # 192.168.1.255
 
 # Ping broadcast (testa om någon svarar)
 ping -b 192.168.1.255
 ```
 
-## The Network Stack: OSI-modellen i detalj
+## Nätverksstacken: OSI-modellen i detalj
 
 OSI-modellen har 7 lager, varje lager har sitt specifika ansvar:
 
-### Layer 1: Physical (Fysiskt)
+### Lager 1: Fysiskt (Physical)
 
 - Kablar, signaler, elektriska impulser
 - Exempel: Ethernet-kabel, fiber
 
-### Layer 2: Data Link (Datalänk)
+### Lager 2: Datalänk (Data Link)
 
-- MAC-adresser, frame-delivery
+- MAC-adresser, ramöverföring
 - Protokoll: Ethernet
 - Exempel: Switchar arbetar här
 
@@ -107,55 +121,55 @@ ip link show
 # link/ether 00:11:22:33:44:55
 ```
 
-### Layer 3: Network (Nätverk)
+### Lager 3: Nätverk (Network)
 
-- IP-adresser, routing
+- IP-adresser, routning
 - Protokoll: IP (IPv4, IPv6), ICMP, ARP
 - Exempel: Routers arbetar här
 
 ```bash
-# Layer 3: IP-adresser
+# Lager 3: IP-adresser
 ip addr show
 ip route show
 ```
 
-### Layer 4: Transport (Transport)
+### Lager 4: Transport (Transport)
 
 - Portar, anslutningar, felkontroll
 - Protokoll: TCP, UDP
 - Exempel: Load balancers kan arbeta här
 
 ```bash
-# Layer 4: Portar och anslutningar
-ss -tlnp  # TCP listening
-ss -ulnp  # UDP listening
+# Lager 4: Portar och anslutningar
+ss -tlnp  # TCP lyssnande
+ss -ulnp  # UDP lyssnande
 ```
 
-### Layer 5: Session (Session)
+### Lager 5: Session (Session)
 
-- Session-hantering
+- Sessionshantering
 - Exempel: NetBIOS
 
-### Layer 6: Presentation (Presentation)
+### Lager 6: Presentation (Presentation)
 
 - Datakodning, kryptering
-- Exempel: SSL/TLS (även om det ofta räknas som Layer 7)
+- Exempel: SSL/TLS (även om det ofta räknas som Lager 7)
 
-### Layer 7: Application (Applikation)
+### Lager 7: Applikation (Application)
 
 - Applikationsprotokoll
 - Protokoll: HTTP, HTTPS, FTP, SSH, DNS
 - Exempel: Webbservrar, e-postservrar
 
 ```bash
-# Layer 7: Applikationsdata
+# Lager 7: Applikationsdata
 curl http://example.com
-# HTTP-headers, URL, cookies - allt detta är Layer 7
+# HTTP-headers, URL, cookies - allt detta är Lager 7
 ```
 
-### Layer 7 Switching/Load Balancing
+### Lager 7 Switching/Load Balancing
 
-Layer 7 Load Balancing balanserar trafik baserat på applikationsdata (t.ex. en specifik URL eller HTTP-header) istället för bara IP-adresser och portar.
+Lager 7 Load Balancing balanserar trafik baserat på applikationsdata (t.ex. en specifik URL eller HTTP-header) istället för bara IP-adresser och portar.
 
 ```nginx
 # Exempel: Nginx kan balansera baserat på URL
@@ -167,54 +181,54 @@ location /static/ {
 }
 ```
 
-**Fördel**: Mer intelligent routing baserat på innehållet i paketen, inte bara destination.
+**Fördel**: Mer intelligent routning baserat på innehållet i paketen, inte bara destination.
 
 ## TCP vs UDP
 
 ### TCP (Transmission Control Protocol)
 
-- Connection-oriented (etablerar anslutning först)
-- Reliable (garanterar leverans)
-- Ordered (data kommer i rätt ordning)
-- Slower (mer overhead)
+- Anslutningsorienterad (etablerar anslutning först)
+- Tillförlitlig (garanterar leverans)
+- Ordnad (data kommer i rätt ordning)
+- Långsammare (mer overhead)
 - **Används för**: HTTP, HTTPS, SSH, FTP, e-post
 
 ### UDP (User Datagram Protocol)
 
-- Connectionless (ingen anslutning)
-- Unreliable (ingen garanti för leverans)
-- Unordered (data kan komma i fel ordning)
-- Faster (mindre overhead)
+- Anslutningslös (ingen anslutning)
+- Otillförlitlig (ingen garanti för leverans)
+- Oordnad (data kan komma i fel ordning)
+- Snabbare (mindre overhead)
 - **Används för**: DNS, streaming, spel, VoIP
 
-### TCP 3-way Handshake
+### TCP 3-vägshandskakning
 
-Innan TCP kan skicka data måste en anslutning etableras via "3-way handshake":
+Innan TCP kan skicka data måste en anslutning etableras via "3-vägshandskakning":
 
 1. **SYN**: Klienten skickar SYN (synchronize) till servern
 2. **SYN-ACK**: Servern svarar med SYN-ACK (acknowledgment)
 3. **ACK**: Klienten bekräftar med ACK
 
 ```bash
-# Observera handshake med tcpdump
+# Observera handskakning med tcpdump
 sudo tcpdump -i eth0 'tcp[tcpflags] & tcp-syn != 0'
 # Du ser: SYN → SYN-ACK → ACK
 ```
 
-### TCP Flaggor
+### TCP-flaggor
 
 TCP använder flaggor för att kontrollera anslutningar:
 
 - **SYN**: Synchronize - starta anslutning
 - **ACK**: Acknowledgment - bekräfta mottagen data
-- **FIN**: Finish - avsluta anslutning snyggt
-- **RST**: Reset - avbryt anslutning tvärt (vid fel)
+- **FIN**: Finish - avsluta anslutning kontrollerat
+- **RST**: Reset - avbryt anslutning abrupt (vid fel)
 - **PSH**: Push - skicka data omedelbart
 - **URG**: Urgent - prioritetsdata
 
 ```bash
 # RST skickas vid fel eller avbruten anslutning
-# FIN används för snygg avstängning (båda parter skickar FIN)
+# FIN används för kontrollerad avstängning (båda parter skickar FIN)
 ```
 
 ### ICMP (Internet Control Message Protocol)
@@ -236,25 +250,25 @@ ping -c 4 8.8.8.8
 **Användning**: Ping, traceroute, felmeddelanden från routers.
 
 ```bash
-# TCP anslutningar
+# TCP-anslutningar
 ss -tn
-# ESTAB = established connection
-# LISTEN = listening for connections
+# ESTAB = etablerad anslutning
+# LISTEN = lyssnar efter anslutningar
 
-# UDP sockets
+# UDP-sockets
 ss -un
-# UDP är connectionless, så ingen "established" state
+# UDP är anslutningslös, så ingen "established" state
 ```
 
-## DNS & Resolution: Order of operations
+## DNS och namnupplösning: Ordningsföljd
 
-När en dator försöker lösa ett hostnamn till en IP-adress, följs denna ordning:
+När en dator försöker lösa ett värdnamn till en IP-adress följs denna ordning:
 
 1. **/etc/hosts**: Lokal fil med statiska mappningar
 2. **/etc/resolv.conf**: DNS-servrar att fråga
 
 ```bash
-# 1. Kolla /etc/hosts först
+# 1. Kontrollera /etc/hosts först
 cat /etc/hosts
 # 127.0.0.1 localhost
 # 192.168.1.10 myserver.local
@@ -268,7 +282,7 @@ cat /etc/resolv.conf
 ### DNS-verktyg
 
 ```bash
-# Testa DNS-resolution
+# Testa DNS-upplösning
 nslookup example.com
 dig example.com
 host example.com
@@ -276,10 +290,10 @@ host example.com
 # Testa specifik DNS-server
 dig @8.8.8.8 example.com
 
-# Reverse DNS lookup (IP → hostname)
+# Omvänd DNS-uppslagning (IP → värdnamn)
 dig -x 8.8.8.8
 
-# Avancerad DNS-uppslagning med hela svarshuvudet
+# Avancerad DNS-uppslagning med komplett svarshuvud
 dig example.com +noall +answer
 dig example.com ANY  # Alla typer av poster
 ```
@@ -315,20 +329,20 @@ dig example.com
 #                  TTL i sekunder (3600 = 1 timme)
 
 # Hög TTL (t.ex. 86400 = 24 timmar):
-# - Ändringar tar längre tid att sprida sig (propagera)
+# - Ändringar tar längre tid att spridas (propagera)
 # - Gamla värden sparas i cache längre
 # - Mindre belastning på DNS-servrar
 
 # Låg TTL (t.ex. 300 = 5 minuter):
 # - Ändringar sprids snabbt
-# - Mer DNS-frågor (högre belastning)
+# - Fler DNS-frågor (högre belastning)
 ```
 
 **Best practice**: Använd låg TTL (300-600) innan ändringar, sedan höj till normalt värde.
 
-## Portar & Sockets
+## Portar och sockets
 
-### Skillnaden mellan TCP (connection-oriented) och UDP
+### Skillnaden mellan TCP (anslutningsorienterad) och UDP
 
 **TCP Socket**:
 
@@ -363,7 +377,7 @@ dig @server example.com
 443/tcp  # HTTPS
 22/tcp   # SSH
 53/udp, 53/tcp  # DNS
-25/tcp   # SMTP (email)
+25/tcp   # SMTP (e-post)
 21/tcp   # FTP
 23/tcp   # Telnet
 ```
@@ -387,7 +401,7 @@ En Socket är kombinationen av en IP-adress och ett portnummer.
 # Socket-format: IP:Port
 192.168.1.10:80
 127.0.0.1:3306
-0.0.0.0:22  # Lyssnar på alla interfaces
+0.0.0.0:22  # Lyssnar på alla gränssnitt
 
 # Visa sockets
 ss -tlnp
@@ -397,12 +411,11 @@ ss -tlnp
 #         Local socket                        Peer socket (tom när LISTEN)
 ```
 
-**Socket States**:
-
-- **LISTEN**: Väntar på inkommande anslutningar
+**Socket-tillstånd**:
+- **LISTEN**: Inväntar inkommande anslutningar
 - **ESTABLISHED**: Aktiv anslutning
-- **TIME-WAIT**: Väntar på att stänga anslutning
-- **CLOSE-WAIT**: Väntar på att applikationen stänger
+- **TIME-WAIT**: Inväntar att stänga anslutning
+- **CLOSE-WAIT**: Inväntar att applikationen stänger
 
 ```bash
 # Visa vilka processer som lyssnar på portar
@@ -428,28 +441,25 @@ curl http://127.0.0.1:8080
 
 ### Hur man når en containers localhost
 
-**Problem**: När du kör en container, är dess localhost isolerad från hostens localhost.
+**Problem**: När du exekverar en container är dess localhost isolerad från värdensens localhost.
 
 **Lösningar**:
 
-1. **Port mapping**: Mappa container-port till host-port
-
+1. **Portmappning**: Mappa container-port till värdport
 ```bash
 docker run -p 8080:80 nginx
-# Container port 80 → Host port 8080
+# Container port 80 → Värd port 8080
 # Nu kan du nå via http://localhost:8080
 ```
 
-1. **Host network mode**: Dela nätverk med host
-
+2. **Värdnätverksläge**: Dela nätverk med värden
 ```bash
 docker run --network host nginx
-# Container delar hosts nätverk
-# localhost i container = localhost på host
+# Container delar värdens nätverk
+# localhost i container = localhost på värden
 ```
 
-1. **Docker bridge network**: Använd container-namn för kommunikation
-
+3. **Docker bridge-nätverk**: Använd containernamn för kommunikation
 ```bash
 # Container A kan nå Container B via namn
 docker run --name app nginx
@@ -462,18 +472,18 @@ docker run --link app:app client
 ### Visa nätverkskonfiguration
 
 ```bash
-# Alla interfaces
+# Alla gränssnitt
 ip addr show
 # eller
 ifconfig
 
-# ip link - Hantera länkar (interfaces)
-ip link show                    # Visa alla interfaces
-ip link set eth0 up            # Aktivera interface
-ip link set eth0 down          # Inaktivera interface
-ip link set eth0 name eth1     # Byt namn (kräver interface down)
+# ip link - Hantera länkar (gränssnitt)
+ip link show                    # Visa alla gränssnitt
+ip link set eth0 up            # Aktivera gränssnitt
+ip link set eth0 down          # Inaktivera gränssnitt
+ip link set eth0 name eth1     # Byt namn (kräver gränssnitt down)
 
-# "lo" = Loopback interface (127.0.0.1)
+# "lo" = Loopback-gränssnitt (127.0.0.1)
 # Det interna virtuella nätverket för kommunikation inom maskinen
 ```
 
@@ -517,11 +527,11 @@ network:
 sudo netplan apply
 ```
 
-**Viktigt**: Dessa filer innehåller den permanenta konfigurationen för nätverkskorten (statisk IP, DHCP, etc.).
+**Notera**: Dessa filer innehåller den permanenta konfigurationen för nätverksgränssnitt (statisk IP, DHCP, etc.).
 
 ### DHCP Lease Time
 
-DHCP Lease Time är den tid en enhet får behålla en tilldelad IP-adress innan den måste be om förnyelse.
+DHCP Lease Time är den tid en enhet får behålla en tilldelad IP-adress innan den måste begära förnyelse.
 
 ```bash
 # Visa DHCP-information
@@ -532,19 +542,19 @@ dhclient -v eth0
 
 # Om lease time går ut:
 # 1. Enheten försöker förnya med DHCP-servern
-# 2. Om förnyelse misslyckas, försöker enheten få ny IP
-# 3. Om det misslyckas, kan enheten använda APIPA (169.254.x.x)
+# 2. Om förnyelse misslyckas försöker enheten få ny IP
+# 3. Om det misslyckas kan enheten använda APIPA (169.254.x.x)
 ```
 
 ### Testa anslutningar
 
 ```bash
-# TCP connection test
+# TCP-anslutningstest
 telnet server.com 80
 # eller
 nc -zv server.com 80
 
-# HTTP test
+# HTTP-test
 curl -I http://server.com
 
 # Ping (ICMP)
@@ -564,12 +574,12 @@ iftop
 # eller
 nethogs
 
-# Packet capture (kräver sudo)
+# Paketfångst (kräver sudo)
 tcpdump -i eth0
 tcpdump -i eth0 port 80
 ```
 
-### tcpdump - Avancerad packet capture
+### tcpdump - Avancerad paketfångst
 
 ```bash
 # Grundläggande användning
@@ -620,13 +630,13 @@ nmap -F 192.168.1.1
 # OS-detektering
 nmap -O 192.168.1.1
 
-# Skanna hela nätverk
+# Skanna helt nätverk
 nmap 192.168.1.0/24
 ```
 
 **Användning**: Säkerhetsauditering, identifiera öppna portar, hitta tjänster på nätverket.
 
-### ss -tulpen - Detaljerad socket-information
+### ss -tulpen - Detaljerad socketinformation
 
 ```bash
 # Visa alla lyssnande TCP/UDP-portar med process-ID och användare
@@ -634,15 +644,15 @@ sudo ss -tulpen
 
 # -t = TCP
 # -u = UDP
-# -l = Listening
+# -l = Lyssnande
 # -p = Process
-# -e = Extended information
-# -n = Numeric (ingen DNS-lookup)
+# -e = Utökad information
+# -n = Numerisk (ingen DNS-uppslagning)
 
-# Exempel output:
+# Exempel utdata:
 # LISTEN 0 128 0.0.0.0:80 0.0.0.0:* users:(("nginx",pid=1234,fd=6))
 #         ↑    ↑   ↑        ↑
-#      Recv Send Local   Peer
+#      Recv Send Lokal   Peer
 ```
 
 ### wget - Ladda ner filer
@@ -664,22 +674,22 @@ wget -b http://example.com/file.zip
 ### hostname -i - Visa IP-adress
 
 ```bash
-# Visa IP-adressen som är kopplad till serverns hostname
+# Visa IP-adressen som är kopplad till serverns värdnamn
 hostname -i
 # 192.168.1.10
 
-# Visa hostname
+# Visa värdnamn
 hostname
 # myserver
 
-# Sätt hostname permanent
+# Tilldela värdnamn permanent
 # Redigera /etc/hostname
 sudo nano /etc/hostname
 ```
 
-### Bandwidth vs Latency
+### Bandbredd vs Latens
 
-**Bandwidth (Bandbredd)**: Den maximala mängden data som kan överföras per sekund över en anslutning.
+**Bandbredd**: Den maximala mängden data som kan överföras per sekund över en anslutning.
 
 ```bash
 # Mät bandbredd
@@ -688,7 +698,7 @@ speedtest-cli
 iperf3 -c server.com
 ```
 
-**Latency (Latens)**: Fördröjningen (tiden) det tar för ett datapaket att färdas från sändare till mottagare.
+**Latens**: Fördröjningen (tiden) det tar för ett datapaket att färdas från sändare till mottagare.
 
 ```bash
 # Mät latens
@@ -715,13 +725,13 @@ sudo ip link set eth0 mtu 9000
 
 # Testa MTU
 ping -M do -s 1472 8.8.8.8
-# -M do = Don't fragment
-# -s 1472 = Packet size (1500 - 28 bytes header = 1472)
+# -M do = Fragmentera inte
+# -s 1472 = Paketstorlek (1500 - 28 bytes header = 1472)
 ```
 
-**Viktigt**: Om paket är större än MTU delas de upp (fragmentering), vilket kan påverka prestanda.
+**Notera**: Om paket är större än MTU delas de upp (fragmentering), vilket kan påverka prestanda.
 
-## Brandvägg & Säkerhet
+## Brandvägg och säkerhet
 
 ### ufw (Uncomplicated Firewall)
 
@@ -750,7 +760,7 @@ sudo ufw status
 # Visa numrerade regler
 sudo ufw status numbered
 
-# Ta bort regel
+# Radera regel
 sudo ufw delete 3
 ```
 
@@ -763,22 +773,22 @@ NAT låter flera enheter i ett privat nätverk dela på en enda publik IP-adress
 # 1. Privat nätverk (192.168.1.0/24) använder privata IP:ar
 # 2. Router har publik IP (t.ex. 203.0.113.1)
 # 3. När en enhet skickar paket ut:
-#    - Router ändrar source IP från 192.168.1.10 till 203.0.113.1
+#    - Router ändrar källadress från 192.168.1.10 till 203.0.113.1
 #    - Router sparar mappningen i NAT-tabellen
 # 4. När svar kommer tillbaka:
 #    - Router tittar i NAT-tabellen
-#    - Router ändrar destination IP tillbaka till 192.168.1.10
+#    - Router ändrar destinationsadress tillbaka till 192.168.1.10
 ```
 
 **Användning**: Hemnätverk, företagsnätverk - alla delar samma publik IP.
 
-### Port Forwarding
+### Portvidarebefordran (Port Forwarding)
 
-Port Forwarding är när en router skickar trafik som kommer till en specifik port vidare till en enhet i det lokala nätverket.
+Portvidarebefordran är när en router skickar trafik som kommer till en specifik port vidare till en enhet i det lokala nätverket.
 
 ```bash
-# Exempel: Port forwarding på router
-# Externa port 8080 → Intern 192.168.1.10:80
+# Exempel: Portvidarebefordran på router
+# Extern port 8080 → Intern 192.168.1.10:80
 
 # När någon ansluter till router:8080,
 # router skickar trafiken vidare till 192.168.1.10:80
@@ -795,38 +805,41 @@ Om ping visar "Destination Host Unreachable" betyder det att din server inte vet
 ping 10.0.0.50
 # From 192.168.1.10 icmp_seq=1 Destination Host Unreachable
 
-# Lösning: Kontrollera routing table
+# Lösning: Kontrollera routingstabell
 ip route show
 # Lägg till rutt om nödvändigt
 sudo ip route add 10.0.0.0/24 via 192.168.1.1
 ```
 
-## Viktiga takeaways
+## Viktiga lärdomar
 
-- **IPv4**: Nätverks-ID + Host-ID, bestäms av subnätmask
-- **Subnetting**: /24 = 254 hosts, /27 = 30 hosts, /29 = 6 hosts (formel: 2^(32-n) - 2)
+- **IPv4**: Nätverks-ID + Värd-ID, bestäms av subnätmask
+- **Subnetting**: /24 = 254 värdar, /27 = 30 värdar, /29 = 6 värdar (formel: 2^(32-n) - 2)
 - **APIPA (169.254.x.x)**: Automatisk IP när DHCP misslyckas
-- **OSI-modellen**: 7 lager - Physical, Data Link (Ethernet), Network (IP), Transport (TCP/UDP), Session, Presentation, Application
-- **TCP 3-way handshake**: SYN → SYN-ACK → ACK
-- **TCP flaggor**: SYN, ACK, FIN, RST, PSH, URG
+- **OSI-modellen**: 7 lager - Fysiskt, Datalänk (Ethernet), Nätverk (IP), Transport (TCP/UDP), Session, Presentation, Applikation
+- **TCP 3-vägshandskakning**: SYN → SYN-ACK → ACK
+- **TCP-flaggor**: SYN, ACK, FIN, RST, PSH, URG
 - **ICMP**: Används för ping, traceroute, felmeddelanden
 - **DNS CNAME**: Alias som pekar på ett annat namn
-- **TTL**: Hur länge DNS-post kan cachas (hög TTL = långsam propagation)
+- **TTL**: Hur länge DNS-post kan cachas (hög TTL = långsam propagering)
 - **Well-known ports (0-1023)**: Reserverade för systemtjänster
 - **Socket**: Kombination av IP-adress och portnummer (t.ex. 192.168.1.10:80)
 - **ARP**: Översätter IP-adress till MAC-adress i lokalt nätverk
-- **ip link**: Hantera nätverksinterfaces (up, down, rename)
+- **ip link**: Hantera nätverksgränssnitt (up, down, rename)
 - **DHCP Lease Time**: Tid en enhet får behålla IP-adress
-- **tcpdump**: Avancerad packet capture för nätverksanalys
+- **tcpdump**: Avancerad paketfångst för nätverksanalys
 - **nmap**: Skanna nätverk efter öppna portar och tjänster
 - **ss -tulpen**: Visa lyssnande portar med process-ID
 - **ufw**: Användarvänlig brandvägg för iptables
 - **NAT**: Flera enheter delar samma publik IP
-- **Port Forwarding**: Router skickar trafik vidare till intern enhet
-- **Bandwidth**: Maximal data per sekund, **Latency**: Fördröjning
+- **Portvidarebefordran**: Router skickar trafik vidare till intern enhet
+- **Bandbredd**: Maximal data per sekund, **Latens**: Fördröjning
 - **MTU**: Maximal paketstorlek (standard 1500 bytes)
-- **TCP**: Connection-oriented, reliable, ordered
-- **UDP**: Connectionless, unreliable, faster
+- **TCP**: Anslutningsorienterad, tillförlitlig, ordnad
+- **UDP**: Anslutningslös, otillförlitlig, snabbare
 - **DNS**: Först /etc/hosts, sedan /etc/resolv.conf
 - **Localhost**: 127.0.0.1 är loopback, isolerad i containers
-- **Port mapping**: Använd `-p` för att nå container-localhost från host
+- **Portmappning**: Använd `-p` för att nå container-localhost från värden
+
+"""
+}

@@ -343,6 +343,7 @@ ACL låter dig ge specifika rättigheter till specifika användare/grupper utöv
 ### Begränsning med klassiska rättigheter
 
 Klassiska Linux-rättigheter kan bara ge rättigheter till:
+
 - En användare (owner)
 - En grupp (group)
 - Alla andra (others)

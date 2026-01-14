@@ -1,37 +1,51 @@
-# Process Management & System Performance
+"""
+NOD: Processhantering och systemprestanda
+=========================================
+Övervaka och felsöka system genom processhantering och prestandaanalys
+"""
 
-Fokus: Övervakning och felsökning av sega system
+PROCESSHANTERING_NODE = {
+    "title": "Processhantering och systemprestanda",
+    "slug": "processhantering",
+    "description": "Övervaka och felsöka system genom processhantering och prestandaanalys",
+    "difficulty": "medium",
+    "estimated_minutes": 60,
+    "xp_reward": 120,
+    "order_index": 3,
+    "content": r"""# Processhantering och systemprestanda
 
-## Process Lifecycle: States
+Fokus: Övervakning och felsökning av långsamma system
 
-Processer kan vara i olika tillstånd:
+## Processlivscykel: Tillstånd
 
-- **Running (R)**: Körs aktivt eller väntar på CPU
-- **Sleeping (S)**: Väntar på en händelse (I/O, signal, etc.)
-- **Zombie (Z)**: Processen är död men väntar på att föräldern läser exit-status
-- **Stopped (T)**: Processen är stoppad (t.ex. med Ctrl+Z)
+Processer kan befinna sig i olika tillstånd:
+
+- **Running (R)**: Exekveras aktivt eller väntar på CPU-tid
+- **Sleeping (S)**: Inväntar händelse (I/O, signal, etc.)
+- **Zombie (Z)**: Processen är avslutad men väntar på att föräldern ska läsa exit-status
+- **Stopped (T)**: Processen är pausad (t.ex. med Ctrl+Z)
 
 ```bash
-# Visa process states
+# Visa processtillstånd
 ps aux | head
-# STAT kolumnen visar tillstånd:
+# STAT-kolumnen visar tillstånd:
 # R = Running
 # S = Sleeping
 # Z = Zombie
 # T = Stopped
-# D = Uninterruptible sleep (väntar på I/O)
+# D = Uninterruptible sleep (inväntar I/O)
 ```
 
-### Process States i detalj
+### Processtillstånd i detalj
 
 ```bash
-# Running processer
+# Exekverande processer
 ps aux | grep " R "
 
-# Sleeping processer
+# Sovande processer
 ps aux | grep " S "
 
-# Zombie processer (bör rensas)
+# Zombie-processer (bör rensas)
 ps aux | grep " Z "
 ```
 
@@ -46,9 +60,8 @@ load average: 1.25, 0.85, 0.60
 ```
 
 **Tolkning**: Om du har 4 CPU-kärnor:
-
 - 1.25: Systemet är 31% belastat (1.25/4 = 0.31)
-- 4.0: Systemet är 100% belastat (alla kärnor används)
+- 4.0: Systemet är 100% belastat (alla kärnor utnyttjas)
 - 8.0: Systemet är 200% belastat (dubbelt så många processer som kärnor)
 
 ```bash
@@ -56,7 +69,7 @@ load average: 1.25, 0.85, 0.60
 uptime
 # 14:30:00 up 10 days, load average: 1.25, 0.85, 0.60
 
-# Eller
+# Alternativt
 cat /proc/loadavg
 # 1.25 0.85 0.60 2/500 12345
 
@@ -66,13 +79,13 @@ nproc
 grep -c processor /proc/cpuinfo
 ```
 
-**Regel**: Om load average > antal CPU-kärnor, är systemet överbelastat.
+**Princip**: Om load average > antal CPU-kärnor är systemet överbelastat.
 
-## Signals: SIGTERM vs SIGKILL
+## Signaler: SIGTERM vs SIGKILL
 
-### SIGTERM (15) - Snygg avstängning
+### SIGTERM (15) - Kontrollerad avslutning
 
-Processen får möjlighet att stänga av sig själv på ett kontrollerat sätt.
+Processen får möjlighet att stänga ner sig själv på ett kontrollerat sätt.
 
 ```bash
 # Skicka SIGTERM
@@ -83,12 +96,12 @@ kill -TERM PID
 # Processen kan:
 # - Spara data
 # - Stänga filer
-# - Rensa resurser
+# - Frigöra resurser
 ```
 
-### SIGKILL (9) - Omedelbar död
+### SIGKILL (9) - Omedelbar terminering
 
-Processen dödas omedelbart, ingen chans att stänga av sig själv.
+Processen termineras omedelbart, ingen möjlighet att stänga ner sig själv.
 
 ```bash
 # Skicka SIGKILL (sista utvägen!)
@@ -98,26 +111,26 @@ kill -KILL PID
 # Processen kan INTE:
 # - Spara data
 # - Stänga filer ordentligt
-# - Rensa resurser
+# - Frigöra resurser
 ```
 
-**Best practice**: Försök alltid SIGTERM först, använd SIGKILL bara om processen inte svarar.
+**Best practice**: Försök alltid SIGTERM först, använd SIGKILL endast om processen inte svarar.
 
 ```bash
-# Snygg avstängning
+# Kontrollerad avslutning
 kill PID
 sleep 5
-# Om processen fortfarande körs
+# Om processen fortfarande exekveras
 kill -9 PID
 ```
 
-### Andra viktiga signals
+### Andra viktiga signaler
 
 ```bash
-SIGHUP (1)   # Hang up - ofta används för att ladda om konfiguration
+SIGHUP (1)   # Hang up - används ofta för att ladda om konfiguration
 SIGINT (2)   # Interrupt - samma som Ctrl+C
-SIGSTOP (19) # Stoppa processen (kan återupptas)
-SIGCONT (18) # Återuppta stoppad process
+SIGSTOP (19) # Pausa processen (kan återupptas)
+SIGCONT (18) # Återuppta pausad process
 ```
 
 ```bash
@@ -139,14 +152,14 @@ pgrep -l nginx
 # 1235 nginx-worker
 ```
 
-## Job Control: jobs, fg, bg, Ctrl+Z
+## Jobbkontroll: jobs, fg, bg, Ctrl+Z
 
 ### Pausa processer med Ctrl+Z
 
-När du kör ett program i terminalen kan du pausa det:
+När du exekverar ett program i terminalen kan du pausa det:
 
 ```bash
-# Kör ett program
+# Exekvera ett program
 sleep 100
 
 # Tryck Ctrl+Z - processen pausas (SIGSTOP)
@@ -166,12 +179,12 @@ jobs -l
 # [1]+ 12345 Stopped                 sleep 100
 ```
 
-### bg - Kör i bakgrunden
+### bg - Exekvera i bakgrunden
 
 ```bash
-# Starta om ett pausat jobb i bakgrunden
+# Återuppta pausat jobb i bakgrunden
 bg %1
-# eller bara
+# eller endast
 bg
 
 # Starta process direkt i bakgrunden
@@ -183,48 +196,48 @@ long_task &
 ```bash
 # Ta tillbaka jobb 1 till förgrunden
 fg %1
-# eller bara
+# eller endast
 fg
 
 # Nu kan du interagera med processen igen
 ```
 
-### nohup - Kör processer som överlever logout
+### nohup - Exekvera processer som överlever utloggning
 
 ```bash
-# Kör process i bakgrunden som överlever logout
+# Exekvera process i bakgrunden som överlever utloggning
 nohup long_task &
 
-# Output sparas i nohup.out
+# Utdata sparas i nohup.out
 # Processen fortsätter även om du loggar ut
 
-# Med egen output-fil
+# Med egen utdatafil
 nohup long_task > output.log 2>&1 &
 ```
 
-**Användning**: När du vill köra långvariga processer som ska fortsätta även om du stänger terminalen.
+**Användning**: När du vill exekvera långvariga processer som ska fortsätta även om du stänger terminalen.
 
-## Context Switching
+## Kontextväxling
 
-Context Switching är när CPU:n byter från att köra en process till att köra en annan.
+Kontextväxling (Context Switching) är när CPU:n byter från att exekvera en process till att exekvera en annan.
 
 ### Hur det fungerar
 
 1. CPU:n sparar tillståndet för den nuvarande processen (register, stack, etc.)
 2. CPU:n laddar in tillståndet för nästa process
-3. CPU:n fortsätter köra den nya processen
+3. CPU:n fortsätter exekvera den nya processen
 
-**Varför det händer**: För att ge intrycket av att flera processer körs samtidigt (multitasking).
+**Varför det händer**: För att ge intrycket av att flera processer exekveras samtidigt (multitasking).
 
 ```bash
-# Visa context switches
+# Visa kontextväxlingar
 vmstat 1
-# cs kolumnen visar antal context switches per sekund
+# cs-kolumnen visar antal kontextväxlingar per sekund
 ```
 
-**Prestanda**: För många context switches kan påverka prestanda negativt eftersom det tar tid att spara/ladda process-tillstånd.
+**Prestanda**: För många kontextväxlingar kan påverka prestanda negativt eftersom det tar tid att spara/ladda processtillstånd.
 
-## Resource Analysis: Verktyg för övervakning
+## Resursanalys: Verktyg för övervakning
 
 ### top - Realtidsöversikt
 
@@ -233,8 +246,8 @@ top
 # Tryck:
 # M = Sortera efter minne
 # P = Sortera efter CPU
-# q = Quit
-# k = Kill process (ange PID)
+# q = Avsluta
+# k = Terminera process (ange PID)
 ```
 
 ### htop - Förbättrad top
@@ -242,9 +255,9 @@ top
 ```bash
 htop
 # Mer användarvänlig, färgkodad
-# F5 = Tree view
+# F5 = Trädvy
 # F6 = Sortera
-# F9 = Kill
+# F9 = Terminera
 ```
 
 ### free -m - Minnesanvändning
@@ -252,7 +265,7 @@ htop
 ```bash
 free -m
 # Visar minne i MB
-# -h = human readable
+# -h = läsbart format
 # -g = GB
 
 free -h
@@ -261,7 +274,6 @@ free -h
 ```
 
 **Tolkning**:
-
 - **used**: Använt minne
 - **free**: Ledigt minne
 - **buff/cache**: Används för cache (kan frigöras om nödvändigt)
@@ -271,8 +283,8 @@ free -h
 
 ```bash
 df -h
-# Visar diskutrymme för alla mount points
-# -h = human readable
+# Visar diskutrymme för alla monteringspunkter
+# -h = läsbart format
 # -i = visa inodes istället
 
 df -h /
@@ -280,7 +292,7 @@ df -h /
 # /dev/sda1        50G   30G   18G  63% /
 ```
 
-### du -sh --max-depth=1 - Diskusage per katalog
+### du -sh --max-depth=1 - Diskutrymme per katalog
 
 ```bash
 # Visa storlek för kataloger på första nivån
@@ -293,7 +305,7 @@ du -sh --max-depth=1 /var
 du -h /var | sort -rh | head -10
 ```
 
-### iostat - Disk-I/O analys
+### iostat - Disk-I/O-analys
 
 ```bash
 # Visa diskstatistik varje sekund
@@ -303,14 +315,14 @@ iostat -x 1
 # %util - Procent av tiden disken var upptagen
 # %iowait - Procent av tiden CPU väntade på I/O
 # r/s, w/s - Läs/skriv per sekund
-# rkB/s, wkB/s - Kilobytes läst/skrivet per sekund
+# rkB/s, wkB/s - Kilobyte läst/skrivet per sekund
 
-# Om %util är nära 100%, är disken en flaskhals
+# Om %util är nära 100% är disken en flaskhals
 ```
 
-**%IOWAIT**: Hur mycket tid CPU:n är overksam medan den väntar på att disk-operationer (läsa/skriva) ska bli klara.
+**%IOWAIT**: Hur mycket tid CPU:n är overksam medan den inväntar att diskoperationer (läsa/skriva) ska slutföras.
 
-### iotop - Process-I/O analys
+### iotop - Process-I/O-analys
 
 ```bash
 # Visa vilka processer som använder mest I/O
@@ -321,7 +333,7 @@ sudo iotop
 # Tryck p för att visa processer istället för trådar
 ```
 
-**Användning**: Hitta processer som läser/skriver mycket till disken (kan göra systemet segt).
+**Användning**: Identifiera processer som läser/skriver mycket till disken (kan göra systemet långsamt).
 
 ## Throttling av processer
 
@@ -336,14 +348,14 @@ nice -n 19 cpu_intensive_task
 renice 19 -p 1234
 ```
 
-**Användning**: När en process tar för mycket resurser och påverkar andra tjänster negativt.
+**Användning**: När en process konsumerar för mycket resurser och påverkar andra tjänster negativt.
 
 ## systemd och journalctl - Avancerad logghantering
 
 ### systemctl status
 
 ```bash
-# Visa status för en tjänst
+# Visa status för tjänst
 systemctl status nginx
 
 # Visa detaljerad information
@@ -356,7 +368,7 @@ systemctl list-units --type=service
 systemctl list-units --type=service --state=running
 ```
 
-### journalctl - systemd loggar
+### journalctl - systemd-loggar
 
 ```bash
 # Visa alla loggar
@@ -383,7 +395,7 @@ journalctl -u nginx | grep "error"
 # Kombinera flera tjänster
 journalctl -u nginx -u apache2
 
-# Visa kernel-loggar
+# Visa kärnloggar
 journalctl -k
 
 # Visa endast fel
@@ -396,7 +408,7 @@ journalctl -p err
 # stop - Stoppar tjänsten nu
 sudo systemctl stop nginx
 
-# disable - Gör att tjänsten inte startar automatiskt vid boot
+# disable - Förhindrar att tjänsten startar automatiskt vid boot
 sudo systemctl disable nginx
 
 # Kombinera
@@ -415,7 +427,7 @@ sudo systemctl start nginx
 cat /proc/cpuinfo
 
 # Viktiga fält:
-# processor - CPU-kärna nummer
+# processor - CPU-kärnnummer
 # model name - CPU-modell
 # cpu MHz - CPU-hastighet
 # cache size - Cache-storlek
@@ -431,7 +443,7 @@ nproc
 grep "model name" /proc/cpuinfo | head -1
 ```
 
-## /proc/[PID]/ - Process-specifik information
+## /proc/[PID]/ - Processspecifik information
 
 Varje process har sin egen katalog under /proc/:
 
@@ -439,12 +451,12 @@ Varje process har sin egen katalog under /proc/:
 # Exempel: Process med PID 1234
 ls /proc/1234/
 # cmdline    - Kommandoraden
-# cwd        - Nuvarande arbetskatalog (symbolic link)
+# cwd        - Nuvarande arbetskatalog (symbolisk länk)
 # environ    - Miljövariabler
-# exe        - Exekverbar fil (symbolic link)
-# fd/        - Öppna filer (file descriptors)
-# status     - Process status
-# stat       - Process statistik
+# exe        - Exekverbar fil (symbolisk länk)
+# fd/        - Öppna filer (filbeskrivare)
+# status     - Processstatus
+# stat       - Processstatistik
 # maps       - Minnesmappning
 # limits     - Resursbegränsningar
 
@@ -457,7 +469,7 @@ cat /proc/1234/environ | tr '\0' '\n'
 # Visa öppna filer
 ls -l /proc/1234/fd/
 
-# Visa process status
+# Visa processstatus
 cat /proc/1234/status
 # Name:   nginx
 # State:  S (sleeping)
@@ -478,7 +490,7 @@ cat /proc/1234/status
 vmstat 1
 
 # Kolumner:
-# r - Antal processer som väntar på CPU
+# r - Antal processer som inväntar CPU
 # b - Antal processer i uninterruptible sleep
 # swpd - Använt swap-minne
 # free - Ledigt minne
@@ -486,7 +498,7 @@ vmstat 1
 # cache - Cache-minne
 # si - Swap in (från disk till RAM)
 # so - Swap out (från RAM till disk)
-# cs - Context switches per sekund
+# cs - Kontextväxlingar per sekund
 # us - User CPU-tid
 # sy - System CPU-tid
 # id - Idle CPU-tid
@@ -495,19 +507,19 @@ vmstat 1
 
 **Användning**: Övervaka systemresurser över tid, identifiera flaskhalsar.
 
-## Interrupts
+## Avbrott (Interrupts)
 
-Interrupts (avbrott) är signaler från hårdvara (t.ex. nätverkskort, tangentbord) till CPU:n att något behöver hanteras omedelbat.
+Avbrott (Interrupts) är signaler från hårdvara (t.ex. nätverkskort, tangentbord) till CPU:n att något behöver hanteras omedelbart.
 
 ```bash
-# Visa interrupts per CPU
+# Visa avbrott per CPU
 cat /proc/interrupts
 
-# Visa interrupts per sekund
+# Visa avbrott per sekund
 watch -n 1 'cat /proc/interrupts | head -20'
 ```
 
-**Exempel**: När du trycker en tangent skickar tangentbordet en interrupt till CPU:n, som sedan hanterar tangenttryckningen.
+**Exempel**: När du trycker en tangent skickar tangentbordet ett avbrott till CPU:n, som sedan hanterar tangenttryckningen.
 
 ## sar - System Activity Reporter
 
@@ -524,46 +536,46 @@ sar -r 1 5
 # Visa I/O-statistik
 sar -b 1 5
 
-# Visa historisk data (om sysstat körs)
+# Visa historisk data (om sysstat exekveras)
 sar -u  # CPU-användning idag
 sar -r  # Minne idag
 ```
 
-**Användning**: Samla in historisk prestandadata för analys av trender och problem.
+**Användning**: Samla historisk prestandadata för analys av trender och problem.
 
 ## CPU Steal Time
 
-CPU Steal Time (%st) är relevant i virtuella miljöer (VM:ar). Det är den tid din virtuella CPU fick vänta på resurser från den fysiska hosten eftersom andra VM:ar använde dem.
+CPU Steal Time (%st) är relevant i virtuella miljöer (VM:ar). Det är den tid din virtuella CPU fick vänta på resurser från den fysiska värden eftersom andra VM:ar använde dem.
 
 ```bash
 # Visa i top eller htop
 top
 # Leta efter kolumnen "st" (steal time)
 
-# Om steal time är hög (>10%), betyder det att:
-# - Hosten är överbelastad
+# Om steal time är hög (>10%) betyder det att:
+# - Värden är överbelastad
 # - Du delar CPU med för många andra VM:ar
-# - Överväg att flytta till en mindre belastad host
+# - Överväg att flytta till en mindre belastad värd
 ```
 
-## Memory Leaks
+## Minnesläckor (Memory Leaks)
 
-Memory Leak (minnesläcka) är när ett program bokar minne men glömmer att släppa tillbaka det, vilket gör att minnet tar slut över tid.
+Minnesläckor (Memory Leak) är när ett program allokerar minne men glömmer att frigöra det, vilket gör att minnet tar slut över tid.
 
-### Identifiera memory leaks
+### Identifiera minnesläckor
 
 ```bash
 # Övervaka minnesanvändning över tid
 watch -n 1 'ps aux --sort=-%mem | head -10'
 
-# Om en process växer kontinuerligt i minne utan att släppa,
-# kan det vara en memory leak
+# Om en process växer kontinuerligt i minne utan att frigöra,
+# kan det vara en minnesläcka
 
-# Använd verktyg som valgrind för att hitta leaks i kod
+# Använd verktyg som valgrind för att hitta läckor i kod
 valgrind --leak-check=full ./program
 ```
 
-**Symptom**: Systemet blir segare över tid, swap-användning ökar, OOM Killer aktiveras.
+**Symptom**: Systemet blir långsammare över tid, swap-användning ökar, OOM Killer aktiveras.
 
 ## IPC (Inter-Process Communication)
 
@@ -571,7 +583,7 @@ Processer behöver kommunicera med varandra:
 
 ### Pipes
 
-Enkelriktad dataström mellan processer.
+Unidirektionell dataström mellan processer.
 
 ```bash
 # Named pipe (FIFO)
@@ -592,40 +604,40 @@ Bidirektionell kommunikation, kan vara över nätverk.
 ls -l /var/run/*.sock
 
 # TCP socket
-ss -tlnp  # Visa listening TCP sockets
+ss -tlnp  # Visa lyssnande TCP-sockets
 ```
 
-### Signals
+### Signaler
 
 Enkla meddelanden mellan processer (se ovan).
 
-### Semaphores
+### Semaforer
 
 Synkronisering mellan processer (delade resurser).
 
 ## Praktiska felsökningsscenarier
 
-### Systemet är segt - var börjar jag?
+### Systemet är långsamt - var börjar jag?
 
 ```bash
-# 1. Kolla load average
+# 1. Kontrollera load average
 uptime
 
-# 2. Kolla CPU-användning
+# 2. Kontrollera CPU-användning
 top
 # Leta efter processer med hög %CPU
 
-# 3. Kolla minne
+# 3. Kontrollera minne
 free -h
-# Om minne är fullt, kolla swap
+# Om minnet är fullt, kontrollera swap
 swapon --show
 
-# 4. Kolla I/O
+# 4. Kontrollera I/O
 iostat -x 1
 # Leta efter hög %util (disk är flaskhals)
 iotop  # Visa processer som använder I/O
 
-# 5. Kolla nätverk
+# 5. Kontrollera nätverk
 iftop
 # eller
 nethogs
@@ -644,37 +656,40 @@ ps aux --sort=-%mem | head -11
 iotop
 ```
 
-### Döda zombie-processer
+### Terminera zombie-processer
 
 ```bash
 # Hitta zombie-processer
 ps aux | grep " Z "
 
-# Zombies kan inte dödas direkt
+# Zombies kan inte termineras direkt
 # De försvinner när föräldern läser exit-status
-# Om föräldern är död, blir init förälder och rensar dem
+# Om föräldern är död blir init förälder och rensar dem
 ```
 
-## Viktiga takeaways
+## Viktiga lärdomar
 
-- **Process States**: Running, Sleeping, Zombie, Stopped
+- **Processtillstånd**: Running, Sleeping, Zombie, Stopped
 - **Load Average**: Jämför med antal CPU-kärnor för att förstå belastning
-- **SIGTERM**: Snygg avstängning (försök först)
-- **SIGKILL**: Omedelbar död (sista utvägen)
-- **Job Control**: Ctrl+Z pausar, `bg` kör i bakgrunden, `fg` tar tillbaka
-- **nohup**: Kör processer som överlever logout
-- **Context Switching**: CPU:n byter mellan processer för multitasking
+- **SIGTERM**: Kontrollerad avslutning (försök först)
+- **SIGKILL**: Omedelbar terminering (sista utvägen)
+- **Jobbkontroll**: Ctrl+Z pausar, `bg` exekverar i bakgrunden, `fg` tar tillbaka
+- **nohup**: Exekvera processer som överlever utloggning
+- **Kontextväxling**: CPU:n byter mellan processer för multitasking
 - **%IOWAIT**: CPU-tid som spenderas väntande på I/O-operationer
 - **iostat/iotop**: Analysera disk-I/O och identifiera flaskhalsar
 - **Throttling**: Begränsa processresurser för att skydda andra tjänster
 - **/proc/cpuinfo**: Detaljerad CPU-information
-- **/proc/[PID]/**: Process-specifik information (cmdline, environ, fd, etc.)
+- **/proc/[PID]/**: Processspecifik information (cmdline, environ, fd, etc.)
 - **vmstat**: Övervaka systemresurser över tid
-- **Interrupts**: Hårdvarusignaler till CPU:n
+- **Avbrott**: Hårdvarusignaler till CPU:n
 - **sar**: Samla historisk prestandadata
-- **CPU Steal Time**: Relevant i VM:ar - tid CPU väntade på host-resurser
-- **Memory Leaks**: Program som glömmer att släppa minne
+- **CPU Steal Time**: Relevant i VM:ar - tid CPU väntade på värdresurser
+- **Minnesläckor**: Program som glömmer att frigöra minne
 - **journalctl**: Avancerad logghantering för systemd-tjänster
 - **pgrep**: Hitta PID för processer med namn
-- **Resource Tools**: top, htop, free, df, du för olika typer av analys
-- **IPC**: Pipes, Sockets, Signals, Semaphores för processkommunikation
+- **Resursverktyg**: top, htop, free, df, du för olika typer av analys
+- **IPC**: Pipes, Sockets, Signaler, Semaforer för processkommunikation
+
+"""
+}
