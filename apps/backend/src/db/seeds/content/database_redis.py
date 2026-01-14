@@ -531,13 +531,13 @@ class RedisLock:
 
     def release(self):
         # Only release if we own the lock (check token)
-        lua_script = """
+        lua_script = '''
         if redis.call("get", KEYS[1]) == ARGV[1] then
             return redis.call("del", KEYS[1])
         else
             return 0
         end
-        """
+        '''
         return r.eval(lua_script, 1, self.key, self.token)
 
 # Usage

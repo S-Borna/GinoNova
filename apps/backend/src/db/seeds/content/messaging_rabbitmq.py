@@ -350,7 +350,7 @@ class TaskWorker:
             ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
     def execute_task(self, task):
-        """Override with your task logic"""
+        '''Override with your task logic'''
         task_type = task.get('type')
 
         if task_type == 'send_email':

@@ -279,10 +279,10 @@ import yaml
 import json
 
 # YAML to JSON
-yaml_string = """
+yaml_string = '''
 name: John Doe
 age: 30
-"""
+'''
 
 data = yaml.safe_load(yaml_string)
 json_string = json.dumps(data, indent=2)

@@ -217,7 +217,7 @@ config = {
 producer = Producer(config)
 
 def delivery_callback(err, msg):
-    """Called once message is delivered or fails"""
+    '''Called once message is delivered or fails'''
     if err:
         print(f'❌ Message delivery failed: {err}')
     else:
@@ -295,7 +295,7 @@ class KafkaProducerService:
             logger.info(f'Message delivered: {msg.topic()}[{msg.partition()}] @ {msg.offset()}')
 
     def send_event(self, topic, event_data, key=None):
-        """Send event to Kafka topic"""
+        '''Send event to Kafka topic'''
         try:
             value = json.dumps(event_data)
 
@@ -314,7 +314,7 @@ class KafkaProducerService:
             self.producer.poll(1)  # Wait for queue to clear
 
     def close(self):
-        """Flush pending messages and close"""
+        '''Flush pending messages and close'''
         logger.info('Flushing remaining messages...')
         self.producer.flush(timeout=30)
         logger.info(f'Stats: {self.delivery_count}')
@@ -416,14 +416,14 @@ class KafkaConsumerService:
         self.running = True
 
     def process_event(self, event):
-        """Override this method with your business logic"""
+        '''Override this method with your business logic'''
         logger.info(f'Processing event: {event}')
 
         # Your business logic here
         # e.g., save to database, call API, etc.
 
     def start(self):
-        """Start consuming messages"""
+        '''Start consuming messages'''
         logger.info('Starting consumer...')
 
         try:
@@ -466,7 +466,7 @@ class KafkaConsumerService:
             self.stop()
 
     def stop(self):
-        """Graceful shutdown"""
+        '''Graceful shutdown'''
         self.running = False
         logger.info('Closing consumer...')
         self.consumer.close()

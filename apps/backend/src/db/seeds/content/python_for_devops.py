@@ -283,13 +283,13 @@ import boto3
 
 @click.group()
 def cli():
-    """DevOps CLI Tool - Manage AWS resources"""
+    '''DevOps CLI Tool - Manage AWS resources'''
     pass
 
 @cli.command()
 @click.option('--region', default='eu-north-1', help='AWS region')
 def list_ec2(region):
-    """List all EC2 instances"""
+    '''List all EC2 instances'''
     ec2 = boto3.client('ec2', region_name=region)
     response = ec2.describe_instances()
 
@@ -300,7 +300,7 @@ def list_ec2(region):
 @cli.command()
 @click.argument('instance_id')
 def stop_instance(instance_id):
-    """Stop an EC2 instance"""
+    '''Stop an EC2 instance'''
     ec2 = boto3.client('ec2')
     ec2.stop_instances(InstanceIds=[instance_id])
     click.echo(f"✅ Stopping {instance_id}")
@@ -308,7 +308,7 @@ def stop_instance(instance_id):
 @cli.command()
 @click.option('--bucket', required=True, help='S3 bucket name')
 def list_s3(bucket):
-    """List objects in S3 bucket"""
+    '''List objects in S3 bucket'''
     s3 = boto3.client('s3')
     response = s3.list_objects_v2(Bucket=bucket)
 
