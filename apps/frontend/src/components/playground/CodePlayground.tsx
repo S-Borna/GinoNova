@@ -179,7 +179,7 @@ export function CodePlayground({
                     document.head.appendChild(script)
                 })
             }
-            
+
             pyodideRef.current = await (window as any).loadPyodide({
                 indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
             })

@@ -314,8 +314,8 @@ export function SharedModulePage({
     const totalXP = module.tasks.reduce((acc, t) => acc + (t.xp_reward || 100), 0)
 
     // Handle null/undefined/empty groups - use default if not properly defined
-    const groups = (module.groups && module.groups.length > 0) 
-        ? module.groups 
+    const groups = (module.groups && module.groups.length > 0)
+        ? module.groups
         : createDefaultGroups(module.tasks)
 
     const isTaskCompleted = (taskSlug: string) => completedTasks.includes(taskSlug)

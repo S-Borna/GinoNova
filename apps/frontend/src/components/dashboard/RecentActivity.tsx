@@ -177,7 +177,7 @@ interface ActivityItemProps {
 }
 
 function ActivityItem({ activity, isLast, delay = 0 }: ActivityItemProps) {
-    const config = activityConfig[activity.type] || activityConfig.task_complete
+    const config = activityConfig[activity.type] || activityConfig.task_completed
     const Icon = config.icon
     const relativeTime = getRelativeTime(activity.timestamp)
 

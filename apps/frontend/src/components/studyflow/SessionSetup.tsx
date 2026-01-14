@@ -4,13 +4,13 @@
  * ============================================================================
  * SESSION SETUP COMPONENT - Pre-Session Configuration
  * ============================================================================
- * 
+ *
  * Features:
  * - Mode selection: Pomodoro (25/5), Deep Focus (50/10), Custom
  * - Task selection: Current module's next task or browse
  * - Goal setting: Tasks or minutes
  * - Big "Start Session" button
- * 
+ *
  * @phase D.5 - Studyflow UI
  */
 
@@ -18,11 +18,11 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { GlassCard, GlassCardHeader, GlassCardTitle, GlassCardContent } from "@/components/ui/glass-card"
 import { Button } from "@/components/ui/button"
-import { 
-    Clock, 
-    Focus, 
-    Settings2, 
-    Target, 
+import {
+    Clock,
+    Focus,
+    Settings2,
+    Target,
     BookOpen,
     CheckCircle2,
     Play,
@@ -126,8 +126,8 @@ function ModeCard({ mode, selected, onSelect }: ModeCardProps) {
             <div className="flex items-start gap-4">
                 <div className={cn(
                     "p-3 rounded-xl",
-                    selected 
-                        ? "bg-primary-500 text-white" 
+                    selected
+                        ? "bg-primary-500 text-white"
                         : "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300"
                 )}>
                     <Icon className="h-6 w-6" />

@@ -463,9 +463,9 @@ function generateReport(analytics: UserAnalytics, period: ReportPeriod): Report 
   const sessions = analytics.sessionHistory.filter(s => s.endTime)
   const avgSessionLength = sessions.length > 0
     ? Math.round(sessions.reduce((sum, s) => {
-        const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
-        return sum + duration
-      }, 0) / sessions.length)
+      const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
+      return sum + duration
+    }, 0) / sessions.length)
     : 0
 
   // Find top skill
