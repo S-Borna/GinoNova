@@ -220,10 +220,10 @@ pipeline {
 def call(String imageName, String tag = 'latest') {
     echo "Building Docker image: ${imageName}:${tag}"
 
-    sh """
+    sh '''
         docker build -t ${imageName}:${tag} .
         docker tag ${imageName}:${tag} ${imageName}:${BUILD_NUMBER}
-    """
+    '''
 
     return [
         name: imageName,
