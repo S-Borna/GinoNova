@@ -456,7 +456,7 @@ function PremiumStatCard({ icon, label, value, subtext, color, delay = 0 }: Stat
         },
     }
 
-    const styles = colorMap[color]
+    const styles = colorMap[color] || colorMap.purple
 
     return (
         <motion.div
