@@ -29,13 +29,15 @@ Jämför de 10 studiefiler som ligger i projektets root-katalog med de befintlig
 **Målgrupp**: DevOps-studenter som nyss påbörjat sin utbildning och har en Linux-tenta att skriva.
 
 Bedöm för varje fil:
+
 - [ ] Är språket begripligt för nybörjare?
 - [ ] Förklaras koncept från grunden innan avancerade ämnen?
 - [ ] Finns det tillräckligt med konkreta exempel?
 - [ ] Är progressionen logisk (enkelt → svårt)?
 - [ ] Undviks onödig komplexitet som kan förvirra?
 
-**Skala**: 
+**Skala**:
+
 - ⭐ För svårt för nybörjare
 - ⭐⭐ Något för avancerat
 - ⭐⭐⭐ Lagom nivå
@@ -47,6 +49,7 @@ Bedöm för varje fil:
 **Krav**: Har man läst igenom modulerna ska man per automatik kunna klara av prov på Linux-kursen.
 
 Bedöm för varje fil:
+
 - [ ] Täcks alla kärnkoncept som förväntas på tentan?
 - [ ] Finns praktiska kommandon och syntax tydligt förklarade?
 - [ ] Inkluderas vanliga tentafrågor/scenarion?
@@ -54,6 +57,7 @@ Bedöm för varje fil:
 - [ ] Är innehållet tillräckligt djupt för att förstå "varför", inte bara "hur"?
 
 **Skala**:
+
 - 🔴 Otillräckligt för tenta
 - 🟡 Behöver komplettering
 - 🟢 Täcker grunderna
@@ -71,6 +75,7 @@ Bedöm för varje fil:
 ### 2. Detaljerad analys per fil
 
 För varje fil, ange:
+
 - **Styrkor**: Vad är bra?
 - **Svagheter**: Vad saknas eller kan förbättras?
 - **Jämförelse**: Hur förhåller sig innehållet till Linux 24/7 och DOE25?
@@ -79,6 +84,7 @@ För varje fil, ange:
 ### 3. Gap-analys
 
 Identifiera:
+
 - Ämnen som saknas helt i studiefilerna men finns i kursmodulerna
 - Ämnen som är bättre täckta i studiefilerna än i kursmodulerna
 - Överlappningar och redundans
@@ -86,6 +92,7 @@ Identifiera:
 ### 4. Slutsats och rekommendation
 
 Besvara:
+
 1. **Kan en student klara Linux-tentan genom att endast läsa dessa 10 filer?**
 2. **Vilka filer bör prioriteras för tentaplugg?**
 3. **Vilka kompletteringar behövs (om några)?**

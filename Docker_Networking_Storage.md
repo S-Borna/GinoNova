@@ -26,6 +26,7 @@ docker run -d --mount type=volume,source=mydata,target=/var/lib/mysql mysql
 ```
 
 **Fördelar**:
+
 - Docker hanterar platsen
 - Fungerar på alla plattformar
 - Kan delas mellan containers
@@ -63,11 +64,13 @@ docker run -d -v /host/path:/container/path:ro nginx
 ```
 
 **Fördelar**:
+
 - Direkt åtkomst till filer på host
 - Ändringar syns omedelbart
 - Bra för utveckling
 
 **Nackdelar**:
+
 - Beroende av host-filsystem
 - Kan ha prestandaproblem på macOS/Windows
 
@@ -109,6 +112,7 @@ curl http://localhost:8080
 ```
 
 **Förklaring**:
+
 - **8080**: Port på host (din dator)
 - **80**: Port i containern (där nginx lyssnar)
 
@@ -157,6 +161,7 @@ docker network inspect bridge
 ```
 
 **Problem med default bridge**:
+
 - Containers kan bara nå varandra via IP-adress
 - Ingen DNS-resolution (kan inte använda container-namn)
 
@@ -176,6 +181,7 @@ docker exec app1 ping app2
 ```
 
 **Fördelar**:
+
 - DNS-resolution mellan containers
 - Isolering från andra networks
 - Enklare kommunikation
@@ -197,6 +203,7 @@ ping db
 ```
 
 **Viktigt**:
+
 - Fungerar bara på custom bridge networks, inte på default bridge
 - Containers på samma custom network kan nå varandra via namn
 - DNS-servern är inbyggd i Docker och hanteras automatiskt
