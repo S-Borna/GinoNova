@@ -52,7 +52,8 @@ type FilterType = "all" | "recent" | "oldest"
 
 export default function CertificatesPage() {
     const { user } = useAuth()
-    const [certificates] = useState<Certificate[]>(getMockCertificates(user?.id || "demo"))
+    // Use empty array instead of mock data - real certificates come from API
+    const [certificates] = useState<Certificate[]>([])
     const [filter, setFilter] = useState<FilterType>("all")
     const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null)
 

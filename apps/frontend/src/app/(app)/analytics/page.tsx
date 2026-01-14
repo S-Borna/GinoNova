@@ -186,7 +186,7 @@ function OverviewStatCard({ icon, label, value, subtext, trend, trendValue, colo
     },
   }
 
-  const styles = colorMap[color]
+  const styles = colorMap[color] || colorMap.purple
 
   const TrendIcon = trend === 'up' ? ArrowUp : trend === 'down' ? ArrowDown : Minus
   const trendColor = trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-zinc-500'

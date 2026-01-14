@@ -168,8 +168,19 @@ export function CodePlayground({
 
     const loadPyodide = async () => {
         try {
-            const { loadPyodide } = await import('https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js' as any)
-            pyodideRef.current = await loadPyodide({
+            // Load Pyodide script dynamically
+            if (!(window as any).loadPyodide) {
+                const script = document.createElement('script')
+                script.src = 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js'
+                script.async = true
+                await new Promise((resolve, reject) => {
+                    script.onload = resolve
+                    script.onerror = reject
+                    document.head.appendChild(script)
+                })
+            }
+            
+            pyodideRef.current = await (window as any).loadPyodide({
                 indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.24.1/full/',
             })
             setPyodideReady(true)

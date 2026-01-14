@@ -467,7 +467,7 @@ export function getRarityColor(rarity: AchievementRarity): {
             glow: "0 0 40px rgba(245, 158, 11, 0.6)",
         },
     }
-    return colors[rarity]
+    return colors[rarity] || colors.common
 }
 
 /**
@@ -486,7 +486,7 @@ export function getCategoryColor(category: AchievementCategory): {
         community: { bg: "bg-pink-500/20", text: "text-pink-400" },
         rare: { bg: "bg-amber-500/20", text: "text-amber-400" },
     }
-    return colors[category]
+    return colors[category] || colors.learning
 }
 
 /**

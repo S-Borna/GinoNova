@@ -256,7 +256,7 @@ function EnvironmentCard({ icon: Icon, name, description, color, examples }: any
         },
     }
 
-    const styles = colorMap[color]
+    const styles = colorMap[color] || colorMap.purple
 
     return (
         <motion.div
