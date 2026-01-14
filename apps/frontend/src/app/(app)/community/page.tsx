@@ -14,23 +14,13 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import {
     MessageSquare,
-    Pin,
-    TrendingUp,
-    Clock,
-    Search,
     Plus,
-    Filter,
-    Eye,
-    MessageCircle,
-    ThumbsUp,
-    CheckCircle,
     Sparkles,
     Users,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { CATEGORIES, type Thread } from "@/lib/community-types"
-import { getReputationLevel } from "@/lib/reputation"
+import { ThreadList } from "@/components/community"
 
 /* ============================================================================
    MOCK DATA
@@ -214,7 +204,7 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
                                 {category.threadCount} threads
                             </span>
                             <span className="flex items-center gap-1">
-                                <MessageCircle className="w-3 h-3" />
+                                <MessageSquare className="w-3 h-3" />
                                 {category.postCount} posts
                             </span>
                         </div>
@@ -225,158 +215,11 @@ function CategoryCard({ category }: { category: typeof CATEGORIES[0] }) {
     )
 }
 
-function ThreadCard({ thread }: { thread: Thread }) {
-    const repLevel = getReputationLevel(thread.author.reputation)
-    const timeAgo = formatTimeAgo(thread.lastActivityAt)
-
-    return (
-        <Link href={`/community/${thread.id}`} prefetch={false}>
-            <motion.div
-                whileHover={{ scale: 1.01, y: -2 }}
-                className={cn(
-                    "group p-5 rounded-2xl cursor-pointer",
-                    "bg-gradient-to-br from-[#0a0a0f] to-[#0d0d14]",
-                    "border border-zinc-800/80",
-                    "hover:border-purple-500/30",
-                    "transition-all duration-300",
-                    thread.isPinned && "border-amber-500/40 bg-amber-500/5"
-                )}
-            >
-                <div className="flex gap-4">
-                    {/* Author Avatar */}
-                    <div className="shrink-0">
-                        <div
-                            className={cn(
-                                "w-12 h-12 rounded-xl",
-                                "bg-gradient-to-br",
-                                repLevel.gradient,
-                                "flex items-center justify-center",
-                                "text-sm font-bold text-white"
-                            )}
-                        >
-                            {thread.author.avatar}
-                        </div>
-                    </div>
-
-                    {/* Thread Content */}
-                    <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-2 mb-2">
-                            {thread.isPinned && (
-                                <Pin className="w-4 h-4 text-amber-400 shrink-0 mt-1" />
-                            )}
-                            <h3
-                                className={cn(
-                                    "text-lg font-semibold",
-                                    "group-hover:text-purple-400 transition-colors"
-                                )}
-                            >
-                                {thread.title}
-                            </h3>
-                            {thread.hasAcceptedAnswer && (
-                                <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                            )}
-                        </div>
-
-                        <div className="flex items-center gap-2 mb-3 text-sm text-zinc-500">
-                            <span className={repLevel.color}>
-                                {thread.author.name}
-                            </span>
-                            <span>•</span>
-                            <span
-                                className={cn(
-                                    "px-2 py-0.5 rounded-md text-xs",
-                                    "bg-gradient-to-r",
-                                    thread.category.gradient,
-                                    "bg-opacity-20"
-                                )}
-                            >
-                                {thread.category.icon} {thread.category.name}
-                            </span>
-                            <span>•</span>
-                            <span>{timeAgo}</span>
-                        </div>
-
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2 mb-3">
-                            {thread.tags.map((tag) => (
-                                <span
-                                    key={tag}
-                                    className="px-2 py-1 rounded-lg bg-zinc-800/50 text-zinc-400 text-xs"
-                                >
-                                    #{tag}
-                                </span>
-                            ))}
-                        </div>
-
-                        {/* Stats */}
-                        <div className="flex items-center gap-4 text-xs text-zinc-600">
-                            <span className="flex items-center gap-1">
-                                <Eye className="w-3 h-3" />
-                                {thread.views}
-                            </span>
-                            <span className="flex items-center gap-1">
-                                <MessageCircle className="w-3 h-3" />
-                                {thread.replyCount} replies
-                            </span>
-                            <span className="flex items-center gap-1 text-emerald-400">
-                                <ThumbsUp className="w-3 h-3" />
-                                {thread.upvotes}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
-        </Link>
-    )
-}
-
-function formatTimeAgo(date: Date): string {
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
-    if (seconds < 60) return "just now"
-    const minutes = Math.floor(seconds / 60)
-    if (minutes < 60) return `${minutes}m ago`
-    const hours = Math.floor(minutes / 60)
-    if (hours < 24) return `${hours}h ago`
-    const days = Math.floor(hours / 24)
-    if (days < 7) return `${days}d ago`
-    const weeks = Math.floor(days / 7)
-    if (weeks < 4) return `${weeks}w ago`
-    const months = Math.floor(days / 30)
-    return `${months}mo ago`
-}
-
 /* ============================================================================
    MAIN PAGE
    ============================================================================ */
 
 export default function CommunityPage() {
-    const [searchQuery, setSearchQuery] = useState("")
-    const [sortBy, setSortBy] = useState<"latest" | "popular" | "replies">(
-        "latest"
-    )
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(
-        null
-    )
-
-    const filteredThreads = MOCK_THREADS.filter((thread) => {
-        if (selectedCategory && thread.categoryId !== selectedCategory)
-            return false
-        if (
-            searchQuery &&
-            !thread.title.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-            return false
-        return true
-    })
-
-    const sortedThreads = [...filteredThreads].sort((a, b) => {
-        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1
-        if (sortBy === "popular")
-            return b.upvotes - a.upvotes
-        if (sortBy === "replies")
-            return b.replyCount - a.replyCount
-        return b.lastActivityAt.getTime() - a.lastActivityAt.getTime()
-    })
 
     return (
         <div className="min-h-screen">
@@ -445,50 +288,6 @@ export default function CommunityPage() {
                 </div>
             </motion.div>
 
-            {/* Search and Filters */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="mb-6 flex flex-col md:flex-row gap-4"
-            >
-                <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-                    <Input
-                        placeholder="Search discussions..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-12 h-12 rounded-xl bg-[#0a0a0f] border-zinc-800 focus:border-purple-500"
-                    />
-                </div>
-                <div className="flex gap-2">
-                    <Button
-                        variant={sortBy === "latest" ? "default" : "outline"}
-                        onClick={() => setSortBy("latest")}
-                        className="rounded-xl"
-                    >
-                        <Clock className="w-4 h-4 mr-2" />
-                        Latest
-                    </Button>
-                    <Button
-                        variant={sortBy === "popular" ? "default" : "outline"}
-                        onClick={() => setSortBy("popular")}
-                        className="rounded-xl"
-                    >
-                        <TrendingUp className="w-4 h-4 mr-2" />
-                        Popular
-                    </Button>
-                    <Button
-                        variant={sortBy === "replies" ? "default" : "outline"}
-                        onClick={() => setSortBy("replies")}
-                        className="rounded-xl"
-                    >
-                        <MessageCircle className="w-4 h-4 mr-2" />
-                        Most Replies
-                    </Button>
-                </div>
-            </motion.div>
-
             {/* Categories */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -507,36 +306,17 @@ export default function CommunityPage() {
                 </div>
             </motion.div>
 
-            {/* Threads */}
+            {/* Threads List */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
             >
-                <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                     <MessageSquare className="w-5 h-5 text-purple-400" />
                     Recent Discussions
                 </h2>
-                <div className="space-y-4">
-                    {sortedThreads.map((thread, index) => (
-                        <motion.div
-                            key={thread.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4 + index * 0.05 }}
-                        >
-                            <ThreadCard thread={thread} />
-                        </motion.div>
-                    ))}
-                </div>
-
-                {sortedThreads.length === 0 && (
-                    <div className="text-center py-12">
-                        <p className="text-zinc-500 text-lg">
-                            No threads found. Be the first to start a discussion!
-                        </p>
-                    </div>
-                )}
+                <ThreadList threads={MOCK_THREADS} showFilters={true} />
             </motion.div>
         </div>
     )
