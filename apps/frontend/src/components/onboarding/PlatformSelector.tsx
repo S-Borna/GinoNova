@@ -102,6 +102,7 @@ function PremiumOSCard({ osKey, isSelected, onClick, disabled, index }: OSCardPr
     if (!osKey) return null
 
     const config = OS_OPTIONS[osKey]
+    if (!config) return null
 
     const cardConfig = {
         macos: {
@@ -127,7 +128,7 @@ function PremiumOSCard({ osKey, isSelected, onClick, disabled, index }: OSCardPr
         },
     }
 
-    const cardStyle = cardConfig[osKey]
+    const cardStyle = cardConfig[osKey] || cardConfig.linux
 
     return (
         <motion.button
@@ -313,6 +314,7 @@ function PremiumDistroCard({ distroKey, isSelected, onClick, index }: DistroCard
     if (!distroKey) return null
 
     const config = LINUX_DISTROS[distroKey]
+    if (!config) return null
 
     return (
         <motion.button

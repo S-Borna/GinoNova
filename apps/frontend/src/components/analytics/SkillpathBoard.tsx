@@ -320,7 +320,7 @@ function StatCard({
         },
     }
 
-    const styles = colorClasses[color]
+    const styles = colorClasses[color] || colorClasses.blue
 
     return (
         <motion.div

@@ -194,7 +194,7 @@ export function TaskPage({
     onBack,
     className,
 }: TaskPageProps) {
-    const config = typeConfig[type]
+    const config = typeConfig[type] || typeConfig.lesson
 
     return (
         <PageLayout className={className}>

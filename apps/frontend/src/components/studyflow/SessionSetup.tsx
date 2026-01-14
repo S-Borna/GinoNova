@@ -109,7 +109,7 @@ interface ModeCardProps {
 }
 
 function ModeCard({ mode, selected, onSelect }: ModeCardProps) {
-    const config = SESSION_MODES[mode]
+    const config = SESSION_MODES[mode] || SESSION_MODES.pomodoro
     const Icon = config.icon
 
     return (
@@ -409,7 +409,7 @@ export function SessionSetup({
     const [goalValue, setGoalValue] = React.useState<number | undefined>(undefined)
 
     // Calculate effective times
-    const modeConfig = SESSION_MODES[selectedMode]
+    const modeConfig = SESSION_MODES[selectedMode] || SESSION_MODES.pomodoro
     const workMinutes = selectedMode === "custom" ? customWorkMinutes : modeConfig.workMinutes
     const breakMinutes = selectedMode === "custom" ? customBreakMinutes : modeConfig.breakMinutes
 

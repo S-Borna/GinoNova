@@ -166,7 +166,7 @@ function GoalCard({ goal, delay, onComplete }: GoalCardProps) {
     certificate: { icon: <Award className="w-5 h-5" />, color: '#10B981' }
   }
 
-  const config = typeConfig[goal.type]
+  const config = typeConfig[goal.type] || typeConfig.module
 
   return (
     <motion.div

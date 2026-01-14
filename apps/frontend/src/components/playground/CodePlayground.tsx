@@ -220,9 +220,10 @@ export function CodePlayground({
         }
 
         setIsRunning(true)
+        const envConfig = environmentConfig[environment] || environmentConfig.bash
         addOutput({
             type: 'info',
-            content: `▶ Executing ${environmentConfig[environment].name}...`,
+            content: `▶ Executing ${envConfig.name}...`,
             timestamp: Date.now(),
         })
 
@@ -450,7 +451,7 @@ sys.stderr = StringIO()
         }
     }, [])
 
-    const config = environmentConfig[environment]
+    const config = environmentConfig[environment] || environmentConfig.bash
 
     return (
         <div className={cn(
