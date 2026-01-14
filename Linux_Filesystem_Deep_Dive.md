@@ -487,15 +487,451 @@ tar -xzf archive.tar.gz
 tar -czf archive.tar.gz folder/
 ```
 
+## LVM (Logical Volume Manager)
+
+LVM är ett flexibelt system för att hantera lagring i Linux. Istället för att arbeta direkt med partitioner, bygger LVM ett abstraktionslager som gör det enklare att ändra storlek, flytta och hantera volymer.
+
+### LVM-hierarkin
+
+```
+Physical Disk → Physical Volume (PV) → Volume Group (VG) → Logical Volume (LV) → Filesystem
+```
+
+**Förklaring**:
+- **Physical Volume (PV)**: En fysisk disk eller partition
+- **Volume Group (VG)**: En pool av Physical Volumes
+- **Logical Volume (LV)**: Virtuella partitioner som kan skapas från Volume Group
+
+### Varför använda LVM?
+
+```bash
+# Fördelar:
+# - Ändra storlek på volymer utan att starta om
+# - Flytta data mellan diskar i drift
+# - Skapa snapshots för backup
+# - Kombinera flera diskar till en stor volym
+```
+
+### Skapa LVM-struktur
+
+```bash
+# Steg 1: Skapa Physical Volume
+sudo pvcreate /dev/sdb1
+# Konverterar en partition till en PV
+
+# Steg 2: Skapa Volume Group
+sudo vgcreate vg_data /dev/sdb1
+# Skapar en VG kallad "vg_data" från PV
+
+# Steg 3: Skapa Logical Volume
+sudo lvcreate -L 10G -n lv_data vg_data
+# Skapar en 10GB LV kallad "lv_data" från VG "vg_data"
+
+# Steg 4: Skapa filsystem
+sudo mkfs.ext4 /dev/vg_data/lv_data
+
+# Steg 5: Montera
+sudo mkdir -p /mnt/data
+sudo mount /dev/vg_data/lv_data /mnt/data
+```
+
+### LVM-kommandon
+
+```bash
+# Visa Physical Volumes
+pvdisplay
+pvs  # Kort format
+
+# Visa Volume Groups
+vgdisplay
+vgs  # Kort format
+
+# Visa Logical Volumes
+lvdisplay
+lvs  # Kort format
+
+# Visa allt
+sudo lsblk
+# Visar hela strukturen: disk → partition → LVM → mountpoint
+```
+
+### Ändra storlek på LVM
+
+**Utöka Logical Volume**:
+
+```bash
+# Kontrollera tillgängligt utrymme i VG
+sudo vgs
+# Free PE visar ledigt utrymme
+
+# Utöka LV med 5GB
+sudo lvextend -L +5G /dev/vg_data/lv_data
+# Eller använd allt ledigt utrymme
+sudo lvextend -l +100%FREE /dev/vg_data/lv_data
+
+# Utöka filsystemet (ext4)
+sudo resize2fs /dev/vg_data/lv_data
+
+# För XFS
+sudo xfs_growfs /mnt/data
+```
+
+**Minska Logical Volume** (farligt - kan förlora data!):
+
+```bash
+# Avmontera först
+sudo umount /mnt/data
+
+# Kontrollera filsystem
+sudo e2fsck -f /dev/vg_data/lv_data
+
+# Minska filsystem
+sudo resize2fs /dev/vg_data/lv_data 8G
+
+# Minska LV
+sudo lvreduce -L 8G /dev/vg_data/lv_data
+
+# Montera igen
+sudo mount /dev/vg_data/lv_data /mnt/data
+```
+
+**Viktigt**: Minska alltid filsystemet FÖRE du minskar LV, annars riskerar du dataförlust!
+
+### LVM Snapshots
+
+Snapshots låter dig skapa point-in-time kopior för backup.
+
+```bash
+# Skapa snapshot (10% av original-storlek)
+sudo lvcreate -L 1G -s -n lv_data_snapshot /dev/vg_data/lv_data
+
+# Montera snapshot
+sudo mkdir -p /mnt/snapshot
+sudo mount /dev/vg_data/lv_data_snapshot /mnt/snapshot
+
+# Backup från snapshot
+sudo tar czf /backup/data-backup.tar.gz /mnt/snapshot
+
+# Ta bort snapshot efter backup
+sudo umount /mnt/snapshot
+sudo lvremove /dev/vg_data/lv_data_snapshot
+```
+
+### Lägga till disk till VG
+
+```bash
+# Skapa PV från ny disk
+sudo pvcreate /dev/sdc1
+
+# Lägg till i befintlig VG
+sudo vgextend vg_data /dev/sdc1
+
+# Nu kan du utöka LV med det nya utrymmet
+sudo lvextend -L +50G /dev/vg_data/lv_data
+sudo resize2fs /dev/vg_data/lv_data
+```
+
+### Permanent montering i /etc/fstab
+
+```bash
+# Använd LVM-path i fstab
+/dev/vg_data/lv_data  /mnt/data  ext4  defaults  0  2
+
+# Eller använd UUID (rekommenderat)
+# Hitta UUID
+sudo blkid /dev/vg_data/lv_data
+# UUID=abc-123-def-456
+
+# I /etc/fstab
+UUID=abc-123-def-456  /mnt/data  ext4  defaults  0  2
+```
+
+### Troubleshooting LVM
+
+```bash
+# Om VG inte syns efter reboot
+sudo vgscan
+sudo vgchange -ay
+
+# Reparera metadata
+sudo vgck vg_data
+
+# Ta bort LV (VARNING: data förloras)
+sudo umount /mnt/data
+sudo lvremove /dev/vg_data/lv_data
+
+# Ta bort VG
+sudo vgremove vg_data
+
+# Ta bort PV
+sudo pvremove /dev/sdb1
+```
+
+## Package Management
+
+Linux-system använder pakethanterare för att installera, uppdatera och ta bort programvara.
+
+### apt (Debian/Ubuntu)
+
+apt är det moderna kommandot för pakethantering i Debian-baserade system.
+
+```bash
+# Uppdatera paketlistan
+sudo apt update
+# Hämtar info om nya versioner från repositories
+
+# Uppgradera alla paket
+sudo apt upgrade
+# Installerar nya versioner av installerade paket
+
+# Full uppgradering (hanterar dependencies)
+sudo apt full-upgrade
+sudo apt dist-upgrade  # Äldre namn
+
+# Installera paket
+sudo apt install nginx
+sudo apt install nginx mysql-server php
+
+# Ta bort paket (behåll config)
+sudo apt remove nginx
+
+# Ta bort paket (inkl config)
+sudo apt purge nginx
+
+# Ta bort oanvända dependencies
+sudo apt autoremove
+```
+
+### apt-cache - Sök och visa paketinformation
+
+```bash
+# Sök efter paket
+apt-cache search nginx
+apt-cache search "web server"
+
+# Visa paketinformation
+apt-cache show nginx
+
+# Lista alla tillgängliga versioner
+apt-cache policy nginx
+
+# Visa dependencies
+apt-cache depends nginx
+
+# Visa reverse dependencies (vad som beror på paketet)
+apt-cache rdepends nginx
+```
+
+### dpkg - Low-level pakethantering
+
+dpkg är det underliggande verktyget som apt använder.
+
+```bash
+# Lista installerade paket
+dpkg -l
+dpkg -l | grep nginx
+
+# Visa om paket är installerat
+dpkg -l nginx
+dpkg -s nginx  # Mer detaljerad info
+
+# Lista filer i paket
+dpkg -L nginx
+
+# Hitta vilket paket en fil tillhör
+dpkg -S /usr/sbin/nginx
+
+# Installera .deb-fil
+sudo dpkg -i package.deb
+
+# Ta bort paket
+sudo dpkg -r nginx
+sudo dpkg -P nginx  # Purge (inkl config)
+```
+
+### Repository Management
+
+Repositories är servrar som innehåller paket.
+
+```bash
+# Repositories definieras i:
+cat /etc/apt/sources.list
+ls /etc/apt/sources.list.d/
+
+# Lägg till repository
+sudo add-apt-repository ppa:nginx/stable
+sudo apt update
+
+# Ta bort repository
+sudo add-apt-repository --remove ppa:nginx/stable
+
+# Manuellt lägg till i sources.list
+sudo nano /etc/apt/sources.list
+# deb http://archive.ubuntu.com/ubuntu/ focal main restricted
+```
+
+### Låsa paket-version
+
+Förhindra att ett paket uppgraderas.
+
+```bash
+# Låsa version
+sudo apt-mark hold nginx
+
+# Visa låsta paket
+apt-mark showhold
+
+# Låsa upp
+sudo apt-mark unhold nginx
+```
+
+### Rensa cache
+
+```bash
+# Ta bort nedladdade .deb-filer
+sudo apt clean
+
+# Ta bort gamla versioner (behåll senaste)
+sudo apt autoclean
+```
+
+## Cron Jobs - Schemaläggning
+
+Cron används för att köra kommandon automatiskt vid specifika tider.
+
+### Crontab-syntax
+
+```bash
+# Format: Min  Hour  Day  Month  Weekday  Command
+#         0-59 0-23  1-31 1-12   0-7      /path/to/command
+
+# Exempel
+0 2 * * * /path/to/backup.sh
+# Kör backup.sh kl 02:00 varje dag
+
+*/15 * * * * /path/to/check.sh
+# Kör check.sh var 15:e minut
+
+0 */2 * * * /path/to/task.sh
+# Kör task.sh varannan timme
+
+0 0 * * 0 /path/to/weekly.sh
+# Kör weekly.sh kl 00:00 på söndagar (0 eller 7 = söndag)
+
+0 9 1 * * /path/to/monthly.sh
+# Kör monthly.sh kl 09:00 den första varje månad
+```
+
+### Hantera crontab
+
+```bash
+# Öppna din crontab för redigering
+crontab -e
+
+# Visa din crontab
+crontab -l
+
+# Ta bort din crontab
+crontab -r
+
+# Redigera annan användares crontab (root)
+sudo crontab -u username -e
+```
+
+### System-wide cron
+
+```bash
+# System crontabs
+/etc/crontab          # System-wide crontab
+/etc/cron.d/          # Katalog för cron-filer
+/etc/cron.daily/      # Körs dagligen
+/etc/cron.weekly/     # Körs veckovis
+/etc/cron.monthly/    # Körs månadsvis
+
+# Lägg skript i dessa kataloger
+sudo cp backup.sh /etc/cron.daily/
+sudo chmod +x /etc/cron.daily/backup.sh
+```
+
+### Cron-miljövariabler
+
+```bash
+# I crontab, sätt miljövariabler
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=admin@example.com
+
+# Ditt cron job
+0 2 * * * /path/to/backup.sh
+```
+
+### Logga cron-jobb
+
+```bash
+# Cron logs finns i
+grep CRON /var/log/syslog
+
+# Omdirigera output till fil i crontab
+0 2 * * * /path/to/backup.sh >> /var/log/backup.log 2>&1
+
+# Skicka output till email (om MAILTO är satt)
+0 2 * * * /path/to/backup.sh
+```
+
+### Speciala cron-scheman
+
+```bash
+# @reboot - Kör vid systemstart
+@reboot /path/to/startup.sh
+
+# @daily - Kör en gång per dag (00:00)
+@daily /path/to/daily.sh
+
+# @weekly - Kör en gång per vecka (söndag 00:00)
+@weekly /path/to/weekly.sh
+
+# @monthly - Kör en gång per månad (första dagen 00:00)
+@monthly /path/to/monthly.sh
+
+# @yearly eller @annually - Kör en gång per år
+@yearly /path/to/yearly.sh
+```
+
+### Troubleshooting cron
+
+```bash
+# Kontrollera att crond körs
+sudo systemctl status cron
+
+# Starta/stoppa cron
+sudo systemctl start cron
+sudo systemctl stop cron
+
+# Testa cron-jobb manuellt
+/path/to/script.sh
+
+# Vanliga problem:
+# - PATH-miljövariabel är inte densamma som i shell
+# - Använd absoluta paths i crontab
+# - Kontrollera execute-rättigheter (chmod +x)
+# - Kontrollera logs för fel
+```
+
 ## Viktiga takeaways
 
 - **Allt är en fil**: Sockets, pipes, hardware - allt kan hanteras som filer
 - **Lagringsstacken**: Disk → Partition → LUKS → Filesystem → Mount
+- **LVM-hierarki**: Physical Volume → Volume Group → Logical Volume
+- **LVM fördelar**: Flexibel storlek, snapshots, kombinera diskar
 - **Inodes lagrar metadata**, inte själva filinnehållet
 - **Hard links** pekar på inode, **symbolic links** pekar på filnamn
 - **/bin och /sbin** är kritiska för boot, /usr/bin och /usr/sbin är inte
 - **/usr/local/bin** är rätt plats för egna scripts som inte kommer från pakethanteraren
 - **/proc** är ett virtuellt filsystem som visar systemtillstånd i realtid
 - **Loggar** finns i /var/log - använd `tail -f` för realtidsövervakning
+- **apt update** hämtar paketlistor, **apt upgrade** installerar uppdateringar
+- **dpkg** är low-level, **apt** är high-level pakethantering
+- **Crontab-format**: Min Hour Day Month Weekday Command
+- **crontab -e** för att redigera, **crontab -l** för att lista
 - **history, uptime, uname** är viktiga verktyg för systemunderhåll
 - **find** är kraftfullt men långsamt, **locate** är snabbt men kräver uppdaterad databas
