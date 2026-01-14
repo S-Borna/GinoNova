@@ -176,6 +176,21 @@ def seed_content():
     else:
         existing_slugs = {m.slug for m in existing_modules} if existing_modules else set()
 
+    # Hämta slugs som SKA finnas (från content)
+    content_slugs = {m.get("slug") for m in modules_to_seed}
+    
+    # 🗑️ Ta bort moduler som finns i DB men INTE i content
+    orphan_slugs = existing_slugs - content_slugs
+    if orphan_slugs and use_postgres:
+        with get_db_context() as db:
+            for slug in orphan_slugs:
+                module = db.query(models.Module).filter(models.Module.slug == slug).first()
+                if module:
+                    db.query(models.Task).filter(models.Task.module_id == module.id).delete()
+                    db.delete(module)
+                    logger.info(f"🗑️ Removed orphan module: {slug}")
+            db.commit()
+
     # Filtrera ut moduler som behöver skapas
     new_modules = [m for m in modules_to_seed if m.get("slug") not in existing_slugs]
 
