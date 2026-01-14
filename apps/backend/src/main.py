@@ -341,6 +341,51 @@ def seed_content():
         else:
             logger.info("⚠️  Hands-On Lab module not found in database - will create on next full seed")
 
+    # 🆕 NYTT: Kolla om befintliga moduler saknar tasks och seeda dem
+    if use_postgres:
+        from .db import models
+        with get_db_context() as db:
+            for module_data in modules_to_seed:
+                existing_module = db.query(models.Module).filter(
+                    models.Module.slug == module_data.get("slug")
+                ).first()
+                if existing_module:
+                    # Kolla om modulen har tasks
+                    task_count = db.query(models.Task).filter(
+                        models.Task.module_id == existing_module.id
+                    ).count()
+                    if task_count == 0 and module_data.get("tasks"):
+                        logger.info(f"🔧 Module '{existing_module.slug}' exists but has 0 tasks - seeding tasks...")
+                        tasks_added = 0
+                        for idx, task_data in enumerate(module_data.get("tasks", [])):
+                            task_difficulty = _normalize_task_difficulty(task_data.get("difficulty", "medium"))
+                            estimated_minutes = task_data.get("estimated_minutes") or {
+                                "easy": 15, "medium": 30, "hard": 45
+                            }.get(task_difficulty, 30)
+                            xp_reward = task_data.get("xp_reward") or {
+                                "easy": 50, "medium": 100, "hard": 150
+                            }.get(task_difficulty, 100)
+                            task_order_index = task_data.get("order_index")
+                            if task_order_index is None or task_order_index < 1:
+                                task_order_index = idx + 1
+                            
+                            new_task = models.Task(
+                                module_id=existing_module.id,
+                                title=task_data["title"],
+                                description=task_data.get("description"),
+                                content=task_data.get("content"),
+                                content_blocks=task_data.get("content_blocks"),
+                                requirements=task_data.get("requirements"),
+                                order_index=task_order_index,
+                                difficulty=task_difficulty,
+                                estimated_minutes=estimated_minutes,
+                                xp_reward=xp_reward,
+                            )
+                            db.add(new_task)
+                            tasks_added += 1
+                        db.commit()
+                        logger.info(f"✅ Added {tasks_added} tasks to module '{existing_module.slug}'")
+
     # Skapa NYA moduler som inte finns i databasen
     if not new_modules:
         if existing_modules:
