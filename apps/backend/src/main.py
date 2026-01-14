@@ -175,13 +175,13 @@ def seed_content():
             existing_slugs = {m.slug for m in db.query(models.Module).all()}
     else:
         existing_slugs = {m.slug for m in existing_modules} if existing_modules else set()
-    
+
     # Filtrera ut moduler som behöver skapas
     new_modules = [m for m in modules_to_seed if m.get("slug") not in existing_slugs]
-    
+
     if new_modules:
         logger.info(f"🆕 Found {len(new_modules)} NEW modules to create...")
-    
+
     # Om det finns befintliga moduler, uppdatera hands-on och lägg till nya
     if existing_modules:
         logger.info(f"📝 Content exists: {len(existing_modules)} modules - checking for updates...")

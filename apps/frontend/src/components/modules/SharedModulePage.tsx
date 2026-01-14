@@ -313,7 +313,10 @@ export function SharedModulePage({
     const totalHours = Math.round(totalMinutes / 60)
     const totalXP = module.tasks.reduce((acc, t) => acc + (t.xp_reward || 100), 0)
 
-    const groups = module.groups || createDefaultGroups(module.tasks)
+    // Handle null/undefined/empty groups - use default if not properly defined
+    const groups = (module.groups && module.groups.length > 0) 
+        ? module.groups 
+        : createDefaultGroups(module.tasks)
 
     const isTaskCompleted = (taskSlug: string) => completedTasks.includes(taskSlug)
     const getTaskByIndex = (index: number) => module.tasks[index]

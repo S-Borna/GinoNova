@@ -28,25 +28,25 @@ engine = create_engine(db_url)
 
 with engine.connect() as conn:
     inspector = inspect(engine)
-    
+
     # Check tasks table columns
     task_columns = [c['name'] for c in inspector.get_columns('tasks')]
-    
+
     # Add task_tier if missing
     if 'task_tier' not in task_columns:
         print('⚠️  Adding missing task_tier column...')
         conn.execute(text(\"\"\"
-            ALTER TABLE tasks 
+            ALTER TABLE tasks
             ADD COLUMN task_tier VARCHAR(20) NOT NULL DEFAULT 'standard'
         \"\"\"))
         conn.commit()
         print('✅ task_tier column added')
-    
-    # Add parent_task_id if missing  
+
+    # Add parent_task_id if missing
     if 'parent_task_id' not in task_columns:
         print('⚠️  Adding missing parent_task_id column...')
         conn.execute(text(\"\"\"
-            ALTER TABLE tasks 
+            ALTER TABLE tasks
             ADD COLUMN parent_task_id UUID REFERENCES tasks(id) ON DELETE SET NULL
         \"\"\"))
         conn.commit()
@@ -75,11 +75,11 @@ try:
     from src.db.database import get_db
     from src.api.admin import seed_skillsmaps_v3_internal
     from src.db.seeds.modules_v3 import get_total_tasks
-    
+
     # Check if seeding is needed by counting tasks in V3 data
     total_v3_tasks = get_total_tasks()
     print(f'📊 V3 SkillsMaps contains {total_v3_tasks} tasks')
-    
+
     # Run idempotent seed
     db = next(get_db())
     try:
