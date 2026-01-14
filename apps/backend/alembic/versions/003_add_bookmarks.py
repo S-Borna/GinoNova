@@ -40,10 +40,10 @@ def upgrade():
         sa.Column('task_id', postgresql.UUID(as_uuid=True), sa.ForeignKey('tasks.id', ondelete='CASCADE'), nullable=False),
         sa.Column('created_at', sa.DateTime, server_default=sa.func.now()),
     )
-    
+
     # Index for getting all bookmarks for a user
     op.create_index('ix_bookmarks_user_id', 'bookmarks', ['user_id'])
-    
+
     # Unique constraint: user can only bookmark a task once
     op.create_index('ix_bookmarks_user_task', 'bookmarks', ['user_id', 'task_id'], unique=True)
 
