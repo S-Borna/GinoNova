@@ -39,8 +39,7 @@ from typing import Optional
 # IMPORT MODULES
 # =============================================================================
 from .linux_247 import MODULE as LINUX_247_MODULE
-from .doe25_tentaplugg import MODULE as DOE25_TENTAPLUGG_MODULE
-from .doe25_tentaplugg_parafraserad import MODULE as DOE25_PARAFRASERAD_MODULE
+from .linux_tentaplugg import MODULE as LINUX_TENTAPLUGG_MODULE
 from .hands_on import MODULE as HANDS_ON_MODULE
 from .kubernetes_fundamentals import MODULE as KUBERNETES_MODULE
 from .prompt_engineering_devops import MODULE as PROMPT_ENGINEERING_MODULE
@@ -89,8 +88,7 @@ from .languages_yaml_json import MODULE as YAML_JSON_MODULE
 ALL_MODULES: list[dict] = [
     # Existing modules
     LINUX_247_MODULE,
-    DOE25_TENTAPLUGG_MODULE,
-    DOE25_PARAFRASERAD_MODULE,
+    LINUX_TENTAPLUGG_MODULE,
     HANDS_ON_MODULE,
 
     # Core DevOps Skills (Job-ready content)

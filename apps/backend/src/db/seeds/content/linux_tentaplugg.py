@@ -43,10 +43,10 @@ def _update_order_index(node, index):
 
 
 MODULE = {
-    "id": "doe25-tenta-parafraserad",
-    "slug": "doe25-tenta-parafraserad",
-    "title": "DOE25 Tentaplugg - Parafraserad Edition",
-    "description": "10 djupgående noder med parafraserat innehåll: Linux Filsystem, Rättigheter, Processhantering, Nätverk, SSH, Bash Skript & Verktyg, samt Docker & Compose.",
+    "id": "linux-tentaplugg",
+    "slug": "linux-tentaplugg",
+    "title": "Linux Tentaplugg",
+    "description": "10 djupgående noder: Linux Filsystem, Rättigheter, Processhantering, Nätverk, SSH, Bash Skript & Verktyg, samt Docker & Compose.",
     "icon": "📚",
     "difficulty": "intermediate",
     "estimated_hours": 12,
