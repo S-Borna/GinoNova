@@ -37,10 +37,7 @@ import {
     getNextModule
 } from "@/lib/learning-paths"
 
-export const metadata = {
-    title: "SkillPath Board | DevOpsHub",
-    description: "Interactive DevOps learning path visualization"
-}
+// NOTE: Metadata moved to layout.tsx since this is a client component
 
 /**
  * View modes

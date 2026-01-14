@@ -27,11 +27,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ModuleNode, ModuleNodeStatus, ModuleNodeDifficulty } from "./ModuleNode"
 import { LearningPath, MODULE_POSITIONS } from "@/lib/learning-paths"
-import { ModulePublic } from "@/lib/modules"
+
+// Generic module interface for flexibility
+interface ModuleBase {
+    id: string
+    name: string
+    slug: string
+    description?: string | null
+    difficulty?: "beginner" | "intermediate" | "advanced" | "expert"
+    estimated_hours?: number
+}
 
 export interface SkillPathVisualizationProps {
     path: LearningPath
-    modules: ModulePublic[]
+    modules: ModuleBase[]
     completedModules: string[]
     onModuleClick: (moduleSlug: string) => void
     className?: string
