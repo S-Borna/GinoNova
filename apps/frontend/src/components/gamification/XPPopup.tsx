@@ -104,8 +104,8 @@ function SinglePopup({ notification, onDismiss, autoHideDuration, index }: Singl
     const [isLeaving, setIsLeaving] = useState(false)
 
     const type = notification.type || "xp"
-    const Icon = typeIcons[type]
-    const colors = typeColors[type]
+    const Icon = typeIcons[type] || typeIcons.xp
+    const colors = typeColors[type] || typeColors.xp
 
     useEffect(() => {
         // Animate in

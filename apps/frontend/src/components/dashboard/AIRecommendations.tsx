@@ -165,7 +165,7 @@ function RecommendationCard({ recommendation, index }: RecommendationCardProps) 
                             <span
                                 className={cn(
                                     "text-xs font-semibold px-2.5 py-1 rounded-full border uppercase",
-                                    priorityColors[recommendation.priority]
+                                    priorityColors[recommendation.priority] || priorityColors.medium
                                 )}
                             >
                                 {recommendation.priority}

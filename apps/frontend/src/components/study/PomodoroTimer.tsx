@@ -306,7 +306,7 @@ function CircularTimer({
         longBreak: { start: "#3b82f6", end: "#2563eb", glow: "rgba(59, 130, 246, 0.5)" }
     }
 
-    const color = colors[phase]
+    const color = colors[phase] || colors.focus
 
     return (
         <div className="relative inline-flex items-center justify-center">

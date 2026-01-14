@@ -103,7 +103,7 @@ function StatCard({
     return (
         <div className={cn(
             "p-5 rounded-xl border bg-gradient-to-br",
-            colors[color]
+            colors[color] || colors.purple
         )}>
             {loading ? (
                 <div className="animate-pulse">

@@ -595,7 +595,7 @@ function RecommendationsSection() {
                                 </p>
                                 <span className={cn(
                                     "px-1.5 py-0.5 text-[10px] rounded border",
-                                    difficultyColors[rec.difficulty]
+                                    difficultyColors[rec.difficulty as keyof typeof difficultyColors] || difficultyColors.medium
                                 )}>
                                     {rec.difficulty}
                                 </span>

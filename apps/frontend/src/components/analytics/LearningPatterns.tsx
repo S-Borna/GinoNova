@@ -123,7 +123,7 @@ function StatCard({ icon, label, value, color }: StatCardProps) {
       className={cn(
         "p-4 rounded-xl border backdrop-blur-sm",
         "bg-gradient-to-br from-zinc-900/50 to-zinc-900/20",
-        colorMap[color]
+        colorMap[color] || colorMap.purple
       )}
     >
       <div className="flex items-center gap-2 mb-2">

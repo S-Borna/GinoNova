@@ -148,7 +148,7 @@ function InsightCard({ insight, delay }: InsightCardProps) {
     }
   }
 
-  const style = typeStyles[insight.type]
+  const style = typeStyles[insight.type] || typeStyles.recommendation
 
   return (
     <motion.div

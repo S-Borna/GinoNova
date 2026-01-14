@@ -254,7 +254,7 @@ function ConfirmDialog({
                         disabled={loading}
                         className={cn(
                             "px-4 py-2 text-sm rounded-lg transition flex items-center gap-2",
-                            colors[confirmColor]
+                            colors[confirmColor] || colors.purple
                         )}
                     >
                         {loading && <RefreshCw className="w-4 h-4 animate-spin" />}
