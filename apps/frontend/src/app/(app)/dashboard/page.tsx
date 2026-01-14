@@ -23,6 +23,8 @@ import { cn } from "@/lib/utils"
 import { getDashboardSummary, DashboardSummary } from "@/lib/dashboard"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { AIRecommendations } from "@/components/dashboard/AIRecommendations"
+import { DallasAssistant } from "@/components/ai/DallasAssistant"
 
 // 🛡️ SECURITY: Disable prefetching on all links
 const SecureLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) => (
@@ -860,6 +862,9 @@ export default function DashboardPage() {
                         />
                     </div>
 
+                    {/* AI-Powered Recommendations */}
+                    <AIRecommendations />
+
                     {/* Quick Actions + XP Progress */}
                     <div className="grid lg:grid-cols-3 gap-6">
                         {/* Quick Actions */}
@@ -921,6 +926,9 @@ export default function DashboardPage() {
                     </div>
                 </div>
             )}
+
+            {/* Dallas AI Assistant - Floating Chat */}
+            <DallasAssistant />
         </PageLayout>
     )
 }
