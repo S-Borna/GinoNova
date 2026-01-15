@@ -4,6 +4,8 @@ Study API Routes - Flashcards och Quiz från modulinnehåll
 
 Dynamiskt genererat från modulernas noder.
 Hämtar Key Takeaways, Kom ihåg-punkter och kommandotabeller.
+
+SECURITY: All endpoints require authentication to prevent content scraping.
 """
 from fastapi import APIRouter, HTTPException, status, Query
 from pydantic import BaseModel
@@ -16,6 +18,7 @@ from src.services.study_generator import (
     get_v3_study_modules,
     get_module_icon,
 )
+from src.core.deps import CurrentUser
 
 # Fallback registry - tom om ingen study_data finns
 STUDY_DATA_REGISTRY = {}
@@ -271,10 +274,21 @@ def get_lessons_for_module(module_slug: str) -> List[dict]:
 # === Endpoints ===
 
 @router.get("/modules", response_model=List[StudyModule])
-async def list_study_modules():
+async def list_study_modules(current_user: CurrentUser):
     """
     Lista alla moduler med studydata.
     Prioriterar V3-genererat innehåll, fallback till statisk data.
+
+    **Authentication required**: Must be logged in to view study modules.
+
+    Args:
+        current_user: Authenticated user (injected)
+
+    Returns:
+        List of available study modules
+
+    Raises:
+        401: If not authenticated
     """
     result = []
 
@@ -333,8 +347,23 @@ async def list_study_modules():
 
 
 @router.get("/modules/{module_slug}", response_model=StudyModuleDetail)
-async def get_study_module(module_slug: str):
-    """Hämta detaljer för en specifik modul med lessons"""
+async def get_study_module(module_slug: str, current_user: CurrentUser):
+    """
+    Hämta detaljer för en specifik modul med lessons.
+
+    **Authentication required**: Must be logged in to view module details.
+
+    Args:
+        module_slug: Module identifier
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Module details with lessons
+
+    Raises:
+        401: If not authenticated
+        404: If module not found
+    """
     # Försök V3 först
     v3_data = get_v3_study_data(module_slug)
 
@@ -371,6 +400,7 @@ async def get_study_module(module_slug: str):
 @router.get("/modules/{module_slug}/flashcards", response_model=FlashcardsResponse)
 async def get_flashcards(
     module_slug: str,
+    current_user: CurrentUser,
     lessons: Optional[str] = Query(None, description="Kommaseparerade lesson IDs"),
     shuffle: bool = Query(True, description="Slumpa ordningen på kort")
 ):
@@ -378,8 +408,21 @@ async def get_flashcards(
     Hämta flashcards för en modul.
     Prioriterar V3-genererat innehåll från modulnoder.
 
-    - **lessons**: Filtrera på lesson IDs (kommaseparerade)
-    - **shuffle**: Slumpa ordningen (default: true)
+    **Authentication required**: Must be logged in to access flashcards.
+    This prevents unauthorized scraping of educational content.
+
+    Args:
+        module_slug: Module identifier
+        current_user: Authenticated user (injected)
+        lessons: Filtrera på lesson IDs (kommaseparerade)
+        shuffle: Slumpa ordningen (default: true)
+
+    Returns:
+        Flashcards for the module
+
+    Raises:
+        401: If not authenticated
+        404: If module not found or has no flashcards
     """
     flashcards = get_flashcards_for_module(module_slug)
 
@@ -407,6 +450,7 @@ async def get_flashcards(
 @router.get("/modules/{module_slug}/quiz", response_model=QuizResponse)
 async def get_quiz(
     module_slug: str,
+    current_user: CurrentUser,
     lessons: Optional[str] = Query(None, description="Kommaseparerade lesson IDs"),
     shuffle: bool = Query(True, description="Slumpa ordningen på frågor"),
     shuffle_options: bool = Query(True, description="Slumpa svarsalternativens ordning")
@@ -415,9 +459,22 @@ async def get_quiz(
     Hämta quiz-frågor för en modul.
     Prioriterar V3-genererat innehåll från modulnoder.
 
-    - **lessons**: Filtrera på lesson IDs (kommaseparerade)
-    - **shuffle**: Slumpa frågeordningen (default: true)
-    - **shuffle_options**: Slumpa svarsalternativ så rätt svar inte alltid är A (default: true)
+    **Authentication required**: Must be logged in to access quiz questions.
+    This prevents unauthorized scraping of educational content.
+
+    Args:
+        module_slug: Module identifier
+        current_user: Authenticated user (injected)
+        lessons: Filtrera på lesson IDs (kommaseparerade)
+        shuffle: Slumpa frågeordningen (default: true)
+        shuffle_options: Slumpa svarsalternativ så rätt svar inte alltid är A (default: true)
+
+    Returns:
+        Quiz questions for the module
+
+    Raises:
+        401: If not authenticated
+        404: If module not found or has no quiz questions
     """
     questions = get_quiz_for_module(module_slug)
 

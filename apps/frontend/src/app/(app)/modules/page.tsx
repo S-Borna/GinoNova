@@ -11,7 +11,7 @@
  * @phase ARCHITECTURE-UNIFICATION
  */
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
 import { PlatformBadge } from "@/components/onboarding"
 import { BookOpen, Trophy, RefreshCw, AlertCircle, Sparkles } from "lucide-react"
+import { ModuleFilters, type FilterState, type SortState, applyFilters, applySorting } from "@/components/modules/ModuleFilters"
 
 // @saas/ui Design System
 import { Section } from "@saas/ui"
@@ -371,6 +372,18 @@ export default function ModulesPage() {
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
+    // Filter and Sort State
+    const [filters, setFilters] = useState<FilterState>({
+        difficulty: "all",
+        status: "all",
+        searchQuery: "",
+        tags: [],
+    })
+    const [sort, setSort] = useState<SortState>({
+        sortBy: "name",
+        sortDirection: "asc",
+    })
+
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
     const fetchModules = async (isRefresh = false) => {
@@ -486,6 +499,22 @@ export default function ModulesPage() {
         fetchModules(true)
     }
 
+    // Apply filters and sorting
+    const filteredModules = React.useMemo(() => {
+        let result = applyFilters(modules, filters)
+        result = applySorting(result, sort)
+        return result
+    }, [modules, filters, sort])
+
+    // Extract available tags from all modules
+    const availableTags = React.useMemo(() => {
+        const tagsSet = new Set<string>()
+        modules.forEach((mod) => {
+            mod.tags?.forEach((tag) => tagsSet.add(tag))
+        })
+        return Array.from(tagsSet).sort()
+    }, [modules])
+
     // Calculate stats
     const totalModules = modules.length
     const completedModules = modules.filter((m) => m.status === "complete").length
@@ -573,10 +602,44 @@ export default function ModulesPage() {
                             </motion.div>
                         </Section>
 
+                        {/* Module Filters */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.3 }}
+                        >
+                            <ModuleFilters
+                                filters={filters}
+                                sort={sort}
+                                onFilterChange={setFilters}
+                                onSortChange={setSort}
+                                availableTags={availableTags}
+                                totalCount={totalModules}
+                                filteredCount={filteredModules.length}
+                            />
+                        </motion.div>
+
                         {/* Modules grid with wave animation */}
                         <Section spacing="none">
+                            {filteredModules.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <p className="text-zinc-400 text-lg">No modules match your filters</p>
+                                    <Button
+                                        variant="ghost"
+                                        onClick={() => setFilters({
+                                            difficulty: "all",
+                                            status: "all",
+                                            searchQuery: "",
+                                            tags: [],
+                                        })}
+                                        className="mt-4"
+                                    >
+                                        Clear Filters
+                                    </Button>
+                                </div>
+                            ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {modules.map((module, index) => (
+                                {filteredModules.map((module, index) => (
                                     <motion.div
                                         key={module.id}
                                         initial={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -608,6 +671,7 @@ export default function ModulesPage() {
                                     </motion.div>
                                 ))}
                             </div>
+                            )}
                         </Section>
                     </motion.div>
                 </AnimatePresence>

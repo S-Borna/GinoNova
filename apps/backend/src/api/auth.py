@@ -257,40 +257,19 @@ def reset_user_progress(current_user: CurrentUser):
     }
 
 
-# Temporary dev endpoint for password reset (remove in production)
-from pydantic import BaseModel
-
-class DevPasswordReset(BaseModel):
-    email: str
-    new_password: str
-    secret: str
-
-@auth_router.post("/dev-reset-password")
-def dev_reset_password(data: DevPasswordReset):
-    """
-    DEV ONLY: Reset password without authentication.
-    Requires knowing the email and a secret key.
-    """
-    import os
-    DEV_SECRET = os.getenv("DEV_SECRET", "devops-hub-2024")
-
-    if data.secret != DEV_SECRET:
-        raise HTTPException(status_code=403, detail="Invalid secret")
-
-    from ..db import user_repository
-    from ..core.security import hash_password
-
-    user = user_repository.get_user_by_email(data.email)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    hashed = hash_password(data.new_password)
-    updated = user_repository.update_user(user.id, hashed_password=hashed)
-
-    if not updated:
-        raise HTTPException(status_code=500, detail="Failed to update password")
-
-    return {"success": True, "message": f"Password reset for {data.email}"}
+# ==============================================================================
+# SECURITY: DEV ENDPOINT REMOVED
+# ==============================================================================
+# The /dev-reset-password endpoint has been removed for security reasons.
+# It allowed password resets without proper authentication, which is a critical
+# security vulnerability in production environments.
+#
+# For password resets, use the proper /forgot-password and /reset-password endpoints
+# that require email verification tokens.
+#
+# If you need to reset a password in development, use the database directly or
+# create a proper admin endpoint with full authentication and authorization.
+# ==============================================================================
 
 
 # === OAUTH ENDPOINTS ===

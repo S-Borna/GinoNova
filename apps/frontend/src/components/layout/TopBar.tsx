@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
 import { DallasOrb } from "@/components/ai/DallasOrb"
+import { ThemeToggle } from "@/components/ui/ThemeToggle"
 import {
     Search,
     Settings,
@@ -142,6 +143,11 @@ function UserDropdown() {
                             <Settings className="h-4 w-4" />
                             Settings
                         </Link>
+                    </div>
+
+                    {/* Theme Toggle */}
+                    <div className="border-t border-neutral-100 dark:border-neutral-800">
+                        <ThemeToggle variant="menu" />
                     </div>
 
                     {/* Logout */}

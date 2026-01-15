@@ -3,6 +3,7 @@ Tasks Router - API endpoints for task management
 Phase 3.0: Tasks Foundation
 Phase v4.0: Added related tasks (fördjupning) endpoint
 Phase v4.1: Added module_id query parameter support
+Phase SECURITY: Added authentication to all endpoints
 """
 from uuid import UUID
 from typing import List, Optional
@@ -11,6 +12,7 @@ from fastapi import APIRouter, Response, status, Query
 
 from ..schemas.task import TaskCreate, TaskUpdate, TaskPublic, TaskWithRelated
 from ..services.task_service import task_service
+from ..core.deps import CurrentUser
 
 tasks_router = APIRouter()
 
@@ -37,16 +39,23 @@ def tasks_status(response: Response):
 @tasks_router.get("/", response_model=list[TaskPublic])
 def list_tasks(
     response: Response,
+    current_user: CurrentUser,
     module_id: Optional[UUID] = Query(None, description="Filter tasks by module UUID"),
 ):
     """
     List tasks, optionally filtered by module.
 
+    **Authentication required**: Must be logged in to view tasks.
+
     Args:
+        current_user: Authenticated user (injected)
         module_id: Optional UUID to filter tasks by module
 
     Returns:
         List of all tasks, or tasks for the specified module
+
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
     if module_id:
@@ -55,17 +64,21 @@ def list_tasks(
 
 
 @tasks_router.get("/module/slug/{module_slug}", response_model=list[TaskPublic])
-def list_tasks_by_module_slug(module_slug: str, response: Response):
+def list_tasks_by_module_slug(module_slug: str, response: Response, current_user: CurrentUser):
     """
     List all tasks for a module identified by slug.
 
+    **Authentication required**: Must be logged in to view tasks.
+
     Args:
         module_slug: Slug of the module (e.g., 'linux-mastery')
+        current_user: Authenticated user (injected)
 
     Returns:
         List of TaskPublic objects belonging to the module
 
     Raises:
+        401: If not authenticated
         404: If module not found
     """
     add_phase_header(response)
@@ -73,17 +86,21 @@ def list_tasks_by_module_slug(module_slug: str, response: Response):
 
 
 @tasks_router.get("/module/{module_id}", response_model=list[TaskPublic])
-def list_tasks_by_module(module_id: UUID, response: Response):
+def list_tasks_by_module(module_id: UUID, response: Response, current_user: CurrentUser):
     """
     List all tasks for a specific module.
 
+    **Authentication required**: Must be logged in to view tasks.
+
     Args:
         module_id: UUID of the module
+        current_user: Authenticated user (injected)
 
     Returns:
         List of TaskPublic objects belonging to the module
 
     Raises:
+        401: If not authenticated
         404: If module not found
     """
     add_phase_header(response)
@@ -91,17 +108,21 @@ def list_tasks_by_module(module_id: UUID, response: Response):
 
 
 @tasks_router.get("/{task_id}", response_model=TaskPublic)
-def get_task(task_id: UUID, response: Response):
+def get_task(task_id: UUID, response: Response, current_user: CurrentUser):
     """
     Get a specific task by ID.
 
+    **Authentication required**: Must be logged in to view task details.
+
     Args:
         task_id: UUID of the task to retrieve
+        current_user: Authenticated user (injected)
 
     Returns:
         TaskPublic object
 
     Raises:
+        401: If not authenticated
         404: If task not found
     """
     add_phase_header(response)
@@ -109,7 +130,7 @@ def get_task(task_id: UUID, response: Response):
 
 
 @tasks_router.get("/{task_id}/related", response_model=List[TaskPublic])
-def get_related_tasks(task_id: UUID, response: Response):
+def get_related_tasks(task_id: UUID, response: Response, current_user: CurrentUser):
     """
     Get related advanced/deep-dive tasks for a standard task.
 
@@ -117,13 +138,17 @@ def get_related_tasks(task_id: UUID, response: Response):
     that are linked to the specified task. These are NOT locked -
     users can try them anytime for extra XP.
 
+    **Authentication required**: Must be logged in to view related tasks.
+
     Args:
         task_id: UUID of the parent/standard task
+        current_user: Authenticated user (injected)
 
     Returns:
         List of related TaskPublic objects (advanced/deep_dive tier)
 
     Raises:
+        401: If not authenticated
         404: If task not found
     """
     add_phase_header(response)
@@ -131,20 +156,24 @@ def get_related_tasks(task_id: UUID, response: Response):
 
 
 @tasks_router.get("/{task_id}/with-related", response_model=TaskWithRelated)
-def get_task_with_related(task_id: UUID, response: Response):
+def get_task_with_related(task_id: UUID, response: Response, current_user: CurrentUser):
     """
     Get a task with its related advanced/deep-dive tasks included.
 
     Convenience endpoint that returns the task and all related
     fördjupning tasks in a single response.
 
+    **Authentication required**: Must be logged in to view tasks.
+
     Args:
         task_id: UUID of the task to retrieve
+        current_user: Authenticated user (injected)
 
     Returns:
         TaskWithRelated object with task + related_tasks array
 
     Raises:
+        401: If not authenticated
         404: If task not found
     """
     add_phase_header(response)
