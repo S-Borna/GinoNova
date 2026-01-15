@@ -13,19 +13,26 @@ export default function Icon() {
         (
             <div
                 style={{
-                    fontSize: 20,
-                    background: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
                     width: '100%',
                     height: '100%',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
-                    fontWeight: 'bold',
-                    borderRadius: 6,
+                    background: 'transparent',
                 }}
             >
-                D
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src="https://ginonova.com/ginonova-logo.svg"
+                    alt="GinoNova"
+                    width={32}
+                    height={32}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                    }}
+                />
             </div>
         ),
         {

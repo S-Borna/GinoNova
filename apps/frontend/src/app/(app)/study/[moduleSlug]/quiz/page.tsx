@@ -21,6 +21,7 @@ import { DOE25_TASK_QUIZ, getAllDOE25Quiz, TaskQuizQuestion as DOE25QuizQuestion
 import { LINUX247_TASK_QUIZ, getAllLinux247Quiz, TaskQuizQuestion as Linux247QuizQuestion } from "@/data/linux247-task-quiz"
 import { HANDSON_TASK_QUIZ, getAllHandsOnQuiz, TaskQuizQuestion as HandsOnQuizQuestion } from "@/data/handson-task-quiz"
 import { HANDSON_MEGA_QUIZ, MegaQuizQuestion, MegaQuizTaskSet } from "@/data/handson-mega-quiz"
+import { OMTENTA_2_TASK_QUIZ, getAllOmtenta2Quiz } from "@/data/omtenta-2.0-task-adapter"
 
 // Generic quiz question type for local data
 interface LocalQuizQuestion {
@@ -65,6 +66,11 @@ const MODULE_CONFIG: Record<string, {
         getTaskData: () => HANDSON_MEGA_QUIZ as MegaQuizTaskSet[],
         title: 'Hands-On Lab',
         useMegaQuiz: true
+    },
+    'omtenta-2': {
+        getData: getAllOmtenta2Quiz as () => LocalQuizQuestion[],
+        getTaskData: () => OMTENTA_2_TASK_QUIZ as TaskQuizSet[],
+        title: 'Omtenta 2.0 (10 Noder)'
     }
 }
 

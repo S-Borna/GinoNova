@@ -21,6 +21,7 @@ import { DOE25_TASK_FLASHCARDS, getAllDOE25Flashcards, type TaskFlashcard } from
 import { LINUX247_TASK_FLASHCARDS, getAllFlashcards as getAllLinux247Flashcards } from "@/data/linux247-task-flashcards"
 import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 import { OMTENTA_V2_TASK_FLASHCARDS } from "@/data/omtenta-v2-task-flashcards"
+import { OMTENTA_2_TASK_FLASHCARDS } from "@/data/omtenta-2.0-task-adapter"
 
 interface Flashcard {
     id: string
@@ -38,6 +39,7 @@ const MODULE_CONFIG: Record<string, { title: string; data: typeof DOE25_TASK_FLA
     'linux-247': { title: 'Linux 24/7', data: LINUX247_TASK_FLASHCARDS },
     'hands-on-lab': { title: 'Hands-On Lab', data: HANDSON_TASK_FLASHCARDS },
     'omtenta': { title: 'Omtenta (770 flashcards)', data: OMTENTA_V2_TASK_FLASHCARDS },
+    'omtenta-2': { title: 'Omtenta 2.0 (10 Noder)', data: OMTENTA_2_TASK_FLASHCARDS },
 }
 
 function FlashcardsContent() {

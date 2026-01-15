@@ -98,6 +98,34 @@ const mainNavItems: NavItem[] = [
         glowColor: "rgba(16, 185, 129, 0.5)"
     },
     {
+        label: "SkillsMaps",
+        href: "/skillsmaps",
+        icon: Map,
+        gradient: "from-orange-500 to-amber-600",
+        glowColor: "rgba(249, 115, 22, 0.5)"
+    },
+    {
+        label: "Studyroom",
+        href: "/study",
+        icon: Clock,
+        gradient: "from-blue-500 to-cyan-600",
+        glowColor: "rgba(59, 130, 246, 0.5)"
+    },
+    {
+        label: "AI Quiz",
+        href: "/quiz",
+        icon: Brain,
+        gradient: "from-violet-500 to-purple-600",
+        glowColor: "rgba(139, 92, 246, 0.5)"
+    },
+    {
+        label: "FastTrack",
+        href: "/fasttrack",
+        icon: Zap,
+        gradient: "from-yellow-400 to-amber-500",
+        glowColor: "rgba(250, 204, 21, 0.5)"
+    },
+    {
         label: "Code Playground",
         href: "/playground",
         icon: Code2,
@@ -124,34 +152,6 @@ const mainNavItems: NavItem[] = [
         icon: Trophy,
         gradient: "from-amber-500 to-yellow-600",
         glowColor: "rgba(245, 158, 11, 0.5)"
-    },
-    {
-        label: "SkillsMaps",
-        href: "/skillsmaps",
-        icon: Map,
-        gradient: "from-orange-500 to-amber-600",
-        glowColor: "rgba(249, 115, 22, 0.5)"
-    },
-    {
-        label: "FastTrack",
-        href: "/fasttrack",
-        icon: Zap,
-        gradient: "from-yellow-400 to-amber-500",
-        glowColor: "rgba(250, 204, 21, 0.5)"
-    },
-    {
-        label: "Studyroom",
-        href: "/study",
-        icon: Clock,
-        gradient: "from-blue-500 to-cyan-600",
-        glowColor: "rgba(59, 130, 246, 0.5)"
-    },
-    {
-        label: "AI Quiz",
-        href: "/quiz",
-        icon: Brain,
-        gradient: "from-violet-500 to-purple-600",
-        glowColor: "rgba(139, 92, 246, 0.5)"
     },
     {
         label: "Pulsmätning",

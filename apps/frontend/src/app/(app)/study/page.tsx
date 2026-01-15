@@ -74,22 +74,6 @@ interface StudyModule {
 
 const STUDY_MODULES: StudyModule[] = [
     {
-        id: 'doe25-tenta',
-        slug: 'doe25-tenta',
-        title: 'DOE25 Tentaplugg',
-        description: 'Komplett förberedelse för Linux-tentan 7 januari 2026',
-        icon: '🎓',
-        taskCount: DOE25_MODULE.tasks.length,
-        flashcardCount: DOE25_MODULE.tasks.length * 30,
-        quizCount: DOE25_MODULE.tasks.length * 20,
-        color: 'purple',
-        tasks: DOE25_TASK_FLASHCARDS.map(t => ({
-            id: t.taskId,
-            title: t.taskTitle,
-            flashcardCount: t.flashcards.length
-        }))
-    },
-    {
         id: 'linux-247',
         slug: 'linux-247',
         title: 'Linux 24/7',
@@ -648,8 +632,8 @@ export default function StudyPage() {
                                         {omtenta2SelectedNodes.length > 0 && (
                                             <span className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-sm bg-teal-500/20 text-teal-300 border border-teal-500/30">
                                                 <Brain className="w-4 h-4" />
-                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => 
-                                                    omtenta2SelectedNodes.includes(q.topic) && 
+                                                {ALL_OMTENTA_2_QUESTIONS.filter(q =>
+                                                    omtenta2SelectedNodes.includes(q.topic) &&
                                                     (omtenta2QuestionType === 'mix' || q.type === omtenta2QuestionType)
                                                 ).length} frågor
                                             </span>
@@ -672,8 +656,8 @@ export default function StudyPage() {
                                                             const isSelected = omtenta2SelectedNodes.includes(topic)
                                                             const quizCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic && q.type === 'quiz').length
                                                             const scenarioCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic && q.type === 'scenario').length
-                                                            const filteredCount = omtenta2QuestionType === 'mix' 
-                                                                ? quizCount + scenarioCount 
+                                                            const filteredCount = omtenta2QuestionType === 'mix'
+                                                                ? quizCount + scenarioCount
                                                                 : omtenta2QuestionType === 'quiz' ? quizCount : scenarioCount
                                                             // Extrahera kort namn: 'Nod 1: Filsystem & Grunder' -> 'Filsystem & Grunder'
                                                             const shortName = info.name.includes(':') ? info.name.split(':')[1].trim() : info.name
@@ -797,7 +781,7 @@ export default function StudyPage() {
                         <div className="h-px flex-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {STUDY_MODULES.map((module, index) => {
                             const isSelected = selectedModule === module.slug
                             const moduleProgress = progress[module.slug] || 0
