@@ -38,7 +38,7 @@ export interface APIErrorLog extends ErrorLogEntry {
    ============================================================================ */
 
 const MAX_STORED_ERRORS = 50;
-const ERROR_STORAGE_KEY = 'devopshub_error_log';
+const ERROR_STORAGE_KEY = 'ginonova_error_log';
 
 function getStoredErrors(): ErrorLogEntry[] {
   if (typeof window === 'undefined') return [];

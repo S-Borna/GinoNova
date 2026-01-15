@@ -86,7 +86,7 @@ export const TOOLS_DATA: Tool[] = [
                 description: "Grundläggande YAML-struktur med olika datatyper",
                 language: "yaml",
                 code: `# Kommentarer börjar med #
-name: DevOpsHub
+name: GinoNova
 version: 2.0
 
 # Nested objekt (indentation = 2 spaces)
@@ -199,7 +199,7 @@ spec:
                 description: "Grundläggande JSON med olika datatyper",
                 language: "json",
                 code: `{
-  "name": "DevOpsHub",
+  "name": "GinoNova",
   "version": "2.0.0",
   "active": true,
   "users": 1500,

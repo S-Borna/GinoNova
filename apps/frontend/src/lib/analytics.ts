@@ -49,7 +49,7 @@ export interface UserAction extends AnalyticsEvent {
    SESSION MANAGEMENT
    ============================================================================ */
 
-const SESSION_KEY = 'devopshub_analytics_session';
+const SESSION_KEY = 'ginonova_analytics_session';
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
 
 interface Session {
@@ -124,7 +124,7 @@ function updateSession(updates: Partial<Session>): void {
    EVENT QUEUE
    ============================================================================ */
 
-const EVENT_QUEUE_KEY = 'devopshub_analytics_queue';
+const EVENT_QUEUE_KEY = 'ginonova_analytics_queue';
 const MAX_QUEUE_SIZE = 100;
 
 let eventQueue: AnalyticsEvent[] = [];

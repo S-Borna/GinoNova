@@ -156,7 +156,7 @@ async def generate_module_certificate(
     return {
         "certificate_id": str(user_id),  # Placeholder
         "verification_code": verification_code,
-        "verification_url": f"https://saids-devopshub.netlify.app/verify/{verification_code}",
+        "verification_url": f"https://ginonova.se/verify/{verification_code}",
         "message": "Certificate generated successfully"
     }
 
@@ -194,7 +194,7 @@ async def generate_track_certificate(
     return {
         "certificate_id": str(user_id),
         "verification_code": verification_code,
-        "verification_url": f"https://saids-devopshub.netlify.app/verify/{verification_code}",
+        "verification_url": f"https://ginonova.se/verify/{verification_code}",
         "message": "Track certificate generated successfully"
     }
 

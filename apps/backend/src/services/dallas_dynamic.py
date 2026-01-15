@@ -167,9 +167,9 @@ def generate_module_response(module_info: Dict[str, Any]) -> str:
 
 STATIC_FAQ: List[Tuple[List[str], List[str], str]] = [
     (
-        ["devopshub", "plattform", "vad är", "hur funkar", "sida", "sidan", "hub"],
-        ["vad är devopshub", "hur funkar sidan", "vad kan jag göra här", "vad är detta"],
-        """**DevOpsHub** är en lärplattform för tech! 🚀
+        ["ginonova", "plattform", "vad är", "hur funkar", "sida", "sidan", "hub"],
+        ["vad är ginonova", "hur funkar sidan", "vad kan jag göra här", "vad är detta"],
+        """**GinoNova** är en lärplattform för tech! 🚀
 
 Här kan du lära dig:
 • **DevOps** - Linux, Docker, Kubernetes, CI/CD, Terraform

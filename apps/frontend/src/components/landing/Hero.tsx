@@ -223,39 +223,6 @@ function GinoNovaCloudOverlay() {
 }
 
 /* ============================================================================
-   🎁 FREE ACCESS BADGE — THE GAME CHANGER
-   ============================================================================ */
-
-function FreeAccessBadge() {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="inline-flex mb-8"
-        >
-            <div
-                className={cn(
-                    "flex items-center gap-3 px-6 py-3 rounded-full",
-                    "bg-emerald-500/15 backdrop-blur-sm",
-                    "border border-emerald-400/40",
-                    "shadow-lg shadow-emerald-500/10"
-                )}
-            >
-                <Gift className="w-5 h-5 text-emerald-400" />
-                <span className="text-lg font-bold text-emerald-300">
-                    100% GRATIS
-                </span>
-                <span className="text-emerald-300/60">•</span>
-                <span className="text-emerald-200/80 font-medium">
-                    Ingen registrering krävs
-                </span>
-            </div>
-        </motion.div>
-    )
-}
-
-/* ============================================================================
    🧠 AI & TECH STACK INDICATOR
    ============================================================================ */
 
@@ -389,9 +356,6 @@ export function Hero() {
 
             {/* Content */}
             <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
-
-                {/* FREE ACCESS BADGE */}
-                <FreeAccessBadge />
 
                 {/* Tech Stack Indicators */}
                 <TechStackIndicator />

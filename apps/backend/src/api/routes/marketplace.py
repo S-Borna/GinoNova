@@ -70,8 +70,8 @@ def _seed_sample_items():
     sample_creator = CreatorInDB(
         id=sample_creator_id,
         user_id=uuid4(),
-        display_name="DevOpsHub Official",
-        bio="Official DevOpsHub content packs",
+        display_name="GinoNova Official",
+        bio="Official GinoNova content packs",
         rating=4.8,
         total_items=3,
         is_verified=True,

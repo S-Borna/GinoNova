@@ -110,9 +110,9 @@ export interface Insight {
    STORAGE KEYS
    ============================================================================ */
 
-const ANALYTICS_KEY = 'devopshub_user_analytics'
-const CURRENT_SESSION_KEY = 'devopshub_current_session'
-const EVENTS_QUEUE_KEY = 'devopshub_analytics_events'
+const ANALYTICS_KEY = 'ginonova_user_analytics'
+const CURRENT_SESSION_KEY = 'ginonova_current_session'
+const EVENTS_QUEUE_KEY = 'ginonova_analytics_events'
 
 /* ============================================================================
    ANALYTICS TRACKER CLASS

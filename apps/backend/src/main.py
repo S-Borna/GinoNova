@@ -559,7 +559,7 @@ async def lifespan(app: FastAPI):
 # =============================================================================
 
 app = FastAPI(
-    title="DevOpsHub API",
+    title="GinoNova API",
     version=settings.PROJECT_VERSION,
     lifespan=lifespan,
     redirect_slashes=False,
@@ -573,7 +573,7 @@ origins = [
     "http://127.0.0.1:3001",
     "https://ginonova.com",
     "https://www.ginonova.com",
-    "https://saids-devopshub.netlify.app",
+    "https://ginonova.se",
     "https://saasprojekt.netlify.app",
 ]
 

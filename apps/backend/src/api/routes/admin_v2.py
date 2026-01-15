@@ -1565,7 +1565,7 @@ async def get_settings(
     # Return full settings structure that frontend expects
     return {
         "general": {
-            "site_name": "DevOpsHub",
+            "site_name": "GinoNova",
             "site_description": "Learn DevOps with interactive modules",
             "maintenance_mode": False,
             "registration_enabled": True,

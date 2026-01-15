@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # Email provider config
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", "")
-FROM_EMAIL = os.getenv("FROM_EMAIL", "noreply@devopshub.se")
+FROM_EMAIL = os.getenv("FROM_EMAIL", "noreply@ginonova.se")
 
 
 # Notification types
@@ -215,7 +215,7 @@ async def send_weekly_summary_email(
     stats: dict
 ) -> bool:
     """Send weekly summary email."""
-    subject = "Din veckosummering från DevOpsHub 📊"
+    subject = "Din veckosummering från GinoNova 📊"
 
     html_content = f"""
     <h1>Hej!</h1>
@@ -227,7 +227,7 @@ async def send_weekly_summary_email(
         <li><strong>Streak:</strong> {stats.get('current_streak', 0)} dagar</li>
     </ul>
     <p>Fortsätt så! 💪</p>
-    <p><a href="https://saids-devopshub.netlify.app/dashboard">Gå till Dashboard</a></p>
+    <p><a href="https://ginonova.se/dashboard">Gå till Dashboard</a></p>
     """
 
     return await send_email(email, subject, html_content, user_id)

@@ -363,7 +363,7 @@ export const ACHIEVEMENTS: Achievement[] = [
     {
         id: "early-adopter",
         name: "Early Adopter",
-        description: "Join DevOpsHub in its first month",
+        description: "Join GinoNova in its first month",
         icon: "🌟",
         rarity: "legendary",
         category: "rare",
@@ -513,7 +513,7 @@ export function getCertificateDownloadUrl(certificateId: string, format: "png" |
  */
 export function getLinkedInShareUrl(certificate: Certificate): string {
     const certUrl = `${window.location.origin}/verify/${certificate.id}`
-    const text = `I just earned a certificate in ${certificate.moduleName} from DevOpsHub! 🎓`
+    const text = `I just earned a certificate in ${certificate.moduleName} from GinoNova! 🎓`
     return `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(certUrl)}&title=${encodeURIComponent(text)}`
 }
 

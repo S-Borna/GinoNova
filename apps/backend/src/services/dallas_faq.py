@@ -16,9 +16,9 @@ FAQ_DATABASE: List[Tuple[List[str], List[str], str]] = [
     # PLATTFORMEN - Allmänna frågor
     # ==========================================================================
     (
-        ["devopshub", "plattform", "vad är", "hur funkar", "sida", "sidan"],
-        ["vad är devopshub", "hur funkar sidan", "vad kan jag göra här"],
-        """DevOpsHub är en lärplattform för DevOps! 🚀
+        ["ginonova", "plattform", "vad är", "hur funkar", "sida", "sidan"],
+        ["vad är ginonova", "hur funkar sidan", "vad kan jag göra här"],
+        """GinoNova är en lärplattform för DevOps! 🚀
 
 Här kan du:
 • **Camp DevOps** - Strukturerade moduler med tasks och XP
@@ -94,7 +94,7 @@ Din XP syns på Dashboard och i din profil. Ju mer du lär dig, desto högre lev
     (
         ["dallas", "du", "vem", "assistent", "ai", "hjälp"],
         ["vem är du", "vad är dallas", "vad kan du hjälpa med"],
-        """Jag är **Dallas** 🐺 - din guide på DevOpsHub!
+        """Jag är **Dallas** 🐺 - din guide på GinoNova!
 
 Jag kan hjälpa dig med:
 • Förklara vad som finns på plattformen
