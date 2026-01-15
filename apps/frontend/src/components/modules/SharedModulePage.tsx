@@ -23,6 +23,7 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import { TentaCountdown } from "@/components/ui/tenta-countdown"
+import { saveLastActivity } from "@/components/dashboard/ContinueLearning"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -299,6 +300,35 @@ export function SharedModulePage({
             fetchModule()
         }
     }, [slug])
+
+    // Track activity for Continue Learning feature
+    useEffect(() => {
+        if (module && !loading) {
+            const moduleName = module.title || module.name || slug
+            const totalTasks = module.tasks.length
+            const completedCount = completedTasks.length
+            const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0
+            const totalMinutes = module.tasks.reduce((acc, t) => acc + (t.estimated_minutes || 30), 0)
+            const remainingTasks = totalTasks - completedCount
+            const avgMinutesPerTask = totalTasks > 0 ? totalMinutes / totalTasks : 30
+            const estimatedMinutesRemaining = Math.round(remainingTasks * avgMinutesPerTask)
+
+            // Find current task (first incomplete or last completed)
+            const firstIncompleteTask = module.tasks.find(t => !completedTasks.includes(t.slug || t.title))
+            const currentTaskTitle = firstIncompleteTask?.title || (completedCount > 0 ? "Review completed tasks" : undefined)
+
+            saveLastActivity({
+                moduleSlug: slug,
+                moduleName,
+                taskTitle: currentTaskTitle,
+                progress: progressPercent,
+                totalTasks,
+                completedTasks: completedCount,
+                estimatedMinutes: estimatedMinutesRemaining,
+                icon: module.icon,
+            })
+        }
+    }, [module, completedTasks, loading, slug])
 
     if (loading) return <LoadingSkeleton />
     if (error) return <ErrorState error={error} onRetry={fetchModule} />

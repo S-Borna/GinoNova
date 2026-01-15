@@ -16,8 +16,10 @@
  * TOTAL: ~800 frågor
  */
 
-// Import NOD3-10 från auto-genererad fil
+// Import NOD1-10 från auto-genererad fil
 import {
+    NOD1_FILSYSTEM_QUESTIONS,
+    NOD2_RATTIGHETER_QUESTIONS,
     NOD3_PROCESSHANTERING_QUESTIONS,
     NOD4_NATVERK_QUESTIONS,
     NOD5_SSH_QUESTIONS,
@@ -26,7 +28,7 @@ import {
     NOD8_DOCKER_ISOLERING_QUESTIONS,
     NOD9_DOCKER_NATVERK_QUESTIONS,
     NOD10_DOCKER_COMPOSE_QUESTIONS
-} from './nod3-10-questions'
+} from './nod1-10-questions'
 
 export type Omtenta2Topic =
     | 'nod1-filsystem'
@@ -65,8 +67,12 @@ export const OMTENTA2_TOPIC_INFO: Record<Omtenta2Topic, { name: string; descript
     'nod10-docker-compose': { name: 'Nod 10: Docker Compose & IaC', description: 'docker-compose.yml, services, IaC' }
 }
 
-// ===== NOD 1: FILSYSTEM & GRUNDER =====
-export const NOD1_QUESTIONS: Omtenta2Question[] = [
+// ===== NOD 1 & 2: MANUELLT DEFINIERADE (ERSATTA AV AUTO-GENERERADE) =====
+// Dessa har ersatts av auto-genererade versioner från nod1-10-questions.ts
+// Se re-export nedan för NOD1_QUESTIONS och NOD2_QUESTIONS
+
+/* BORTTAGET - Ersatt av auto-genererade frågor med validerade svar
+export const NOD1_QUESTIONS_MANUAL: Omtenta2Question[] = [
     // QUIZ FRÅGOR
     {
         id: 'nod1-q1',
@@ -901,8 +907,11 @@ export const NOD2_QUESTIONS: Omtenta2Question[] = [
         type: 'scenario'
     }
 ]
+*/ // END BORTTAGET MANUELLT DEFINIERADE FRÅGOR
 
-// Re-exportera NOD3-10 med enkla namn för bakåtkompatibilitet
+// Re-exportera NOD1-10 med enkla namn för bakåtkompatibilitet och använd auto-genererade frågor med korrekta svar
+export const NOD1_QUESTIONS: Omtenta2Question[] = NOD1_FILSYSTEM_QUESTIONS as Omtenta2Question[]
+export const NOD2_QUESTIONS: Omtenta2Question[] = NOD2_RATTIGHETER_QUESTIONS as Omtenta2Question[]
 export const NOD3_QUESTIONS: Omtenta2Question[] = NOD3_PROCESSHANTERING_QUESTIONS as Omtenta2Question[]
 export const NOD4_QUESTIONS: Omtenta2Question[] = NOD4_NATVERK_QUESTIONS as Omtenta2Question[]
 export const NOD5_QUESTIONS: Omtenta2Question[] = NOD5_SSH_QUESTIONS as Omtenta2Question[]

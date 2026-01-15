@@ -7,9 +7,12 @@ Kör: python3 scripts/parse_nod_questions.py
 import re
 import os
 from pathlib import Path
+from correct_answers import CORRECT_ANSWERS
 
 # Nod-mappningar
 NOD_FILES = {
+    'nod1-filsystem': 'Omtenta/Nod1_Filsystem_Grunder_Master.md',
+    'nod2-rattigheter': 'Omtenta/Nod2_Rattigheter_Sakerhet_Master.md',
     'nod3-processhantering': 'Omtenta/Nod3_Processhantering_Master.md',
     'nod4-natverk': 'Omtenta/Nod4_Natverk_Server_Master.md',
     'nod5-ssh': 'Omtenta/Nod5_SSH_Kommunikation_Master.md',
@@ -41,10 +44,10 @@ def parse_quiz_questions(content: str, topic: str) -> list:
         
         # Clean up options - remove trailing punctuation, backticks etc
         options = [opt.rstrip('.').strip() for opt in options]
-        
-        # Try to determine correct answer (usually first option in unshuffled)
-        # For now default to 0 (A) - can be verified later
-        correct_idx = 0
+
+        # Get correct answer from validated mapping
+        question_id = f'{topic}-q{q_num}'
+        correct_idx = CORRECT_ANSWERS.get(question_id, 0)
         
         questions.append({
             'id': f'{topic}-q{q_num}',
@@ -137,7 +140,7 @@ def main():
         all_questions[topic] = questions
     
     # Generate complete TypeScript output
-    output_file = base_path / 'apps/frontend/src/data/nod3-10-questions.ts'
+    output_file = base_path / 'apps/frontend/src/data/nod1-10-questions.ts'
     
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('// AUTO-GENERATED from Nod*_Master.md files\n')
@@ -146,7 +149,7 @@ def main():
         
         # Define inline type to avoid circular import
         f.write('// Inline type (same as Omtenta2Question)\n')
-        f.write('interface Nod3to10Question {\n')
+        f.write('interface Nod1to10Question {\n')
         f.write('    id: string\n')
         f.write('    question: string\n')
         f.write('    options: string[]\n')
@@ -161,7 +164,7 @@ def main():
         for topic, questions in all_questions.items():
             var_name = topic.upper().replace('-', '_') + '_QUESTIONS'
             f.write(f"// ===== {topic.upper().replace('-', ' ')} ({len(questions)} frågor) =====\n")
-            f.write(f"export const {var_name}: Nod3to10Question[] = [\n")
+            f.write(f"export const {var_name}: Nod1to10Question[] = [\n")
             
             for q in questions:
                 f.write("    {\n")
@@ -180,7 +183,7 @@ def main():
         
         # Export combined array
         f.write("// Combined export\n")
-        f.write("export const ALL_NOD3_TO_10_QUESTIONS: Nod3to10Question[] = [\n")
+        f.write("export const ALL_NOD1_TO_10_QUESTIONS: Nod1to10Question[] = [\n")
         for topic in all_questions.keys():
             var_name = topic.upper().replace('-', '_') + '_QUESTIONS'
             f.write(f"    ...{var_name},\n")
