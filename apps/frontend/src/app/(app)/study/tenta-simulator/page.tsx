@@ -14,7 +14,7 @@
  *
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
- * - Random questions from DOE25 + Hands-On + Linux Commands + Tentaish
+ * - Random questions from Omtenta 2.0 + Hands-On + Linux Commands + Linux Tenta
  * - Multi-select question sources
  * - Mix of G and VG difficulty
  * - Live grading OR grading at end
@@ -736,32 +736,32 @@ export default function TentaSimulatorPage() {
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <button
                             onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('doe25')
-                                    ? s.selectedSources.filter(src => src !== 'doe25')
-                                    : [...s.selectedSources, 'doe25'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['doe25'] }
+                                const sources = s.selectedSources.includes('omtenta-2')
+                                    ? s.selectedSources.filter(src => src !== 'omtenta-2')
+                                    : [...s.selectedSources, 'omtenta-2'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['omtenta-2'] }
                             })}
                             className={cn(
                                 "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('doe25')
-                                    ? "bg-purple-500/20 border-purple-500 text-purple-300"
+                                settings.selectedSources.includes('omtenta-2')
+                                    ? "bg-teal-500/20 border-teal-500 text-teal-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
-                            {settings.selectedSources.includes('doe25') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
+                            {settings.selectedSources.includes('omtenta-2') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-teal-500 rounded-full flex items-center justify-center">
                                     <CheckCircle className="w-3 h-3 text-white" />
                                 </div>
                             )}
-                            <span className="text-lg">🎓</span>
-                            <span className="text-sm font-medium">DOE25</span>
-                            <span className="text-xs opacity-70">{doe25Questions.length} frågor</span>
+                            <span className="text-lg">🎯</span>
+                            <span className="text-sm font-medium">Omtenta 2.0</span>
+                            <span className="text-xs opacity-70">{omtenta2Questions.length} frågor</span>
                         </button>
                         <button
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('handson')
                                     ? s.selectedSources.filter(src => src !== 'handson')
-                                    : [...s.selectedSources, 'handson'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
+                                    : [...s.selectedSources, 'handson'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
                             })}
                             className={cn(
@@ -784,7 +784,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('linux-commands')
                                     ? s.selectedSources.filter(src => src !== 'linux-commands')
-                                    : [...s.selectedSources, 'linux-commands'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
+                                    : [...s.selectedSources, 'linux-commands'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
                             })}
                             className={cn(
@@ -805,33 +805,33 @@ export default function TentaSimulatorPage() {
                         </button>
                         <button
                             onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('tentaish')
-                                    ? s.selectedSources.filter(src => src !== 'tentaish')
-                                    : [...s.selectedSources, 'tentaish'] as ('doe25' | 'handson' | 'linux-commands' | 'tentaish')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['tentaish'] }
+                                const sources = s.selectedSources.includes('linux-tenta')
+                                    ? s.selectedSources.filter(src => src !== 'linux-tenta')
+                                    : [...s.selectedSources, 'linux-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-tenta'] }
                             })}
                             className={cn(
                                 "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('tentaish')
-                                    ? "bg-cyan-500/20 border-cyan-500 text-cyan-300"
+                                settings.selectedSources.includes('linux-tenta')
+                                    ? "bg-red-500/20 border-red-500 text-red-300"
                                     : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
                             )}
                         >
-                            {settings.selectedSources.includes('tentaish') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-cyan-500 rounded-full flex items-center justify-center">
+                            {settings.selectedSources.includes('linux-tenta') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
                                     <CheckCircle className="w-3 h-3 text-white" />
                                 </div>
                             )}
                             <span className="text-lg">📝</span>
-                            <span className="text-sm font-medium">Tentaish</span>
-                            <span className="text-xs opacity-70">{tentaishQuestions.length} frågor</span>
+                            <span className="text-sm font-medium">Linux Tentan</span>
+                            <span className="text-xs opacity-70">{linuxTentaQuestions.length} frågor</span>
                         </button>
                     </div>
                     <p className="text-xs text-zinc-500 mt-2">
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'doe25' && "✨ Rekommenderat för tentan - fokuserade tentafrågor"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "Praktiska frågor från Hands-On modulen"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "🔥 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'tentaish' && "📝 Tentaish - komplett tentaöversikt: filsystem, användare, SSH, Docker, disk & nätverk"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "🔧 Praktiska frågor från Hands-On modulen"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "💻 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
+                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-tenta' && "📝 Original Linux-tentafrågor"}
                         {settings.selectedSources.length > 1 && `Kombinerat: ${settings.selectedSources.length} källor valda (${allQuestions.length} frågor)`}
                     </p>
                 </div>
@@ -873,7 +873,7 @@ export default function TentaSimulatorPage() {
                         VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
                     </span>
                     <span className="text-zinc-500 ml-auto">
-                        Källa: {settings.selectedSources.map(s => s === 'doe25' ? '🎓' : s === 'handson' ? '🔧' : s === 'tentaish' ? '📝' : '💻').join(' ')}
+                        Källa: {settings.selectedSources.map(s => s === 'omtenta-2' ? '🎯' : s === 'handson' ? '🔧' : s === 'linux-tenta' ? '📝' : '💻').join(' ')}
                     </span>
                 </div>
             </div>

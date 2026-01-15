@@ -27,8 +27,6 @@ import {
     ChevronRight,
     Sparkles,
 } from "lucide-react"
-// TentaCountdown removed
-import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -96,11 +94,6 @@ export function Navbar() {
                             isScrolled ? "h-16" : "h-20"
                         )}
                     >
-
-                        {/* Spotify Live Player - Desktop */}
-                        <div className="hidden lg:block">
-                            <SpotifyLivePlayer />
-                        </div>
 
                         {/* Mobile menu button */}
                         <motion.button
