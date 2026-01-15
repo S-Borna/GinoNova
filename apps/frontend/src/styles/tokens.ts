@@ -2,13 +2,22 @@
 // "Learn like a pro, feel like home"
 
 export const colors = {
-    // Backgrounds - Rich, deep darks (samma approach som MakeThePlay)
+    // Dark Mode Backgrounds - Rich, deep darks
     bg: {
-        primary: '#0a0a0f',      // Djupare än tidigare
-        secondary: '#0f0f17',    // Sidebar, cards
-        tertiary: '#141420',     // Elevated elements
-        card: '#12121c',         // Module cards
-        elevated: '#1a1a28',     // Hover states
+        dark: {
+            primary: '#0a0a0f',      // Main background
+            secondary: '#0f0f17',    // Sidebar, cards
+            tertiary: '#141420',     // Elevated elements
+            card: '#12121c',         // Module cards
+            elevated: '#1a1a28',     // Hover states
+        },
+        light: {
+            primary: '#ffffff',      // Main background
+            secondary: '#f9fafb',    // Sidebar, cards (gray-50)
+            tertiary: '#f3f4f6',     // Elevated elements (gray-100)
+            card: '#ffffff',         // Module cards
+            elevated: '#e5e7eb',     // Hover states (gray-200)
+        },
     },
 
     // Purple/Violet - Signature color (raffinerad)
@@ -50,12 +59,36 @@ export const colors = {
         greenGlow: 'rgba(34, 197, 94, 0.15)',
     },
 
-    // Text hierarchy
+    // Text hierarchy (theme-aware)
     text: {
-        primary: '#f8fafc',      // Bright white
-        secondary: '#a1a1aa',    // Zinc-400
-        muted: '#71717a',        // Zinc-500
-        disabled: '#52525b',     // Zinc-600
+        dark: {
+            primary: '#f8fafc',      // Bright white
+            secondary: '#a1a1aa',    // Zinc-400
+            muted: '#71717a',        // Zinc-500
+            disabled: '#52525b',     // Zinc-600
+        },
+        light: {
+            primary: '#0a0a0f',      // Near black
+            secondary: '#52525b',    // Zinc-600
+            muted: '#71717a',        // Zinc-500
+            disabled: '#a1a1aa',     // Zinc-400
+        },
+    },
+
+    // Difficulty Colors
+    difficulty: {
+        easy: '#22c55e',         // Green
+        medium: '#f59e0b',       // Amber
+        hard: '#ef4444',         // Red
+        expert: '#a855f7',       // Purple
+    },
+
+    // Status Colors
+    status: {
+        'not-started': '#71717a',   // Zinc-500
+        'in-progress': '#06b6d4',   // Cyan
+        completed: '#22c55e',        // Green
+        locked: '#52525b',           // Zinc-600
     },
 
     // Borders
@@ -145,6 +178,85 @@ export const animation = {
     },
 } as const;
 
+// Layout Constants
+export const layout = {
+    sidebar: {
+        collapsed: '72px',
+        expanded: '240px',
+    },
+    topBar: {
+        height: '64px',
+    },
+    mobileNav: {
+        height: '64px',
+    },
+    maxWidth: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+        full: '100%',
+    },
+} as const;
+
+// Z-Index Scale
+export const zIndex = {
+    dropdown: 1000,
+    sticky: 1020,
+    fixed: 1030,
+    modalBackdrop: 1040,
+    modal: 1050,
+    popover: 1060,
+    tooltip: 1070,
+    dallas: 1080,  // Dallas AI assistant
+} as const;
+
+// Component-specific tokens
+export const components = {
+    button: {
+        height: {
+            sm: '32px',
+            md: '40px',
+            lg: '48px',
+        },
+        padding: {
+            sm: '0 12px',
+            md: '0 16px',
+            lg: '0 24px',
+        },
+    },
+    input: {
+        height: {
+            sm: '32px',
+            md: '40px',
+            lg: '48px',
+        },
+        padding: {
+            sm: '0 12px',
+            md: '0 16px',
+            lg: '0 20px',
+        },
+    },
+    card: {
+        padding: {
+            sm: spacing.sm,
+            md: spacing.md,
+            lg: spacing.lg,
+        },
+        borderRadius: borderRadius.xl,
+    },
+} as const;
+
+// Utility functions
+export function withOpacity(color: string, opacity: number): string {
+    return `${color}${Math.round(opacity * 255).toString(16).padStart(2, '0')}`;
+}
+
+export function getThemeColor(isDark: boolean, darkColor: string, lightColor: string): string {
+    return isDark ? darkColor : lightColor;
+}
+
 // Export default theme object
 const theme = {
     colors,
@@ -153,6 +265,10 @@ const theme = {
     borderRadius,
     spacing,
     animation,
+    layout,
+    zIndex,
+    components,
 } as const;
 
 export default theme;
+export type Theme = typeof theme;

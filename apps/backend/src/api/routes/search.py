@@ -1,9 +1,12 @@
 """
 Search API - Search across modules, tasks, and labs
 Phase FAS 1.4 - Implement search functionality
+Phase SECURITY: Added authentication to prevent content scraping
 
 Endpoints:
-- GET /api/search?q={query} - Search all content
+- GET /api/search?q={query} - Search all content (authentication required)
+
+All endpoints require authentication to prevent unauthorized content scraping.
 """
 
 from fastapi import APIRouter, Query, Response
@@ -14,6 +17,7 @@ import logging
 from ...db.module_repository import list_modules
 from ...db.task_repository import list_tasks
 from ...db.lab_repository import list_labs
+from ...core.deps import CurrentUser
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +89,7 @@ def calculate_relevance(query: str, title: str, description: Optional[str]) -> f
 @router.get("", response_model=SearchResponse)
 def search(
     response: Response,
+    current_user: CurrentUser,
     q: str = Query(..., min_length=2, max_length=100, description="Search query"),
     limit: int = Query(20, ge=1, le=50, description="Max results to return"),
     type_filter: Optional[str] = Query(None, description="Filter by type: module, task, lab"),
@@ -93,6 +98,20 @@ def search(
     Search across modules, tasks, and labs.
 
     Returns results sorted by relevance score.
+    
+    **Authentication required**: Must be logged in to search content.
+
+    Args:
+        current_user: Authenticated user (injected)
+        q: Search query
+        limit: Max results to return
+        type_filter: Filter by type (module, task, lab)
+
+    Returns:
+        SearchResponse with matching results sorted by relevance
+        
+    Raises:
+        401: If not authenticated
     """
     response.headers["X-Phase"] = "FAS-1.4-Search"
 
@@ -175,12 +194,26 @@ def search(
 @router.get("/suggestions")
 def get_suggestions(
     response: Response,
+    current_user: CurrentUser,
     q: str = Query(..., min_length=1, max_length=50),
     limit: int = Query(5, ge=1, le=10),
 ) -> List[str]:
     """
     Get search suggestions based on partial query.
     Returns a list of suggested search terms.
+    
+    **Authentication required**: Must be logged in to get suggestions.
+
+    Args:
+        current_user: Authenticated user (injected)
+        q: Partial search query
+        limit: Max suggestions to return
+
+    Returns:
+        List of suggested search terms
+        
+    Raises:
+        401: If not authenticated
     """
     response.headers["X-Phase"] = "FAS-1.4-Search"
 

@@ -1,11 +1,14 @@
 """
 Content Delivery System (CDS) API Routes
 Phase 14 - Content Delivery
+Phase SECURITY: Added authentication to prevent content scraping
 
 Provides clean, content-focused endpoints for:
 - Module content by slug
 - Task content by ID
 - Raw markdown/content fetching
+
+All endpoints require authentication to prevent unauthorized content scraping.
 """
 from typing import Optional, List, Any
 from uuid import UUID
@@ -14,6 +17,7 @@ from fastapi import APIRouter, Response, HTTPException, status
 from pydantic import BaseModel
 
 from ...db import module_repository, task_repository
+from ...core.deps import CurrentUser
 
 
 router = APIRouter(prefix="/content", tags=["content"])
@@ -118,12 +122,20 @@ class ContentStatusResponse(BaseModel):
 # ==============================================================================
 
 @router.get("/status", response_model=ContentStatusResponse)
-def content_status(response: Response):
+def content_status(response: Response, current_user: CurrentUser):
     """
     Get Content Delivery System status.
+    
+    **Authentication required**: Must be logged in to access content system.
+
+    Args:
+        current_user: Authenticated user (injected)
 
     Returns:
         CDS status and available features
+        
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
     return ContentStatusResponse(
@@ -145,7 +157,7 @@ def content_status(response: Response):
 
 
 @router.get("/module/{slug}", response_model=ModuleContentResponse)
-def get_module_content(slug: str, response: Response):
+def get_module_content(slug: str, response: Response, current_user: CurrentUser):
     """
     Get module content by slug.
 
@@ -154,13 +166,17 @@ def get_module_content(slug: str, response: Response):
     - Task list with summaries
     - Raw markdown content if available
 
+    **Authentication required**: Must be logged in to access module content.
+
     Args:
         slug: Module slug (e.g., "linux-basics", "docker-fundamentals")
+        current_user: Authenticated user (injected)
 
     Returns:
         ModuleContentResponse with full module data
 
     Raises:
+        401: If not authenticated
         404: If module not found
     """
     add_phase_header(response)
@@ -218,7 +234,7 @@ def get_module_content(slug: str, response: Response):
 
 
 @router.get("/task/{task_id}", response_model=TaskContentResponse)
-def get_task_content(task_id: UUID, response: Response):
+def get_task_content(task_id: UUID, response: Response, current_user: CurrentUser):
     """
     Get task content by ID.
 
@@ -228,13 +244,17 @@ def get_task_content(task_id: UUID, response: Response):
     - Navigation context (prev/next tasks)
     - Examples and attachments
 
+    **Authentication required**: Must be logged in to access task content.
+
     Args:
         task_id: Task UUID
+        current_user: Authenticated user (injected)
 
     Returns:
         TaskContentResponse with full task data
 
     Raises:
+        401: If not authenticated
         404: If task not found
     """
     add_phase_header(response)
@@ -291,7 +311,7 @@ def get_task_content(task_id: UUID, response: Response):
 
 
 @router.get("/raw/{path:path}")
-def get_raw_content(path: str, response: Response):
+def get_raw_content(path: str, response: Response, current_user: CurrentUser):
     """
     Get raw markdown content by path.
 
@@ -300,13 +320,17 @@ def get_raw_content(path: str, response: Response):
     - Task content files
     - Documentation
 
+    **Authentication required**: Must be logged in to access raw content.
+
     Args:
         path: Content path (e.g., "modules/linux/README.md")
+        current_user: Authenticated user (injected)
 
     Returns:
         Raw markdown content
 
     Raises:
+        401: If not authenticated
         404: If content not found
         501: Feature not yet implemented
     """
@@ -345,6 +369,7 @@ class ContentSearchResponse(BaseModel):
 @router.get("/search", response_model=ContentSearchResponse)
 def search_content(
     q: str,
+    current_user: CurrentUser,
     type: Optional[str] = None,  # "module", "task", or None for all
     limit: int = 20,
     response: Response = None
@@ -354,13 +379,19 @@ def search_content(
 
     Simple text search across modules and tasks.
 
+    **Authentication required**: Must be logged in to search content.
+
     Args:
         q: Search query
+        current_user: Authenticated user (injected)
         type: Filter by content type ("module" or "task")
         limit: Max results to return
 
     Returns:
         ContentSearchResponse with matching content
+        
+    Raises:
+        401: If not authenticated
     """
     if response:
         add_phase_header(response)
