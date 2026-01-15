@@ -38,12 +38,11 @@ import { getToken } from "@/lib/auth"
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
 // Import quiz data
-import { DOE25_TASK_QUIZ, type TaskQuizQuestion } from "@/data/doe25-task-quiz"
 import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-quiz"
 import { ALL_LINUX_COMMAND_QUESTIONS, type LinuxCommandQuestion } from "@/data/linux-commands-quiz"
-import { ALL_TENTAISH_QUESTIONS, type TentaishQuestion } from "@/data/tentaish-quiz"
 import { ALL_LINUX_TENTA_QUESTIONS, type LinuxTentaQuestion } from "@/data/linux-tenta-quiz"
-import { ALL_OMTENTA_V2_QUESTIONS, type OmtentaV2Question } from "@/data/omtenta-v2-quiz"
+// OMTENTA 2.0 - Nya frågor från Nod-filer
+import { ALL_OMTENTA_2_QUESTIONS, type Omtenta2Question, type Omtenta2Topic, OMTENTA2_TOPICS } from "@/data/omtenta-2.0-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
@@ -55,9 +54,10 @@ interface SimulatorQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta'
+    source: 'handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2'
     scenario?: string // Optional scenario context
     isMultiSelect: boolean
+    nodeTopic?: Omtenta2Topic // For Omtenta 2.0 node filtering
 }
 
 interface SimulatorSettings {
@@ -67,7 +67,8 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[] // Multi-select question sources
+    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[] // Multi-select question sources
+    selectedNodes: Omtenta2Topic[] // For Omtenta 2.0 node filtering
 }
 
 interface QuizResult {
@@ -89,7 +90,8 @@ const DEFAULT_SETTINGS: SimulatorSettings = {
     includeVG: true,
     showTimer: true,
     gradingMode: 'live',
-    selectedSources: ['doe25'] // Default to DOE25 only for best exam prep
+    selectedSources: ['omtenta-2'], // Default to Omtenta 2.0
+    selectedNodes: OMTENTA2_TOPICS // All nodes by default
 }
 
 // Shuffle array helper
@@ -123,23 +125,6 @@ function shuffleQuestionOptions(question: SimulatorQuestion): SimulatorQuestion 
         options: shuffledOptions.map(o => o.option),
         correctIndices: newCorrectIndices,
         correctIndex: newCorrectIndices[0] as 0 | 1 | 2 | 3 | undefined
-    }
-}
-
-// Convert DOE25 question to SimulatorQuestion
-function convertDOE25Question(q: TaskQuizQuestion): SimulatorQuestion {
-    return {
-        id: q.id,
-        question: q.question,
-        options: q.options,
-        correctIndex: q.correctIndex,
-        correctIndices: [q.correctIndex],
-        explanation: q.explanation,
-        difficulty: q.difficulty,
-        category: q.category,
-        source: 'doe25',
-        scenario: q.scenario,
-        isMultiSelect: false
     }
 }
 
@@ -181,23 +166,6 @@ function convertLinuxCommandQuestion(q: LinuxCommandQuestion): SimulatorQuestion
     }
 }
 
-// Convert Tentaish question to SimulatorQuestion
-function convertTentaishQuestion(q: TentaishQuestion): SimulatorQuestion {
-    return {
-        id: q.id,
-        question: q.question,
-        options: q.options,
-        correctIndex: q.correctIndex,
-        correctIndices: [q.correctIndex],
-        explanation: q.explanation,
-        difficulty: q.difficulty,
-        category: q.category,
-        source: 'tentaish',
-        scenario: q.scenario,
-        isMultiSelect: false
-    }
-}
-
 // Convert Linux Tenta question to SimulatorQuestion
 function convertLinuxTentaQuestion(q: LinuxTentaQuestion): SimulatorQuestion {
     return {
@@ -215,8 +183,8 @@ function convertLinuxTentaQuestion(q: LinuxTentaQuestion): SimulatorQuestion {
     }
 }
 
-// Convert Omtenta question to SimulatorQuestion (FULL multi-select support)
-function convertOmtentaQuestion(q: OmtentaV2Question): SimulatorQuestion {
+// Convert Omtenta 2.0 question to SimulatorQuestion (FULL multi-select support)
+function convertOmtenta2Question(q: Omtenta2Question): SimulatorQuestion {
     const isMulti = q.correctIndices.length > 1
     return {
         id: q.id,
@@ -227,8 +195,9 @@ function convertOmtentaQuestion(q: OmtentaV2Question): SimulatorQuestion {
         explanation: q.explanation,
         difficulty: q.difficulty,
         category: q.category,
-        source: 'omtenta',
-        isMultiSelect: isMulti
+        source: 'omtenta-2',
+        isMultiSelect: isMulti,
+        nodeTopic: q.topic
     }
 }
 
@@ -253,13 +222,6 @@ export default function TentaSimulatorPage() {
     const [examStartTime, setExamStartTime] = useState<Date | null>(null)
     const hasSubmittedResult = useRef(false)
 
-    // Get DOE25 questions
-    const doe25Questions = useMemo(() => {
-        return DOE25_TASK_QUIZ.flatMap(set =>
-            set.questions.map(convertDOE25Question)
-        )
-    }, [])
-
     // Get Hands-On questions
     const handsonQuestions = useMemo(() => {
         return HANDSON_MEGA_QUIZ.flatMap(set =>
@@ -272,44 +234,37 @@ export default function TentaSimulatorPage() {
         return ALL_LINUX_COMMAND_QUESTIONS.map(convertLinuxCommandQuestion)
     }, [])
 
-    // Get Tentaish questions
-    const tentaishQuestions = useMemo(() => {
-        return ALL_TENTAISH_QUESTIONS.map(convertTentaishQuestion)
-    }, [])
-
     // Get Linux Tenta questions (original exam)
     const linuxTentaQuestions = useMemo(() => {
         return ALL_LINUX_TENTA_QUESTIONS.map(convertLinuxTentaQuestion)
     }, [])
 
-    // Get Omtenta questions (770 questions from 14 source files, WITH multi-select support)
-    const omtentaQuestions = useMemo(() => {
-        return ALL_OMTENTA_V2_QUESTIONS.map(convertOmtentaQuestion)
+    // Get Omtenta 2.0 questions (800+ questions from 10 Nod-modules, WITH multi-select support)
+    const omtenta2Questions = useMemo(() => {
+        return ALL_OMTENTA_2_QUESTIONS.map(convertOmtenta2Question)
     }, [])
 
-    // Get filtered questions based on selected sources
+    // Get filtered questions based on selected sources and nodes
     const allQuestions = useMemo(() => {
         const questions: SimulatorQuestion[] = []
-        if (settings.selectedSources.includes('doe25')) {
-            questions.push(...doe25Questions)
-        }
         if (settings.selectedSources.includes('handson')) {
             questions.push(...handsonQuestions)
         }
         if (settings.selectedSources.includes('linux-commands')) {
             questions.push(...linuxCommandsQuestions)
         }
-        if (settings.selectedSources.includes('tentaish')) {
-            questions.push(...tentaishQuestions)
-        }
         if (settings.selectedSources.includes('linux-tenta')) {
             questions.push(...linuxTentaQuestions)
         }
-        if (settings.selectedSources.includes('omtenta')) {
-            questions.push(...omtentaQuestions)
+        if (settings.selectedSources.includes('omtenta-2')) {
+            // Filter by selected nodes
+            const filtered = omtenta2Questions.filter(q => 
+                !q.nodeTopic || settings.selectedNodes.includes(q.nodeTopic)
+            )
+            questions.push(...filtered)
         }
         return questions
-    }, [doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions, linuxTentaQuestions, omtentaQuestions, settings.selectedSources])
+    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions, settings.selectedSources, settings.selectedNodes])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -320,6 +275,7 @@ export default function TentaSimulatorPage() {
         const gradingParam = searchParams?.get('grading')
         const difficultyParam = searchParams?.get('difficulty')
         const sourceParam = searchParams?.get('source')
+        const nodesParam = searchParams?.get('nodes')
 
         if (timeParam || countParam || gradingParam || difficultyParam || sourceParam) {
             // Parse difficulty param: 'G', 'VG', or 'both'
@@ -333,12 +289,20 @@ export default function TentaSimulatorPage() {
                 includeVG = true
             }
 
-            // Parse source param (comma-separated for multi-select)
-            let selectedSources: ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[] = ['doe25']
+            // Parse source param
+            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[] = ['omtenta-2']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('doe25' | 'handson' | 'linux-commands' | 'tentaish' | 'linux-tenta' | 'omtenta')[]
-                selectedSources = sources.filter(s => ['doe25', 'handson', 'linux-commands', 'tentaish', 'linux-tenta', 'omtenta'].includes(s))
-                if (selectedSources.length === 0) selectedSources = ['doe25']
+                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[]
+                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'omtenta-2'].includes(s))
+                if (selectedSources.length === 0) selectedSources = ['omtenta-2']
+            }
+
+            // Parse nodes param for Omtenta 2.0
+            let selectedNodes: Omtenta2Topic[] = OMTENTA2_TOPICS
+            if (nodesParam) {
+                const nodes = nodesParam.split(',') as Omtenta2Topic[]
+                selectedNodes = nodes.filter(n => OMTENTA2_TOPICS.includes(n))
+                if (selectedNodes.length === 0) selectedNodes = OMTENTA2_TOPICS
             }
 
             const newSettings: SimulatorSettings = {
@@ -348,19 +312,24 @@ export default function TentaSimulatorPage() {
                 gradingMode: (gradingParam === 'end' ? 'end' : 'live') as 'live' | 'end',
                 includeG,
                 includeVG,
-                selectedSources
+                selectedSources,
+                selectedNodes
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
 
             // Get questions based on selected sources
             let sourceQuestions: SimulatorQuestion[] = []
-            if (selectedSources.includes('doe25')) sourceQuestions.push(...doe25Questions)
             if (selectedSources.includes('handson')) sourceQuestions.push(...handsonQuestions)
             if (selectedSources.includes('linux-commands')) sourceQuestions.push(...linuxCommandsQuestions)
-            if (selectedSources.includes('tentaish')) sourceQuestions.push(...tentaishQuestions)
             if (selectedSources.includes('linux-tenta')) sourceQuestions.push(...linuxTentaQuestions)
-            if (selectedSources.includes('omtenta')) sourceQuestions.push(...omtentaQuestions)
+            if (selectedSources.includes('omtenta-2')) {
+                // Filter by selected nodes
+                const filtered = omtenta2Questions.filter(q => 
+                    !q.nodeTopic || selectedNodes.includes(q.nodeTopic)
+                )
+                sourceQuestions.push(...filtered)
+            }
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -385,7 +354,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, doe25Questions, handsonQuestions, linuxCommandsQuestions, tentaishQuestions])
+    }, [searchParams, hasAutoStarted, handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {

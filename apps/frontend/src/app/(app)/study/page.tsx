@@ -46,8 +46,9 @@ import { HANDSON_MODULE } from "@/data/handson-module"
 import { DOE25_TASK_FLASHCARDS } from "@/data/doe25-task-flashcards"
 import { LINUX247_TASK_FLASHCARDS } from "@/data/linux247-task-flashcards"
 import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
-import { TENTAISH_STATS } from "@/data/tentaish-quiz"
-import { OMTENTA_V2_TASK_FLASHCARDS, OMTENTA_V2_FLASHCARD_STATS } from "@/data/omtenta-v2-task-flashcards"
+// OMTENTA 2.0 - Nytt innehåll från Nod-filer
+import { OMTENTA2_TOPICS, OMTENTA2_TOPIC_INFO, ALL_OMTENTA_2_QUESTIONS } from "@/data/omtenta-2.0-quiz"
+import { ALL_OMTENTA_2_FLASHCARDS } from "@/data/omtenta-2.0-flashcards"
 
 /* ============================================================================
    TYPES
@@ -121,19 +122,19 @@ const STUDY_MODULES: StudyModule[] = [
         }))
     },
     {
-        id: 'omtenta',
-        slug: 'omtenta',
-        title: 'Omtenta',
-        description: '770 frågor & flashcards från 14 källfiler',
-        icon: '🎓',
-        taskCount: 7,
-        flashcardCount: OMTENTA_V2_FLASHCARD_STATS.totalFlashcards,
-        quizCount: 770,
+        id: 'omtenta-2',
+        slug: 'omtenta-2',
+        title: 'Omtenta 2.0',
+        description: '800+ frågor & 500 flashcards från 10 Nod-moduler',
+        icon: '🎯',
+        taskCount: 10,
+        flashcardCount: ALL_OMTENTA_2_FLASHCARDS.length,
+        quizCount: ALL_OMTENTA_2_QUESTIONS.length,
         color: 'emerald',
-        tasks: OMTENTA_V2_TASK_FLASHCARDS.map(t => ({
-            id: t.taskId,
-            title: t.taskTitle,
-            flashcardCount: t.flashcards.length
+        tasks: OMTENTA2_TOPICS.map(topic => ({
+            id: topic,
+            title: OMTENTA2_TOPIC_INFO[topic].name,
+            flashcardCount: ALL_OMTENTA_2_FLASHCARDS.filter(f => f.topic === topic).length
         }))
     }
 ]
@@ -158,7 +159,8 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'doe25' | 'handson' | 'linux' | 'tentaish' | 'linux-tenta' | 'omtenta'>('doe25')
+    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2'>('omtenta-2')
+    const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -490,17 +492,17 @@ export default function StudyPage() {
                                 </div>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                     <button
-                                        onClick={() => setTentaSource('doe25')}
+                                        onClick={() => setTentaSource('omtenta-2')}
                                         className={cn(
                                             "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
-                                            tentaSource === 'doe25'
-                                                ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
+                                            tentaSource === 'omtenta-2'
+                                                ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30"
                                                 : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
                                         )}
                                     >
-                                        <span className="text-2xl">🎓</span>
-                                        <span className="text-xs font-medium">DOE25</span>
-                                        <span className="text-[10px] opacity-70 font-normal">554 frågor</span>
+                                        <span className="text-2xl">🎯</span>
+                                        <span className="text-xs font-medium">Omtenta 2.0</span>
+                                        <span className="text-[10px] opacity-70 font-normal">{ALL_OMTENTA_2_QUESTIONS.length} frågor</span>
                                     </button>
                                     <button
                                         onClick={() => setTentaSource('handson')}
@@ -529,19 +531,6 @@ export default function StudyPage() {
                                         <span className="text-[10px] opacity-70 font-normal">350+ frågor</span>
                                     </button>
                                     <button
-                                        onClick={() => setTentaSource('tentaish')}
-                                        className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
-                                            tentaSource === 'tentaish'
-                                                ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
-                                        )}
-                                    >
-                                        <span className="text-2xl">📝</span>
-                                        <span className="text-xs font-medium">Tentaish</span>
-                                        <span className="text-[10px] opacity-70 font-normal">{TENTAISH_STATS.totalQuestions} frågor</span>
-                                    </button>
-                                    <button
                                         onClick={() => setTentaSource('linux-tenta')}
                                         className={cn(
                                             "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
@@ -550,45 +539,88 @@ export default function StudyPage() {
                                                 : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
                                         )}
                                     >
-                                        <span className="text-2xl">🎯</span>
+                                        <span className="text-2xl">📝</span>
                                         <span className="text-xs font-medium">Linux Tentan</span>
                                         <span className="text-[10px] opacity-70 font-normal">20 frågor</span>
                                     </button>
-                                    <button
-                                        onClick={() => setTentaSource('omtenta')}
-                                        className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
-                                            tentaSource === 'omtenta'
-                                                ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
-                                        )}
-                                    >
-                                        <span className="text-2xl">🎓</span>
-                                        <span className="text-xs font-medium">Omtenta</span>
-                                        <span className="text-[10px] opacity-70 font-normal">770 frågor</span>
-                                    </button>
                                 </div>
                                 <p className="text-xs text-zinc-400 mt-3 text-center">
-                                    {tentaSource === 'doe25' && "✨ Rekommenderat för tentan"}
-                                    {tentaSource === 'handson' && "Praktiska frågor"}
+                                    {tentaSource === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
+                                    {tentaSource === 'handson' && "🔧 Praktiska frågor"}
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
-                                    {tentaSource === 'tentaish' && "📝 Komplett tentaöversikt"}
-                                    {tentaSource === 'linux-tenta' && "🎯 Original tentafrågor"}
-                                    {tentaSource === 'omtenta' && "🎓 770 frågor från 14 källfiler"}
+                                    {tentaSource === 'linux-tenta' && "📝 Original tentafrågor"}
                                 </p>
                             </div>
 
+                            {/* Omtenta 2.0 Node Selection */}
+                            {tentaSource === 'omtenta-2' && (
+                                <div className="bg-black/30 rounded-2xl p-5 border border-teal-500/20 mb-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div className="flex items-center gap-2">
+                                            <Layers className="w-5 h-5 text-teal-400" />
+                                            <span className="text-white font-bold">Välj Nod-moduler</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setOmtenta2SelectedNodes(OMTENTA2_TOPICS)}
+                                                className="px-3 py-1 text-xs rounded-lg bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 transition-all"
+                                            >
+                                                Välj alla
+                                            </button>
+                                            <button
+                                                onClick={() => setOmtenta2SelectedNodes([])}
+                                                className="px-3 py-1 text-xs rounded-lg bg-zinc-700/50 text-zinc-400 hover:bg-zinc-700 transition-all"
+                                            >
+                                                Avmarkera
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                                        {OMTENTA2_TOPICS.map(topic => {
+                                            const info = OMTENTA2_TOPIC_INFO[topic]
+                                            const isSelected = omtenta2SelectedNodes.includes(topic)
+                                            const questionCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic).length
+                                            return (
+                                                <button
+                                                    key={topic}
+                                                    onClick={() => setOmtenta2SelectedNodes(prev =>
+                                                        isSelected ? prev.filter(t => t !== topic) : [...prev, topic]
+                                                    )}
+                                                    className={cn(
+                                                        "py-2 px-3 rounded-lg text-xs font-medium transition-all flex flex-col items-center gap-1",
+                                                        isSelected
+                                                            ? "bg-teal-500/30 text-teal-200 border border-teal-500/50"
+                                                            : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                    )}
+                                                >
+                                                    <span className="font-bold">{info.name.split(':')[0]}</span>
+                                                    <span className="opacity-70 text-[10px]">{questionCount} frågor</span>
+                                                </button>
+                                            )
+                                        })}
+                                    </div>
+                                    <p className="text-xs text-zinc-500 mt-3 text-center">
+                                        {omtenta2SelectedNodes.length === 0
+                                            ? "⚠️ Välj minst en nod"
+                                            : `✅ ${omtenta2SelectedNodes.length} noder valda (${ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor)`
+                                        }
+                                    </p>
+                                </div>
+                            )}
+
                             {/* Start button */}
-                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}`}>
+                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}` : ''}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
+                                    disabled={tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0}
                                     className={cn(
                                         "w-full py-4 rounded-2xl font-black text-lg",
                                         "bg-gradient-to-r from-orange-500 via-red-500 to-purple-500",
                                         "text-white shadow-xl shadow-orange-500/30",
                                         "hover:shadow-2xl hover:shadow-orange-500/40 transition-all",
-                                        "flex items-center justify-center gap-3"
+                                        "flex items-center justify-center gap-3",
+                                        tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0 && "opacity-50 cursor-not-allowed"
                                     )}
                                 >
                                     <Zap className="w-6 h-6" />
