@@ -36,34 +36,52 @@ module.exports = {
 
     webpack: (config, { isServer }) => {
         if (!isServer) {
-            // AGGRESSIVE: Bundle everything into minimal chunks
+            // OPTIMIZED: Better chunking strategy for performance
             config.optimization.splitChunks = {
                 chunks: 'all',
-                minSize: 0,
-                maxInitialRequests: 3,
-                maxAsyncRequests: 3,
+                minSize: 20000, // 20KB minimum (prevents tiny chunks)
+                maxSize: 244000, // 244KB maximum (optimal for HTTP/2)
+                maxInitialRequests: 6, // Increased from 3 for better parallel loading
+                maxAsyncRequests: 6,   // Increased for better code splitting
                 cacheGroups: {
-                    default: false,
-                    vendors: false,
-                    defaultVendors: false,
+                    // Framework chunks (React, Next.js)
+                    framework: {
+                        name: 'framework',
+                        test: /[\\/]node_modules[\\/](react|react-dom|scheduler|next)[\\/]/,
+                        chunks: 'all',
+                        priority: 40,
+                        enforce: true,
+                    },
+                    // UI libraries
+                    ui: {
+                        name: 'ui',
+                        test: /[\\/]node_modules[\\/](framer-motion|lucide-react|@radix-ui)[\\/]/,
+                        chunks: 'all',
+                        priority: 30,
+                        enforce: true,
+                        reuseExistingChunk: true,
+                    },
+                    // Other vendor code
                     vendor: {
                         name: 'vendor',
                         test: /[\\/]node_modules[\\/]/,
                         chunks: 'all',
                         priority: 20,
-                        enforce: true,
+                        reuseExistingChunk: true,
                     },
-                    app: {
-                        name: 'app',
-                        test: /[\\/]src[\\/]/,
-                        chunks: 'all',
+                    // Common app code (used in 2+ places)
+                    common: {
+                        name: 'common',
+                        minChunks: 2,
                         priority: 10,
-                        enforce: true,
-                        minChunks: 1,
+                        reuseExistingChunk: true,
                     },
                 },
             };
-            config.optimization.runtimeChunk = false;
+            // Enable runtime chunk for better caching
+            config.optimization.runtimeChunk = {
+                name: 'runtime'
+            };
 
             // 🛡️ SECURITY: Mangle/obfuscate function and variable names
             if (config.optimization.minimizer) {

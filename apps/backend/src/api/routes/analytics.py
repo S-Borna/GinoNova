@@ -1,6 +1,10 @@
 """
 Analytics API Routes - Phase 13
+Phase SECURITY: Added authentication and fixed IDOR vulnerabilities
+
 Event tracking and insights endpoints.
+All endpoints require authentication and enforce authorization.
+Users can only access their own analytics data unless they are admins.
 """
 from fastapi import APIRouter, HTTPException, Query, Request, Depends
 from pydantic import BaseModel
@@ -12,6 +16,7 @@ import logging
 
 from src.db.database import get_db
 from src.services.analytics_service import AnalyticsService
+from src.core.deps import CurrentUser, AdminUser
 
 logger = logging.getLogger(__name__)
 
@@ -62,14 +67,27 @@ class UserAnalyticsResponse(BaseModel):
 async def track_event(
     request: TrackEventRequest,
     req: Request,
-    user_id: Optional[UUID] = Query(None),
+    current_user: CurrentUser,
     db: Session = Depends(get_db)
 ):
     """
-    Track an analytics event.
+    Track an analytics event for the authenticated user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only track events for themselves.
+
+    Args:
+        request: Event data to track
+        current_user: Authenticated user (injected)
+        db: Database session
+
+    Returns:
+        Event tracking confirmation
+        
+    Raises:
+        401: If not authenticated
     """
-    if not user_id:
-        raise HTTPException(status_code=401, detail="Authentication required")
+    user_id = current_user.id
 
     if request.event_type not in EVENT_TYPES:
         logger.warning(f"Unknown event type: {request.event_type}")
@@ -94,14 +112,34 @@ async def track_event(
 @router.get("/user/{user_id}", response_model=UserAnalyticsResponse)
 async def get_user_analytics(
     user_id: UUID,
-    requesting_user: Optional[UUID] = Query(None),
+    current_user: CurrentUser,
     db: Session = Depends(get_db)
 ):
     """
     Get analytics summary for a user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own analytics unless they are admins.
+
+    Args:
+        user_id: User ID to get analytics for
+        current_user: Authenticated user (injected)
+        db: Database session
+
+    Returns:
+        User analytics summary
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to access another user's analytics without admin privileges
+        404: If user not found
     """
-    # TODO: Check if requesting_user can view user_id's analytics
-    # For now, users can view their own analytics
+    # Authorization check: users can only view their own analytics unless admin
+    if user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only access your own analytics"
+        )
 
     analytics_service = AnalyticsService(db)
     data = analytics_service.get_user_analytics_summary(user_id)
@@ -122,13 +160,35 @@ async def get_user_analytics(
 @router.get("/user/{user_id}/daily")
 async def get_daily_stats(
     user_id: UUID,
+    current_user: CurrentUser,
     days: int = Query(30, le=365),
-    requesting_user: Optional[UUID] = Query(None),
     db: Session = Depends(get_db)
 ):
     """
     Get daily statistics for a user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own daily stats unless they are admins.
+
+    Args:
+        user_id: User ID to get daily stats for
+        current_user: Authenticated user (injected)
+        days: Number of days to fetch
+        db: Database session
+
+    Returns:
+        Daily statistics for the specified period
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to access another user's stats without admin privileges
     """
+    # Authorization check: users can only view their own stats unless admin
+    if user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only access your own daily statistics"
+        )
     # Generate date range
     end_date = datetime.utcnow().date()
     start_date = end_date - timedelta(days=days)
@@ -159,11 +219,31 @@ async def get_daily_stats(
 @router.get("/user/{user_id}/insights")
 async def get_user_insights(
     user_id: UUID,
-    requesting_user: Optional[UUID] = Query(None)
+    current_user: CurrentUser
 ):
     """
     Get computed insights for a user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own insights unless they are admins.
+
+    Args:
+        user_id: User ID to get insights for
+        current_user: Authenticated user (injected)
+
+    Returns:
+        User insights and recommendations
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to access another user's insights without admin privileges
     """
+    # Authorization check: users can only view their own insights unless admin
+    if user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only access your own insights"
+        )
     # TODO: Fetch from user_insights table
     return {
         "user_id": str(user_id),
@@ -180,13 +260,35 @@ async def get_user_insights(
 @router.get("/user/{user_id}/activity-heatmap")
 async def get_activity_heatmap(
     user_id: UUID,
+    current_user: CurrentUser,
     weeks: int = Query(12, le=52),
-    requesting_user: Optional[UUID] = Query(None),
     db: Session = Depends(get_db)
 ):
     """
     Get activity heatmap data (like GitHub contribution graph).
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own heatmap unless they are admins.
+
+    Args:
+        user_id: User ID to get heatmap for
+        current_user: Authenticated user (injected)
+        weeks: Number of weeks to include
+        db: Database session
+
+    Returns:
+        Activity heatmap data
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to access another user's heatmap without admin privileges
     """
+    # Authorization check: users can only view their own heatmap unless admin
+    if user_id != current_user.id and not current_user.is_admin:
+        raise HTTPException(
+            status_code=403,
+            detail="You can only access your own activity heatmap"
+        )
     analytics_service = AnalyticsService(db)
     heatmap_data = analytics_service.get_activity_heatmap(user_id, weeks)
 
@@ -199,6 +301,7 @@ async def get_activity_heatmap(
 
 @router.get("/leaderboard")
 async def get_leaderboard(
+    current_user: CurrentUser,
     period: str = Query("week", regex="^(day|week|month|all)$"),
     metric: str = Query("xp", regex="^(xp|tasks|streak|hours)$"),
     limit: int = Query(10, le=100),
@@ -206,6 +309,21 @@ async def get_leaderboard(
 ):
     """
     Get leaderboard based on various metrics.
+    
+    **Authentication required**: Must be logged in to view leaderboard.
+
+    Args:
+        current_user: Authenticated user (injected)
+        period: Time period (day, week, month, all)
+        metric: Metric to rank by (xp, tasks, streak, hours)
+        limit: Max entries to return
+        db: Database session
+
+    Returns:
+        Leaderboard rankings
+        
+    Raises:
+        401: If not authenticated
     """
     analytics_service = AnalyticsService(db)
     leaderboard_data = analytics_service.get_leaderboard(period, metric, limit)
@@ -220,15 +338,26 @@ async def get_leaderboard(
 # Admin endpoints
 @router.get("/admin/overview")
 async def get_admin_analytics(
-    admin_user: Optional[UUID] = Query(None),
+    admin_user: AdminUser,
     db: Session = Depends(get_db)
 ):
     """
     Get platform-wide analytics overview.
-    Admin only.
-    """
-    # TODO: Check admin permissions
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Admin access required.
 
+    Args:
+        admin_user: Authenticated admin user (injected)
+        db: Database session
+
+    Returns:
+        Platform-wide analytics overview
+        
+    Raises:
+        401: If not authenticated
+        403: If user is not an admin
+    """
     analytics_service = AnalyticsService(db)
     overview_data = analytics_service.get_platform_overview()
 
@@ -237,11 +366,23 @@ async def get_admin_analytics(
 
 @router.get("/admin/modules")
 async def get_module_analytics(
-    admin_user: Optional[UUID] = Query(None)
+    admin_user: AdminUser
 ):
     """
     Get analytics for all modules.
-    Admin only.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Admin access required.
+
+    Args:
+        admin_user: Authenticated admin user (injected)
+
+    Returns:
+        Analytics for all modules
+        
+    Raises:
+        401: If not authenticated
+        403: If user is not an admin
     """
     # TODO: Fetch from module_analytics table
     return {
@@ -251,12 +392,25 @@ async def get_module_analytics(
 
 @router.get("/admin/retention")
 async def get_retention_analytics(
-    admin_user: Optional[UUID] = Query(None),
+    admin_user: AdminUser,
     cohort_type: str = Query("week", regex="^(day|week|month)$")
 ):
     """
     Get user retention cohort analysis.
-    Admin only.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Admin access required.
+
+    Args:
+        admin_user: Authenticated admin user (injected)
+        cohort_type: Cohort grouping type (day, week, month)
+
+    Returns:
+        User retention cohort analysis
+        
+    Raises:
+        401: If not authenticated
+        403: If user is not an admin
     """
     return {
         "cohort_type": cohort_type,

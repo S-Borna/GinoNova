@@ -22,9 +22,10 @@ export function Providers({ children }: ProvidersProps) {
     return (
         <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
-            enableSystem={false}
+            defaultTheme="system"
+            enableSystem={true}
             disableTransitionOnChange
+            storageKey="devopshub-theme"
         >
             <AppInitializer />
             <NextAuthProvider>

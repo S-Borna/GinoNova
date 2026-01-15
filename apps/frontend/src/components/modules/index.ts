@@ -17,3 +17,7 @@ export { BookmarkSidebar } from "./BookmarkSidebar"
 
 // Premium Upgrade Phase 2: Combined Right Sidebar
 export { RightSidebar } from "./RightSidebar"
+
+// Module Filtering & Sorting
+export { ModuleFilters, applyFilters, applySorting } from "./ModuleFilters"
+export type { FilterState, SortState, DifficultyFilter, StatusFilter, SortOption, SortDirection } from "./ModuleFilters"

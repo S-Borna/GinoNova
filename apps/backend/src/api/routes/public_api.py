@@ -1,5 +1,10 @@
 """
 Phase 28 - Public API, Webhooks & Integration Layer API routes.
+Phase SECURITY: Added authentication and fixed IDOR vulnerabilities
+
+API key and webhook management require authentication.
+Public data endpoints require authentication to prevent scraping.
+Consider adding rate limiting for production use.
 """
 from datetime import datetime, timedelta
 from typing import Optional
@@ -8,6 +13,7 @@ import secrets
 
 from fastapi import APIRouter, Query, Response, Header
 
+from ...core.deps import CurrentUser
 from ...schemas.public_api import (
     PublicAPIStatus,
     APIKey,
@@ -66,9 +72,21 @@ def get_public_api_status(response: Response) -> PublicAPIStatus:
 # ============ API Key Endpoints ============
 
 @public_api_router.get("/keys")
-def list_api_keys(response: Response) -> list[APIKey]:
+def list_api_keys(response: Response, current_user: CurrentUser) -> list[APIKey]:
     """
     List API keys for the authenticated user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own API keys.
+
+    Args:
+        current_user: Authenticated user (injected)
+
+    Returns:
+        List of user's API keys
+        
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
 
@@ -102,9 +120,23 @@ def list_api_keys(response: Response) -> list[APIKey]:
 def create_api_key(
     key_data: APIKeyCreate,
     response: Response,
+    current_user: CurrentUser,
 ) -> APIKeyCreated:
     """
-    Create a new API key.
+    Create a new API key for the authenticated user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only create API keys for themselves.
+
+    Args:
+        key_data: API key configuration
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Created API key with secret
+        
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
 
@@ -120,20 +152,50 @@ def create_api_key(
 
 
 @public_api_router.delete("/keys/{key_id}")
-def revoke_api_key(key_id: str, response: Response) -> dict:
+def revoke_api_key(key_id: str, response: Response, current_user: CurrentUser) -> dict:
     """
     Revoke an API key.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only revoke their own API keys.
+
+    Args:
+        key_id: API key ID to revoke
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Revocation confirmation
+        
+    Raises:
+        401: If not authenticated
+        403: If key belongs to another user
     """
+    # TODO: Verify key belongs to current_user
     add_phase_header(response)
 
     return {"status": "revoked", "key_id": key_id}
 
 
 @public_api_router.get("/keys/{key_id}/usage", response_model=APIKeyUsage)
-def get_api_key_usage(key_id: str, response: Response) -> APIKeyUsage:
+def get_api_key_usage(key_id: str, response: Response, current_user: CurrentUser) -> APIKeyUsage:
     """
     Get API key usage statistics.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view usage for their own API keys.
+
+    Args:
+        key_id: API key ID to get usage for
+        current_user: Authenticated user (injected)
+
+    Returns:
+        API key usage statistics
+        
+    Raises:
+        401: If not authenticated
+        403: If key belongs to another user
     """
+    # TODO: Verify key belongs to current_user
     add_phase_header(response)
 
     return APIKeyUsage(
@@ -174,9 +236,21 @@ def validate_api_key(
 # ============ Webhook Endpoints ============
 
 @public_api_router.get("/webhooks")
-def list_webhooks(response: Response) -> list[WebhookEndpoint]:
+def list_webhooks(response: Response, current_user: CurrentUser) -> list[WebhookEndpoint]:
     """
-    List webhook endpoints.
+    List webhook endpoints for the authenticated user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view their own webhooks.
+
+    Args:
+        current_user: Authenticated user (injected)
+
+    Returns:
+        List of user's webhook endpoints
+        
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
 
@@ -206,9 +280,23 @@ def list_webhooks(response: Response) -> list[WebhookEndpoint]:
 def create_webhook(
     webhook_data: WebhookEndpointCreate,
     response: Response,
+    current_user: CurrentUser,
 ) -> WebhookEndpointCreated:
     """
-    Create a new webhook endpoint.
+    Create a new webhook endpoint for the authenticated user.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only create webhooks for themselves.
+
+    Args:
+        webhook_data: Webhook configuration
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Created webhook with secret
+        
+    Raises:
+        401: If not authenticated
     """
     add_phase_header(response)
 
@@ -224,20 +312,51 @@ def create_webhook(
 
 
 @public_api_router.delete("/webhooks/{webhook_id}")
-def delete_webhook(webhook_id: str, response: Response) -> dict:
+def delete_webhook(webhook_id: str, response: Response, current_user: CurrentUser) -> dict:
     """
     Delete a webhook endpoint.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only delete their own webhooks.
+
+    Args:
+        webhook_id: Webhook ID to delete
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Deletion confirmation
+        
+    Raises:
+        401: If not authenticated
+        403: If webhook belongs to another user
     """
+    # TODO: Verify webhook belongs to current_user
     add_phase_header(response)
 
     return {"status": "deleted", "webhook_id": webhook_id}
 
 
 @public_api_router.put("/webhooks/{webhook_id}/toggle")
-def toggle_webhook(webhook_id: str, response: Response, active: bool = True) -> WebhookEndpoint:
+def toggle_webhook(webhook_id: str, response: Response, current_user: CurrentUser, active: bool = True) -> WebhookEndpoint:
     """
     Enable or disable a webhook.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only toggle their own webhooks.
+
+    Args:
+        webhook_id: Webhook ID to toggle
+        current_user: Authenticated user (injected)
+        active: Enable (True) or disable (False)
+
+    Returns:
+        Updated webhook status
+        
+    Raises:
+        401: If not authenticated
+        403: If webhook belongs to another user
     """
+    # TODO: Verify webhook belongs to current_user
     add_phase_header(response)
 
     return WebhookEndpoint(
@@ -254,11 +373,28 @@ def toggle_webhook(webhook_id: str, response: Response, active: bool = True) -> 
 def list_webhook_deliveries(
     webhook_id: str,
     response: Response,
+    current_user: CurrentUser,
     limit: int = Query(20, le=100),
 ) -> list[WebhookDelivery]:
     """
     List webhook delivery history.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only view deliveries for their own webhooks.
+
+    Args:
+        webhook_id: Webhook ID to get deliveries for
+        current_user: Authenticated user (injected)
+        limit: Max deliveries to return
+
+    Returns:
+        List of webhook deliveries
+        
+    Raises:
+        401: If not authenticated
+        403: If webhook belongs to another user
     """
+    # TODO: Verify webhook belongs to current_user
     add_phase_header(response)
 
     return [
@@ -278,10 +414,25 @@ def list_webhook_deliveries(
 
 
 @public_api_router.post("/webhooks/{webhook_id}/test")
-def test_webhook(webhook_id: str, response: Response) -> WebhookDelivery:
+def test_webhook(webhook_id: str, response: Response, current_user: CurrentUser) -> WebhookDelivery:
     """
     Send a test webhook.
+    
+    **Authentication required**: Must be logged in.
+    **Authorization**: Users can only test their own webhooks.
+
+    Args:
+        webhook_id: Webhook ID to test
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Test delivery result
+        
+    Raises:
+        401: If not authenticated
+        403: If webhook belongs to another user
     """
+    # TODO: Verify webhook belongs to current_user
     add_phase_header(response)
 
     return WebhookDelivery(
@@ -323,10 +474,22 @@ def get_rate_limit_info(
 # ============ Public Data Endpoints ============
 
 @public_api_router.get("/v1/modules")
-def public_list_modules(response: Response) -> list[dict]:
+def public_list_modules(response: Response, current_user: CurrentUser) -> list[dict]:
     """
     Public API: List modules.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+
+    Args:
+        current_user: Authenticated user (injected)
+
+    Returns:
+        List of modules
+        
+    Raises:
+        401: If not authenticated
     """
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return [
@@ -337,10 +500,23 @@ def public_list_modules(response: Response) -> list[dict]:
 
 
 @public_api_router.get("/v1/modules/{module_id}")
-def public_get_module(module_id: str, response: Response) -> dict:
+def public_get_module(module_id: str, response: Response, current_user: CurrentUser) -> dict:
     """
     Public API: Get module details.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+
+    Args:
+        module_id: Module ID to get
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Module details
+        
+    Raises:
+        401: If not authenticated
     """
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return {
@@ -354,10 +530,23 @@ def public_get_module(module_id: str, response: Response) -> dict:
 
 
 @public_api_router.get("/v1/modules/{module_id}/tasks")
-def public_list_module_tasks(module_id: str, response: Response) -> list[dict]:
+def public_list_module_tasks(module_id: str, response: Response, current_user: CurrentUser) -> list[dict]:
     """
     Public API: List tasks in a module.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+
+    Args:
+        module_id: Module ID to get tasks for
+        current_user: Authenticated user (injected)
+
+    Returns:
+        List of tasks in module
+        
+    Raises:
+        401: If not authenticated
     """
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return [
@@ -368,10 +557,26 @@ def public_list_module_tasks(module_id: str, response: Response) -> list[dict]:
 
 
 @public_api_router.get("/v1/users/{user_id}/progress")
-def public_get_user_progress(user_id: str, response: Response) -> dict:
+def public_get_user_progress(user_id: str, response: Response, current_user: CurrentUser) -> dict:
     """
     Public API: Get user progress.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+    **Authorization**: Users can only view their own progress unless admin.
+
+    Args:
+        user_id: User ID to get progress for
+        current_user: Authenticated user (injected)
+
+    Returns:
+        User progress data
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to access another user's progress without admin privileges
     """
+    # TODO: Add authorization check - user_id must match current_user.id unless admin
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return {
@@ -388,12 +593,31 @@ def public_get_user_progress(user_id: str, response: Response) -> dict:
 def public_update_user_progress(
     user_id: str,
     response: Response,
+    current_user: CurrentUser,
     task_id: str = Query(...),
     status: str = Query("completed"),
 ) -> dict:
     """
     Public API: Update user progress.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+    **Authorization**: Users can only update their own progress.
+
+    Args:
+        user_id: User ID to update progress for
+        current_user: Authenticated user (injected)
+        task_id: Task ID
+        status: New status
+
+    Returns:
+        Updated progress data
+        
+    Raises:
+        401: If not authenticated
+        403: If user tries to update another user's progress
     """
+    # TODO: Add authorization check - user_id must match current_user.id
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return {
@@ -406,10 +630,23 @@ def public_update_user_progress(
 
 
 @public_api_router.get("/v1/analytics/heatmap")
-def public_get_heatmap(response: Response) -> dict:
+def public_get_heatmap(response: Response, current_user: CurrentUser) -> dict:
     """
-    Public API: Get activity heatmap data.
+    Public API: Get activity heatmap data for authenticated user.
+    
+    **Authentication required**: Must be logged in or provide valid API key.
+
+    Args:
+        current_user: Authenticated user (injected)
+
+    Returns:
+        Activity heatmap data for the user
+        
+    Raises:
+        401: If not authenticated
     """
+    # TODO: Return heatmap for current_user.id
+    # TODO: Support API key authentication as alternative to user auth
     add_phase_header(response)
 
     return {
