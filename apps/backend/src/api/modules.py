@@ -37,24 +37,20 @@ def modules_status(response: Response):
 
 
 @modules_router.get("/full/{slug}")
-def get_full_module(slug: str, response: Response, current_user: CurrentUser):
+def get_full_module(slug: str, response: Response):
     """
     Get FULL module data including all tasks and content.
 
     This is the main endpoint for frontend to get complete module data.
     Returns module with all tasks, groups, content - everything needed to render.
 
-    **Authentication required**: Must be logged in to access module content.
-
     Args:
         slug: Module slug (e.g., 'doe25-tenta', 'linux-247')
-        current_user: Authenticated user (injected)
 
     Returns:
         Full module dict with all data from content source
 
     Raises:
-        401: If not authenticated
         404: If module not found
     """
     add_phase_header(response)
@@ -71,22 +67,14 @@ def get_full_module(slug: str, response: Response, current_user: CurrentUser):
 
 
 @modules_router.get("/full")
-def list_full_modules(response: Response, current_user: CurrentUser):
+def list_full_modules(response: Response):
     """
     List ALL modules with full data including tasks and content.
 
     This is the main endpoint for frontend to get all modules for listing pages.
 
-    **Authentication required**: Must be logged in to access module content.
-
-    Args:
-        current_user: Authenticated user (injected)
-
     Returns:
         List of all modules with full content
-
-    Raises:
-        401: If not authenticated
     """
     add_phase_header(response)
     from ..db.seeds.content import get_all_modules
@@ -95,41 +83,29 @@ def list_full_modules(response: Response, current_user: CurrentUser):
 
 @modules_router.get("", response_model=list[ModulePublic])
 @modules_router.get("/", response_model=list[ModulePublic])
-def list_modules(response: Response, current_user: CurrentUser):
+def list_modules(response: Response):
     """
     List all modules.
 
-    **Authentication required**: Must be logged in to view modules.
-
-    Args:
-        current_user: Authenticated user (injected)
-
     Returns:
         List of all modules in the system
-
-    Raises:
-        401: If not authenticated
     """
     add_phase_header(response)
     return module_service.list_modules()
 
 
 @modules_router.get("/slug/{slug}", response_model=ModulePublic)
-def get_module_by_slug(slug: str, response: Response, current_user: CurrentUser):
+def get_module_by_slug(slug: str, response: Response):
     """
     Get a specific module by slug.
 
-    **Authentication required**: Must be logged in to view module details.
-
     Args:
         slug: Slug of the module to retrieve (e.g., 'linux-mastery')
-        current_user: Authenticated user (injected)
 
     Returns:
         ModulePublic object
 
     Raises:
-        401: If not authenticated
         404: If module not found
     """
     add_phase_header(response)
