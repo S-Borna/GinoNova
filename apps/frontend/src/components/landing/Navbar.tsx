@@ -139,11 +139,11 @@ export function Navbar() {
                                     <Image
                                         src="/ginonova-logo-horizontal.svg"
                                         alt="GinoNova"
-                                        width={340}
-                                        height={85}
+                                        width={510}
+                                        height={127}
                                         className={cn(
                                             "w-auto transition-all duration-300",
-                                            isScrolled ? "h-[72px]" : "h-[88px]"
+                                            isScrolled ? "h-[108px]" : "h-[132px]"
                                         )}
                                         priority
                                     />

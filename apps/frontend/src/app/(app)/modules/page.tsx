@@ -2,13 +2,19 @@
 
 /**
  * ============================================================================
- * MODULES LIST PAGE — Camp DevOps (ALL MODULES)
+ * MODULES LIST PAGE — Camp DevOps (3 MODULES ONLY)
  * ============================================================================
  *
- * Fetches ALL modules from backend content source: /api/modules/full
- * No filtering - shows all available modules for learning.
+ * Fetches Camp DevOps modules from backend: /api/modules/camp-devops
  *
- * @phase CAMP-DEVOPS-ALL-MODULES
+ * Camp DevOps only shows:
+ * - Linux 24/7
+ * - Linux Tentaplugg
+ * - Hands On Lab
+ *
+ * All other modules are available in SkillsMaps (/skillsmaps).
+ *
+ * @phase CAMP-DEVOPS-3-MODULES
  */
 
 import React, { useState, useEffect } from "react"
@@ -391,9 +397,10 @@ export default function ModulesPage() {
 
         try {
             // ================================================================
-            // FETCH FROM BACKEND CONTENT SOURCE (Single Source of Truth)
+            // FETCH CAMP DEVOPS MODULES ONLY (3 modules)
+            // All other modules available in SkillsMaps
             // ================================================================
-            const res = await fetch(`${API_BASE_URL}/api/modules/full`)
+            const res = await fetch(`${API_BASE_URL}/api/modules/camp-devops`)
 
             if (!res.ok) {
                 throw new Error("Backend unavailable")

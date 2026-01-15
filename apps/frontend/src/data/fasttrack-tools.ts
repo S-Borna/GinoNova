@@ -292,6 +292,108 @@ json.dumps(User("Alice"), default=serialize)`
         },
         useCases: ["Python projects (pyproject.toml)", "Rust projects (Cargo.toml)", "Hugo sites", "Konfigurationsfiler"],
         keyFeatures: ["Explicit typning", "Nested tables", "Datum/tid-stöd", "Inline tables"],
+        codeExamples: [
+            {
+                title: "TOML Grundsyntax",
+                description: "Grundläggande TOML-struktur och datatyper",
+                language: "toml",
+                code: `# Kommentar
+title = "DevOps Config"
+
+[owner]
+name = "Gino Nova"
+dob = 1979-05-27T07:32:00-08:00  # First class datum/tid!
+
+[database]
+enabled = true
+ports = [ 8000, 8001, 8002 ]
+data = [ ["delta", "phi"], [3.14] ]
+hosts = [
+  "alpha",
+  "omega"
+]
+
+[servers]
+
+  [servers.alpha]
+  ip = "10.0.0.1"
+  role = "frontend"
+
+  [servers.beta]
+  ip = "10.0.0.2"
+  role = "backend"`
+            },
+            {
+                title: "pyproject.toml Exempel",
+                description: "Modern Python-projektkonfiguration med pyproject.toml",
+                language: "toml",
+                code: `[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "my-devops-tool"
+version = "1.0.0"
+description = "A DevOps automation tool"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "DevOps Team", email = "team@devops.io" }
+]
+dependencies = [
+    "requests>=2.28.0",
+    "pyyaml>=6.0",
+    "click>=8.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "black>=23.0",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+devtool = "my_devops_tool.cli:main"
+
+[tool.black]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.11"
+strict = true`
+            },
+            {
+                title: "Python TOML-hantering",
+                description: "Läs och skriv TOML med Python",
+                language: "python",
+                code: `import tomllib  # Python 3.11+ (inbyggt!)
+import tomli_w  # För att skriva TOML
+
+# Läs TOML (Python 3.11+)
+with open("pyproject.toml", "rb") as f:
+    config = tomllib.load(f)
+    
+print(config["project"]["name"])
+print(config["project"]["dependencies"])
+
+# Skriv TOML (med tomli-w)
+data = {
+    "project": {
+        "name": "my-app",
+        "version": "2.0.0",
+        "dependencies": ["requests", "click"],
+    },
+    "tool": {
+        "black": {"line-length": 88}
+    }
+}
+
+with open("config.toml", "wb") as f:
+    tomli_w.dump(data, f)`
+            }
+        ],
         officialUrl: "https://toml.io",
         docsUrl: "https://toml.io/en/v1.0.0",
         flashcardCount: 10,
@@ -424,6 +526,72 @@ docker volume rm mydata`
         },
         useCases: ["Rootless containers", "Docker replacement", "Pod management", "Systemd integration"],
         keyFeatures: ["Daemonless", "Rootless", "Pod support", "Docker-kompatibel", "Systemd integration"],
+        codeExamples: [
+            {
+                title: "Podman vs Docker Kommandon",
+                description: "Podman har samma CLI som Docker - byt bara ut 'docker' mot 'podman'",
+                language: "bash",
+                code: `# Kör container (rootless by default!)
+podman run -d -p 8080:80 nginx:alpine
+
+# Lista containers
+podman ps -a
+
+# Bygga image från Dockerfile
+podman build -t myapp:latest .
+
+# Visa loggar
+podman logs -f container_name
+
+# Gå in i container
+podman exec -it container_name /bin/sh
+
+# Alias för Docker-kompatibilitet
+alias docker=podman`
+            },
+            {
+                title: "Podman Pods",
+                description: "Pods grupperar containers som delar network namespace (som Kubernetes)",
+                language: "bash",
+                code: `# Skapa en pod
+podman pod create --name mypod -p 8080:80
+
+# Kör containers i podden
+podman run -d --pod mypod nginx:alpine
+podman run -d --pod mypod redis:alpine
+
+# Lista pods
+podman pod ls
+
+# Visa containers i en pod
+podman pod inspect mypod
+
+# Stoppa hela podden
+podman pod stop mypod
+
+# Ta bort pod (inkl containers)
+podman pod rm mypod`
+            },
+            {
+                title: "Podman Systemd Integration",
+                description: "Generera systemd service-filer för containers",
+                language: "bash",
+                code: `# Generera systemd unit-fil från körande container
+podman generate systemd --new --name myapp > myapp.service
+
+# Eller för en pod
+podman generate systemd --new --name mypod --files
+
+# Installera som user service
+mkdir -p ~/.config/systemd/user/
+cp myapp.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now myapp
+
+# Kör container vid boot (lingering)
+loginctl enable-linger $USER`
+            }
+        ],
         officialUrl: "https://podman.io",
         docsUrl: "https://docs.podman.io",
         flashcardCount: 12,
@@ -1059,6 +1227,94 @@ echo "Host: \${info[hostname]}"`
         },
         useCases: ["Docker base images", "Minimal containers", "Edge computing", "Security-focused systems"],
         keyFeatures: ["musl libc", "BusyBox", "apk package manager", "~5MB storlek", "Security-hardened"],
+        codeExamples: [
+            {
+                title: "apk Pakethantering",
+                description: "Alpine's pakethanterare - snabb och enkel",
+                language: "bash",
+                code: `# Uppdatera paketindex
+apk update
+
+# Installera paket
+apk add nginx curl git
+
+# Installera utan cache (sparar utrymme i Docker)
+apk add --no-cache python3 py3-pip
+
+# Sök efter paket
+apk search nginx
+
+# Visa paketinfo
+apk info nginx
+
+# Lista installerade paket
+apk list --installed
+
+# Ta bort paket
+apk del nginx
+
+# Uppgradera alla paket
+apk upgrade`
+            },
+            {
+                title: "Alpine Dockerfile Best Practices",
+                description: "Optimerad Dockerfile med Alpine",
+                language: "dockerfile",
+                code: `# Multi-stage build med Alpine
+FROM python:3.11-alpine AS builder
+
+# Installera build dependencies
+RUN apk add --no-cache \\
+    gcc \\
+    musl-dev \\
+    libffi-dev
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# Production stage
+FROM python:3.11-alpine
+WORKDIR /app
+
+# Kopiera endast installerade packages
+COPY --from=builder /root/.local /root/.local
+COPY . .
+
+# Skapa non-root user
+RUN adduser -D -u 1000 appuser
+USER appuser
+
+ENV PATH=/root/.local/bin:$PATH
+CMD ["python", "app.py"]`
+            },
+            {
+                title: "Alpine Service Management",
+                description: "OpenRC istället för systemd",
+                language: "bash",
+                code: `# Alpine använder OpenRC (inte systemd)
+
+# Starta/stoppa tjänst
+rc-service nginx start
+rc-service nginx stop
+rc-service nginx restart
+
+# Enable vid boot
+rc-update add nginx default
+
+# Disable vid boot
+rc-update del nginx default
+
+# Lista alla tjänster
+rc-status
+
+# Se specifik runlevel
+rc-status --runlevel default
+
+# Manuell service-kontroll
+/etc/init.d/nginx status`
+            }
+        ],
         officialUrl: "https://alpinelinux.org",
         docsUrl: "https://wiki.alpinelinux.org",
         flashcardCount: 10,
@@ -1333,6 +1589,94 @@ sudo nginx -T                  # Visa hela config`
         },
         useCases: ["Flexibla funktioner", "Wrapper functions", "Decorators", "API design", "Config passing"],
         keyFeatures: ["Dictionary unpacking", "Valfria parametrar", "Forwarding arguments", "Kombination med *args"],
+        codeExamples: [
+            {
+                title: "*args och **kwargs Grunderna",
+                description: "Flexibla funktionsparametrar",
+                language: "python",
+                code: `# *args - fångar positional arguments som tuple
+def sum_all(*args):
+    return sum(args)
+
+print(sum_all(1, 2, 3, 4))  # 10
+
+# **kwargs - fångar keyword arguments som dict
+def create_user(**kwargs):
+    print(f"Creating user with: {kwargs}")
+    return kwargs
+
+user = create_user(name="Alice", role="admin", active=True)
+# Output: Creating user with: {'name': 'Alice', 'role': 'admin', 'active': True}
+
+# Kombinera båda
+def flexible_func(*args, **kwargs):
+    print(f"Args: {args}")
+    print(f"Kwargs: {kwargs}")
+
+flexible_func(1, 2, 3, name="test", value=42)
+# Args: (1, 2, 3)
+# Kwargs: {'name': 'test', 'value': 42}`
+            },
+            {
+                title: "Dict/List Unpacking",
+                description: "Packa upp datastrukturer med * och **",
+                language: "python",
+                code: `# Unpacking i funktionsanrop
+def deploy(service, version, replicas=1):
+    print(f"Deploying {service}:{version} with {replicas} replicas")
+
+# Från dictionary
+config = {"service": "nginx", "version": "1.25", "replicas": 3}
+deploy(**config)  # Unpacking dict till kwargs
+
+# Från lista
+params = ["redis", "7.2"]
+deploy(*params)  # Unpacking list till args
+
+# Kombinera
+base_config = {"version": "latest"}
+deploy("postgres", **base_config, replicas=2)
+
+# Merga dictionaries (Python 3.9+)
+defaults = {"timeout": 30, "retries": 3}
+overrides = {"retries": 5, "debug": True}
+final = {**defaults, **overrides}  # {'timeout': 30, 'retries': 5, 'debug': True}`
+            },
+            {
+                title: "Wrapper Functions & Decorators",
+                description: "Forwarda arguments genom wrappers",
+                language: "python",
+                code: `import functools
+import time
+
+# Decorator som preservar original function signatur
+def timing_decorator(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        result = func(*args, **kwargs)  # Forward alla args!
+        elapsed = time.time() - start
+        print(f"{func.__name__} took {elapsed:.3f}s")
+        return result
+    return wrapper
+
+@timing_decorator
+def process_data(items, multiplier=1, verbose=False):
+    if verbose:
+        print(f"Processing {len(items)} items")
+    return [x * multiplier for x in items]
+
+# Wrapper som lägger till defaults
+def with_defaults(func):
+    default_kwargs = {"timeout": 30, "retry": True}
+    
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        merged = {**default_kwargs, **kwargs}
+        return func(*args, **merged)
+    return wrapper`
+            }
+        ],
         docsUrl: "https://docs.python.org/3/tutorial/controlflow.html#keyword-arguments",
         flashcardCount: 8,
         quizCount: 6
@@ -1349,6 +1693,141 @@ sudo nginx -T                  # Visa hela config`
         },
         useCases: ["OOP", "Data modeling", "Encapsulation", "Inheritance", "Polymorphism"],
         keyFeatures: ["__init__", "self", "Inheritance", "Class methods", "Static methods", "Properties", "Dunder methods"],
+        codeExamples: [
+            {
+                title: "Klass Grunderna",
+                description: "Skapa klasser med attribut och metoder",
+                language: "python",
+                code: `class Server:
+    """En server-klass för DevOps-hantering."""
+    
+    # Class attribute (delad av alla instanser)
+    server_count = 0
+    
+    def __init__(self, hostname: str, ip: str, port: int = 22):
+        # Instance attributes
+        self.hostname = hostname
+        self.ip = ip
+        self.port = port
+        self.status = "stopped"
+        Server.server_count += 1
+    
+    def start(self):
+        """Starta servern."""
+        self.status = "running"
+        print(f"{self.hostname} is now running")
+    
+    def stop(self):
+        self.status = "stopped"
+    
+    def __str__(self):
+        return f"Server({self.hostname} @ {self.ip})"
+    
+    def __repr__(self):
+        return f"Server(hostname='{self.hostname}', ip='{self.ip}')"
+
+# Användning
+web = Server("web-01", "10.0.1.10")
+db = Server("db-01", "10.0.1.20", port=5432)
+web.start()
+print(Server.server_count)  # 2`
+            },
+            {
+                title: "Inheritance & Polymorphism",
+                description: "Arv och metodöverlagring",
+                language: "python",
+                code: `from abc import ABC, abstractmethod
+
+# Abstract base class
+class Container(ABC):
+    def __init__(self, name: str, image: str):
+        self.name = name
+        self.image = image
+    
+    @abstractmethod
+    def start(self):
+        pass
+    
+    @abstractmethod
+    def stop(self):
+        pass
+
+class DockerContainer(Container):
+    def start(self):
+        print(f"docker run {self.image} --name {self.name}")
+    
+    def stop(self):
+        print(f"docker stop {self.name}")
+
+class PodmanContainer(Container):
+    def start(self):
+        print(f"podman run {self.image} --name {self.name}")
+    
+    def stop(self):
+        print(f"podman stop {self.name}")
+
+# Polymorphism - samma interface, olika implementation
+def deploy_containers(containers: list[Container]):
+    for c in containers:
+        c.start()  # Anropar rätt implementation
+
+containers = [
+    DockerContainer("web", "nginx:alpine"),
+    PodmanContainer("api", "python:3.11"),
+]
+deploy_containers(containers)`
+            },
+            {
+                title: "Properties & Class Methods",
+                description: "Avancerade attribut och metoder",
+                language: "python",
+                code: `from dataclasses import dataclass
+from datetime import datetime
+
+class Deployment:
+    _deployments = []  # Class-level tracking
+    
+    def __init__(self, service: str, version: str):
+        self._service = service
+        self._version = version
+        self._deployed_at = None
+        Deployment._deployments.append(self)
+    
+    @property
+    def service(self):
+        """Getter - read-only access."""
+        return self._service
+    
+    @property
+    def version(self):
+        return self._version
+    
+    @version.setter
+    def version(self, value: str):
+        """Setter med validering."""
+        if not value:
+            raise ValueError("Version cannot be empty")
+        self._version = value
+        self._deployed_at = datetime.now()
+    
+    @classmethod
+    def get_all(cls) -> list:
+        """Class method - tillgång till class state."""
+        return cls._deployments
+    
+    @staticmethod
+    def validate_version(version: str) -> bool:
+        """Static method - ingen tillgång till self/cls."""
+        import re
+        return bool(re.match(r'^\\d+\\.\\d+\\.\\d+$', version))
+
+# Användning
+d = Deployment("nginx", "1.24.0")
+d.version = "1.25.0"  # Använder setter
+print(Deployment.get_all())  # Class method
+print(Deployment.validate_version("1.0.0"))  # Static method`
+            }
+        ],
         docsUrl: "https://docs.python.org/3/tutorial/classes.html",
         flashcardCount: 15,
         quizCount: 12
@@ -2927,6 +3406,89 @@ cat access.log | grep "POST" | grep -c "200"  # Lyckade POSTs`
         },
         useCases: ["Text replacement", "Line deletion", "Text transformation", "Config file editing", "Batch processing"],
         keyFeatures: ["s/find/replace/", "-i in-place", "-n suppress", "Address ranges", "Hold buffer", "Multiple commands"],
+        codeExamples: [
+            {
+                title: "Find & Replace",
+                description: "Sök och ersätt text med sed",
+                language: "bash",
+                code: `# Grundläggande ersättning (första på varje rad)
+sed 's/old/new/' file.txt
+
+# Ersätt ALLA förekomster (global)
+sed 's/old/new/g' file.txt
+
+# Case-insensitive
+sed 's/error/ERROR/gi' logfile.txt
+
+# In-place editering (ändra fil direkt)
+sed -i 's/localhost/0.0.0.0/g' config.conf
+
+# Med backup
+sed -i.bak 's/localhost/0.0.0.0/g' config.conf
+
+# Andra delimiter (för paths)
+sed 's|/var/log|/opt/logs|g' config.txt
+sed 's#http://#https://#g' urls.txt
+
+# Ersätt bara på specifik rad
+sed '5s/old/new/' file.txt        # Bara rad 5
+sed '10,20s/old/new/g' file.txt   # Rad 10-20`
+            },
+            {
+                title: "Rad-operationer",
+                description: "Ta bort, infoga och modifiera rader",
+                language: "bash",
+                code: `# Ta bort rad
+sed '5d' file.txt                # Ta bort rad 5
+sed '1,10d' file.txt             # Ta bort rad 1-10
+sed '/pattern/d' file.txt        # Ta bort rader med pattern
+sed '/^#/d' file.txt             # Ta bort kommentarer
+sed '/^$/d' file.txt             # Ta bort tomma rader
+
+# Infoga rad
+sed '3i\\New line here' file.txt     # Före rad 3
+sed '3a\\New line here' file.txt     # Efter rad 3
+sed '/pattern/a\\New line' file.txt  # Efter matchande rad
+
+# Visa specifika rader
+sed -n '5p' file.txt             # Visa bara rad 5
+sed -n '10,20p' file.txt         # Visa rad 10-20
+sed -n '/start/,/end/p' file.txt # Visa block
+
+# Skriv ut radnummer
+sed -n '=' file.txt              # Alla radnummer
+sed -n '/error/=' logfile.txt    # Radnummer för errors`
+            },
+            {
+                title: "Praktiska DevOps-exempel",
+                description: "sed i automation och scripts",
+                language: "bash",
+                code: `# Uppdatera config-fil
+sed -i 's/^DEBUG=.*/DEBUG=false/' .env
+sed -i 's/^PORT=.*/PORT=8080/' config.conf
+
+# Kommentera ut rad
+sed -i '/DISABLED_FEATURE/s/^/#/' config.txt
+
+# Avkommentera rad
+sed -i 's/^#ServerName/ServerName/' httpd.conf
+
+# Extrahera värde
+VERSION=$(sed -n 's/.*version": "\\([^"]*\\).*/\\1/p' package.json)
+
+# Processa loggar
+sed -n '/2024-01-15 10:/,/2024-01-15 11:/p' app.log
+
+# Multipla kommandon
+sed -e 's/foo/bar/g' -e 's/baz/qux/g' file.txt
+
+# Från script-fil
+sed -f transforms.sed input.txt
+
+# Pipeline med andra verktyg
+grep "ERROR" log.txt | sed 's/^.*ERROR: //' | sort | uniq -c`
+            }
+        ],
         docsUrl: "https://www.gnu.org/software/sed/manual/",
         flashcardCount: 10,
         quizCount: 7
@@ -2944,6 +3506,89 @@ cat access.log | grep "POST" | grep -c "200"  # Lyckade POSTs`
         },
         useCases: ["Log parsing", "CSV processing", "Report generation", "Data extraction", "Column manipulation"],
         keyFeatures: ["Field splitting", "Pattern matching", "Built-in variables", "Functions", "BEGIN/END blocks"],
+        codeExamples: [
+            {
+                title: "Kolumn-extraktion",
+                description: "AWK delar automatiskt på whitespace",
+                language: "bash",
+                code: `# Skriv ut specifik kolumn
+awk '{print $1}' file.txt         # Första kolumnen
+awk '{print $NF}' file.txt        # Sista kolumnen
+awk '{print $1, $3}' file.txt     # Kolumn 1 och 3
+
+# Custom separator
+awk -F':' '{print $1}' /etc/passwd    # : som separator
+awk -F',' '{print $2}' data.csv       # CSV
+
+# Output separator
+awk -F',' '{OFS="\t"; print $1, $2}' file.csv
+
+# ps + awk pipeline
+ps aux | awk '{print $1, $2, $11}'    # user, pid, command
+
+# Visa minneskonsumtion
+ps aux | awk '{print $4, $11}' | sort -rn | head -10
+
+# /etc/passwd parsing
+awk -F':' '{print $1 " has shell: " $7}' /etc/passwd`
+            },
+            {
+                title: "Pattern Matching & Filtering",
+                description: "Villkor och pattern för filtrering",
+                language: "bash",
+                code: `# Filtrera på mönster
+awk '/error/' logfile.txt             # Rader med "error"
+awk '!/debug/' logfile.txt            # Rader UTAN "debug"
+
+# Villkor på kolumn
+awk '$3 > 100' data.txt               # Kolumn 3 större än 100
+awk '$1 == "nginx"' services.txt      # Kolumn 1 är "nginx"
+awk 'length($0) > 80' file.txt        # Rader längre än 80 tecken
+
+# Kombinerade villkor
+awk '/error/ && $3 > 10' logfile.txt
+awk '$2 >= 50 && $2 <= 100' data.txt
+
+# Reguljära uttryck
+awk '$1 ~ /^web/' servers.txt         # Kolumn 1 börjar med "web"
+awk '$3 !~ /[0-9]/' file.txt          # Kolumn 3 har inga siffror
+
+# Range pattern (från-till)
+awk '/START/,/END/' logfile.txt       # Block mellan START och END`
+            },
+            {
+                title: "Beräkningar & Rapporter",
+                description: "Aggregering och statistik med AWK",
+                language: "bash",
+                code: `# Summera kolumn
+awk '{sum += $3} END {print "Total:", sum}' data.txt
+
+# Räkna rader
+awk 'END {print NR " lines"}' file.txt
+awk '/error/ {count++} END {print count " errors"}' logfile.txt
+
+# Genomsnitt
+awk '{sum += $2; n++} END {print "Avg:", sum/n}' data.txt
+
+# Min/Max
+awk 'NR==1 || $3>max {max=$3} END {print "Max:", max}' data.txt
+
+# Gruppera och räkna (som GROUP BY)
+awk '{count[$1]++} END {for (k in count) print k, count[k]}' access.log
+
+# BEGIN/END block
+awk 'BEGIN {print "=== REPORT ==="; OFS="\t"}
+     /error/ {errors++; print $1, $4}
+     END {print "Total errors:", errors}' logfile.txt
+
+# Formaterad output
+awk '{printf "%-20s %10d\\n", $1, $2}' data.txt
+
+# Aggregerad access log-analys
+awk '{urls[$7]++} END {for (u in urls) print urls[u], u}' \\
+    access.log | sort -rn | head -20`
+            }
+        ],
         docsUrl: "https://www.gnu.org/software/gawk/manual/",
         flashcardCount: 12,
         quizCount: 8

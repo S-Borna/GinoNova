@@ -475,9 +475,9 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 <Image
                                     src="/ginonova-logo-horizontal.svg"
                                     alt="GinoNova"
-                                    width={400}
-                                    height={100}
-                                    className="w-auto h-[110px]"
+                                    width={600}
+                                    height={150}
+                                    className="w-auto h-[165px]"
                                     priority
                                 />
                             </motion.div>
@@ -512,9 +512,9 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 <Image
                                     src="/ginonova-logo.svg"
                                     alt="GinoNova"
-                                    width={90}
-                                    height={90}
-                                    className="w-[90px] h-[90px]"
+                                    width={135}
+                                    height={135}
+                                    className="w-[135px] h-[135px]"
                                     priority
                                 />
                             </motion.div>

@@ -71,7 +71,7 @@ def list_full_modules(response: Response):
     """
     List ALL modules with full data including tasks and content.
 
-    This is the main endpoint for frontend to get all modules for listing pages.
+    This endpoint returns ALL modules (for SkillsMaps).
 
     Returns:
         List of all modules with full content
@@ -79,6 +79,23 @@ def list_full_modules(response: Response):
     add_phase_header(response)
     from ..db.seeds.content import get_all_modules
     return get_all_modules()
+
+
+@modules_router.get("/camp-devops")
+def list_camp_devops_modules(response: Response):
+    """
+    List Camp DevOps modules only (3 modules).
+
+    Returns only:
+    - Linux 24/7
+    - Linux Tentaplugg
+    - Hands On Lab
+
+    All other modules are available via /api/modules/full (SkillsMaps).
+    """
+    add_phase_header(response)
+    from ..db.seeds.content import get_camp_devops_modules
+    return get_camp_devops_modules()
 
 
 @modules_router.get("", response_model=list[ModulePublic])

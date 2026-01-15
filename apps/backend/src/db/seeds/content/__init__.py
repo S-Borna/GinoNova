@@ -158,22 +158,26 @@ def get_all_modules() -> list[dict]:
     return ALL_MODULES
 
 
+# Camp DevOps slugs - endast dessa 3 moduler visas på Camp DevOps sidan
+CAMP_DEVOPS_SLUGS = [
+    "linux-247",
+    "linux-tentaplugg",
+    "hands-on-lab",
+]
+
+
 def get_camp_devops_modules() -> list[dict]:
     """
-    Returnerar Camp DevOps moduler (DevOps-fokuserade).
-    Filtrera på track_slug om du vill separera.
+    Returnerar Camp DevOps moduler (3 huvudmoduler).
+
+    Endast:
+    - Linux 24/7
+    - Linux Tentaplugg
+    - Hands On Lab
+
+    Alla andra moduler finns enbart i SkillsMaps.
     """
-    return [
-        m
-        for m in ALL_MODULES
-        if m.get("track_slug")
-        in [
-            "foundation",
-            "cloud-infrastructure",
-            "containers-orchestration",
-            "platform-engineering",
-        ]
-    ]
+    return [m for m in ALL_MODULES if m.get("slug") in CAMP_DEVOPS_SLUGS]
 
 
 def get_module_by_slug(slug: str) -> Optional[dict]:

@@ -238,54 +238,74 @@ export function DallasAssistant() {
 
     // Simulate AI response (in production, this would call your backend AI service)
     const generateAIResponse = async (userMessage: string): Promise<string> => {
-        // Context-aware responses based on pathname
-        const context = pathname.includes("/modules/") ? "module" :
-            pathname.includes("/dashboard") ? "dashboard" :
-                pathname.includes("/modules") ? "modules-list" : "general"
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
-        // Simulate typing delay
-        await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
+        try {
+            // Call backend Dallas AI service (connected to OpenAI)
+            const response = await fetch(`${API_BASE_URL}/api/dallas/chat`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: userMessage,
+                    context: pathname.includes("/modules/") ? "module" :
+                        pathname.includes("/dashboard") ? "dashboard" : "general",
+                    user_name: "User"
+                }),
+            })
 
-        // Smart responses based on context and keywords
-        const lowerMessage = userMessage.toLowerCase()
+            if (response.ok) {
+                const data = await response.json()
+                return data.response || "Hmm, jag fick inget svar. Försök igen!"
+            }
 
-        // Help with concepts
-        if (lowerMessage.includes("explain") || lowerMessage.includes("what is")) {
-            return "Great question! Let me break this down for you:\n\n1. Start with the basics - understand the 'why' before the 'how'\n2. Try the hands-on exercises - they'll make concepts click\n3. Don't rush - mastery comes from practice\n\nNeed me to dive deeper into any specific part?"
+            // Fallback if backend fails
+            throw new Error("Backend unavailable")
+        } catch (error) {
+            console.error("Dallas API error:", error)
+
+            // Smart fallback responses
+            const lowerMessage = userMessage.toLowerCase()
+
+            // Help with concepts
+            if (lowerMessage.includes("explain") || lowerMessage.includes("what is")) {
+                return "Great question! Let me break this down for you:\n\n1. Start with the basics - understand the 'why' before the 'how'\n2. Try the hands-on exercises - they'll make concepts click\n3. Don't rush - mastery comes from practice\n\nNeed me to dive deeper into any specific part?"
+            }
+
+            // Hints
+            if (lowerMessage.includes("hint") || lowerMessage.includes("stuck")) {
+                return "I can see you're working through this challenge! Here's a nudge in the right direction:\n\n💡 Think about the command structure you learned earlier. What flag would help you see hidden files?\n\nTry it out and let me know how it goes!"
+            }
+
+            // Next steps
+            if (lowerMessage.includes("next") || lowerMessage.includes("should i learn")) {
+                return "Based on your progress, I recommend:\n\n🚀 Focus on Docker next - it's foundational for modern DevOps\n⏱️ Should take about 8-10 hours to complete\n💼 95% of DevOps jobs require container knowledge\n\nReady to dive in? The 'Docker Containers' module is waiting!"
+            }
+
+            // Progress check
+            if (lowerMessage.includes("progress") || lowerMessage.includes("how am i doing")) {
+                return "You're crushing it! 🎉\n\n✅ 3 modules completed\n⚡ 450 XP earned\n🔥 5-day learning streak\n\nYou're in the top 20% of learners this month. Keep up the amazing work!"
+            }
+
+            // Study tips
+            if (lowerMessage.includes("tips") || lowerMessage.includes("how to learn")) {
+                return "Here are my proven DevOps learning strategies:\n\n1. **Hands-on practice** - Don't just read, do!\n2. **Build real projects** - Portfolio > certificates\n3. **Learn in public** - Share what you learn\n4. **Join communities** - DevOps Reddit, Discord servers\n5. **Consistency > intensity** - 1 hour daily beats 7 hours Sunday\n\nWhich area do you want to focus on?"
+            }
+
+            // Career advice
+            if (lowerMessage.includes("job") || lowerMessage.includes("career")) {
+                return "Let's talk career strategy! 💼\n\n**Most in-demand skills right now:**\n- Kubernetes (top priority)\n- CI/CD pipelines\n- Cloud platforms (AWS/Azure)\n- Infrastructure as Code\n\n**My advice:** Master Docker first, then Kubernetes. That combo will open doors at 90% of companies.\n\nWant specific job search tips?"
+            }
+
+            // Default contextual response
+            if (pathname.includes("/modules/")) {
+                return "Jag är här för att hjälpa dig med denna modul! Fråga mig gärna om:\n\n- Förklaringar av koncept\n- Ledtrådar till övningar\n- Exempel från verkligheten\n- Ytterligare resurser\n\nVad skulle hjälpa dig mest just nu?"
+            }
+
+            // Generic helpful response
+            return "Jag är här för att guida dig på din DevOps-resa! 🐺\n\n- Frågor om moduler och koncept\n- Personliga lärrekommendationer\n- Hjälp när du kör fast\n- Karriärråd och studietips\n\nVad vill du veta?"
         }
-
-        // Hints
-        if (lowerMessage.includes("hint") || lowerMessage.includes("stuck")) {
-            return "I can see you're working through this challenge! Here's a nudge in the right direction:\n\n💡 Think about the command structure you learned earlier. What flag would help you see hidden files?\n\nTry it out and let me know how it goes!"
-        }
-
-        // Next steps
-        if (lowerMessage.includes("next") || lowerMessage.includes("should i learn")) {
-            return "Based on your progress, I recommend:\n\n🚀 Focus on Docker next - it's foundational for modern DevOps\n⏱️ Should take about 8-10 hours to complete\n💼 95% of DevOps jobs require container knowledge\n\nReady to dive in? The 'Docker Containers' module is waiting!"
-        }
-
-        // Progress check
-        if (lowerMessage.includes("progress") || lowerMessage.includes("how am i doing")) {
-            return "You're crushing it! 🎉\n\n✅ 3 modules completed\n⚡ 450 XP earned\n🔥 5-day learning streak\n\nYou're in the top 20% of learners this month. Keep up the amazing work!"
-        }
-
-        // Study tips
-        if (lowerMessage.includes("tips") || lowerMessage.includes("how to learn")) {
-            return "Here are my proven DevOps learning strategies:\n\n1. **Hands-on practice** - Don't just read, do!\n2. **Build real projects** - Portfolio > certificates\n3. **Learn in public** - Share what you learn\n4. **Join communities** - DevOps Reddit, Discord servers\n5. **Consistency > intensity** - 1 hour daily beats 7 hours Sunday\n\nWhich area do you want to focus on?"
-        }
-
-        // Career advice
-        if (lowerMessage.includes("job") || lowerMessage.includes("career")) {
-            return "Let's talk career strategy! 💼\n\n**Most in-demand skills right now:**\n- Kubernetes (top priority)\n- CI/CD pipelines\n- Cloud platforms (AWS/Azure)\n- Infrastructure as Code\n\n**My advice:** Master Docker first, then Kubernetes. That combo will open doors at 90% of companies.\n\nWant specific job search tips?"
-        }
-
-        // Default contextual response
-        if (context === "module") {
-            return "I'm here to help you with this module! Feel free to ask me to:\n\n- Explain concepts in simpler terms\n- Give you hints on exercises\n- Share real-world examples\n- Suggest additional resources\n\nWhat would be most helpful right now?"
-        }
-
-        // Generic helpful response
-        return "I'm here to help you on your DevOps journey! I can:\n\n- Answer questions about modules and concepts\n- Give you personalized learning recommendations\n- Help when you're stuck on exercises\n- Share career advice and study tips\n\nWhat would you like to know?"
     }
 
     const handleSend = async () => {
