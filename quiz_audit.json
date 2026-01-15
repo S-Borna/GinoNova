@@ -1,0 +1,9892 @@
+{
+  "Nod10_Docker_Compose_IaC_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilket kommando startar hela miljön definierad i `docker-compose.yml`?",
+      "raw_options": [
+        [
+          "A",
+          "`docker run all`"
+        ],
+        [
+          "B",
+          "`docker-compose start`"
+        ],
+        [
+          "C",
+          "`docker-compose up`"
+        ],
+        [
+          "D",
+          "`docker start compose`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vad händer om du kör `docker-compose up` utan `-d`?",
+      "raw_options": [
+        [
+          "A",
+          "Inget händer."
+        ],
+        [
+          "B",
+          "Loggarna från alla tjänster streamas till din terminal och låser den."
+        ],
+        [
+          "C",
+          "Det fungerar inte."
+        ],
+        [
+          "D",
+          "Det körs i bakgrunden ändå."
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilken fil används automatiskt för att skriva över inställningar lokalt?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose.local.yml`"
+        ],
+        [
+          "B",
+          "`docker-compose.override.yml`"
+        ],
+        [
+          "C",
+          "`docker-compose.dev.yml`"
+        ],
+        [
+          "D",
+          "`.env`"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder `depends_on: - db`?",
+      "raw_options": [
+        [
+          "A",
+          "Tjänsten startar efter `db`."
+        ],
+        [
+          "B",
+          "Tjänsten kraschar om `db` dör."
+        ],
+        [
+          "C",
+          "Tjänsten delar nätverk med `db`."
+        ],
+        [
+          "D",
+          "Tjänsten monterar `db` som volym."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Hur refererar du till en annan tjänst i samma stack nätverksmässigt?",
+      "raw_options": [
+        [
+          "A",
+          "Via IP-adress."
+        ],
+        [
+          "B",
+          "Via tjänstenamnet (t.ex. `http://ws:8080`)."
+        ],
+        [
+          "C",
+          "Via localhost."
+        ],
+        [
+          "D",
+          "Via host-maskinens IP."
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vad gör `docker-compose down -v`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort containers."
+        ],
+        [
+          "B",
+          "Tar bort containers och nätverk."
+        ],
+        [
+          "C",
+          "Tar bort containers, nätverk OCH volymer."
+        ],
+        [
+          "D",
+          "Validerar filen."
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Var ska du lagra databas-lösenord för att inte hardkoda dem i YAML?",
+      "raw_options": [
+        [
+          "A",
+          "I en textfil på skrivbordet."
+        ],
+        [
+          "B",
+          "I `.env`-filen."
+        ],
+        [
+          "C",
+          "I Dockerfile."
+        ],
+        [
+          "D",
+          "I containernamnet."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad är YAML-regeln för listor?",
+      "raw_options": [
+        [
+          "A",
+          "Använd `*`."
+        ],
+        [
+          "B",
+          "Använd `-` (bindestreck)."
+        ],
+        [
+          "C",
+          "Använd `1.`."
+        ],
+        [
+          "D",
+          "Använd `[]`."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Hur skalar du tjänsten \"worker\" till 5 instanser?",
+      "raw_options": [
+        [
+          "A",
+          "Ändra i YAML och kör `up`."
+        ],
+        [
+          "B",
+          "`docker-compose scale worker=5`."
+        ],
+        [
+          "C",
+          "`docker-compose up --scale worker=5`."
+        ],
+        [
+          "D",
+          "Alla ovanstående fungerar (men C är modernast)."
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vad händer om indenteringen är fel i YAML-filen?",
+      "raw_options": [
+        [
+          "A",
+          "Docker gissar vad du menar."
+        ],
+        [
+          "B",
+          "Det blir ett syntax-error (`scanner mapping error`)."
+        ],
+        [
+          "C",
+          "Det körs men med fel inställningar."
+        ],
+        [
+          "D",
+          "Inget."
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vilket kommando bygger om alla images i stacken?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose build`"
+        ],
+        [
+          "B",
+          "`docker build .`"
+        ],
+        [
+          "C",
+          "`docker-compose rebuild`"
+        ],
+        [
+          "D",
+          "`docker-compose up --force`"
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad är default-nätverksmodellen för Docker Compose?",
+      "raw_options": [
+        [
+          "A",
+          "Alla tjänster isoleras helt."
+        ],
+        [
+          "B",
+          "En gemensam brygga (bridge) skapas för projektet där alla kan nå varandra."
+        ],
+        [
+          "C",
+          "Host networking."
+        ],
+        [
+          "D",
+          "Inget nätverk."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Hur kan du se loggarna för BARA tjänsten \"db\"?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose logs`"
+        ],
+        [
+          "B",
+          "`docker-compose logs db`"
+        ],
+        [
+          "C",
+          "`tail -f db.log`"
+        ],
+        [
+          "D",
+          "`docker logs all`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad innebär `restart: always`?",
+      "raw_options": [
+        [
+          "A",
+          "Containern startar om var 5:e minut."
+        ],
+        [
+          "B",
+          "Containern startar om om den kraschar eller om Docker daemon startas om."
+        ],
+        [
+          "C",
+          "Containern går aldrig att stoppa."
+        ],
+        [
+          "D",
+          "Containern startar om vid build."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Vad är `docker-compose config`?",
+      "raw_options": [
+        [
+          "A",
+          "En editor för filen."
+        ],
+        [
+          "B",
+          "Visar den slutgiltiga konfigurationen efter att variabler och overrides slagits ihop (validerar syntax)."
+        ],
+        [
+          "C",
+          "Konfigurerar nätverket."
+        ],
+        [
+          "D",
+          "Sparar filen."
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Hur mappar du in nuvarande katalog som volym?",
+      "raw_options": [
+        [
+          "A",
+          "`- .:/app`"
+        ],
+        [
+          "B",
+          "`- .:/volume`"
+        ],
+        [
+          "C",
+          "`- $PWD:/app`"
+        ],
+        [
+          "D",
+          "`- vol:/app`"
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "I vilken sektion definierar du vilka portar som ska öppnas mot hosten?",
+      "raw_options": [
+        [
+          "A",
+          "`networks`"
+        ],
+        [
+          "B",
+          "`expose`"
+        ],
+        [
+          "C",
+          "`ports`"
+        ],
+        [
+          "D",
+          "`links`"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad gör `docker-compose pull`?",
+      "raw_options": [
+        [
+          "A",
+          "Hämtar senaste versionen av bilderna som anges i filen."
+        ],
+        [
+          "B",
+          "Hämtar koden från Git."
+        ],
+        [
+          "C",
+          "Startar containers."
+        ],
+        [
+          "D",
+          "Drar ner nätverket."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad är en fördel med att använda `env_file` istället för `environment`?",
+      "raw_options": [
+        [
+          "A",
+          "Snyggare YAML-fil om du har MÅNGA variabler."
+        ],
+        [
+          "B",
+          "Säkrare."
+        ],
+        [
+          "C",
+          "Snabbare."
+        ],
+        [
+          "D",
+          "Krävs för Windows."
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Om du ändrar i `docker-compose.yml`, vad måste du göra för att ändringen ska slå igenom?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose restart`"
+        ],
+        [
+          "B",
+          "`docker-compose up -d` (Docker upptäcker ändringen och reagerar smart)."
+        ],
+        [
+          "C",
+          "`docker-compose reload`"
+        ],
+        [
+          "D",
+          "Inget."
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är en \"Named Volume\" i Compose?",
+      "raw_options": [
+        [
+          "A",
+          "`volumes: - ./data:/data`"
+        ],
+        [
+          "B",
+          "`volumes: - mydata:/data` (och definierad längst ner under volumes:)."
+        ],
+        [
+          "C",
+          "`volumes: - /data`"
+        ],
+        [
+          "D",
+          "`volumes: - tmpfs`"
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Hur körs ett kommando inuti en tjänst som INTE körs med `up`?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose run <service> <cmd>`"
+        ],
+        [
+          "B",
+          "`docker-compose exec <service> <cmd>`"
+        ],
+        [
+          "C",
+          "`docker exec <service> <cmd>`"
+        ],
+        [
+          "D",
+          "`docker start <service>`"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vad händer med datan i en databas-tjänst om du glömt definiera en volym när du kör `down`?",
+      "raw_options": [
+        [
+          "A",
+          "Den sparas i `/tmp`."
+        ],
+        [
+          "B",
+          "Den försvinner permanent."
+        ],
+        [
+          "C",
+          "Den sparas i en anonym volym."
+        ],
+        [
+          "D",
+          "Docker varnar och vägrar stoppa."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad betyder `driver: local` under volumes?",
+      "raw_options": [
+        [
+          "A",
+          "Standard lagringsdrivrutin för Docker (lokalt på hosten)."
+        ],
+        [
+          "B",
+          "Lagring i molnet."
+        ],
+        [
+          "C",
+          "Tillfällig lagring."
+        ],
+        [
+          "D",
+          "USB-minne."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur sätter du ett specifikt IP-nummer på en tjänst?",
+      "raw_options": [
+        [
+          "A",
+          "`ip: 1.2.3.4`"
+        ],
+        [
+          "B",
+          "Under `networks:` -> `ipv4_address: ...`."
+        ],
+        [
+          "C",
+          "Det går inte i Compose."
+        ],
+        [
+          "D",
+          "`static_ip: ...`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad är syftet med `.dockerignore` vid build via Compose?",
+      "raw_options": [
+        [
+          "A",
+          "Ignorera filer vid `git push`."
+        ],
+        [
+          "B",
+          "Ignorera filer när build-context skickas till daemon (snabbar upp bygget)."
+        ],
+        [
+          "C",
+          "Ignorera fel."
+        ],
+        [
+          "D",
+          "Ignorera nätverk."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Kan du använda Docker Compose i produktion?",
+      "raw_options": [
+        [
+          "A",
+          "Nej, bara för dev."
+        ],
+        [
+          "B",
+          "Ja, för single-node deployments är det mycket vanligt."
+        ],
+        [
+          "C",
+          "Ja, men bara med Swarm."
+        ],
+        [
+          "D",
+          "Ja, men utan volymer."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Exekveras `command:` i YAML-filen före eller efter `ENTRYPOINT` i Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Före."
+        ],
+        [
+          "B",
+          "Efter (som argument till Entrypoint)."
+        ],
+        [
+          "C",
+          "Aldrig."
+        ],
+        [
+          "D",
+          "Samtidigt."
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad betyder `context: ./backend`?",
+      "raw_options": [
+        [
+          "A",
+          "Att Docker ska leta efter Dockerfile i mappen `backend`."
+        ],
+        [
+          "B",
+          "Att nätverket heter backend."
+        ],
+        [
+          "C",
+          "Att volymen heter backend."
+        ],
+        [
+          "D",
+          "Att kontexten är Linux."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Hur tar du bort \"orphaned containers\" (tjänster som tagits bort ur filen)?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose up --remove-orphans`"
+        ],
+        [
+          "B",
+          "`docker clean`"
+        ],
+        [
+          "C",
+          "Manuell radering."
+        ],
+        [
+          "D",
+          "`docker-compose down --orphans`"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vem äger standardnätverket som skapas?",
+      "raw_options": [
+        [
+          "A",
+          "Root."
+        ],
+        [
+          "B",
+          "Projektet (namngivet efter mappen)."
+        ],
+        [
+          "C",
+          "Ingen."
+        ],
+        [
+          "D",
+          "Systemet."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vad gör `docker-compose pause`?",
+      "raw_options": [
+        [
+          "A",
+          "Fryser processerna i containrarna (SIGSTOP)."
+        ],
+        [
+          "B",
+          "Stoppar containrarna."
+        ],
+        [
+          "C",
+          "Tar en paus."
+        ],
+        [
+          "D",
+          "Väntar 10 sekunder."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Kan du köra flera Compose-projekt på samma maskin?",
+      "raw_options": [
+        [
+          "A",
+          "Nej."
+        ],
+        [
+          "B",
+          "Ja, så länge de ligger i olika mappar (projekt-namnet baseras på mappen)."
+        ],
+        [
+          "C",
+          "Ja, om du ändrar portar."
+        ],
+        [
+          "D",
+          "Både B och C."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vad är `init: true` i version 3.7+?",
+      "raw_options": [
+        [
+          "A",
+          "Initialiserar databasen."
+        ],
+        [
+          "B",
+          "Lägger till en init-process (tini) som PID 1 för att hantera zombiesignaler."
+        ],
+        [
+          "C",
+          "Skapar en init-fil."
+        ],
+        [
+          "D",
+          "Startar om systemet."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad är \"secrets\" i Docker Compose?",
+      "raw_options": [
+        [
+          "A",
+          "Ett säkrare sätt att hantera lösenord än miljövariabler (sparade i filer, mountade i `/run/secrets`)."
+        ],
+        [
+          "B",
+          "Hemliga nätverk."
+        ],
+        [
+          "C",
+          "Krypterade images."
+        ],
+        [
+          "D",
+          "Dolt läge."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Om din app ansluter till databasen på `localhost` inuti containern, vad händer?",
+      "raw_options": [
+        [
+          "A",
+          "Det funkar."
+        ],
+        [
+          "B",
+          "Den försöker ansluta till sig själv (containern), inte DB-containern. Det misslyckas."
+        ],
+        [
+          "C",
+          "Docker routar om det till DB."
+        ],
+        [
+          "D",
+          "Den ansluter till hosten."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur tvingar du fram \"recreation\" av containers även om konfigurationen inte ändrats?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose up --force-recreate`"
+        ],
+        [
+          "B",
+          "`docker-compose restart`"
+        ],
+        [
+          "C",
+          "`docker-compose reload`"
+        ],
+        [
+          "D",
+          "Radera filen."
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad gör `working_dir: /app`?",
+      "raw_options": [
+        [
+          "A",
+          "Sätter arbetskatalog inuti containern (motsvarar `WORKDIR`)."
+        ],
+        [
+          "B",
+          "Sätter var filen sparas."
+        ],
+        [
+          "C",
+          "Sätter loggmapp."
+        ],
+        [
+          "D",
+          "Byter mapp på hosten."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vilket alternativ används för att begränsa logg-storlek?",
+      "raw_options": [
+        [
+          "A",
+          "`logging: driver: json-file options: max-size: 10m`"
+        ],
+        [
+          "B",
+          "`log-limit: 10m`"
+        ],
+        [
+          "C",
+          "Det går inte."
+        ],
+        [
+          "D",
+          "`ulimit -l`"
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Vad är \"Extension fields\" i YAML (`x-helper: &default-logging`)?",
+      "raw_options": [
+        [
+          "A",
+          "Ett sätt att återanvända konfigurationsblock (DRY - Don't Repeat Yourself) med anchors."
+        ],
+        [
+          "B",
+          "Extra plugins."
+        ],
+        [
+          "C",
+          "Felaktig syntax."
+        ],
+        [
+          "D",
+          "Experimentella funktioner."
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad händer om `docker-compose.yml` saknar `version`-fältet?",
+      "raw_options": [
+        [
+          "A",
+          "Det antas vara version 1 (gammal, legacy)."
+        ],
+        [
+          "B",
+          "Det fungerar inte."
+        ],
+        [
+          "C",
+          "Det antas vara senaste."
+        ],
+        [
+          "D",
+          "Det blir en varning."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vad gör `sysctls`?",
+      "raw_options": [
+        [
+          "A",
+          "Sätter kernel-parametrar för containern."
+        ],
+        [
+          "B",
+          "Startar systemet."
+        ],
+        [
+          "C",
+          "Kollar systemklockan."
+        ],
+        [
+          "D",
+          "Styr systemd."
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Om du har definierat `image: my-custom-image` OCH `build: .`, vad gör `docker-compose up`?",
+      "raw_options": [
+        [
+          "A",
+          "Bygger bilden och taggar den som `my-custom-image`."
+        ],
+        [
+          "B",
+          "Ignorerar build."
+        ],
+        [
+          "C",
+          "Ignorerar image."
+        ],
+        [
+          "D",
+          "Ger fel."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Hur ser du resursanvändning för din stack?",
+      "raw_options": [
+        [
+          "A",
+          "`docker-compose top`"
+        ],
+        [
+          "B",
+          "`docker stats` (visar alla containers)."
+        ],
+        [
+          "C",
+          "`docker-compose stats` (finns ej som standardkommando)."
+        ],
+        [
+          "D",
+          "A och B."
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Vad är skillnaden på `link` och `depends_on`?",
+      "raw_options": [
+        [
+          "A",
+          "`link` är deprecated (gammal teknik för nätverk). `depends_on` är för startordning."
+        ],
+        [
+          "B",
+          "Det är samma sak."
+        ],
+        [
+          "C",
+          "`link` är snabbare."
+        ],
+        [
+          "D",
+          "`depends_on` kopplar nätverk."
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "När ska man använda `network_mode: host`?",
+      "raw_options": [
+        [
+          "A",
+          "För maximal nätverksprestanda eller när containern ska agera som om den vore hosten."
+        ],
+        [
+          "B",
+          "Alltid."
+        ],
+        [
+          "C",
+          "Aldrig."
+        ],
+        [
+          "D",
+          "För databaser."
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Vilken nätverksdriver används om du inte anger något?",
+      "raw_options": [
+        [
+          "A",
+          "Bridge."
+        ],
+        [
+          "B",
+          "Overlay."
+        ],
+        [
+          "C",
+          "Macvlan."
+        ],
+        [
+          "D",
+          "Host."
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad betyder `rw` i volym-definitionen?",
+      "raw_options": [
+        [
+          "A",
+          "Read-Write (Standard)."
+        ],
+        [
+          "B",
+          "Re-Write."
+        ],
+        [
+          "C",
+          "Read-Wait."
+        ],
+        [
+          "D",
+          "Random-Write."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Kan du köra Windows och Linux containers i samma Compose-fil?",
+      "raw_options": [
+        [
+          "A",
+          "Nej, Docker Engine kör antingen eller."
+        ],
+        [
+          "B",
+          "Ja."
+        ],
+        [
+          "C",
+          "Bara i molnet."
+        ],
+        [
+          "D",
+          "Kanske."
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är den största fördelen med IaC?",
+      "raw_options": [
+        [
+          "A",
+          "Att man kan versionshantera och automatisera sin infrastruktur."
+        ],
+        [
+          "B",
+          "Att det är snabbt."
+        ],
+        [
+          "C",
+          "Att det är snyggt."
+        ],
+        [
+          "D",
+          "Att det är modernt."
+        ]
+      ]
+    }
+  ],
+  "Nod1_Filsystem_Grunder_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilken av följande kataloger ska endast innehålla binärer som krävs för att starta systemet i single-user mode?",
+      "raw_options": [
+        [
+          "A",
+          "`/usr/bin`"
+        ],
+        [
+          "B",
+          "`/bin`"
+        ],
+        [
+          "C",
+          "`/boot/bin`"
+        ],
+        [
+          "D",
+          "`/opt/bin`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Du söker efter konfigurationsfilen för SSH-servern. Var letar du först?",
+      "raw_options": [
+        [
+          "A",
+          "`/var/ssh/sshd_config`"
+        ],
+        [
+          "B",
+          "`/usr/local/ssh/config`"
+        ],
+        [
+          "C",
+          "`/etc/ssh/sshd_config`"
+        ],
+        [
+          "D",
+          "`/home/root/ssh_config`"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vad är det primära syftet med katalogen `/tmp`?",
+      "raw_options": [
+        [
+          "A",
+          "Att lagra temporära filer som kan raderas vid omstart."
+        ],
+        [
+          "B",
+          "Att lagra säkerhetskopior av systemet."
+        ],
+        [
+          "C",
+          "Att lagra användarnas personliga dokument."
+        ],
+        [
+          "D",
+          "Att installera tillfälliga applikationer."
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vilket uttalande stämmer bäst överens med Linux-filosofin angående hårdvara?",
+      "raw_options": [
+        [
+          "A",
+          "Hårdvara styrs enbart via grafiska drivrutiner."
+        ],
+        [
+          "B",
+          "Hårdvara representeras ofta som filer i `/dev`."
+        ],
+        [
+          "C",
+          "Hårdvara är helt dolt från filsystemet."
+        ],
+        [
+          "D",
+          "Hårdvara hanteras via systemregistret i `/reg`."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Om du vill se hur mycket diskutrymme som är ledigt på filsystemet, vilket kommando kör du?",
+      "raw_options": [
+        [
+          "A",
+          "`du -h`"
+        ],
+        [
+          "B",
+          "`ls -size`"
+        ],
+        [
+          "C",
+          "`df -h`"
+        ],
+        [
+          "D",
+          "`top memory`"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilken flagga till `rm` krävs för att radera en katalog som innehåller filer?",
+      "raw_options": [
+        [
+          "A",
+          "`rm -f`"
+        ],
+        [
+          "B",
+          "`rm -d`"
+        ],
+        [
+          "C",
+          "`rm -r`"
+        ],
+        [
+          "D",
+          "`rm -all`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad är skillnaden mellan en \"Hard Link\" och en \"Symbolic Link\"?",
+      "raw_options": [
+        [
+          "A",
+          "Hard links kan peka på kataloger, det kan inte symbolic links."
+        ],
+        [
+          "B",
+          "Symbolic links fungerar över olika partitioner, det gör inte hard links."
+        ],
+        [
+          "C",
+          "Symbolic links är snabbare att läsa än hard links."
+        ],
+        [
+          "D",
+          "Hard links tar mer plats på disken än symbolic links."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vilket kommando skapar en symbolisk länk från `data.txt` till `link.txt`?",
+      "raw_options": [
+        [
+          "A",
+          "`ln data.txt link.txt`"
+        ],
+        [
+          "B",
+          "`cp -s data.txt link.txt`"
+        ],
+        [
+          "C",
+          "`ln -s data.txt link.txt`"
+        ],
+        [
+          "D",
+          "`link -soft data.txt link.txt`"
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Du vill gå direkt till din hemkatalog. Vilket kommando fungerar INTE?",
+      "raw_options": [
+        [
+          "A",
+          "`cd`"
+        ],
+        [
+          "B",
+          "`cd ~`"
+        ],
+        [
+          "C",
+          "`cd $HOME`"
+        ],
+        [
+          "D",
+          "`cd /root` "
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vad visar kommandot `pwd`?",
+      "raw_options": [
+        [
+          "A",
+          "Ditt nuvarande lösenord (Print Working Data)."
+        ],
+        [
+          "B",
+          "Sökvägen till katalogen du står i (Print Working Directory)."
+        ],
+        [
+          "C",
+          "Prestandastatus för hårddisken (Performance Working Disk)."
+        ],
+        [
+          "D",
+          "Namnet på din användare (Print Working Developer)."
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vilken fil används för att definiera vilka diskar som ska monteras automatiskt?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/mtab`"
+        ],
+        [
+          "B",
+          "`/etc/fstab`"
+        ],
+        [
+          "C",
+          "`/boot/mounts`"
+        ],
+        [
+          "D",
+          "`/etc/disks`"
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad är en \"Mount Point\" i Linux?",
+      "raw_options": [
+        [
+          "A",
+          "En fysisk kontakt på moderkortet."
+        ],
+        [
+          "B",
+          "En katalog där ett filsystem görs tillgängligt."
+        ],
+        [
+          "C",
+          "En typ av hårddiskpartition."
+        ],
+        [
+          "D",
+          "En säkerhetsnyckel för kryptering."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilket kommando visar innehållet i en stor textfil sida för sida?",
+      "raw_options": [
+        [
+          "A",
+          "`cat filen.txt`"
+        ],
+        [
+          "B",
+          "`echo filen.txt`"
+        ],
+        [
+          "C",
+          "`less filen.txt`"
+        ],
+        [
+          "D",
+          "`grep filen.txt`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad betyder `.` (punkt) i början av ett filnamn (t.ex. `.bashrc`)?",
+      "raw_options": [
+        [
+          "A",
+          "Att filen är en systemfil och inte får raderas."
+        ],
+        [
+          "B",
+          "Att filen är skadad."
+        ],
+        [
+          "C",
+          "Att filen är \"dold\" och inte visas av standard `ls`."
+        ],
+        [
+          "D",
+          "Att filen är en körbar binärfil."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Vilket tecken används för att separera kataloger i en sökväg i Linux?",
+      "raw_options": [
+        [
+          "A",
+          "Backslash `\\`"
+        ],
+        [
+          "B",
+          "Forward slash `/`"
+        ],
+        [
+          "C",
+          "Pipe `|`"
+        ],
+        [
+          "D",
+          "Kolon `:`"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad gör kommandot `touch minfil.txt` om filen redan finns?",
+      "raw_options": [
+        [
+          "A",
+          "Det raderar filens innehåll."
+        ],
+        [
+          "B",
+          "Det skapar en kopia som heter `minfil.txt.bak`."
+        ],
+        [
+          "C",
+          "Det uppdaterar filens tidsstämpel (modifierad tid)."
+        ],
+        [
+          "D",
+          "Det ger ett felmeddelande och avslutas."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Vilken katalog innehåller information om körande processer?",
+      "raw_options": [
+        [
+          "A",
+          "`/sys/active`"
+        ],
+        [
+          "B",
+          "`/var/run`"
+        ],
+        [
+          "C",
+          "`/proc`"
+        ],
+        [
+          "D",
+          "`/dev/procs`"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Du vill kopiera en fil och samtidigt byta namn på kopian. Vilket kommando?",
+      "raw_options": [
+        [
+          "A",
+          "`cp fil.txt nyfil.txt`"
+        ],
+        [
+          "B",
+          "`mv fil.txt nyfil.txt`"
+        ],
+        [
+          "C",
+          "`cat fil.txt > nyfil.txt`"
+        ],
+        [
+          "D",
+          "Både A och C fungerar tekniskt sett."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad är `/dev/null`?",
+      "raw_options": [
+        [
+          "A",
+          "En fil som innehåller nollor."
+        ],
+        [
+          "B",
+          "En enhet som kastar all data som skrivs till den."
+        ],
+        [
+          "C",
+          "Root-användarens papperskorg."
+        ],
+        [
+          "D",
+          "En loggfil för systemfel."
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Vilket kommando listar filer med detaljerad information (rättigheter, storlek, ägare)?",
+      "raw_options": [
+        [
+          "A",
+          "`ls -a`"
+        ],
+        [
+          "B",
+          "`ls -l`"
+        ],
+        [
+          "C",
+          "`ls -x`"
+        ],
+        [
+          "D",
+          "`ls -d`"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är en \"absolut sökväg\"?",
+      "raw_options": [
+        [
+          "A",
+          "En sökväg som börjar från roten `/`."
+        ],
+        [
+          "B",
+          "En sökväg som börjar från nuvarande katalog."
+        ],
+        [
+          "C",
+          "En sökväg som innehåller specialtecken."
+        ],
+        [
+          "D",
+          "En sökväg som bara root kan komma åt."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "I vilken ordning skapar du en krypterad volym korrekt?",
+      "raw_options": [
+        [
+          "A",
+          "Filsystem -> LUKS -> Partition."
+        ],
+        [
+          "B",
+          "LUKS -> Partition -> Filsystem."
+        ],
+        [
+          "C",
+          "Partition -> LUKS -> Filsystem."
+        ],
+        [
+          "D",
+          "Partition -> Filsystem -> Montering."
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vilken katalog är avsedd för \"variable data\" som loggar och spool-filer?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc`"
+        ],
+        [
+          "B",
+          "`/lib`"
+        ],
+        [
+          "C",
+          "`/var`"
+        ],
+        [
+          "D",
+          "`/opt`"
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad händer om du flyttar (`mv`) en fil från en partition till en annan?",
+      "raw_options": [
+        [
+          "A",
+          "Linux uppdaterar bara inoden (snabbt)."
+        ],
+        [
+          "B",
+          "Linux kopierar datan och tar sedan bort originalet (långsammare)."
+        ],
+        [
+          "C",
+          "Det går inte att flytta filer mellan partitioner."
+        ],
+        [
+          "D",
+          "Filen konverteras till en symbolisk länk."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Vad är ext4?",
+      "raw_options": [
+        [
+          "A",
+          "Ett protokoll för nätverksöverföring."
+        ],
+        [
+          "B",
+          "Det vanligaste filsystemet för Linux-partitioner."
+        ],
+        [
+          "C",
+          "En typ av kryptering."
+        ],
+        [
+          "D",
+          "Ett program för att packa upp zip-filer."
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vilket kommando visar de sista raderna i en fil?",
+      "raw_options": [
+        [
+          "A",
+          "`head`"
+        ],
+        [
+          "B",
+          "`bottom`"
+        ],
+        [
+          "C",
+          "`tail`"
+        ],
+        [
+          "D",
+          "`end`"
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Du har råkat ta bort en fil med `rm`. Hur återställer du den enklast?",
+      "raw_options": [
+        [
+          "A",
+          "Går till papperskorgen i `/home/.trash`."
+        ],
+        [
+          "B",
+          "Kör `rm -undo`."
+        ],
+        [
+          "C",
+          "Normalt sett går det inte att ångra `rm` i terminalen."
+        ],
+        [
+          "D",
+          "Startar om datorn."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Vilken katalog innehåller vanligen hemkataloger för \"vanliga\" användare?",
+      "raw_options": [
+        [
+          "A",
+          "`/usr/users`"
+        ],
+        [
+          "B",
+          "`/root`"
+        ],
+        [
+          "C",
+          "`/home`"
+        ],
+        [
+          "D",
+          "`/users`"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad innebär `..` i kommandot `cd ..`?",
+      "raw_options": [
+        [
+          "A",
+          "Hemkatalogen."
+        ],
+        [
+          "B",
+          "Rotkatalogen."
+        ],
+        [
+          "C",
+          "Föräldrakatalogen (en nivå upp)."
+        ],
+        [
+          "D",
+          "Senaste katalogen."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Vilket kommando skapar en hel katalogstruktur på en gång (t.ex. `år/månad/dag`)?",
+      "raw_options": [
+        [
+          "A",
+          "`mkdir -r år/månad/dag`"
+        ],
+        [
+          "B",
+          "`mkdir -p år/månad/dag`"
+        ],
+        [
+          "C",
+          "`mkdir -all år/månad/dag`"
+        ],
+        [
+          "D",
+          "`create dir år/månad/dag`"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad är syftet med `/opt`?",
+      "raw_options": [
+        [
+          "A",
+          "\"Optional\" mjukvara, ofta stora tredjepartspaket."
+        ],
+        [
+          "B",
+          "\"Optimal\" systemprestanda-filer."
+        ],
+        [
+          "C",
+          "\"Operators\" hemkataloger."
+        ],
+        [
+          "D",
+          "\"Options\" för systemkonfiguration."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vilken fil används för namnupplösning (hosts) innan DNS tillfrågas?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/dns`"
+        ],
+        [
+          "B",
+          "`/etc/resolv.conf`"
+        ],
+        [
+          "C",
+          "`/etc/hosts`"
+        ],
+        [
+          "D",
+          "`/etc/networks`"
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Vad betyder det om en katalog har behörigheten `r-x` för en användare?",
+      "raw_options": [
+        [
+          "A",
+          "Användaren får läsa (ls) och gå in i (cd) katalogen."
+        ],
+        [
+          "B",
+          "Användaren får bara läsa, men inte gå in i katalogen."
+        ],
+        [
+          "C",
+          "Användaren får skapa filer i katalogen."
+        ],
+        [
+          "D",
+          "Behörigheten är ogiltig för kataloger."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vilket kommando kan visa hur mycket minne (RAM) som används?",
+      "raw_options": [
+        [
+          "A",
+          "`df -h`"
+        ],
+        [
+          "B",
+          "`du -h`"
+        ],
+        [
+          "C",
+          "`free -h`"
+        ],
+        [
+          "D",
+          "`mem -show`"
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad händer om du skriver `cd` utan argument och trycker enter?",
+      "raw_options": [
+        [
+          "A",
+          "Du får ett felmeddelande."
+        ],
+        [
+          "B",
+          "Du stannar kvar i samma katalog."
+        ],
+        [
+          "C",
+          "Du flyttas till din hemkatalog."
+        ],
+        [
+          "D",
+          "Du flyttas till rotkatalogen."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vilken katalog brukar innehålla delade biblioteksfiler (.so) för program?",
+      "raw_options": [
+        [
+          "A",
+          "`/lib` eller `/usr/lib`"
+        ],
+        [
+          "B",
+          "`/bin`"
+        ],
+        [
+          "C",
+          "`/dll`"
+        ],
+        [
+          "D",
+          "`/src`"
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur ser du vilka partitioner som är monterade just nu?",
+      "raw_options": [
+        [
+          "A",
+          "`cat /proc/mounts` eller `mount`"
+        ],
+        [
+          "B",
+          "`cat /etc/fstab`"
+        ],
+        [
+          "C",
+          "`ls -l /dev/disk`"
+        ],
+        [
+          "D",
+          "`show mounts`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad är skillnaden på `cat` och `tac`?",
+      "raw_options": [
+        [
+          "A",
+          "Det är samma kommando."
+        ],
+        [
+          "B",
+          "`tac` skriver ut filen baklänges (sista raden först)."
+        ],
+        [
+          "C",
+          "`tac` är en textredigerare."
+        ],
+        [
+          "D",
+          "`cat` är för text, `tac` är för binärer."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vilket kommando används för att hitta var en binär (t.ex. `python`) ligger?",
+      "raw_options": [
+        [
+          "A",
+          "`find python`"
+        ],
+        [
+          "B",
+          "`search python`"
+        ],
+        [
+          "C",
+          "`which python`"
+        ],
+        [
+          "D",
+          "`map python`"
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Vad är en \"Device Node\" (t.ex. `/dev/sda`)?",
+      "raw_options": [
+        [
+          "A",
+          "En fysisk hårdvara som ser ut som en fil för systemet."
+        ],
+        [
+          "B",
+          "En mapp med drivrutiner."
+        ],
+        [
+          "C",
+          "En konfigurationsfil för skärmen."
+        ],
+        [
+          "D",
+          "En nätverkskoppling."
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Om `/` (root) partitionen blir 100% full, vad händer troligtvis?",
+      "raw_options": [
+        [
+          "A",
+          "Datorn blir lite långsam men fungerar."
+        ],
+        [
+          "B",
+          "Ingenting, Linux komprimerar automatiskt."
+        ],
+        [
+          "C",
+          "Systemet kan sluta fungera eller krascha då loggar/tempfiler inte kan skrivas."
+        ],
+        [
+          "D",
+          "Det går, så länge du har RAM-minne kvar."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vilken katalog innehåller filer som representerar användare och grupper?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc` (specifikt passwd och group)."
+        ],
+        [
+          "B",
+          "`/home`"
+        ],
+        [
+          "C",
+          "`/usr/users`"
+        ],
+        [
+          "D",
+          "`/var/auth`"
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vad innebär `ls -lh`?",
+      "raw_options": [
+        [
+          "A",
+          "Long format, Hidden files."
+        ],
+        [
+          "B",
+          "Long format, Human readable sizes (MB/GB istället för bytes)."
+        ],
+        [
+          "C",
+          "List Hierarchy."
+        ],
+        [
+          "D",
+          "List Hardlinks."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Vilket kommando skapar en tom fil med namnet `test`?",
+      "raw_options": [
+        [
+          "A",
+          "`mkfile test`"
+        ],
+        [
+          "B",
+          "`new test`"
+        ],
+        [
+          "C",
+          "`touch test`"
+        ],
+        [
+          "D",
+          "`create test`"
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Vad är `/srv` avsett för?",
+      "raw_options": [
+        [
+          "A",
+          "Källkod (Source)."
+        ],
+        [
+          "B",
+          "Data för tjänster (Services) som systemet erbjuder, t.ex. webbsidor."
+        ],
+        [
+          "C",
+          "Server-konfigurationer."
+        ],
+        [
+          "D",
+          "Service-loggar."
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vilken mapp innehåller kärnan (kernel) och bootloader-filer?",
+      "raw_options": [
+        [
+          "A",
+          "`/kernel`"
+        ],
+        [
+          "B",
+          "`/bin`"
+        ],
+        [
+          "C",
+          "`/boot`"
+        ],
+        [
+          "D",
+          "`/start`"
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Hur raderar man en katalog som heter `Mina Filer` (med mellanslag)?",
+      "raw_options": [
+        [
+          "A",
+          "`rm -r Mina Filer`"
+        ],
+        [
+          "B",
+          "`rm -r \"Mina Filer\"`"
+        ],
+        [
+          "C",
+          "`rm -r Mina_Filer`"
+        ],
+        [
+          "D",
+          "`delete \"Mina Filer\"`"
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad gör `cp -i`?",
+      "raw_options": [
+        [
+          "A",
+          "Kopierar \"Intelligent\" (bara nyare filer)."
+        ],
+        [
+          "B",
+          "Kopierar \"Interaktivt\" (frågar innan den skriver över filer)."
+        ],
+        [
+          "C",
+          "Kopierar \"Instant\" (snabbare)."
+        ],
+        [
+          "D",
+          "Kopierar \"Invisible\" (dold fil)."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Vad är syftet med kommandot `history`?",
+      "raw_options": [
+        [
+          "A",
+          "Visa systemets upptid."
+        ],
+        [
+          "B",
+          "Visa tidigare inloggade användare."
+        ],
+        [
+          "C",
+          "Visa en lista på kommandon du tidigare skrivit i terminalen."
+        ],
+        [
+          "D",
+          "Visa versionshistorik för en fil."
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad står \"rx\" för om du ser det i filrättigheter (t.ex. `r-x`)?",
+      "raw_options": [
+        [
+          "A",
+          "Read, Execute."
+        ],
+        [
+          "B",
+          "Read, X-ray."
+        ],
+        [
+          "C",
+          "Run, Execute."
+        ],
+        [
+          "D",
+          "Root, X-permission."
+        ]
+      ]
+    }
+  ],
+  "Nod2_Rattigheter_Sakerhet_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilket kommando ger ägaren rätt att läsa, skriva och köra; gruppen att läsa och köra; och övriga ingen tillgång?",
+      "raw_options": [
+        [
+          "A",
+          "`chmod 755`"
+        ],
+        [
+          "B",
+          "`chmod 750`"
+        ],
+        [
+          "C",
+          "`chmod 770`"
+        ],
+        [
+          "D",
+          "`chmod 640`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vilken fil används för att lagra krypterade lösenord?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/passwd`"
+        ],
+        [
+          "B",
+          "`/etc/security`"
+        ],
+        [
+          "C",
+          "`/etc/shadow`"
+        ],
+        [
+          "D",
+          "`/etc/passwords`"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Du vill att alla scripts (.sh) i en mapp ska vara körbara för ägaren. Vilket kommando?",
+      "raw_options": [
+        [
+          "A",
+          "`chmod u+x *.sh`"
+        ],
+        [
+          "B",
+          "`chmod a+x *.sh`"
+        ],
+        [
+          "C",
+          "`chown u+x *.sh`"
+        ],
+        [
+          "D",
+          "`chmod +x *.sh`"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad är UID för root-användaren?",
+      "raw_options": [
+        [
+          "A",
+          "1000"
+        ],
+        [
+          "B",
+          "1"
+        ],
+        [
+          "C",
+          "0"
+        ],
+        [
+          "D",
+          "-1"
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Vilket siffervärde motsvarar rättigheten \"Read\"?",
+      "raw_options": [
+        [
+          "A",
+          "1"
+        ],
+        [
+          "B",
+          "2"
+        ],
+        [
+          "C",
+          "4"
+        ],
+        [
+          "D",
+          "8"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vad innebär \"Sticky Bit\" när den är satt på en katalog som `/tmp`?",
+      "raw_options": [
+        [
+          "A",
+          "Filer stannar kvar i RAM-minnet (klistras fast)."
+        ],
+        [
+          "B",
+          "Alla får skriva, men man får bara radera sina egna filer."
+        ],
+        [
+          "C",
+          "Endast root kan skriva i mappen."
+        ],
+        [
+          "D",
+          "Mappen kan inte raderas."
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Du vill lägga till användaren \"anna\" i gruppen \"admin\" utan att ta bort henne från andra grupper. Vilket kommando?",
+      "raw_options": [
+        [
+          "A",
+          "`usermod -G admin anna`"
+        ],
+        [
+          "B",
+          "`useradd -G admin anna`"
+        ],
+        [
+          "C",
+          "`usermod -aG admin anna`"
+        ],
+        [
+          "D",
+          "`groupadd anna admin`"
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad står \"x\" för i filen `/etc/passwd` där lösenordet ska vara?",
+      "raw_options": [
+        [
+          "A",
+          "Att användaren saknar lösenord."
+        ],
+        [
+          "B",
+          "Att kontot är avstängt (X-rated)."
+        ],
+        [
+          "C",
+          "Att lösenordet är lagrat i `/etc/shadow` istället."
+        ],
+        [
+          "D",
+          "Att lösenordet är \"secret\"."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vilket kommando byter ägare på en fil?",
+      "raw_options": [
+        [
+          "A",
+          "`chmod`"
+        ],
+        [
+          "B",
+          "`chown`"
+        ],
+        [
+          "C",
+          "`chgrp`"
+        ],
+        [
+          "D",
+          "`chuser`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Om umask är `0022`, vad blir rättigheterna på en ny katalog?",
+      "raw_options": [
+        [
+          "A",
+          "777 (rwxrwxrwx)"
+        ],
+        [
+          "B",
+          "755 (rwxr-xr-x)"
+        ],
+        [
+          "C",
+          "644 (rw-r--r--)"
+        ],
+        [
+          "D",
+          "700 (rwx"
+        ]
+      ]
+    }
+  ],
+  "Nod3_Processhantering_Master.md": [
+    {
+      "id": 1,
+      "question": "Vad visar kommandot `uptime` ?",
+      "raw_options": [
+        [
+          "A",
+          "Hur länge datorn har varit påslagen och load average."
+        ],
+        [
+          "B",
+          "När datorn ska uppdateras nästa gång."
+        ],
+        [
+          "C",
+          "Nätverkets uppladdningshastighet."
+        ],
+        [
+          "D",
+          "Tiden sedan senaste kraschen."
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Om du har 2 CPU-kärnor, vad är en \"bra\" load average?",
+      "raw_options": [
+        [
+          "A",
+          "Under 2.0."
+        ],
+        [
+          "B",
+          "Över 4.0."
+        ],
+        [
+          "C",
+          "Alltid 0."
+        ],
+        [
+          "D",
+          "Exakt 100."
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilken signal skickar kommandot `kill` som standard om ingen flagga ges?",
+      "raw_options": [
+        [
+          "A",
+          "SIGKILL (9)"
+        ],
+        [
+          "B",
+          "SIGTERM (15)"
+        ],
+        [
+          "C",
+          "SIGSTOP (19)"
+        ],
+        [
+          "D",
+          "SIGINT (2)"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder det om en process har status `Z` (Zombie)?",
+      "raw_options": [
+        [
+          "A",
+          "Den är skadlig kod, ett virus."
+        ],
+        [
+          "B",
+          "Den har kraschat och väntar på att städas upp av föräldraprocessen."
+        ],
+        [
+          "C",
+          "Den sover och väntar på midnatt."
+        ],
+        [
+          "D",
+          "Den körs med maximal prioritet."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Vilken tangentkombination skickar SIGINT (avbryt) till ett program?",
+      "raw_options": [
+        [
+          "A",
+          "Ctrl+Z"
+        ],
+        [
+          "B",
+          "Ctrl+C"
+        ],
+        [
+          "C",
+          "Ctrl+D"
+        ],
+        [
+          "D",
+          "Ctrl+Q"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilket verktyg är bäst för att se systemets belastning i realtid med staplar och färger?",
+      "raw_options": [
+        [
+          "A",
+          "`top`"
+        ],
+        [
+          "B",
+          "`ps`"
+        ],
+        [
+          "C",
+          "`htop`"
+        ],
+        [
+          "D",
+          "`ls`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad gör kommandot `nice`?",
+      "raw_options": [
+        [
+          "A",
+          "Gör terminalen snyggare."
+        ],
+        [
+          "B",
+          "Startar ett program med ändrad prioritet."
+        ],
+        [
+          "C",
+          "Ber programmet vara snällt och dela minne."
+        ],
+        [
+          "D",
+          "Stänger av programmet mjukt."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad står PID för?",
+      "raw_options": [
+        [
+          "A",
+          "Program Identity Data"
+        ],
+        [
+          "B",
+          "Process ID"
+        ],
+        [
+          "C",
+          "Personal ID"
+        ],
+        [
+          "D",
+          "Priority In Daemon"
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Hur startar du scriptet `longjob.sh` i bakgrunden?",
+      "raw_options": [
+        [
+          "A",
+          "`bg longjob.sh`"
+        ],
+        [
+          "B",
+          "`./longjob.sh &`"
+        ],
+        [
+          "C",
+          "`start ./longjob.sh`"
+        ],
+        [
+          "D",
+          "`run -b ./longjob.sh`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Du har pausat ett jobb med Ctrl+Z. Hur startar du det igen i bakgrunden?",
+      "raw_options": [
+        [
+          "A",
+          "Skriv `bg` och tryck Enter."
+        ],
+        [
+          "B",
+          "Skriv `fg` och tryck Enter."
+        ],
+        [
+          "C",
+          "Tryck `Ctrl+C`."
+        ],
+        [
+          "D",
+          "Skriv `jobs -start`."
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vilken signal kan *inte* fångas eller ignoreras av en process?",
+      "raw_options": [
+        [
+          "A",
+          "SIGTERM"
+        ],
+        [
+          "B",
+          "SIGINT"
+        ],
+        [
+          "C",
+          "SIGKILL"
+        ],
+        [
+          "D",
+          "SIGHUP"
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad händer om RAM-minnet tar slut och Swap är fullt?",
+      "raw_options": [
+        [
+          "A",
+          "Datorn stänger av sig."
+        ],
+        [
+          "B",
+          "OOM Killer dödar en process för att frigöra minne."
+        ],
+        [
+          "C",
+          "Hårddisken börjar brinna."
+        ],
+        [
+          "D",
+          "Processorn går ner i vila."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilket kommando visar minnesanvändning i ett läsbart format (t.ex. GB/MB)?",
+      "raw_options": [
+        [
+          "A",
+          "`free -m`"
+        ],
+        [
+          "B",
+          "`free -h`"
+        ],
+        [
+          "C",
+          "`mem -info`"
+        ],
+        [
+          "D",
+          "`ShowMemory`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad är `PPID`?",
+      "raw_options": [
+        [
+          "A",
+          "Pre-Process ID."
+        ],
+        [
+          "B",
+          "Parent Process ID (Förälderns ID)."
+        ],
+        [
+          "C",
+          "Priority Process ID."
+        ],
+        [
+          "D",
+          "Post Process ID."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Om du vill filtrera processlistan för att hitta `nginx`, vad kör du?",
+      "raw_options": [
+        [
+          "A",
+          "`ps aux | grep nginx`"
+        ],
+        [
+          "B",
+          "`top -nginx`"
+        ],
+        [
+          "C",
+          "`find process nginx`"
+        ],
+        [
+          "D",
+          "`locate nginx`"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad innebär \"Load Average\" siffrorna egentligen?",
+      "raw_options": [
+        [
+          "A",
+          "Procent CPU-användning just nu."
+        ],
+        [
+          "B",
+          "Antal processer i kön för CPU eller Disk I/O."
+        ],
+        [
+          "C",
+          "Antal inloggade användare."
+        ],
+        [
+          "D",
+          "Temperatur på processorn."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Hur många signaler finns det ungefär i Linux?",
+      "raw_options": [
+        [
+          "A",
+          "Bara 2 (Stop och Go)."
+        ],
+        [
+          "B",
+          "Exakt 10."
+        ],
+        [
+          "C",
+          "Över 60 st (men vi använder oftast bara ett fåtal)."
+        ],
+        [
+          "D",
+          "Oändligt många."
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vilket kommando dödar alla processer som heter `firefox`?",
+      "raw_options": [
+        [
+          "A",
+          "`kill firefox`"
+        ],
+        [
+          "B",
+          "`killall firefox`"
+        ],
+        [
+          "C",
+          "`stop firefox`"
+        ],
+        [
+          "D",
+          "`end firefox`"
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad gör `nohup my_script.sh &`?",
+      "raw_options": [
+        [
+          "A",
+          "Startar scriptet med högsta prioritet."
+        ],
+        [
+          "B",
+          "Startar scriptet så det fortsätter köra även efter att du loggar ut."
+        ],
+        [
+          "C",
+          "Startar scriptet utan att spara loggar."
+        ],
+        [
+          "D",
+          "Startar scriptet i debug-läge."
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "I `top`, vad betyder kolumnen `NI`?",
+      "raw_options": [
+        [
+          "A",
+          "Network Interface."
+        ],
+        [
+          "B",
+          "Nice value (prioritet)."
+        ],
+        [
+          "C",
+          "Number of Instructions."
+        ],
+        [
+          "D",
+          "New Instance."
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är en \"Daemon\"?",
+      "raw_options": [
+        [
+          "A",
+          "Ett elakt virus."
+        ],
+        [
+          "B",
+          "En bakgrundsprocess som körs kontinuerligt (service)."
+        ],
+        [
+          "C",
+          "En typ av filsystem."
+        ],
+        [
+          "D",
+          "En användare med UID 666."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vilken process har alltid PID 1?",
+      "raw_options": [
+        [
+          "A",
+          "Kernl"
+        ],
+        [
+          "B",
+          "Init (eller Systemd i moderna system)."
+        ],
+        [
+          "C",
+          "Bash."
+        ],
+        [
+          "D",
+          "Root."
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vad ska du göra om `kill PID` (SIGTERM) inte fungerar?",
+      "raw_options": [
+        [
+          "A",
+          "Starta om datorn direkt."
+        ],
+        [
+          "B",
+          "Vänta 1 minut och prova igen."
+        ],
+        [
+          "C",
+          "Prova `kill -9 PID` (SIGKILL)."
+        ],
+        [
+          "D",
+          "Skrika på skärmen."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad betyder statusen `D` i ps/top?",
+      "raw_options": [
+        [
+          "A",
+          "Dead."
+        ],
+        [
+          "B",
+          "Daemon."
+        ],
+        [
+          "C",
+          "Uninterruptible sleep (ofta Disk I/O väntan)."
+        ],
+        [
+          "D",
+          "Done."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur ser du trädstrukturen för processer (vem som startade vem)?",
+      "raw_options": [
+        [
+          "A",
+          "`pstree`"
+        ],
+        [
+          "B",
+          "`ps --tree`"
+        ],
+        [
+          "C",
+          "`tree --process`"
+        ],
+        [
+          "D",
+          "`top --tree`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad använder `htop` för att visa belastning visuellt?",
+      "raw_options": [
+        [
+          "A",
+          "Cirkeldiagram."
+        ],
+        [
+          "B",
+          "Staplar (Bars) i färger."
+        ],
+        [
+          "C",
+          "Bara text."
+        ],
+        [
+          "D",
+          "Ljudsignaler."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Om load average är 0.50, vad betyder det?",
+      "raw_options": [
+        [
+          "A",
+          "Halva processorn används i snitt (om singel core)."
+        ],
+        [
+          "B",
+          "Processorn är 50% trasig."
+        ],
+        [
+          "C",
+          "50 processer väntar."
+        ],
+        [
+          "D",
+          "Ingen vet."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Kan en vanlig användare döda andras processer?",
+      "raw_options": [
+        [
+          "A",
+          "Ja."
+        ],
+        [
+          "B",
+          "Nej, bara sina egna (och root kan döda alla)."
+        ],
+        [
+          "C",
+          "Ja, om de är i samma grupp."
+        ],
+        [
+          "D",
+          "Nej, aldrig."
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad är \"Swap thrashing\"?",
+      "raw_options": [
+        [
+          "A",
+          "När datorn städar disken snabbt."
+        ],
+        [
+          "B",
+          "När datorn är så slut på RAM att den lägger all tid på att flytta data in/ut ur Swap, vilket gör den extremt långsam."
+        ],
+        [
+          "C",
+          "En snabbare typ av swap."
+        ],
+        [
+          "D",
+          "När man raderar swap-filen."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Vilket kommando visar listan på öppna filer för en process?",
+      "raw_options": [
+        [
+          "A",
+          "`openfiles`"
+        ],
+        [
+          "B",
+          "`lsof`"
+        ],
+        [
+          "C",
+          "`files`"
+        ],
+        [
+          "D",
+          "`ps -f`"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad är en \"Foreground process\"?",
+      "raw_options": [
+        [
+          "A",
+          "En process som körs dolt."
+        ],
+        [
+          "B",
+          "En process som låser terminalen tills den är klar."
+        ],
+        [
+          "C",
+          "En process med röd text."
+        ],
+        [
+          "D",
+          "En grafisk process."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Hur stänger man av en process som \"hängt\" sig i terminalen?",
+      "raw_options": [
+        [
+          "A",
+          "`Ctrl+C` (oftast)."
+        ],
+        [
+          "B",
+          "Dra ur sladden."
+        ],
+        [
+          "C",
+          "`Esc`."
+        ],
+        [
+          "D",
+          "`Ctrl+P`."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Vad betyder `vmstat 1`?",
+      "raw_options": [
+        [
+          "A",
+          "Uppdaterar statistiken 1 gång."
+        ],
+        [
+          "B",
+          "Uppdaterar statistiken varje sekund."
+        ],
+        [
+          "C",
+          "Visar statistik för PID 1."
+        ],
+        [
+          "D",
+          "Visar statistik för CPU 1."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vad händer med ett jobb om du skriver `fg` utan argument?",
+      "raw_options": [
+        [
+          "A",
+          "Det senaste bakgrundsjobbet tas upp till förgrunden."
+        ],
+        [
+          "B",
+          "Alla jobb startas om."
+        ],
+        [
+          "C",
+          "Jobbet raderas."
+        ],
+        [
+          "D",
+          "Det äldsta jobbet tas upp."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad är `SIGHUP` (1) ofta använt till för servrar (t.ex. nginx)?",
+      "raw_options": [
+        [
+          "A",
+          "För att krascha servern."
+        ],
+        [
+          "B",
+          "För att ladda om konfigurationsfiler (Reload)."
+        ],
+        [
+          "C",
+          "För att hänga upp luren på ett modem."
+        ],
+        [
+          "D",
+          "För att pausa servern."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vad innebär \"CPU Affinity\"?",
+      "raw_options": [
+        [
+          "A",
+          "Att en process älskar sin CPU."
+        ],
+        [
+          "B",
+          "Att en process är låst till att bara köra på en specifik CPU-kärna."
+        ],
+        [
+          "C",
+          "Att CPU:n är snabb."
+        ],
+        [
+          "D",
+          "Att alla processer delar lika."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur ser du alla processer för *alla* användare med `ps`?",
+      "raw_options": [
+        [
+          "A",
+          "`ps -u`"
+        ],
+        [
+          "B",
+          "`ps aux` (eller `ps -ef`)."
+        ],
+        [
+          "C",
+          "`ps all`"
+        ],
+        [
+          "D",
+          "`show all`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad gör `renice +10 1234`?",
+      "raw_options": [
+        [
+          "A",
+          "Ökar prioriteten för process 1234."
+        ],
+        [
+          "B",
+          "Sänker prioriteten för process 1234 (gör den \"snällare\" mot andra)."
+        ],
+        [
+          "C",
+          "Startar 10 nya kopior."
+        ],
+        [
+          "D",
+          "Dödar processen efter 10 sekunder."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vilket kommando ger dig PID för `ssh` snabbast?",
+      "raw_options": [
+        [
+          "A",
+          "`pgrep ssh`"
+        ],
+        [
+          "B",
+          "`ps aux | grep ssh`"
+        ],
+        [
+          "C",
+          "`pidof ssh`"
+        ],
+        [
+          "D",
+          "Alla ovanstående fungerar, men pgrep/pidof är direkt gjorda för det."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Vad händer om en Zombies förälder dör?",
+      "raw_options": [
+        [
+          "A",
+          "Zombien lever för alltid."
+        ],
+        [
+          "B",
+          "Zombien adopteras av `init` (PID 1) som genast städar bort den."
+        ],
+        [
+          "C",
+          "Hela systemet kraschar."
+        ],
+        [
+          "D",
+          "Zombien blir en Daemon."
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad är `cron`?",
+      "raw_options": [
+        [
+          "A",
+          "En tidsschemaläggare för att köra processer automatiskt."
+        ],
+        [
+          "B",
+          "En klocka på skrivbordet."
+        ],
+        [
+          "C",
+          "Ett virusprogram."
+        ],
+        [
+          "D",
+          "En webläsare."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vilken fil visar hur mycket minne du har totalt?",
+      "raw_options": [
+        [
+          "A",
+          "`/proc/cpuinfo`"
+        ],
+        [
+          "B",
+          "`/proc/meminfo`"
+        ],
+        [
+          "C",
+          "`/dev/mem`"
+        ],
+        [
+          "D",
+          "`/etc/memory`"
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vad innebär \"User space\" vs \"Kernel space\"?",
+      "raw_options": [
+        [
+          "A",
+          "Användare har mer plats."
+        ],
+        [
+          "B",
+          "Processer i User space har begränsad åtkomst till hårdvara, Kernel space har full kontroll."
+        ],
+        [
+          "C",
+          "Det är två olika hårddiskar."
+        ],
+        [
+          "D",
+          "Det är ingen skillnad."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Hur skickar man signal 9 till PID 500?",
+      "raw_options": [
+        [
+          "A",
+          "`kill 9 500`"
+        ],
+        [
+          "B",
+          "`kill -9 500`"
+        ],
+        [
+          "C",
+          "`kill -SIG 9 500`"
+        ],
+        [
+          "D",
+          "`stop 500`"
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Vilket statiskt verktyg visar systeminformation (CPU/RAM) vid inloggning?",
+      "raw_options": [
+        [
+          "A",
+          "`top`"
+        ],
+        [
+          "B",
+          "`landscape-sysinfo` (eller liknande i MOTD)."
+        ],
+        [
+          "C",
+          "`bash`"
+        ],
+        [
+          "D",
+          "`info`"
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vad betyder TTY i ps-listan om det står `?`?",
+      "raw_options": [
+        [
+          "A",
+          "Processen vet inte var den är."
+        ],
+        [
+          "B",
+          "Processen är inte kopplad till en terminal (ofta en daemon)."
+        ],
+        [
+          "C",
+          "Processen är hemlig."
+        ],
+        [
+          "D",
+          "Det är ett fel."
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Varför ska man undvika `kill -9` om möjligt?",
+      "raw_options": [
+        [
+          "A",
+          "Det är oartigt."
+        ],
+        [
+          "B",
+          "Processen kan lämna korrupta filer efter sig (t.ex. databaser)."
+        ],
+        [
+          "C",
+          "Processorn kan bli överhettad."
+        ],
+        [
+          "D",
+          "Det tar längre tid."
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad visar `iotop`?",
+      "raw_options": [
+        [
+          "A",
+          "Internettrafik."
+        ],
+        [
+          "B",
+          "Disk I/O (läs/skriv) per process."
+        ],
+        [
+          "C",
+          "In/Ut enheter."
+        ],
+        [
+          "D",
+          "IP-adresser."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Vilket kommando tar bort alla jobb från `jobs`-listan?",
+      "raw_options": [
+        [
+          "A",
+          "`kill` dem eller vänta tills de är klara. (`disown` tar bort dem ur listan utan att döda)."
+        ],
+        [
+          "B",
+          "`clear`"
+        ],
+        [
+          "C",
+          "`jobs -c`"
+        ],
+        [
+          "D",
+          "`reset`"
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är en \"process\"?",
+      "raw_options": [
+        [
+          "A",
+          "En statisk fil på hårddisken."
+        ],
+        [
+          "B",
+          "Ett program som körs (exekveras) i minnet."
+        ],
+        [
+          "C",
+          "En användare."
+        ],
+        [
+          "D",
+          "En nätverkskoppling."
+        ]
+      ]
+    }
+  ],
+  "Nod4_Natverk_Server_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilket kommando visar IP-adresser på Linux (modern standard)?",
+      "raw_options": [
+        [
+          "A",
+          "`ipconfig`"
+        ],
+        [
+          "B",
+          "`ifconfig`"
+        ],
+        [
+          "C",
+          "`ip addr`"
+        ],
+        [
+          "D",
+          "`show ip`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vad är subnätmasken för `/24`?",
+      "raw_options": [
+        [
+          "A",
+          "255.0.0.0"
+        ],
+        [
+          "B",
+          "255.255.0.0"
+        ],
+        [
+          "C",
+          "255.255.255.0"
+        ],
+        [
+          "D",
+          "255.255.255.255"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilken IP-adress används för broadcast i nätverket 192.168.1.0/24?",
+      "raw_options": [
+        [
+          "A",
+          "192.168.1.1"
+        ],
+        [
+          "B",
+          "192.168.1.0"
+        ],
+        [
+          "C",
+          "192.168.1.254"
+        ],
+        [
+          "D",
+          "192.168.1.255"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder det om du får en IP-adress som börjar på 169.254?",
+      "raw_options": [
+        [
+          "A",
+          "Du har fått en publik IP."
+        ],
+        [
+          "B",
+          "DHCP-servern kunde inte nås (APIPA)."
+        ],
+        [
+          "C",
+          "Nätverket fungerar perfekt."
+        ],
+        [
+          "D",
+          "Det är en loopback-adress."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Vilket lager hanterar routrar huvudsakligen?",
+      "raw_options": [
+        [
+          "A",
+          "Lager 1"
+        ],
+        [
+          "B",
+          "Lager 2"
+        ],
+        [
+          "C",
+          "Lager 3"
+        ],
+        [
+          "D",
+          "Lager 4"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilket protokoll ska du välja för en videostreeming-tjänst där prestanda är viktigare än 100% korrekthet?",
+      "raw_options": [
+        [
+          "A",
+          "TCP"
+        ],
+        [
+          "B",
+          "UDP"
+        ],
+        [
+          "C",
+          "ICMP"
+        ],
+        [
+          "D",
+          "HTTP"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vem initierar en TCP 3-vägshandskakning?",
+      "raw_options": [
+        [
+          "A",
+          "Servern"
+        ],
+        [
+          "B",
+          "Klienten"
+        ],
+        [
+          "C",
+          "Routern"
+        ],
+        [
+          "D",
+          "DNS"
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad står \"s\" för i `https`?",
+      "raw_options": [
+        [
+          "A",
+          "Standard"
+        ],
+        [
+          "B",
+          "Secure (TLS/SSL)"
+        ],
+        [
+          "C",
+          "Server"
+        ],
+        [
+          "D",
+          "Simple"
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vilket kommando listar alla öppna nätverksportar som lyssnar?",
+      "raw_options": [
+        [
+          "A",
+          "`ps aux`"
+        ],
+        [
+          "B",
+          "`ss -tulpn`"
+        ],
+        [
+          "C",
+          "`ip route`"
+        ],
+        [
+          "D",
+          "`ping localhost`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vilken fil redigerar du för att manuellt mappa \"minserver\" till IP \"10.0.0.5\"?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/resolv.conf`"
+        ],
+        [
+          "B",
+          "`/etc/network`"
+        ],
+        [
+          "C",
+          "`/etc/hosts`"
+        ],
+        [
+          "D",
+          "`/etc/dns`"
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vad är \"Destination Unreachable\" för typ av meddelande?",
+      "raw_options": [
+        [
+          "A",
+          "Ett TCP fel."
+        ],
+        [
+          "B",
+          "Ett ICMP meddelande (Typ 3)."
+        ],
+        [
+          "C",
+          "Ett kernel panic."
+        ],
+        [
+          "D",
+          "En HTTP 404."
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Hur många unika IP-adresser (ungefär) finns i IPv4?",
+      "raw_options": [
+        [
+          "A",
+          "1 miljon."
+        ],
+        [
+          "B",
+          "4,3 miljarder (2^32)."
+        ],
+        [
+          "C",
+          "Oändligt många."
+        ],
+        [
+          "D",
+          "255 stycken."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilket verktyg kan \"avlyssna\" trafik och visa TCP-handskakningen?",
+      "raw_options": [
+        [
+          "A",
+          "`tcpdump` (eller Wireshark)."
+        ],
+        [
+          "B",
+          "`ping`"
+        ],
+        [
+          "C",
+          "`telnet`"
+        ],
+        [
+          "D",
+          "`traceroute`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad är syftet med flaggan SYN i TCP?",
+      "raw_options": [
+        [
+          "A",
+          "Att avsluta en anslutning."
+        ],
+        [
+          "B",
+          "Att synkronisera sekvensnummer vid start av anslutning."
+        ],
+        [
+          "C",
+          "Att skicka data akut."
+        ],
+        [
+          "D",
+          "Att starta om anslutningen vid fel."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Vilken port lyssnar oftast en SSH-server på?",
+      "raw_options": [
+        [
+          "A",
+          "21"
+        ],
+        [
+          "B",
+          "22"
+        ],
+        [
+          "C",
+          "23"
+        ],
+        [
+          "D",
+          "25"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vilket av följande är en privat IP-adress (RFC 1918) som inte routas på internet?",
+      "raw_options": [
+        [
+          "A",
+          "8.8.8.8"
+        ],
+        [
+          "B",
+          "172.16.0.5"
+        ],
+        [
+          "C",
+          "1.1.1.1"
+        ],
+        [
+          "D",
+          "200.100.50.1"
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Vad innebär `/etc/resolv.conf`?",
+      "raw_options": [
+        [
+          "A",
+          "Den bestämmer din egen IP-adress."
+        ],
+        [
+          "B",
+          "Den listar vilka DNS-servrar som ska användas."
+        ],
+        [
+          "C",
+          "Den sparar lösenord."
+        ],
+        [
+          "D",
+          "Den konfigurerar brandväggen."
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad betyder kommandot `ip link show`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar MAC-adresser och status på nätverkskort (Lager 2)."
+        ],
+        [
+          "B",
+          "Visar IP-adresser (Lager 3)."
+        ],
+        [
+          "C",
+          "Visar routes."
+        ],
+        [
+          "D",
+          "Visar webblänkar."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vilket lager 7-protokoll används för filöverföring?",
+      "raw_options": [
+        [
+          "A",
+          "DNS"
+        ],
+        [
+          "B",
+          "FTP (eller SFTP)."
+        ],
+        [
+          "C",
+          "SMTP"
+        ],
+        [
+          "D",
+          "DHCP"
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Vad händer om du har fel Default Gateway konfigurerat?",
+      "raw_options": [
+        [
+          "A",
+          "Du kan nå internet men inte lokala nätverket."
+        ],
+        [
+          "B",
+          "Du kan nå lokala nätverket men inte internet/andra nätverk."
+        ],
+        [
+          "C",
+          "Du får ingen IP-adress."
+        ],
+        [
+          "D",
+          "Datorn startar inte."
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är skillnaden på 127.0.0.1 och 0.0.0.0 när man konfigurerar en tjänst?",
+      "raw_options": [
+        [
+          "A",
+          "Ingen skillnad."
+        ],
+        [
+          "B",
+          "127.0.0.1 är bara lokalt åtkomlig (från samma dator). 0.0.0.0 är åtkomlig från alla interface (utifrån)."
+        ],
+        [
+          "C",
+          "0.0.0.0 är en ogiltig adress."
+        ],
+        [
+          "D",
+          "127.0.0.1 är snabbare."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vilken TCP-flagga skickas vid en \"Reset\" (abrupt avslut)?",
+      "raw_options": [
+        [
+          "A",
+          "FIN"
+        ],
+        [
+          "B",
+          "RST"
+        ],
+        [
+          "C",
+          "ACK"
+        ],
+        [
+          "D",
+          "PSH"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vilket kommando används för att fråga en specifik DNS-server?",
+      "raw_options": [
+        [
+          "A",
+          "`nslookup host`"
+        ],
+        [
+          "B",
+          "`dig @8.8.8.8 host`"
+        ],
+        [
+          "C",
+          "`ping host`"
+        ],
+        [
+          "D",
+          "`host -server host`"
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad betyder CIDR?",
+      "raw_options": [
+        [
+          "A",
+          "Classless Inter-Domain Routing."
+        ],
+        [
+          "B",
+          "Central IP Domain Registry."
+        ],
+        [
+          "C",
+          "Computer ID Routing."
+        ],
+        [
+          "D",
+          "Cisco Internet Domain Rule."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur många användbara IP-adresser har ett `/30`-nät (används ofta för point-to-point länkar)?",
+      "raw_options": [
+        [
+          "A",
+          "30"
+        ],
+        [
+          "B",
+          "2"
+        ],
+        [
+          "C",
+          "4"
+        ],
+        [
+          "D",
+          "1"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vilket protokoll använder ping?",
+      "raw_options": [
+        [
+          "A",
+          "TCP"
+        ],
+        [
+          "B",
+          "ICMP"
+        ],
+        [
+          "C",
+          "UDP"
+        ],
+        [
+          "D",
+          "HTTP"
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Vad gör `curl http://example.com`?",
+      "raw_options": [
+        [
+          "A",
+          "Laddar ner sidan och visar HTML-koden i terminalen."
+        ],
+        [
+          "B",
+          "Öppnar sidan i Firefox."
+        ],
+        [
+          "C",
+          "Pinger sidan."
+        ],
+        [
+          "D",
+          "Hittar IP-adressen."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Vilket verktyg visar statistik för öppna sockets?",
+      "raw_options": [
+        [
+          "A",
+          "`ss` (Socket Statistics)."
+        ],
+        [
+          "B",
+          "`ps`"
+        ],
+        [
+          "C",
+          "`stat`"
+        ],
+        [
+          "D",
+          "`ls`"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad är `eth0` eller `ens33` exempel på?",
+      "raw_options": [
+        [
+          "A",
+          "IP-adresser."
+        ],
+        [
+          "B",
+          "Interface-namn (Nätverkskort)."
+        ],
+        [
+          "C",
+          "DN-servrar."
+        ],
+        [
+          "D",
+          "WiFi-lösenord."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Om du pingar `google.com` och får \"Temporary failure in name resolution\", vad är fel?",
+      "raw_options": [
+        [
+          "A",
+          "Google är nere."
+        ],
+        [
+          "B",
+          "Din DNS fungerar inte."
+        ],
+        [
+          "C",
+          "Din nätverkskabel är ur."
+        ],
+        [
+          "D",
+          "Brandväggen blockerar ICMP."
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vart hamnar paket som inte matchar någon specifik route i routingtabellen?",
+      "raw_options": [
+        [
+          "A",
+          "De kastas bort."
+        ],
+        [
+          "B",
+          "De skickas till Default Gateway."
+        ],
+        [
+          "C",
+          "De skickas till localhost."
+        ],
+        [
+          "D",
+          "De skickas till Broadcast."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vad är MAC-adressen uppbyggd av?",
+      "raw_options": [
+        [
+          "A",
+          "32 bitar."
+        ],
+        [
+          "B",
+          "48 bitar (hexadecimalt, t.ex. 00:AA:22:...)."
+        ],
+        [
+          "C",
+          "128 bitar."
+        ],
+        [
+          "D",
+          "4 siffror."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "På vilket lager jobbar en \"Load Balancer\" som tittar på HTTP-headers och Cookies?",
+      "raw_options": [
+        [
+          "A",
+          "Lager 3"
+        ],
+        [
+          "B",
+          "Lager 4"
+        ],
+        [
+          "C",
+          "Lager 7"
+        ],
+        [
+          "D",
+          "Lager 1"
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vilken port används för säker e-post (SMTP med starttls/ssl) ofta?",
+      "raw_options": [
+        [
+          "A",
+          "25 / 587"
+        ],
+        [
+          "B",
+          "80"
+        ],
+        [
+          "C",
+          "22"
+        ],
+        [
+          "D",
+          "21"
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad är TTL (Time To Live) i ett IP-paket?",
+      "raw_options": [
+        [
+          "A",
+          "Hur länge paketet får existera i sekunder."
+        ],
+        [
+          "B",
+          "Hur många \"hopp\" (routers) paketet får passera innan det kastas (för att undvika loopar)."
+        ],
+        [
+          "C",
+          "Paketets storlek."
+        ],
+        [
+          "D",
+          "Paketets prioritet."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vad gör `traceroute`?",
+      "raw_options": [
+        [
+          "A",
+          "Hittar snabbaste vägen."
+        ],
+        [
+          "B",
+          "Visar alla routrar (hops) på vägen till målet."
+        ],
+        [
+          "C",
+          "Pinger oavbrutet."
+        ],
+        [
+          "D",
+          "Visar DNS-records."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Vilken typ av DNS-record pekar ett namn till en IPv4-adress?",
+      "raw_options": [
+        [
+          "A",
+          "A record."
+        ],
+        [
+          "B",
+          "AAAA record."
+        ],
+        [
+          "C",
+          "CNAME."
+        ],
+        [
+          "D",
+          "MX record."
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vilken typ av DNS-record pekar ett namn till en IPv6-adress?",
+      "raw_options": [
+        [
+          "A",
+          "A"
+        ],
+        [
+          "B",
+          "AAAA"
+        ],
+        [
+          "C",
+          "PTR"
+        ],
+        [
+          "D",
+          "TXT"
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vad innebär \"Latency\"?",
+      "raw_options": [
+        [
+          "A",
+          "Bandbredd."
+        ],
+        [
+          "B",
+          "Fördröjning (tiden det tar för ett paket att åka fram och tillbaka)."
+        ],
+        [
+          "C",
+          "Paketförlust."
+        ],
+        [
+          "D",
+          "Nedladdningshastighet."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Hur ser du IPv6-adresser på Linux?",
+      "raw_options": [
+        [
+          "A",
+          "`ip -6 addr`"
+        ],
+        [
+          "B",
+          "`ip config`"
+        ],
+        [
+          "C",
+          "`ls ipv6`"
+        ],
+        [
+          "D",
+          "`show ip`"
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad är MTU?",
+      "raw_options": [
+        [
+          "A",
+          "Maximum Transmission Unit (Maximal paketstorlek, ofta 1500 bytes)."
+        ],
+        [
+          "B",
+          "Maximum Time Unit."
+        ],
+        [
+          "C",
+          "Minimum Transfer Uplink."
+        ],
+        [
+          "D",
+          "My Transmission Utility."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vad händer om ett paket är större än MTU?",
+      "raw_options": [
+        [
+          "A",
+          "Det kastas bort."
+        ],
+        [
+          "B",
+          "Det fragmenteras (delas upp) eller kastas om \"Don't Fragment\" är satt."
+        ],
+        [
+          "C",
+          "Det komprimeras."
+        ],
+        [
+          "D",
+          "Det skickas långsammare."
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vilket kommando visar routing-tabellen i Linux?",
+      "raw_options": [
+        [
+          "A",
+          "`ip route show`"
+        ],
+        [
+          "B",
+          "`show route`"
+        ],
+        [
+          "C",
+          "`route map`"
+        ],
+        [
+          "D",
+          "`cat /etc/routes`"
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Vad betyder `127.0.0.1`?",
+      "raw_options": [
+        [
+          "A",
+          "Broadcast."
+        ],
+        [
+          "B",
+          "Localhost (Loopback)."
+        ],
+        [
+          "C",
+          "Gateway."
+        ],
+        [
+          "D",
+          "DNS."
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Vilket protokoll hanterar felmeddelanden som \"Time Exceeded\"?",
+      "raw_options": [
+        [
+          "A",
+          "TCP"
+        ],
+        [
+          "B",
+          "ICMP"
+        ],
+        [
+          "C",
+          "HTTP"
+        ],
+        [
+          "D",
+          "SSH"
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vad är Netmask för `/8`?",
+      "raw_options": [
+        [
+          "A",
+          "255.0.0.0"
+        ],
+        [
+          "B",
+          "255.255.0.0"
+        ],
+        [
+          "C",
+          "255.255.255.0"
+        ],
+        [
+          "D",
+          "0.0.0.0"
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Vilken port är standard för MySQL/MariaDB?",
+      "raw_options": [
+        [
+          "A",
+          "3306"
+        ],
+        [
+          "B",
+          "5432"
+        ],
+        [
+          "C",
+          "8080"
+        ],
+        [
+          "D",
+          "1521"
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad är syftet med NAT (Network Address Translation)?",
+      "raw_options": [
+        [
+          "A",
+          "Att öka internethastigheten."
+        ],
+        [
+          "B",
+          "Att låta flera enheter med privata IP-adresser dela på en publik IP-adress."
+        ],
+        [
+          "C",
+          "Att blockera virus."
+        ],
+        [
+          "D",
+          "Att kryptera trafik."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Vilket kommando kan visa om en nätverkskabel är ikopplad (Link up/down)?",
+      "raw_options": [
+        [
+          "A",
+          "`ip link`"
+        ],
+        [
+          "B",
+          "`ping`"
+        ],
+        [
+          "C",
+          "`ls cable`"
+        ],
+        [
+          "D",
+          "`updown`"
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är `10.0.0.0/8` exempel på?",
+      "raw_options": [
+        [
+          "A",
+          "Ett privat nätverksintervall (RFC 1918)."
+        ],
+        [
+          "B",
+          "Ett publikt nätverk."
+        ],
+        [
+          "C",
+          "Ett felaktigt nätverk."
+        ],
+        [
+          "D",
+          "USAs militära nätverk."
+        ]
+      ]
+    }
+  ],
+  "Nod5_SSH_Kommunikation_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilket kommando genererar en ny SSH-nyckel?",
+      "raw_options": [
+        [
+          "A",
+          "`ssh-add`"
+        ],
+        [
+          "B",
+          "`ssh-keygen`"
+        ],
+        [
+          "C",
+          "`ssh-create`"
+        ],
+        [
+          "D",
+          "`openssl gen`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vilken fil innehåller din privata nyckel som standard (RSA)?",
+      "raw_options": [
+        [
+          "A",
+          "`id_rsa.pub`"
+        ],
+        [
+          "B",
+          "`authorized_keys`"
+        ],
+        [
+          "C",
+          "`id_rsa`"
+        ],
+        [
+          "D",
+          "`known_hosts`"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilket svar ska du ge när SSH frågar \"Are you sure you want to continue connecting?\" första gången?",
+      "raw_options": [
+        [
+          "A",
+          "no"
+        ],
+        [
+          "B",
+          "yes"
+        ],
+        [
+          "C",
+          "maybe"
+        ],
+        [
+          "D",
+          "fingerprint"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad är syftet med `ssh-copy-id`?",
+      "raw_options": [
+        [
+          "A",
+          "Att kopiera serverns nyckel till din dator."
+        ],
+        [
+          "B",
+          "Att kopiera din publika nyckel till serverns `authorized_keys`."
+        ],
+        [
+          "C",
+          "Att kopiera filer mellan datorer."
+        ],
+        [
+          "D",
+          "Att stjäla lösenord."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Vilken fil på servern avgör vilka publika nycklar som får logga in?",
+      "raw_options": [
+        [
+          "A",
+          "`~/.ssh/config`"
+        ],
+        [
+          "B",
+          "`~/.ssh/known_hosts`"
+        ],
+        [
+          "C",
+          "`~/.ssh/authorized_keys`"
+        ],
+        [
+          "D",
+          "`/etc/ssh/ssh_host_key`"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilken flagga används för att specificera en icke-standard port (t.ex. 2222)?",
+      "raw_options": [
+        [
+          "A",
+          "`-P`"
+        ],
+        [
+          "B",
+          "`-p`"
+        ],
+        [
+          "C",
+          "`-port`"
+        ],
+        [
+          "D",
+          "`--port`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad innebär `-D 8080` i ett SSH-kommando?",
+      "raw_options": [
+        [
+          "A",
+          "Debug mode."
+        ],
+        [
+          "B",
+          "Dynamic port forward (SOCKS proxy)."
+        ],
+        [
+          "C",
+          "Daemon mode."
+        ],
+        [
+          "D",
+          "Delete key."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad händer om `~/.ssh` katalogen har rättigheterna 777 på servern?",
+      "raw_options": [
+        [
+          "A",
+          "Allt fungerar som vanligt."
+        ],
+        [
+          "B",
+          "SSH vägrar inloggning pga \"bad ownership/modes\"."
+        ],
+        [
+          "C",
+          "Det blir snabbare inloggning."
+        ],
+        [
+          "D",
+          "Du måste använda lösenord."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vilket verktyg används för att \"komma ihåg\" lösenfrasen till din privata nyckel i en session?",
+      "raw_options": [
+        [
+          "A",
+          "`ssh-mem`"
+        ],
+        [
+          "B",
+          "`ssh-agent`"
+        ],
+        [
+          "C",
+          "`ssh-keeper`"
+        ],
+        [
+          "D",
+          "`gpg-agent`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vilken fil kontrollerar SSH-serverns inställningar (endast root)?",
+      "raw_options": [
+        [
+          "A",
+          "`~/.ssh/config`"
+        ],
+        [
+          "B",
+          "`/etc/ssh/ssh_config`"
+        ],
+        [
+          "C",
+          "`/etc/ssh/sshd_config`"
+        ],
+        [
+          "D",
+          "`/var/log/auth.log`"
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vad är en \"Passphrase\"?",
+      "raw_options": [
+        [
+          "A",
+          "Lösenordet till din användare på servern."
+        ],
+        [
+          "B",
+          "Lösenordet som krypterar din privata nyckel fil."
+        ],
+        [
+          "C",
+          "Lösenordet till root."
+        ],
+        [
+          "D",
+          "Serverns IP-adress."
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad är Agent Forwarding (`-A`)?",
+      "raw_options": [
+        [
+          "A",
+          "Att vidarebefordra mail."
+        ],
+        [
+          "B",
+          "Att låta en server använda din lokala SSH-nyckel för att hoppa vidare."
+        ],
+        [
+          "C",
+          "Att byta agent på servern."
+        ],
+        [
+          "D",
+          "Att kopiera agenten till servern."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilken algoritm är modernast och rekommenderas för nya nycklar?",
+      "raw_options": [
+        [
+          "A",
+          "DSA"
+        ],
+        [
+          "B",
+          "RSA (1024 bit)"
+        ],
+        [
+          "C",
+          "Ed25519"
+        ],
+        [
+          "D",
+          "DES"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad betyder felet \"Permission denied (publickey)\"?",
+      "raw_options": [
+        [
+          "A",
+          "Servern är nere."
+        ],
+        [
+          "B",
+          "Du har fel IP."
+        ],
+        [
+          "C",
+          "Din nyckel finns inte i serverns `authorized_keys` (eller du saknar privat nyckel)."
+        ],
+        [
+          "D",
+          "Root-login är förbjudet."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Hur inaktiverar du lösenordsinloggning på servern?",
+      "raw_options": [
+        [
+          "A",
+          "Sätt `PasswordAuthentication no` i `sshd_config`."
+        ],
+        [
+          "B",
+          "Radera allas lösenord med `passwd -d`."
+        ],
+        [
+          "C",
+          "Ta bort tangentbordet."
+        ],
+        [
+          "D",
+          "Sätt `UseKeys only` i config."
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad gör kommandot `ssh -L 8080:localhost:80 user@host`?",
+      "raw_options": [
+        [
+          "A",
+          "Startar en webbserver på port 8080."
+        ],
+        [
+          "B",
+          "Tunnlar lokal port 8080 till fjärrserverns localhost:80."
+        ],
+        [
+          "C",
+          "Tunnlar fjärrport 8080 till din localhost:80."
+        ],
+        [
+          "D",
+          "Listar filer på port 8080."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "I vilken fil sparas fingeravtryck för servrar du litar på?",
+      "raw_options": [
+        [
+          "A",
+          "`authorized_keys`"
+        ],
+        [
+          "B",
+          "`known_hosts`"
+        ],
+        [
+          "C",
+          "`trusted_hosts`"
+        ],
+        [
+          "D",
+          "`ssh_hosts`"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad måste du göra efter att ha ändrat i `/etc/ssh/sshd_config`?",
+      "raw_options": [
+        [
+          "A",
+          "Logga ut."
+        ],
+        [
+          "B",
+          "Starta om datorn."
+        ],
+        [
+          "C",
+          "Starta om SSH-tjänsten (`systemctl restart sshd`)."
+        ],
+        [
+          "D",
+          "Köra `ssh-keygen`."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad innebär \"Two-Factor Authentication\" (2FA) i SSH?",
+      "raw_options": [
+        [
+          "A",
+          "Att använda två monitorer."
+        ],
+        [
+          "B",
+          "Att kräva både nyckel och lösenord/Google Authenticator."
+        ],
+        [
+          "C",
+          "Att ansluta till två servrar samtidigt."
+        ],
+        [
+          "D",
+          "Att använda två nätverkskort."
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Vilket kommando visar innehållet i din publika nyckel?",
+      "raw_options": [
+        [
+          "A",
+          "`cat ~/.ssh/id_rsa.pub`"
+        ],
+        [
+          "B",
+          "`cat ~/.ssh/id_rsa`"
+        ],
+        [
+          "C",
+          "`show key`"
+        ],
+        [
+          "D",
+          "`ssh-add -L`"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är skillnaden på `ssh` och `scp`?",
+      "raw_options": [
+        [
+          "A",
+          "`ssh` är för filer, `scp` för inloggning."
+        ],
+        [
+          "B",
+          "`ssh` är för fjärrstyrning, `scp` är för filkopiering."
+        ],
+        [
+          "C",
+          "Ingen skillnad."
+        ],
+        [
+          "D",
+          "`scp` är osäkert."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vilken rättighet ska `~/.ssh/id_rsa` (privat nyckel) ha?",
+      "raw_options": [
+        [
+          "A",
+          "777"
+        ],
+        [
+          "B",
+          "644"
+        ],
+        [
+          "C",
+          "600"
+        ],
+        [
+          "D",
+          "755"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vad ska du göra om du tappar bort din privata nyckel?",
+      "raw_options": [
+        [
+          "A",
+          "Ladda ner den från servern (går ej)."
+        ],
+        [
+          "B",
+          "Gissa hashen."
+        ],
+        [
+          "C",
+          "Ta bort den publika nyckeln från alla servrar och generera ett nytt par."
+        ],
+        [
+          "D",
+          "Ring polisen."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Varför anses root-login via SSH vara en säkerhetsrisk?",
+      "raw_options": [
+        [
+          "A",
+          "För att root har samma lösenord på alla maskiner."
+        ],
+        [
+          "B",
+          "För att angripare alltid vet användarnamnet \"root\" och kan gissa lösenordet (brute force)."
+        ],
+        [
+          "C",
+          "För att root inte kan använda nycklar."
+        ],
+        [
+          "D",
+          "För att root är långsamt."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur raderar du en specifik host från `known_hosts`?",
+      "raw_options": [
+        [
+          "A",
+          "`ssh-keygen -R hostname`"
+        ],
+        [
+          "B",
+          "`rm known_hosts`"
+        ],
+        [
+          "C",
+          "`ssh-delete hostname`"
+        ],
+        [
+          "D",
+          "`del host`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad använder SSH för transportprotokoll?",
+      "raw_options": [
+        [
+          "A",
+          "UDP"
+        ],
+        [
+          "B",
+          "TCP"
+        ],
+        [
+          "C",
+          "ICMP"
+        ],
+        [
+          "D",
+          "HTTP"
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Vad betyder \"Connection refused\" på port 22?",
+      "raw_options": [
+        [
+          "A",
+          "SSH är inte installerat eller inte startat på servern."
+        ],
+        [
+          "B",
+          "Fel lösenord."
+        ],
+        [
+          "C",
+          "Nyckeln är fel."
+        ],
+        [
+          "D",
+          "Nätverket är nere."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Vilken fil används för att konfigurera genvägar (alias) för dina SSH-anslutningar?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/hosts`"
+        ],
+        [
+          "B",
+          "`~/.ssh/config`"
+        ],
+        [
+          "C",
+          "`~/.bashrc`"
+        ],
+        [
+          "D",
+          "`~/.ssh/shortcuts`"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad är `IdentityFile` i SSH-config?",
+      "raw_options": [
+        [
+          "A",
+          "Sökvägen till ditt pass."
+        ],
+        [
+          "B",
+          "Sökvägen till din privata nyckel."
+        ],
+        [
+          "C",
+          "Sökvägen till serverns nyckel."
+        ],
+        [
+          "D",
+          "Ditt namn."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Kan du använda SSH-nycklar för att automatisera script (inloggning utan lösenord)?",
+      "raw_options": [
+        [
+          "A",
+          "Nej, det krävs alltid en människa."
+        ],
+        [
+          "B",
+          "Ja, om du skapar en nyckel utan lösenfras (passphrase)."
+        ],
+        [
+          "C",
+          "Ja, men bara om scriptet körs som root."
+        ],
+        [
+          "D",
+          "Nej, det är olagligt."
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad gör `ssh -v user@host`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar versionen."
+        ],
+        [
+          "B",
+          "Verbose mode (visar debug-info om anslutningen)."
+        ],
+        [
+          "C",
+          "Validate connection."
+        ],
+        [
+          "D",
+          "Virtual connection."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vad är OpenSSH?",
+      "raw_options": [
+        [
+          "A",
+          "En öppen dörr."
+        ],
+        [
+          "B",
+          "Den vanligaste mjukvaran för implementering av SSH-protokollet på Linux."
+        ],
+        [
+          "C",
+          "Ett virus."
+        ],
+        [
+          "D",
+          "En webbläsare."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Vad betyder fingerprint (fingeravtryck) av en nyckel?",
+      "raw_options": [
+        [
+          "A",
+          "En kort sträng (hash) som identifierar nyckeln för enkel verifiering."
+        ],
+        [
+          "B",
+          "En bild på ditt finger."
+        ],
+        [
+          "C",
+          "Hela nyckeln i binärt format."
+        ],
+        [
+          "D",
+          "Datumen nyckeln skapades."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vilken version av SSH-protokollet ska man använda?",
+      "raw_options": [
+        [
+          "A",
+          "SSH-1"
+        ],
+        [
+          "B",
+          "SSH-2"
+        ],
+        [
+          "C",
+          "Telnet"
+        ],
+        [
+          "D",
+          "SSH-3"
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad gör `ssh-add -D`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort alla nycklar från ssh-agentens minne."
+        ],
+        [
+          "B",
+          "Tar bort nyckelfiler från disken."
+        ],
+        [
+          "C",
+          "Debuggar agenten."
+        ],
+        [
+          "D",
+          "Dödar agenten."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Om du får felet \"unprotected private key file\", vad måste du göra?",
+      "raw_options": [
+        [
+          "A",
+          "`chmod 600 id_rsa`"
+        ],
+        [
+          "B",
+          "`chmod 777 id_rsa`"
+        ],
+        [
+          "C",
+          "Ta bort nyckeln."
+        ],
+        [
+          "D",
+          "Dela nyckeln med root."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Vad är en \"Hopp-server\" (Jump host)?",
+      "raw_options": [
+        [
+          "A",
+          "En server som startar om ofta."
+        ],
+        [
+          "B",
+          "En mellanhandsserver för att nå isolerade nätverk."
+        ],
+        [
+          "C",
+          "En server med mycket RAM."
+        ],
+        [
+          "D",
+          "En DNS server."
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad innebär Remote Port Forwarding (-R) rent praktiskt?",
+      "raw_options": [
+        [
+          "A",
+          "Att servern kan komma åt tjänster på DIN laptop."
+        ],
+        [
+          "B",
+          "Att du kan komma åt tjänster på servern."
+        ],
+        [
+          "C",
+          "Att servern startar om."
+        ],
+        [
+          "D",
+          "Att porten stängs."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vilket format har en publika nyckel oftast?",
+      "raw_options": [
+        [
+          "A",
+          "Den börjar med `ssh-rsa` eller `ssh-ed25519`."
+        ],
+        [
+          "B",
+          "Den börjar med `"
+        ]
+      ]
+    }
+  ],
+  "Nod6_Bash_Skript_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilken rad måste stå absolut först i ett bash-script?",
+      "raw_options": [
+        [
+          "A",
+          "`// bin/bash`"
+        ],
+        [
+          "B",
+          "`set -e`"
+        ],
+        [
+          "C",
+          "`#!/bin/bash`"
+        ],
+        [
+          "D",
+          "`import bash`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vad gör `set -u`?",
+      "raw_options": [
+        [
+          "A",
+          "Uppdaterar scriptet."
+        ],
+        [
+          "B",
+          "Ger fel om man använder odefinierade variabler."
+        ],
+        [
+          "C",
+          "Ignorerar fel."
+        ],
+        [
+          "D",
+          "Unset variables."
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Du vill kolla om filen \"data.txt\" finns. Vilket test är korrekt?",
+      "raw_options": [
+        [
+          "A",
+          "`[[ -f \"data.txt\" ]]`"
+        ],
+        [
+          "B",
+          "`[[ -d \"data.txt\" ]]`"
+        ],
+        [
+          "C",
+          "`if exist \"data.txt\"`"
+        ],
+        [
+          "D",
+          "`test -exist \"data.txt\"`"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder `$#`?",
+      "raw_options": [
+        [
+          "A",
+          "Alla argument som en sträng."
+        ],
+        [
+          "B",
+          "Antal argument scriptet fick."
+        ],
+        [
+          "C",
+          "Process ID."
+        ],
+        [
+          "D",
+          "Kommentar."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Hur tilldelar du strängen \"Hej\" till variabeln MSG?",
+      "raw_options": [
+        [
+          "A",
+          "`MSG = \"Hej\"`"
+        ],
+        [
+          "B",
+          "`MSG=\"Hej\"`"
+        ],
+        [
+          "C",
+          "`$MSG = \"Hej\"`"
+        ],
+        [
+          "D",
+          "`set MSG \"Hej\"`"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilket tecken används för att göra en pipeline?",
+      "raw_options": [
+        [
+          "A",
+          "`>`"
+        ],
+        [
+          "B",
+          "`&`"
+        ],
+        [
+          "C",
+          "`|`"
+        ],
+        [
+          "D",
+          "`;`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad händer om ett kommando i mitten av en pipe misslyckas när du kör `set -o pipefail`?",
+      "raw_options": [
+        [
+          "A",
+          "Inget, scriptet fortsätter."
+        ],
+        [
+          "B",
+          "Hela pipelinens exit-kod blir \"fail\" (icke-noll)."
+        ],
+        [
+          "C",
+          "Datorn startar om."
+        ],
+        [
+          "D",
+          "Det misslyckade kommandot hoppas över."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad innehåller `$1`?",
+      "raw_options": [
+        [
+          "A",
+          "Scriptets filnamn."
+        ],
+        [
+          "B",
+          "Första argumentet."
+        ],
+        [
+          "C",
+          "Exit koden."
+        ],
+        [
+          "D",
+          "Hemkatalogen."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Hur itererar du över argumenten `$@` säkrast?",
+      "raw_options": [
+        [
+          "A",
+          "`for arg in \"$@\"; do`"
+        ],
+        [
+          "B",
+          "`for arg in $*; do`"
+        ],
+        [
+          "C",
+          "`while $arg`"
+        ],
+        [
+          "D",
+          "`foreach arg in args`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vilket kommando avslutar scriptet direkt med en felkod?",
+      "raw_options": [
+        [
+          "A",
+          "`quit 1`"
+        ],
+        [
+          "B",
+          "`exit 1`"
+        ],
+        [
+          "C",
+          "`stop`"
+        ],
+        [
+          "D",
+          "`return`"
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vad gör `read -p \"Age: \" age`?",
+      "raw_options": [
+        [
+          "A",
+          "Skriver ut \"Age: \" och sparar svaret i variabeln `age`."
+        ],
+        [
+          "B",
+          "Läser en fil som heter Age."
+        ],
+        [
+          "C",
+          "Pausar scriptet för alltid."
+        ],
+        [
+          "D",
+          "Printar variabeln age."
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad är skillnaden mellan `echo '$VAR'` och `echo \"$VAR\"`?",
+      "raw_options": [
+        [
+          "A",
+          "Ingen skillnad."
+        ],
+        [
+          "B",
+          "Enkel-fnuttar (`'`) tolkar INTE variabeln (skriver ut bokstavligt $VAR). Dubbel-fnuttar (`\"`) ersätter med värdet."
+        ],
+        [
+          "C",
+          "Dubbel-fnuttar är förbjudna i Bash."
+        ],
+        [
+          "D",
+          "Enkel-fnuttar är snabbare."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilken operator betyder \"inte lika med\" för heltal?",
+      "raw_options": [
+        [
+          "A",
+          "`!=`"
+        ],
+        [
+          "B",
+          "`-ne` (not equal)"
+        ],
+        [
+          "C",
+          "`<>`"
+        ],
+        [
+          "D",
+          "`!==`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad gör `trap 'rm temp' EXIT`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort filen `temp` när scriptet avslutas (oavsett hur det avslutas)."
+        ],
+        [
+          "B",
+          "Tar bort filen `temp` NU."
+        ],
+        [
+          "C",
+          "Fångar virus."
+        ],
+        [
+          "D",
+          "Väntar på att användaren skriver `exit`."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Hur skapar du en temporär fil säkert?",
+      "raw_options": [
+        [
+          "A",
+          "`touch /tmp/fil`"
+        ],
+        [
+          "B",
+          "`mktemp`"
+        ],
+        [
+          "C",
+          "`mkdir temp`"
+        ],
+        [
+          "D",
+          "`echo > temp`"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad gör `shift`?",
+      "raw_options": [
+        [
+          "A",
+          "Byter tangentbordslayout."
+        ],
+        [
+          "B",
+          "Tar bort `$1` och flyttar `$2` till `$1`."
+        ],
+        [
+          "C",
+          "Avslutar loopen."
+        ],
+        [
+          "D",
+          "Ändrar textfärg."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Hur får du längden på strängen i variabeln `NAME`?",
+      "raw_options": [
+        [
+          "A",
+          "`len($NAME)`"
+        ],
+        [
+          "B",
+          "`${#NAME}`"
+        ],
+        [
+          "C",
+          "`length $NAME`"
+        ],
+        [
+          "D",
+          "`$NAME.size`"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad betyder logikern `&&` mellan två kommandon?",
+      "raw_options": [
+        [
+          "A",
+          "Kör kommando 2 BARA om kommando 1 lyckades."
+        ],
+        [
+          "B",
+          "Kör båda samtidigt i bakgrunden."
+        ],
+        [
+          "C",
+          "Kör kommando 2 oavsett vad."
+        ],
+        [
+          "D",
+          "Skicka output vidare."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad betyder logikern `||` mellan två kommandon?",
+      "raw_options": [
+        [
+          "A",
+          "Pipe."
+        ],
+        [
+          "B",
+          "Kör kommando 2 BARA om kommando 1 MISSLYCKADES."
+        ],
+        [
+          "C",
+          "Kör båda parallellt."
+        ],
+        [
+          "D",
+          "ELLER i text."
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Vilken variabel håller exit-status från föregående kommando?",
+      "raw_options": [
+        [
+          "A",
+          "`$$`"
+        ],
+        [
+          "B",
+          "`$!`"
+        ],
+        [
+          "C",
+          "`$?`"
+        ],
+        [
+          "D",
+          "`$status`"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad är defaultvärdet för variabeln `X` i uttrycket `${X:-word}` om X är tom?",
+      "raw_options": [
+        [
+          "A",
+          "word"
+        ],
+        [
+          "B",
+          "X"
+        ],
+        [
+          "C",
+          "tom"
+        ],
+        [
+          "D",
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Hur gör du så ett script stannar och frågar \"Are you sure?\" och läser svar?",
+      "raw_options": [
+        [
+          "A",
+          "`ask \"Are you sure?\"`"
+        ],
+        [
+          "B",
+          "`read -p \"Are you sure?\" svar`"
+        ],
+        [
+          "C",
+          "`confirm`"
+        ],
+        [
+          "D",
+          "`echo \"Are you sure?\" && stop`"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vad gör `exec` i ett script?",
+      "raw_options": [
+        [
+          "A",
+          "Kör ett kommando och ersätter shell-processen med kommandot (scriptet slutar existera)."
+        ],
+        [
+          "B",
+          "Exekverar i bakgrunden."
+        ],
+        [
+          "C",
+          "Extraherar filer."
+        ],
+        [
+          "D",
+          "Avslutar terminalen."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vilket script-läge är bra för felsökning och visar alla kommandon som körs?",
+      "raw_options": [
+        [
+          "A",
+          "`set -e`"
+        ],
+        [
+          "B",
+          "`set -x`"
+        ],
+        [
+          "C",
+          "`set -v`"
+        ],
+        [
+          "D",
+          "`set -debug`"
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur skriver man en kommentar i Bash?",
+      "raw_options": [
+        [
+          "A",
+          "`// kommentar`"
+        ],
+        [
+          "B",
+          "`<!-- kommentar -->`"
+        ],
+        [
+          "C",
+          "`# kommentar`"
+        ],
+        [
+          "D",
+          "`; kommentar`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad är en funktion?",
+      "raw_options": [
+        [
+          "A",
+          "En separat fil."
+        ],
+        [
+          "B",
+          "Ett kodblock man kan återanvända."
+        ],
+        [
+          "C",
+          "En variabel."
+        ],
+        [
+          "D",
+          "Ett program i C."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Varför ska man undvika `ls` i script (t.ex. `for f in $(ls)`)?",
+      "raw_options": [
+        [
+          "A",
+          "Det är långsamt."
+        ],
+        [
+          "B",
+          "Det hanterar inte filnamn med mellanslag eller radbrytningar korrekt."
+        ],
+        [
+          "C",
+          "`ls` finns inte på alla system."
+        ],
+        [
+          "D",
+          "Det är fult."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Vilket kommando kollar om syntaxen i ett script är korrekt utan att köra det?",
+      "raw_options": [
+        [
+          "A",
+          "`bash -n script.sh`"
+        ],
+        [
+          "B",
+          "`bash -c script.sh`"
+        ],
+        [
+          "C",
+          "`check script.sh`"
+        ],
+        [
+          "D",
+          "`lint script.sh`"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad betyder `#!/usr/bin/env bash` jämfört med `#!/bin/bash`?",
+      "raw_options": [
+        [
+          "A",
+          "Det är samma sak."
+        ],
+        [
+          "B",
+          "`env` letar upp var bash ligger i PATH (mer portabelt)."
+        ],
+        [
+          "C",
+          "`env` är långsammare."
+        ],
+        [
+          "D",
+          "`env` används bara för Python."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Hur gör du variabeln `PATH` tillgänglig för sub-scripts?",
+      "raw_options": [
+        [
+          "A",
+          "`set PATH`"
+        ],
+        [
+          "B",
+          "`export PATH`"
+        ],
+        [
+          "C",
+          "`publish PATH`"
+        ],
+        [
+          "D",
+          "`global PATH`"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad är `SIGINT`?",
+      "raw_options": [
+        [
+          "A",
+          "Signal för internet."
+        ],
+        [
+          "B",
+          "Signal Interrupt (Ctrl+C)."
+        ],
+        [
+          "C",
+          "Signal Integer."
+        ],
+        [
+          "D",
+          "Significant Integer."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "`if [[ -z \"$VAR\" ]]`; vad testas?",
+      "raw_options": [
+        [
+          "A",
+          "Om VAR är noll."
+        ],
+        [
+          "B",
+          "Om VAR är en tom sträng."
+        ],
+        [
+          "C",
+          "Om VAR är en zippad fil."
+        ],
+        [
+          "D",
+          "Om VAR är sista bokstaven."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Hur räknar man matte i bash enklast?",
+      "raw_options": [
+        [
+          "A",
+          "`calc 1 + 1`"
+        ],
+        [
+          "B",
+          "`(( 1 + 1 ))` eller `$(( 1 + 1 ))`"
+        ],
+        [
+          "C",
+          "`math 1 + 1`"
+        ],
+        [
+          "D",
+          "`count 1 + 1`"
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vad gör `dirname /var/log/syslog`?",
+      "raw_options": [
+        [
+          "A",
+          "Returnerar `/var/log`."
+        ],
+        [
+          "B",
+          "Returnerar `syslog`."
+        ],
+        [
+          "C",
+          "Skapar mappen."
+        ],
+        [
+          "D",
+          "Tar bort mappen."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad gör `basename /var/log/syslog`?",
+      "raw_options": [
+        [
+          "A",
+          "Returnerar `/var/log`."
+        ],
+        [
+          "B",
+          "Returnerar `syslog`."
+        ],
+        [
+          "C",
+          "Ändrar namnet."
+        ],
+        [
+          "D",
+          "Visar filens ägare."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vad är syftet med `local` framför en variabel i en funktion?",
+      "raw_options": [
+        [
+          "A",
+          "Gör den snabbare."
+        ],
+        [
+          "B",
+          "Gör att den inte skriver över globala variabler med samma namn."
+        ],
+        [
+          "C",
+          "Gör att den sparas på disk."
+        ],
+        [
+          "D",
+          "Gör den osynlig."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur väntar du på att en bakgrundsprocess ska bli klar?",
+      "raw_options": [
+        [
+          "A",
+          "`pause`"
+        ],
+        [
+          "B",
+          "`wait`"
+        ],
+        [
+          "C",
+          "`sleep`"
+        ],
+        [
+          "D",
+          "`stop`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad gör `sleep 5`?",
+      "raw_options": [
+        [
+          "A",
+          "Pausar scriptet i 5 sekunder."
+        ],
+        [
+          "B",
+          "Pausar scriptet i 5 minuter."
+        ],
+        [
+          "C",
+          "Stänger av datorn."
+        ],
+        [
+          "D",
+          "Sänker processorns hastighet."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vad är `$!`?",
+      "raw_options": [
+        [
+          "A",
+          "PID för det senast startade bakgrundsjobbet."
+        ],
+        [
+          "B",
+          "PID för nuvarande shell."
+        ],
+        [
+          "C",
+          "Förra kommandot."
+        ],
+        [
+          "D",
+          "Ett felmeddelande."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Hur kollar du om scriptet körs som root?",
+      "raw_options": [
+        [
+          "A",
+          "`if [[ $USER == \"admin\" ]]`"
+        ],
+        [
+          "B",
+          "`if [[ $EUID -eq 0 ]]`"
+        ],
+        [
+          "C",
+          "`if [[ root == true ]]`"
+        ],
+        [
+          "D",
+          "`check root`"
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad gör `tee` i `echo \"hej\" | tee fil.txt`?",
+      "raw_options": [
+        [
+          "A",
+          "Skriver bara till filen."
+        ],
+        [
+          "B",
+          "Skriver BÅDE till skärmen (stdout) OCH till filen."
+        ],
+        [
+          "C",
+          "Dricker te."
+        ],
+        [
+          "D",
+          "Tar bort filen."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vilken fil läses när du loggar in (login shell)?",
+      "raw_options": [
+        [
+          "A",
+          "`~/.bashrc` (oftast för non-login, men laddas ofta av profile)."
+        ],
+        [
+          "B",
+          "`~/.bash_profile` eller `~/.profile`."
+        ],
+        [
+          "C",
+          "`/etc/password`."
+        ],
+        [
+          "D",
+          "`~/.logout`."
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vad gör `source script.sh` eller `. script.sh`?",
+      "raw_options": [
+        [
+          "A",
+          "Kör scriptet i en ny process."
+        ],
+        [
+          "B",
+          "Kör scriptet i NUVARANDE shell (variabler behålls)."
+        ],
+        [
+          "C",
+          "Visar källkoden."
+        ],
+        [
+          "D",
+          "Laddar ner scriptet."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Hur loopar man oändligt tills man trycker Ctrl+C?",
+      "raw_options": [
+        [
+          "A",
+          "`for i in forever`"
+        ],
+        [
+          "B",
+          "`while true; do ... done`"
+        ],
+        [
+          "C",
+          "`loop`"
+        ],
+        [
+          "D",
+          "`run`"
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Vad betyder `2> /dev/null`?",
+      "raw_options": [
+        [
+          "A",
+          "Skicka output till null."
+        ],
+        [
+          "B",
+          "Skicka bara felmeddelanden (stderr) till det \"svarta hålet\" (tysta fel)."
+        ],
+        [
+          "C",
+          "Kasta bort allt."
+        ],
+        [
+          "D",
+          "Läs från null."
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vilket kommando används för att \"klippa ut\" delar av en sträng baserat på delimiter?",
+      "raw_options": [
+        [
+          "A",
+          "`cut`"
+        ],
+        [
+          "B",
+          "`slice`"
+        ],
+        [
+          "C",
+          "`chop`"
+        ],
+        [
+          "D",
+          "`split`"
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Hur ersätter du \"foo\" med \"bar\" i variabeln `$TEXT`?",
+      "raw_options": [
+        [
+          "A",
+          "`${TEXT/foo/bar}`"
+        ],
+        [
+          "B",
+          "`subst($TEXT, foo, bar)`"
+        ],
+        [
+          "C",
+          "`sed foo bar`"
+        ],
+        [
+          "D",
+          "`change $TEXT foo bar`"
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad gör `set -o nounset`?",
+      "raw_options": [
+        [
+          "A",
+          "Samma som `set -u`."
+        ],
+        [
+          "B",
+          "Samma som `set -e`."
+        ],
+        [
+          "C",
+          "Reset variables."
+        ],
+        [
+          "D",
+          "Ingen aning."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "När ska man använda `grep -q` i if-satser?",
+      "raw_options": [
+        [
+          "A",
+          "När man vill se resultatet."
+        ],
+        [
+          "B",
+          "När man bara bryr sig om ifall det fanns en matchning (tyst), inte själva texten."
+        ],
+        [
+          "C",
+          "När man vill grep:a snabbt."
+        ],
+        [
+          "D",
+          "Aldrig."
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är \"Command Substitution\"?",
+      "raw_options": [
+        [
+          "A",
+          "Att byta ut ett kommando."
+        ],
+        [
+          "B",
+          "Att köra ett kommando och ersätta det med dess output, t.ex. `$(date)`."
+        ],
+        [
+          "C",
+          "Att aliasa."
+        ],
+        [
+          "D",
+          "Att ta bort kommandon."
+        ]
+      ]
+    }
+  ],
+  "Nod7_Bash_Verktyg_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilket tecken omdirigerar output och LÄGGER TILL (append) till en fil?",
+      "raw_options": [
+        [
+          "A",
+          "`>`"
+        ],
+        [
+          "B",
+          "`>>`"
+        ],
+        [
+          "C",
+          "`<`"
+        ],
+        [
+          "D",
+          "`|`"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vad händer med `ls > fil.txt` om filen redan finns?",
+      "raw_options": [
+        [
+          "A",
+          "Det läggs till sist."
+        ],
+        [
+          "B",
+          "Filen skrivs över helt."
+        ],
+        [
+          "C",
+          "Kommandot misslyckas."
+        ],
+        [
+          "D",
+          "Filen döps om."
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilken siffra representerar stderr?",
+      "raw_options": [
+        [
+          "A",
+          "0"
+        ],
+        [
+          "B",
+          "1"
+        ],
+        [
+          "C",
+          "2"
+        ],
+        [
+          "D",
+          "3"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad gör `grep -v \"error\" log.txt`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar bara rader med \"error\"."
+        ],
+        [
+          "B",
+          "Visar alla rader som INTE innehåller \"error\"."
+        ],
+        [
+          "C",
+          "Visar \"error\" med färg."
+        ],
+        [
+          "D",
+          "Tar bort filen log.txt."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Vilket verktyg är bäst för att plocka ut kolumn 3 från en CSV-fil?",
+      "raw_options": [
+        [
+          "A",
+          "`grep`"
+        ],
+        [
+          "B",
+          "`cut` (eller `awk`)"
+        ],
+        [
+          "C",
+          "`sort`"
+        ],
+        [
+          "D",
+          "`wc`"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Hur sorterar du en fil numeriskt (1, 2, 10 istället för 1, 10, 2)?",
+      "raw_options": [
+        [
+          "A",
+          "`sort -n`"
+        ],
+        [
+          "B",
+          "`sort -N`"
+        ],
+        [
+          "C",
+          "`sort -123`"
+        ],
+        [
+          "D",
+          "`sort --num`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad krävs för att `uniq` ska fungera korrekt på hela filen?",
+      "raw_options": [
+        [
+          "A",
+          "Filen måste vara tom."
+        ],
+        [
+          "B",
+          "Filen måste vara sorterad (`sort`)."
+        ],
+        [
+          "C",
+          "Filen måste vara skrivbar."
+        ],
+        [
+          "D",
+          "Filen måste vara binär."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad gör `wc -l`?",
+      "raw_options": [
+        [
+          "A",
+          "Räknar bokstäver (letters)."
+        ],
+        [
+          "B",
+          "Räknar rader (lines)."
+        ],
+        [
+          "C",
+          "Räknar ord (words)."
+        ],
+        [
+          "D",
+          "Räknar längden."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vilket kommando används för att ersätta \"foo\" med \"bar\" i en ström?",
+      "raw_options": [
+        [
+          "A",
+          "`grep s/foo/bar/`"
+        ],
+        [
+          "B",
+          "`sed 's/foo/bar/'`"
+        ],
+        [
+          "C",
+          "`awk 'foo=bar'`"
+        ],
+        [
+          "D",
+          "`cut foo bar`"
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vad betyder regexet `^Error`?",
+      "raw_options": [
+        [
+          "A",
+          "Rader som slutar på Error."
+        ],
+        [
+          "B",
+          "Rader som innehåller Error var som helst."
+        ],
+        [
+          "C",
+          "Rader som BÖRJAR med Error."
+        ],
+        [
+          "D",
+          "Rader som inte har Error."
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vilket kommando följer en loggfil i realtid?",
+      "raw_options": [
+        [
+          "A",
+          "`cat -f`"
+        ],
+        [
+          "B",
+          "`less -f`"
+        ],
+        [
+          "C",
+          "`tail -f`"
+        ],
+        [
+          "D",
+          "`watch log`"
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad gör `tr 'a-z' 'A-Z'`?",
+      "raw_options": [
+        [
+          "A",
+          "Översätter från engelska till ryska."
+        ],
+        [
+          "B",
+          "Gör om gemener till versaler (uppercase)."
+        ],
+        [
+          "C",
+          "Tar bort bokstäverna A och Z."
+        ],
+        [
+          "D",
+          "Sorterar alfabetiskt."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilken awk-variabel håller hela radens innehåll?",
+      "raw_options": [
+        [
+          "A",
+          "`$1`"
+        ],
+        [
+          "B",
+          "`$ALL`"
+        ],
+        [
+          "C",
+          "`$0`"
+        ],
+        [
+          "D",
+          "`$ROW`"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad gör `head -n 5`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar de 5 sista raderna."
+        ],
+        [
+          "B",
+          "Visar de 5 första raderna."
+        ],
+        [
+          "C",
+          "Tar bort 5 rader."
+        ],
+        [
+          "D",
+          "Visar rad 5."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Hur söker du efter \"fail\" i alla filer i nuvarande mapp rekursivt?",
+      "raw_options": [
+        [
+          "A",
+          "`grep \"fail\" *`"
+        ],
+        [
+          "B",
+          "`grep -r \"fail\" .`"
+        ],
+        [
+          "C",
+          "`find \"fail\"`"
+        ],
+        [
+          "D",
+          "`locate \"fail\"`"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad gör `xargs` i kommandot `find . -name \"*.txt\" | xargs rm`?",
+      "raw_options": [
+        [
+          "A",
+          "Det kör `rm` en gång för varje fil som `find` hittar (eller grupperat)."
+        ],
+        [
+          "B",
+          "Det tar bort xargs."
+        ],
+        [
+          "C",
+          "Det hittar xargs."
+        ],
+        [
+          "D",
+          "Det sorterar filerna."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Vilken flagga till `grep` visar radnummer?",
+      "raw_options": [
+        [
+          "A",
+          "`-r`"
+        ],
+        [
+          "B",
+          "`-n`"
+        ],
+        [
+          "C",
+          "`-l`"
+        ],
+        [
+          "D",
+          "`-x`"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad betyder `2>&1`?",
+      "raw_options": [
+        [
+          "A",
+          "Skicka stdout till stderr."
+        ],
+        [
+          "B",
+          "Skicka stderr till samma plats som stdout."
+        ],
+        [
+          "C",
+          "Multiplicera med 2."
+        ],
+        [
+          "D",
+          "Skicka till filen 1."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vilket kommando skriver till BÅDE skärm och fil?",
+      "raw_options": [
+        [
+          "A",
+          "`cat`"
+        ],
+        [
+          "B",
+          "`tee`"
+        ],
+        [
+          "C",
+          "`echo`"
+        ],
+        [
+          "D",
+          "`write`"
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Hur tar du bort dubbletter men räknar dem också?",
+      "raw_options": [
+        [
+          "A",
+          "`uniq -c`"
+        ],
+        [
+          "B",
+          "`sort -c`"
+        ],
+        [
+          "C",
+          "`wc -u`"
+        ],
+        [
+          "D",
+          "`count -u`"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad gör `sed -i`?",
+      "raw_options": [
+        [
+          "A",
+          "Info mode."
+        ],
+        [
+          "B",
+          "Interactive mode."
+        ],
+        [
+          "C",
+          "In-place editing (sparar ändringar till filen)."
+        ],
+        [
+          "D",
+          "Ignore case."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vad matchar regexet `.` (punkt)?",
+      "raw_options": [
+        [
+          "A",
+          "Bara en punkt."
+        ],
+        [
+          "B",
+          "Slutet på meningen."
+        ],
+        [
+          "C",
+          "Vilket tecken som helst."
+        ],
+        [
+          "D",
+          "Mellanslag."
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vilket kommando visar de sista 100 raderna av en fil?",
+      "raw_options": [
+        [
+          "A",
+          "`tail -n 100`"
+        ],
+        [
+          "B",
+          "`head -n 100`"
+        ],
+        [
+          "C",
+          "`cat -n 100`"
+        ],
+        [
+          "D",
+          "`less 100`"
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad betyder `awk -F:`?",
+      "raw_options": [
+        [
+          "A",
+          "Hitta fel."
+        ],
+        [
+          "B",
+          "Använd kolon som fältavgränsare."
+        ],
+        [
+          "C",
+          "Format file."
+        ],
+        [
+          "D",
+          "Fast mode."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Hur kör du `grep` tyst (bara exit code spelar roll)?",
+      "raw_options": [
+        [
+          "A",
+          "`grep -s`"
+        ],
+        [
+          "B",
+          "`grep -q` (quiet)"
+        ],
+        [
+          "C",
+          "`grep --silent`"
+        ],
+        [
+          "D",
+          "`grep -x`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad gör `awk 'END {print NR}'`?",
+      "raw_options": [
+        [
+          "A",
+          "Skriver ut sista raden."
+        ],
+        [
+          "B",
+          "Skriver ut totala antalet rader."
+        ],
+        [
+          "C",
+          "Avslutar programmet."
+        ],
+        [
+          "D",
+          "Skriver ut \"NR\"."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Hur vänder du på ordningen i `sort`?",
+      "raw_options": [
+        [
+          "A",
+          "`sort -b` (backwards)"
+        ],
+        [
+          "B",
+          "`sort -r` (reverse)"
+        ],
+        [
+          "C",
+          "`sort -i` (inverse)"
+        ],
+        [
+          "D",
+          "`rev`"
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Vad gör `tr -d '0-9'`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort alla siffror."
+        ],
+        [
+          "B",
+          "Tar bort alla bokstäver utom 0-9."
+        ],
+        [
+          "C",
+          "Översätter 0 till 9."
+        ],
+        [
+          "D",
+          "Delar upp vid siffror."
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vilket tecken används för \"Not\" (negering) i en teckenklass `[^...]`?",
+      "raw_options": [
+        [
+          "A",
+          "`!`"
+        ],
+        [
+          "B",
+          "`-`"
+        ],
+        [
+          "C",
+          "`^`"
+        ],
+        [
+          "D",
+          "`~`"
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Vad gör `cut -c 1-5`?",
+      "raw_options": [
+        [
+          "A",
+          "Klipper ut fält 1-5."
+        ],
+        [
+          "B",
+          "Klipper ut tecken (characters) 1-5."
+        ],
+        [
+          "C",
+          "Kopierar 5 gånger."
+        ],
+        [
+          "D",
+          "Skapar 5 filer."
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad är skillnaden på `fgrep` och `grep`?",
+      "raw_options": [
+        [
+          "A",
+          "`fgrep` är snabbare men stöder inte regex (Fixed strings)."
+        ],
+        [
+          "B",
+          "`fgrep` är för filer."
+        ],
+        [
+          "C",
+          "Ingen skillnad."
+        ],
+        [
+          "D",
+          "`fgrep` är deprecated."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vad gör `sed '5d' fil.txt`?",
+      "raw_options": [
+        [
+          "A",
+          "Raderar rad 5."
+        ],
+        [
+          "B",
+          "Duplicerar rad 5."
+        ],
+        [
+          "C",
+          "Visar rad 5."
+        ],
+        [
+          "D",
+          "Delar rad 5."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "Hur får du `xargs` att hantera filnamn med mellanslag korrekt?",
+      "raw_options": [
+        [
+          "A",
+          "`xargs -s`"
+        ],
+        [
+          "B",
+          "`xargs -0` (tillsammans med find -print0)."
+        ],
+        [
+          "C",
+          "`xargs --space`"
+        ],
+        [
+          "D",
+          "Det går inte."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vad betyder `ls | wc -l`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar filstorlekar."
+        ],
+        [
+          "B",
+          "Räknar antalet filer i mappen (om inga submappar/newline i namn)."
+        ],
+        [
+          "C",
+          "Listar filer långsamt."
+        ],
+        [
+          "D",
+          "Sorterar filer."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad gör `sort -k2`?",
+      "raw_options": [
+        [
+          "A",
+          "Sorterar på kolumn 2."
+        ],
+        [
+          "B",
+          "Sorterar 2 filer."
+        ],
+        [
+          "C",
+          "Sorterar 2 gånger."
+        ],
+        [
+          "D",
+          "Beåller 2 rader."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vad matchar regex `[0-9]{3}`?",
+      "raw_options": [
+        [
+          "A",
+          "Siffran 3."
+        ],
+        [
+          "B",
+          "Exakt tre siffror i rad (t.ex. 123)."
+        ],
+        [
+          "C",
+          "Siffrorna 0 till 3."
+        ],
+        [
+          "D",
+          "3 rader."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur skriver du ut kolumn 1 och 3 med awk?",
+      "raw_options": [
+        [
+          "A",
+          "`awk '{print $1, $3}'`"
+        ],
+        [
+          "B",
+          "`awk '{print 1, 3}'`"
+        ],
+        [
+          "C",
+          "`cut 1 3`"
+        ],
+        [
+          "D",
+          "`awk -c 1,3`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad gör `grep -A 2 \"fel\"`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar \"fel\" och 2 rader EFTER (After)."
+        ],
+        [
+          "B",
+          "Visar \"fel\" och 2 rader INNAN."
+        ],
+        [
+          "C",
+          "Visar \"fel\" 2 gånger."
+        ],
+        [
+          "D",
+          "Allt utom \"fel\"."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vad gör `comm` kommandot?",
+      "raw_options": [
+        [
+          "A",
+          "Jämför två sorterade filer rad för rad."
+        ],
+        [
+          "B",
+          "Kommunicerar med servern."
+        ],
+        [
+          "C",
+          "Kommenterar ut rader."
+        ],
+        [
+          "D",
+          "Common commands."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Vad händer om du kör `cat fil | sort | uniq` utan sort?",
+      "raw_options": [
+        [
+          "A",
+          "`uniq` tar bara bort dubbletter som ligger EXAKT bredvid varandra (intilliggande). Utan sort missar den många."
+        ],
+        [
+          "B",
+          "Det fungerar lika bra."
+        ],
+        [
+          "C",
+          "Det blir felmeddelande."
+        ],
+        [
+          "D",
+          "`uniq` sorterar automatiskt."
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad gör `paste` kommandot?",
+      "raw_options": [
+        [
+          "A",
+          "Klistrar in text (Ctrl+V)."
+        ],
+        [
+          "B",
+          "Slår ihop filer horisontellt (sida vid sida)."
+        ],
+        [
+          "C",
+          "Tar bort rader."
+        ],
+        [
+          "D",
+          "Skapar en fil."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Hur tar du bort \"trailing whitespace\" med sed?",
+      "raw_options": [
+        [
+          "A",
+          "`sed 's/ *$//'`"
+        ],
+        [
+          "B",
+          "`sed 'rm space'`"
+        ],
+        [
+          "C",
+          "`trim`"
+        ],
+        [
+          "D",
+          "`cut space`"
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vilken fil är \"bitbucket\" (svarta hålet)?",
+      "raw_options": [
+        [
+          "A",
+          "`/dev/null`"
+        ],
+        [
+          "B",
+          "`/dev/zero`"
+        ],
+        [
+          "C",
+          "`/tmp`"
+        ],
+        [
+          "D",
+          "`/dev/void`"
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Vad betyder regexet `$`?",
+      "raw_options": [
+        [
+          "A",
+          "Variabel."
+        ],
+        [
+          "B",
+          "Start på rad."
+        ],
+        [
+          "C",
+          "Slut på rad."
+        ],
+        [
+          "D",
+          "Pengar."
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Hur konverterar du \"file.csv\" med kommatecken till tabb-separerad?",
+      "raw_options": [
+        [
+          "A",
+          "`tr ',' '\\t' < file.csv`"
+        ],
+        [
+          "B",
+          "`sed CSV file.csv`"
+        ],
+        [
+          "C",
+          "`awk -CSV file.csv`"
+        ],
+        [
+          "D",
+          "`convert file.csv`"
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vad gör `grep -c`?",
+      "raw_options": [
+        [
+          "A",
+          "Räknar antalet matchande rader."
+        ],
+        [
+          "B",
+          "Kopierar matchande rader."
+        ],
+        [
+          "C",
+          "Klipper matchande rader."
+        ],
+        [
+          "D",
+          "Färglägger matchande rader."
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Vilket kommando används ofta med `sed` för att ersätta text i en pipeline utan att spara till fil?",
+      "raw_options": [
+        [
+          "A",
+          "Ingen flagga behövs, standard output är till skärmen."
+        ],
+        [
+          "B",
+          "`sed -p`"
+        ],
+        [
+          "C",
+          "`sed -s`"
+        ],
+        [
+          "D",
+          "`sed -save`"
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad gör `awk 'NR==5'`?",
+      "raw_options": [
+        [
+          "A",
+          "Skriver ut rad 5 (default action är print)."
+        ],
+        [
+          "B",
+          "Sätter NR till 5."
+        ],
+        [
+          "C",
+          "Avslutar efter 5 rader."
+        ],
+        [
+          "D",
+          "Ingenting."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Hur inverterar du sorteringen (Ö till A)?",
+      "raw_options": [
+        [
+          "A",
+          "`sort -i`"
+        ],
+        [
+          "B",
+          "`sort -r`"
+        ],
+        [
+          "C",
+          "`sort -z`"
+        ],
+        [
+          "D",
+          "`sort -back`"
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är en \"Here Document\" (`<<EOF`)?",
+      "raw_options": [
+        [
+          "A",
+          "Ett sätt att skriva flerradig text direkt till stdin på ett kommando."
+        ],
+        [
+          "B",
+          "En länk till dokumentation."
+        ],
+        [
+          "C",
+          "En filtyp."
+        ],
+        [
+          "D",
+          "Ett fel."
+        ]
+      ]
+    }
+  ],
+  "Nod8_Docker_Isolering_Master.md": [
+    {
+      "id": 1,
+      "question": "Vad är den största fördelen med containers jämfört med virtuella maskiner?",
+      "raw_options": [
+        [
+          "A",
+          "De har snyggare logga."
+        ],
+        [
+          "B",
+          "De är lättviktiga och startar snabbare eftersom de delar kernel."
+        ],
+        [
+          "C",
+          "De är säkrare."
+        ],
+        [
+          "D",
+          "De kräver Windows."
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vilket kommando används för att ladda ner en image utan att köra den?",
+      "raw_options": [
+        [
+          "A",
+          "`docker get`"
+        ],
+        [
+          "B",
+          "`docker fetch`"
+        ],
+        [
+          "C",
+          "`docker pull`"
+        ],
+        [
+          "D",
+          "`docker load`"
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilken flagga används för att namnge en container?",
+      "raw_options": [
+        [
+          "A",
+          "`--title`"
+        ],
+        [
+          "B",
+          "`--name`"
+        ],
+        [
+          "C",
+          "`--id`"
+        ],
+        [
+          "D",
+          "`--call`"
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder `-it` i `docker run -it`?",
+      "raw_options": [
+        [
+          "A",
+          "Interactive + TTY (terminal)."
+        ],
+        [
+          "B",
+          "Internet + TCP."
+        ],
+        [
+          "C",
+          "In Time."
+        ],
+        [
+          "D",
+          "Install Tools."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Om du vill mappa en mapp från din dator till containern, vilken flagga använder du?",
+      "raw_options": [
+        [
+          "A",
+          "`-p`"
+        ],
+        [
+          "B",
+          "`-v` (volume)"
+        ],
+        [
+          "C",
+          "`-m`"
+        ],
+        [
+          "D",
+          "`-f`"
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilket kommando tar bort alla stoppade containers?",
+      "raw_options": [
+        [
+          "A",
+          "`docker rm --all`"
+        ],
+        [
+          "B",
+          "`docker container prune`"
+        ],
+        [
+          "C",
+          "`docker clean`"
+        ],
+        [
+          "D",
+          "`docker stop --rm`"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Vad händer om du inte anger någon TAG när du pullar en image (t.ex. `docker pull ubuntu`)?",
+      "raw_options": [
+        [
+          "A",
+          "Det blir fel."
+        ],
+        [
+          "B",
+          "Den hämtar versionen 1.0."
+        ],
+        [
+          "C",
+          "Den hämtar taggen `latest`."
+        ],
+        [
+          "D",
+          "Den hämtar den äldsta versionen."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad gör `ENV` i en Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Sätter miljön till produktion."
+        ],
+        [
+          "B",
+          "Sätter en miljövariabel (Environment Variable)."
+        ],
+        [
+          "C",
+          "Skickar ett kuvert."
+        ],
+        [
+          "D",
+          "Avslutar bygget."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vad är skillnaden på `docker attach` och `docker exec`?",
+      "raw_options": [
+        [
+          "A",
+          "`attach` kopplar dig till huvudprocessen (PID 1) stdout/stdin, `exec` startar en NY process vid sidan av."
+        ],
+        [
+          "B",
+          "Ingen skillnad."
+        ],
+        [
+          "C",
+          "`exec` är gammalt."
+        ],
+        [
+          "D",
+          "`attach` är säkrare."
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vilket filsystem används oftast för Docker images (Union File System)?",
+      "raw_options": [
+        [
+          "A",
+          "NTFS"
+        ],
+        [
+          "B",
+          "Overlay2"
+        ],
+        [
+          "C",
+          "FAT32"
+        ],
+        [
+          "D",
+          "EXT3"
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Vad händer om du har två `CMD` i din Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Båda körs."
+        ],
+        [
+          "B",
+          "Bara den sista körs (den första ignoreras)."
+        ],
+        [
+          "C",
+          "Det blir syntaxfel."
+        ],
+        [
+          "D",
+          "De körs parallellt."
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Hur kan du se vilken IP-adress en container har?",
+      "raw_options": [
+        [
+          "A",
+          "`docker ip <id>`"
+        ],
+        [
+          "B",
+          "`docker inspect <id>`"
+        ],
+        [
+          "C",
+          "`docker show ip`"
+        ],
+        [
+          "D",
+          "`ping <id>`"
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilken status har en container som kraschat?",
+      "raw_options": [
+        [
+          "A",
+          "Running"
+        ],
+        [
+          "B",
+          "Exited"
+        ],
+        [
+          "C",
+          "Paused"
+        ],
+        [
+          "D",
+          "Dead"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad är en \"Multi-stage build\"?",
+      "raw_options": [
+        [
+          "A",
+          "Att bygga flera images samtidigt."
+        ],
+        [
+          "B",
+          "Att använda flera `FROM` i samma Dockerfile för att kopiera artefakter och hålla slut-imagen liten."
+        ],
+        [
+          "C",
+          "Att bygga på flera datorer."
+        ],
+        [
+          "D",
+          "Att bygga långsamt."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Vad gör `docker search nginx`?",
+      "raw_options": [
+        [
+          "A",
+          "Letar efter `nginx` lokalt på disken."
+        ],
+        [
+          "B",
+          "Söker efter `nginx` på Docker Hub (registret)."
+        ],
+        [
+          "C",
+          "Söker efter `nginx`-processen i minnet."
+        ],
+        [
+          "D",
+          "Googlar på nginx."
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Hur raderar du en image som används av en stoppad container?",
+      "raw_options": [
+        [
+          "A",
+          "`docker rmi <image>` (det fungerar direkt)."
+        ],
+        [
+          "B",
+          "Du måste ta bort containern först, eller använda `docker rmi -f`."
+        ],
+        [
+          "C",
+          "Det går inte alls."
+        ],
+        [
+          "D",
+          "Starta om docker."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Vilken port lyssnar `EXPOSE` på?",
+      "raw_options": [
+        [
+          "A",
+          "Port 80."
+        ],
+        [
+          "B",
+          "Ingen port öppnas fysiskt, det är bara dokumentation."
+        ],
+        [
+          "C",
+          "Alla portar."
+        ],
+        [
+          "D",
+          "Port 22."
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad är \"Docker Hub\"?",
+      "raw_options": [
+        [
+          "A",
+          "En USB-hub."
+        ],
+        [
+          "B",
+          "Det officiella molnregistret för Docker images."
+        ],
+        [
+          "C",
+          "En nätverksswitch."
+        ],
+        [
+          "D",
+          "En GUI-klient."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vilket kommando visar hur mycket disk utrymme Docker använder totalt?",
+      "raw_options": [
+        [
+          "A",
+          "`docker system df`"
+        ],
+        [
+          "B",
+          "`df -h`"
+        ],
+        [
+          "C",
+          "`docker space`"
+        ],
+        [
+          "D",
+          "`docker size`"
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Vad gör `docker kill`?",
+      "raw_options": [
+        [
+          "A",
+          "Skickar SIGKILL (omedelbar död) till containern."
+        ],
+        [
+          "B",
+          "Raderar imagen."
+        ],
+        [
+          "C",
+          "Skickar SIGTERM."
+        ],
+        [
+          "D",
+          "Startar om containern."
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Om du vill köra ett kommando i en engångs-container och ta bort den direkt efteråt, vilken flagga använder du?",
+      "raw_options": [
+        [
+          "A",
+          "`--temp`"
+        ],
+        [
+          "B",
+          "`--rm`"
+        ],
+        [
+          "C",
+          "`--delete`"
+        ],
+        [
+          "D",
+          "`--once`"
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vad är `.dockerignore` till för?",
+      "raw_options": [
+        [
+          "A",
+          "Att ignorera docker-fel."
+        ],
+        [
+          "B",
+          "Att hindra onödiga filer (t.ex. `node_modules`) från att skickas till bygg-contextet (Build Context)."
+        ],
+        [
+          "C",
+          "Att ignorera användare."
+        ],
+        [
+          "D",
+          "Att dölja containern."
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Hur specificerar du en annan fil än `Dockerfile` vid build?",
+      "raw_options": [
+        [
+          "A",
+          "`-f MinAndraFil`"
+        ],
+        [
+          "B",
+          "`--file MinAndraFil`"
+        ],
+        [
+          "C",
+          "Både A och B."
+        ],
+        [
+          "D",
+          "Det går inte, den måste heta Dockerfile."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Vad betyder `FROM scratch`?",
+      "raw_options": [
+        [
+          "A",
+          "Börja om från början."
+        ],
+        [
+          "B",
+          "Använd en helt tom image (ingen OS, inga filer)."
+        ],
+        [
+          "C",
+          "Använd Scratch-programmeringsspråket."
+        ],
+        [
+          "D",
+          "Felaktig syntax."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Vilket tecken används för att kommentera i en Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "`//`"
+        ],
+        [
+          "B",
+          "`<!-- -->`"
+        ],
+        [
+          "C",
+          "`#`"
+        ],
+        [
+          "D",
+          "`;`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Vad är \"host\" nätverksläget (`--network host`)?",
+      "raw_options": [
+        [
+          "A",
+          "Containern får egen IP."
+        ],
+        [
+          "B",
+          "Containern delar nätverksstack (IP och portar) direkt med värddatorn (ingen isolering)."
+        ],
+        [
+          "C",
+          "Containern är offline."
+        ],
+        [
+          "D",
+          "Containern agerar router."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Var lagras image-lagren på en Linux-host normalt?",
+      "raw_options": [
+        [
+          "A",
+          "`/tmp`"
+        ],
+        [
+          "B",
+          "`/var/lib/docker`"
+        ],
+        [
+          "C",
+          "`/home/docker`"
+        ],
+        [
+          "D",
+          "`/etc/docker`"
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Hur uppdaterar du en image till senaste versionen?",
+      "raw_options": [
+        [
+          "A",
+          "`docker update <image>`"
+        ],
+        [
+          "B",
+          "`docker pull <image>`"
+        ],
+        [
+          "C",
+          "`docker upgrade`"
+        ],
+        [
+          "D",
+          "`docker refresh`"
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad är en \"Registry\"?",
+      "raw_options": [
+        [
+          "A",
+          "En plats där images lagras och distribueras (t.ex. Docker Hub, GCR)."
+        ],
+        [
+          "B",
+          "En loggfil."
+        ],
+        [
+          "C",
+          "En konfigurationsfil i Windows."
+        ],
+        [
+          "D",
+          "En typ av container."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Om `docker run` misslyckas, vilken exit-kod betyder ofta \"command not found\"?",
+      "raw_options": [
+        [
+          "A",
+          "0"
+        ],
+        [
+          "B",
+          "1"
+        ],
+        [
+          "C",
+          "127"
+        ],
+        [
+          "D",
+          "255"
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad gör `HEALTHCHECK` i en Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Kollar om datorn mår bra."
+        ],
+        [
+          "B",
+          "definierar ett kommando som Docker kör regelbundet för att se om applikationen svarar (friskt/sjukt tillstånd)."
+        ],
+        [
+          "C",
+          "Installerar antivirus."
+        ],
+        [
+          "D",
+          "Startar om vid krasch."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "När körs kommandot i `RUN`?",
+      "raw_options": [
+        [
+          "A",
+          "När containern startar."
+        ],
+        [
+          "B",
+          "När imagen byggs (Build time)."
+        ],
+        [
+          "C",
+          "När du kör `docker exec`."
+        ],
+        [
+          "D",
+          "Aldrig."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "När körs kommandot i `CMD`?",
+      "raw_options": [
+        [
+          "A",
+          "När imagen byggs."
+        ],
+        [
+          "B",
+          "När containern startar (Runtime)."
+        ],
+        [
+          "C",
+          "När du installerar docker."
+        ],
+        [
+          "D",
+          "När du stoppar containern."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vilken prioritet har miljövariabler satta med `-e` jämfört med `ENV` i Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Lägre prioritet."
+        ],
+        [
+          "B",
+          "Högre prioritet (de skriver över Dockerfile)."
+        ],
+        [
+          "C",
+          "Samma prioritet."
+        ],
+        [
+          "D",
+          "Det blir konfliktfel."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Vad är \"Container Orchestration\"?",
+      "raw_options": [
+        [
+          "A",
+          "Att skriva musik."
+        ],
+        [
+          "B",
+          "Att hantera, skala och automatisera deployment av många containers (t.ex. Kubernetes, Swarm)."
+        ],
+        [
+          "C",
+          "Att bygga en image."
+        ],
+        [
+          "D",
+          "Att köra en container manuellt."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Hur kopierar du en fil FRÅN en körande container till din dator?",
+      "raw_options": [
+        [
+          "A",
+          "`docker cp <container>:/path/fil .`"
+        ],
+        [
+          "B",
+          "`scp`"
+        ],
+        [
+          "C",
+          "`docker get`"
+        ],
+        [
+          "D",
+          "`docker pull file`"
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Hur kopierar du en fil TILL en körande container?",
+      "raw_options": [
+        [
+          "A",
+          "`docker cp fil <container>:/path/`"
+        ],
+        [
+          "B",
+          "`docker put`"
+        ],
+        [
+          "C",
+          "`docker push`"
+        ],
+        [
+          "D",
+          "`ftp`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Vad gör `ONBUILD` i en Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Körs när containern startar."
+        ],
+        [
+          "B",
+          "Körs NÄR denna image används som bas (FROM) i en ANNAN Dockerfile."
+        ],
+        [
+          "C",
+          "Bygger snabbare."
+        ],
+        [
+          "D",
+          "Exekveras på onsdagar."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vilket OS körs oftast inuti en Windows-containerstandard?",
+      "raw_options": [
+        [
+          "A",
+          "Linux (via WSL2 eller Hyper-V)."
+        ],
+        [
+          "B",
+          "Windows Server Core / Nano Server."
+        ],
+        [
+          "C",
+          "DOS."
+        ],
+        [
+          "D",
+          "Android."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Hur loggar du in på ett privat registry?",
+      "raw_options": [
+        [
+          "A",
+          "`docker signin`"
+        ],
+        [
+          "B",
+          "`docker login`"
+        ],
+        [
+          "C",
+          "`docker connect`"
+        ],
+        [
+          "D",
+          "`docker auth`"
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad gör `--restart always`?",
+      "raw_options": [
+        [
+          "A",
+          "Startar om datorn."
+        ],
+        [
+          "B",
+          "Startar om containern automatiskt om den kraschar eller om Docker daemon startar om."
+        ],
+        [
+          "C",
+          "Startar om varje timme."
+        ],
+        [
+          "D",
+          "Startar aldrig om."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Vad är `docker inspect --format`?",
+      "raw_options": [
+        [
+          "A",
+          "Formaterar hårddisken."
+        ],
+        [
+          "B",
+          "Låter dig använda Go-templates för att plocka ut specifik data ur JSON-outputen."
+        ],
+        [
+          "C",
+          "Rensar loggar."
+        ],
+        [
+          "D",
+          "Visar hjälp."
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vad betyder `<none>:<none>` i `docker images` listan?",
+      "raw_options": [
+        [
+          "A",
+          "En trasig image."
+        ],
+        [
+          "B",
+          "En \"dangling image\" (ej taggad), ofta resultatet av att en image uppdaterats och den gamla ligger kvar."
+        ],
+        [
+          "C",
+          "En hemlig image."
+        ],
+        [
+          "D",
+          "En virusinfekterad image."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Vilket kommando visar historiken (lagren) för en image?",
+      "raw_options": [
+        [
+          "A",
+          "`docker log`"
+        ],
+        [
+          "B",
+          "`docker history`"
+        ],
+        [
+          "C",
+          "`docker layers`"
+        ],
+        [
+          "D",
+          "`docker steps`"
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Om du binder en volym `-v /data`, vad händer med datan när containern tas bort?",
+      "raw_options": [
+        [
+          "A",
+          "Den raderas."
+        ],
+        [
+          "B",
+          "Den finns kvar på hosten (eftersom det är en volym)."
+        ],
+        [
+          "C",
+          "Den arkiveras."
+        ],
+        [
+          "D",
+          "Den skickas till molnet."
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vad är skillnaden på `-P` (stort) och `-p` (litet)?",
+      "raw_options": [
+        [
+          "A",
+          "`-P` publicerar ALLA exponerade portar till slumpmässiga portar på hosten. `-p` mappar specifika portar."
+        ],
+        [
+          "B",
+          "Ingen skillnad."
+        ],
+        [
+          "C",
+          "`-P` är för UDP."
+        ],
+        [
+          "D",
+          "`-P` är för lösenord."
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Vad gör `SHELL` instruktionen i Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Installerar ett shell."
+        ],
+        [
+          "B",
+          "Ändrar vilket shell som används för `RUN`, `CMD`, `ENTRYPOINT` (t.ex. powershell istället för bash)."
+        ],
+        [
+          "C",
+          "Startar ett shell."
+        ],
+        [
+          "D",
+          "Tar bort shell."
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Hur begränsar du CPU-användning till 0.5 kärnor?",
+      "raw_options": [
+        [
+          "A",
+          "`--cpus=\"0.5\"`"
+        ],
+        [
+          "B",
+          "`--cpu-half`"
+        ],
+        [
+          "C",
+          "`--slow`"
+        ],
+        [
+          "D",
+          "`--cores 1/2`"
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "Vad är syftet med `LABEL` i en Dockerfile?",
+      "raw_options": [
+        [
+          "A",
+          "Att namnge containern."
+        ],
+        [
+          "B",
+          "Att lägga till metadata (t.ex. maintainer, version, beskrivning) till imagen."
+        ],
+        [
+          "C",
+          "Att skapa en etikett."
+        ],
+        [
+          "D",
+          "Att tagga imagen."
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är \"Docker Daemon\" (`dockerd`)?",
+      "raw_options": [
+        [
+          "A",
+          "En bakgrundsprocess som hanterar alla Docker-objekt image, container, nätverk, volymer."
+        ],
+        [
+          "B",
+          "Ett grafiskt verktyg."
+        ],
+        [
+          "C",
+          "En typ av container."
+        ],
+        [
+          "D",
+          "En säkerhetsrisk."
+        ]
+      ]
+    }
+  ],
+  "Nod9_Docker_Natverk_Lagring_Master.md": [
+    {
+      "id": 1,
+      "question": "Vilken lagringsmetod ska du använda för att spara databasdata i produktion?",
+      "raw_options": [
+        [
+          "A",
+          "`tmpfs`"
+        ],
+        [
+          "B",
+          "Bind Mount"
+        ],
+        [
+          "C",
+          "Docker Volume"
+        ],
+        [
+          "D",
+          "Inuti containern (utan mount)"
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "question": "Vad händer om du kör `docker run -v /data` (utan att ange host-sökväg)?",
+      "raw_options": [
+        [
+          "A",
+          "Det blir fel."
+        ],
+        [
+          "B",
+          "Docker skapar en \"Anonym volym\"."
+        ],
+        [
+          "C",
+          "Den använder `/data` på hosten."
+        ],
+        [
+          "D",
+          "Den raderar `/data`."
+        ]
+      ]
+    },
+    {
+      "id": 3,
+      "question": "Vilket kommando skapar ett nätverk där containers kan nå varandra med namn?",
+      "raw_options": [
+        [
+          "A",
+          "`docker network create --driver bridge mynet`"
+        ],
+        [
+          "B",
+          "`docker run --link`"
+        ],
+        [
+          "C",
+          "`docker network init`"
+        ],
+        [
+          "D",
+          "Det fungerar alltid som standard."
+        ]
+      ]
+    },
+    {
+      "id": 4,
+      "question": "Vad betyder flaggan `-p 3000:80`?",
+      "raw_options": [
+        [
+          "A",
+          "Trafik till hostens port 80 skickas till containerns 3000."
+        ],
+        [
+          "B",
+          "Trafik till hostens port 3000 skickas till containerns 80."
+        ],
+        [
+          "C",
+          "Öppna port 3000 till 80 intervall."
+        ],
+        [
+          "D",
+          "Prioritet 3000."
+        ]
+      ]
+    },
+    {
+      "id": 5,
+      "question": "Varför fungerar inte `ping db` från min web-container?",
+      "raw_options": [
+        [
+          "A",
+          "Du har inte installerat ping."
+        ],
+        [
+          "B",
+          "De ligger på \"Default Bridge Network\" (som saknar DNS). Du måste skapa ett eget nätverk."
+        ],
+        [
+          "C",
+          "Databasen är nere."
+        ],
+        [
+          "D",
+          "Ping är blockerat i Docker."
+        ]
+      ]
+    },
+    {
+      "id": 6,
+      "question": "Vilken IP-adress representerar localhost inuti en container?",
+      "raw_options": [
+        [
+          "A",
+          "127.0.0.1 (Containerns egen loopback)."
+        ],
+        [
+          "B",
+          "Hostens IP."
+        ],
+        [
+          "C",
+          "192.168.1.1"
+        ],
+        [
+          "D",
+          "0.0.0.0"
+        ]
+      ]
+    },
+    {
+      "id": 7,
+      "question": "Hur når du tjänster som körs på din värddator (Mac/Windows) inifrån en container?",
+      "raw_options": [
+        [
+          "A",
+          "`localhost`"
+        ],
+        [
+          "B",
+          "`host.docker.internal` (oftast)."
+        ],
+        [
+          "C",
+          "`127.0.0.1`"
+        ],
+        [
+          "D",
+          "Det går inte."
+        ]
+      ]
+    },
+    {
+      "id": 8,
+      "question": "Vad gör `docker volume prune`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort alla volymer."
+        ],
+        [
+          "B",
+          "Tar bort alla volymer som INTE används av någon container (även stoppade)."
+        ],
+        [
+          "C",
+          "Komprimerar volymer."
+        ],
+        [
+          "D",
+          "Tar bort trasiga volymer."
+        ]
+      ]
+    },
+    {
+      "id": 9,
+      "question": "Vad är en fördel med Bind Mounts?",
+      "raw_options": [
+        [
+          "A",
+          "Högre prestanda."
+        ],
+        [
+          "B",
+          "Du kan redigera källkoden på din dator och se ändringar direkt i containern."
+        ],
+        [
+          "C",
+          "Mer säkert."
+        ],
+        [
+          "D",
+          "Enklare backup."
+        ]
+      ]
+    },
+    {
+      "id": 10,
+      "question": "Vilken nätverksdriver används för att ta bort nätverksisolering helt?",
+      "raw_options": [
+        [
+          "A",
+          "Bridge"
+        ],
+        [
+          "B",
+          "Overlay"
+        ],
+        [
+          "C",
+          "Host"
+        ],
+        [
+          "D",
+          "Macvlan"
+        ]
+      ]
+    },
+    {
+      "id": 11,
+      "question": "Om du har två containers, Webb och DB, på samma user-defined network. Behöver DB exponera port 3306 med `-p` för att Webb ska nå den?",
+      "raw_options": [
+        [
+          "A",
+          "Ja."
+        ],
+        [
+          "B",
+          "Nej, `-p` är bara för trafik utifrån hosten. Internt är alla portar öppna."
+        ],
+        [
+          "C",
+          "Bara om brandväggen är på."
+        ],
+        [
+          "D",
+          "Nej, men man måste använda `--link`."
+        ]
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Vad händer om du monterar en volym till `/app` i containern, men `/app` redan innehåller filer i imagen?",
+      "raw_options": [
+        [
+          "A",
+          "Filerna skrivs över/försvinner."
+        ],
+        [
+          "B",
+          "Volymen ärver filerna från imagen (initial population), om volymen är tom när den skapas."
+        ],
+        [
+          "C",
+          "Det blir error."
+        ],
+        [
+          "D",
+          "Båda syns blandade."
+        ]
+      ]
+    },
+    {
+      "id": 13,
+      "question": "Vilket nätverk används för kommunikation mellan olika Docker Hosts (Docker Swarm)?",
+      "raw_options": [
+        [
+          "A",
+          "Bridge"
+        ],
+        [
+          "B",
+          "Host"
+        ],
+        [
+          "C",
+          "Overlay"
+        ],
+        [
+          "D",
+          "Underlay"
+        ]
+      ]
+    },
+    {
+      "id": 14,
+      "question": "Vad är `127.0.0.11`?",
+      "raw_options": [
+        [
+          "A",
+          "En felkonfigurerad IP."
+        ],
+        [
+          "B",
+          "Dockers interna DNS-resolver."
+        ],
+        [
+          "C",
+          "Gateway-adressen."
+        ],
+        [
+          "D",
+          "Broadcast-adressen."
+        ]
+      ]
+    },
+    {
+      "id": 15,
+      "question": "Hur ser du vilka nätverk en container är ansluten till?",
+      "raw_options": [
+        [
+          "A",
+          "`docker network show`"
+        ],
+        [
+          "B",
+          "`docker inspect <container>`"
+        ],
+        [
+          "C",
+          "`ip addr`"
+        ],
+        [
+          "D",
+          "`docker connection`"
+        ]
+      ]
+    },
+    {
+      "id": 16,
+      "question": "Vad händer om du tar bort en container med `docker rm -v`?",
+      "raw_options": [
+        [
+          "A",
+          "Den tar även bort tillhörande anonyma volymer (men inte namngivna)."
+        ],
+        [
+          "B",
+          "Det är ogiltig syntax."
+        ],
+        [
+          "C",
+          "Den tar bort alla volymer."
+        ],
+        [
+          "D",
+          "Den tar bort verifiering."
+        ]
+      ]
+    },
+    {
+      "id": 17,
+      "question": "Hur många nätverk kan en container vara ansluten till?",
+      "raw_options": [
+        [
+          "A",
+          "1"
+        ],
+        [
+          "B",
+          "2"
+        ],
+        [
+          "C",
+          "Obegränsat (i princip)."
+        ],
+        [
+          "D",
+          "0"
+        ]
+      ]
+    },
+    {
+      "id": 18,
+      "question": "Vad gör `docker network disconnect bridge min_container`?",
+      "raw_options": [
+        [
+          "A",
+          "Tar bort bridgenätverket."
+        ],
+        [
+          "B",
+          "Kopplar bort containern från nätverket \"bridge\"."
+        ],
+        [
+          "C",
+          "Stänger av nätverket."
+        ],
+        [
+          "D",
+          "Startar om nätverket."
+        ]
+      ]
+    },
+    {
+      "id": 19,
+      "question": "Vad är standarddrivrutinen för volymer?",
+      "raw_options": [
+        [
+          "A",
+          "`remote`"
+        ],
+        [
+          "B",
+          "`local`"
+        ],
+        [
+          "C",
+          "`cloud`"
+        ],
+        [
+          "D",
+          "`nfs`"
+        ]
+      ]
+    },
+    {
+      "id": 20,
+      "question": "Hur skapar du en skrivskyddad bind mount?",
+      "raw_options": [
+        [
+          "A",
+          "`-v /src:/dest:ro`"
+        ],
+        [
+          "B",
+          "`-v /src:/dest --readonly`"
+        ],
+        [
+          "C",
+          "`-rm`"
+        ],
+        [
+          "D",
+          "`-v ro:/src:/dest`"
+        ]
+      ]
+    },
+    {
+      "id": 21,
+      "question": "Vad händer om du försöker starta en container på port 80, men du har Apache igång på din dator på port 80?",
+      "raw_options": [
+        [
+          "A",
+          "Docker stänger av Apache."
+        ],
+        [
+          "B",
+          "Docker startar på port 81."
+        ],
+        [
+          "C",
+          "Starten misslyckas: \"Bind for 0.0.0.0:80 failed: port is already allocated\"."
+        ],
+        [
+          "D",
+          "De delar på porten."
+        ]
+      ]
+    },
+    {
+      "id": 22,
+      "question": "Vilket verktyg inuti containern är bra för att felsöka DNS?",
+      "raw_options": [
+        [
+          "A",
+          "`ping`"
+        ],
+        [
+          "B",
+          "`nslookup` eller `dig`"
+        ],
+        [
+          "C",
+          "`curl`"
+        ],
+        [
+          "D",
+          "`top`"
+        ]
+      ]
+    },
+    {
+      "id": 23,
+      "question": "Vad betyder `--mount type=tmpfs,destination=/app/cache`?",
+      "raw_options": [
+        [
+          "A",
+          "Mappar en temporär fil."
+        ],
+        [
+          "B",
+          "Skapar en RAM-disk på `/app/cache` (snabb, ingen persistens)."
+        ],
+        [
+          "C",
+          "Skapar en temponär mapp på hosten."
+        ],
+        [
+          "D",
+          "Rensar cache."
+        ]
+      ]
+    },
+    {
+      "id": 24,
+      "question": "Hur kan du begränsa vilken IP som får komma åt en publicerad port?",
+      "raw_options": [
+        [
+          "A",
+          "Det går inte."
+        ],
+        [
+          "B",
+          "`-p 127.0.0.1:8080:80` (Bara localhost kan nå den)."
+        ],
+        [
+          "C",
+          "Docker har inbyggd brandvägg."
+        ],
+        [
+          "D",
+          "Använd `--restrict`."
+        ]
+      ]
+    },
+    {
+      "id": 25,
+      "question": "Vad är den rekommenderade syntaxen för mounts i modern Docker?",
+      "raw_options": [
+        [
+          "A",
+          "`-v`"
+        ],
+        [
+          "B",
+          "`--mount` (mer verbose och explicit)."
+        ],
+        [
+          "C",
+          "`--link`"
+        ],
+        [
+          "D",
+          "`--map`"
+        ]
+      ]
+    },
+    {
+      "id": 26,
+      "question": "Om du har 3 containers som ska bilda ett kluster, vad är första steget?",
+      "raw_options": [
+        [
+          "A",
+          "Starta dem."
+        ],
+        [
+          "B",
+          "Skapa ett gemensamt nätverk `docker network create kluster`."
+        ],
+        [
+          "C",
+          "Använd länkar."
+        ],
+        [
+          "D",
+          "Kopiera IP-adresser manuellt."
+        ]
+      ]
+    },
+    {
+      "id": 27,
+      "question": "Vad händer om du monterar en *fil* över en *mapp* i containern?",
+      "raw_options": [
+        [
+          "A",
+          "Det fungerar."
+        ],
+        [
+          "B",
+          "Det misslyckas eller blir konstigt."
+        ],
+        [
+          "C",
+          "Filen läggs i mappen."
+        ],
+        [
+          "D",
+          "Mappen raderas."
+        ]
+      ]
+    },
+    {
+      "id": 28,
+      "question": "Varför ska man undvika att använda IP-adresser för kommunikation mellan containers?",
+      "raw_options": [
+        [
+          "A",
+          "IP-adresser kan bytas när containers startas om. Namn är stabila."
+        ],
+        [
+          "B",
+          "IP-adresser är långsamma."
+        ],
+        [
+          "C",
+          "Det är osäkert."
+        ],
+        [
+          "D",
+          "Docker stöder inte IP."
+        ]
+      ]
+    },
+    {
+      "id": 29,
+      "question": "Vad är en \"dangling volume\"?",
+      "raw_options": [
+        [
+          "A",
+          "En volym som hänger."
+        ],
+        [
+          "B",
+          "En volym som inte används av någon container längre."
+        ],
+        [
+          "C",
+          "En trasig volym."
+        ],
+        [
+          "D",
+          "En nätverksvolym."
+        ]
+      ]
+    },
+    {
+      "id": 30,
+      "question": "Kan man dela en volym mellan flera containers samtidigt?",
+      "raw_options": [
+        [
+          "A",
+          "Nej."
+        ],
+        [
+          "B",
+          "Ja, både för läsning och skrivning (men se upp för concurrency issues)."
+        ],
+        [
+          "C",
+          "Bara för läsning."
+        ],
+        [
+          "D",
+          "Bara om de är på olika nätverk."
+        ]
+      ]
+    },
+    {
+      "id": 31,
+      "question": "Vad gör `docker network ls`?",
+      "raw_options": [
+        [
+          "A",
+          "Listar filer i nätverket."
+        ],
+        [
+          "B",
+          "Listar alla Docker-nätverk på hosten."
+        ],
+        [
+          "C",
+          "Visar nätverkstrafik."
+        ],
+        [
+          "D",
+          "Skannar wifi."
+        ]
+      ]
+    },
+    {
+      "id": 32,
+      "question": "Vad är subnetting i Docker?",
+      "raw_options": [
+        [
+          "A",
+          "Att dela upp containern."
+        ],
+        [
+          "B",
+          "Att definiera IP-ranges för ett Docker-nätverk (t.ex. `--subnet 172.20.0.0/16`)."
+        ],
+        [
+          "C",
+          "Att använda sub-containers."
+        ],
+        [
+          "D",
+          "Inte möjligt."
+        ]
+      ]
+    },
+    {
+      "id": 33,
+      "question": "När försvinner ett \"User-defined bridge network\"?",
+      "raw_options": [
+        [
+          "A",
+          "När sista containern stoppas."
+        ],
+        [
+          "B",
+          "Aldrig automatiskt, du måste köra `docker network rm`."
+        ],
+        [
+          "C",
+          "Vid omstart."
+        ],
+        [
+          "D",
+          "Efter 24 timmar."
+        ]
+      ]
+    },
+    {
+      "id": 34,
+      "question": "Vad betyder \"Published Port\"?",
+      "raw_options": [
+        [
+          "A",
+          "En port som är öppen mot internet/hosten."
+        ],
+        [
+          "B",
+          "En port som finns i dokumentationen."
+        ],
+        [
+          "C",
+          "En stängd port."
+        ],
+        [
+          "D",
+          "En port som används internt."
+        ]
+      ]
+    },
+    {
+      "id": 35,
+      "question": "Hur överför du data från en gammal volym till en ny?",
+      "raw_options": [
+        [
+          "A",
+          "`docker mv vol1 vol2`"
+        ],
+        [
+          "B",
+          "Du måste manuellt kopiera datan, t.ex. genom att montera båda i en temporär container och köra `cp`."
+        ],
+        [
+          "C",
+          "`docker volume clone`."
+        ],
+        [
+          "D",
+          "Det går inte."
+        ]
+      ]
+    },
+    {
+      "id": 36,
+      "question": "Vad är skillnaden på `COPY` i Dockerfile och `bind mount` vid runtime?",
+      "raw_options": [
+        [
+          "A",
+          "`COPY` bakar in filerna i imagen permanent. `bind mount` läser filerna live från hosten."
+        ],
+        [
+          "B",
+          "Ingen skillnad."
+        ],
+        [
+          "C",
+          "`bind mount` är snabbare vid build."
+        ],
+        [
+          "D",
+          "`COPY` är dynamiskt."
+        ]
+      ]
+    },
+    {
+      "id": 37,
+      "question": "Vilken fil styr DNS-inställningarna inuti en Linux-container?",
+      "raw_options": [
+        [
+          "A",
+          "`/etc/hosts`"
+        ],
+        [
+          "B",
+          "`/etc/resolv.conf`"
+        ],
+        [
+          "C",
+          "`/etc/dns`"
+        ],
+        [
+          "D",
+          "`/etc/network`"
+        ]
+      ]
+    },
+    {
+      "id": 38,
+      "question": "Kan man ändra IP-adressen på en körande container?",
+      "raw_options": [
+        [
+          "A",
+          "Ja, med `ifconfig`."
+        ],
+        [
+          "B",
+          "Nej, man måste oftast återskapa den eller koppla om nätverket."
+        ],
+        [
+          "C",
+          "Ja, i inställningarna."
+        ],
+        [
+          "D",
+          "Docker byter IP varje timme."
+        ]
+      ]
+    },
+    {
+      "id": 39,
+      "question": "Vad är \"Docker Compose\" nätverksstrategi som default?",
+      "raw_options": [
+        [
+          "A",
+          "Inget nätverk."
+        ],
+        [
+          "B",
+          "Den skapar automatiskt ett nätverk för projektet där alla tjänster kan nå varandra."
+        ],
+        [
+          "C",
+          "Alla använder host-nätverket."
+        ],
+        [
+          "D",
+          "Alla använder bridge."
+        ]
+      ]
+    },
+    {
+      "id": 40,
+      "question": "Hur ser du alla mounts för en specifik container i JSON-format?",
+      "raw_options": [
+        [
+          "A",
+          "`docker inspect <container> | grep Mounts`"
+        ],
+        [
+          "B",
+          "`docker mounts`"
+        ],
+        [
+          "C",
+          "`docker volume show`"
+        ],
+        [
+          "D",
+          "`show mounts`"
+        ]
+      ]
+    },
+    {
+      "id": 41,
+      "question": "Vad innebär drivern `local` för volymer?",
+      "raw_options": [
+        [
+          "A",
+          "Lagring på den lokala maskinens disk."
+        ],
+        [
+          "B",
+          "Långsam lagring."
+        ],
+        [
+          "C",
+          "Lokaliserad lagring."
+        ],
+        [
+          "D",
+          "Low calorie."
+        ]
+      ]
+    },
+    {
+      "id": 42,
+      "question": "Kan man montera enskilda filer, inte bara mappar?",
+      "raw_options": [
+        [
+          "A",
+          "Ja, t.ex. `-v $(pwd)/config.json:/app/config.json`."
+        ],
+        [
+          "B",
+          "Nej, bara mappar."
+        ],
+        [
+          "C",
+          "Bara på Linux."
+        ],
+        [
+          "D",
+          "Bara på Windows."
+        ]
+      ]
+    },
+    {
+      "id": 43,
+      "question": "Vad händer om du kör `docker run -P` (stort P)?",
+      "raw_options": [
+        [
+          "A",
+          "Inget."
+        ],
+        [
+          "B",
+          "Alla portar som har `EXPOSE` i Dockerfile publiceras till slumpmässiga portar på hosten."
+        ],
+        [
+          "C",
+          "Det är fel syntax."
+        ],
+        [
+          "D",
+          "Alla portar stängs."
+        ]
+      ]
+    },
+    {
+      "id": 44,
+      "question": "Vilken nätverksmode ger bäst prestanda?",
+      "raw_options": [
+        [
+          "A",
+          "Bridge"
+        ],
+        [
+          "B",
+          "Host (eftersom NAT undviks)."
+        ],
+        [
+          "C",
+          "Overlay"
+        ],
+        [
+          "D",
+          "None"
+        ]
+      ]
+    },
+    {
+      "id": 45,
+      "question": "Hur sätter du ett statiskt IP på en container?",
+      "raw_options": [
+        [
+          "A",
+          "`--ip 172.18.0.22` (kräver att du skapat nätverket med eget subnet först)."
+        ],
+        [
+          "B",
+          "`--static-ip`"
+        ],
+        [
+          "C",
+          "Det går inte."
+        ],
+        [
+          "D",
+          "I Dockerfile."
+        ]
+      ]
+    },
+    {
+      "id": 46,
+      "question": "Vad är NFS-volym?",
+      "raw_options": [
+        [
+          "A",
+          "Network File System (lagring på en annan server)."
+        ],
+        [
+          "B",
+          "New File System."
+        ],
+        [
+          "C",
+          "No File System."
+        ],
+        [
+          "D",
+          "Docker Cloud."
+        ]
+      ]
+    },
+    {
+      "id": 47,
+      "question": "Vilket OS-kommando inuti containern visar nätverksinterface?",
+      "raw_options": [
+        [
+          "A",
+          "`ip addr` eller `ifconfig`."
+        ],
+        [
+          "B",
+          "`ls net`."
+        ],
+        [
+          "C",
+          "`show ip`."
+        ],
+        [
+          "D",
+          "`netstat`."
+        ]
+      ]
+    },
+    {
+      "id": 48,
+      "question": "Vad gör `docker network inspect bridge`?",
+      "raw_options": [
+        [
+          "A",
+          "Visar vilka containers som är kopplade till default-bryggan."
+        ],
+        [
+          "B",
+          "Startar om bryggan."
+        ],
+        [
+          "C",
+          "Raderar bryggan."
+        ],
+        [
+          "D",
+          "Hittar bryggan."
+        ]
+      ]
+    },
+    {
+      "id": 49,
+      "question": "När ska man använda `--net=host`?",
+      "raw_options": [
+        [
+          "A",
+          "För webbservrar."
+        ],
+        [
+          "B",
+          "När nätverksprestanda är extremt kritiskt eller man behöver hantera många portar/protokoll som är svåra att mappa."
+        ],
+        [
+          "C",
+          "Alltid."
+        ],
+        [
+          "D",
+          "Aldrig."
+        ]
+      ]
+    },
+    {
+      "id": 50,
+      "question": "Vad är en \"Named Pipe\" i Windows-containers?",
+      "raw_options": [
+        [
+          "A",
+          "En annan typ av IPC."
+        ],
+        [
+          "B",
+          "En volym."
+        ],
+        [
+          "C",
+          "En nätverkskabel."
+        ],
+        [
+          "D",
+          "Ett rör."
+        ]
+      ]
+    }
+  ]
+}
