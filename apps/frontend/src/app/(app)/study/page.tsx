@@ -162,6 +162,7 @@ export default function StudyPage() {
     const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2'>('omtenta-2')
     const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
     const [showNodeSelector, setShowNodeSelector] = useState(false)
+    const [omtenta2QuestionType, setOmtenta2QuestionType] = useState<'quiz' | 'scenario' | 'mix'>('mix')
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -556,6 +557,55 @@ export default function StudyPage() {
                             {/* Omtenta 2.0 Node Selection - Hidden by default with toggle */}
                             {tentaSource === 'omtenta-2' && (
                                 <div className="mb-6">
+                                    {/* Question Type Filter */}
+                                    <div className="mb-4">
+                                        <label className="block text-sm text-zinc-400 mb-2">Frågetyp</label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <button
+                                                onClick={() => setOmtenta2QuestionType('quiz')}
+                                                className={cn(
+                                                    "py-2 px-3 rounded-xl text-sm font-medium transition-all flex flex-col items-center gap-1",
+                                                    omtenta2QuestionType === 'quiz'
+                                                        ? "bg-blue-500/20 text-blue-300 border border-blue-500/50"
+                                                        : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                )}
+                                            >
+                                                <span>📝 Quiz</span>
+                                                <span className="text-xs opacity-70">
+                                                    {ALL_OMTENTA_2_QUESTIONS.filter(q => q.type === 'quiz' && omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                                </span>
+                                            </button>
+                                            <button
+                                                onClick={() => setOmtenta2QuestionType('scenario')}
+                                                className={cn(
+                                                    "py-2 px-3 rounded-xl text-sm font-medium transition-all flex flex-col items-center gap-1",
+                                                    omtenta2QuestionType === 'scenario'
+                                                        ? "bg-purple-500/20 text-purple-300 border border-purple-500/50"
+                                                        : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                )}
+                                            >
+                                                <span>🎬 Scenarios</span>
+                                                <span className="text-xs opacity-70">
+                                                    {ALL_OMTENTA_2_QUESTIONS.filter(q => q.type === 'scenario' && omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                                </span>
+                                            </button>
+                                            <button
+                                                onClick={() => setOmtenta2QuestionType('mix')}
+                                                className={cn(
+                                                    "py-2 px-3 rounded-xl text-sm font-medium transition-all flex flex-col items-center gap-1",
+                                                    omtenta2QuestionType === 'mix'
+                                                        ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-teal-300 border border-teal-500/50"
+                                                        : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                )}
+                                            >
+                                                <span>🔀 Mix</span>
+                                                <span className="text-xs opacity-70">
+                                                    {ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     {/* Header with toggle */}
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex items-center gap-3">
@@ -598,7 +648,10 @@ export default function StudyPage() {
                                         {omtenta2SelectedNodes.length > 0 && (
                                             <span className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-sm bg-teal-500/20 text-teal-300 border border-teal-500/30">
                                                 <Brain className="w-4 h-4" />
-                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => 
+                                                    omtenta2SelectedNodes.includes(q.topic) && 
+                                                    (omtenta2QuestionType === 'mix' || q.type === omtenta2QuestionType)
+                                                ).length} frågor
                                             </span>
                                         )}
                                     </div>
@@ -612,12 +665,16 @@ export default function StudyPage() {
                                                 exit={{ opacity: 0, height: 0 }}
                                                 className="overflow-hidden"
                                             >
-                                                <div className="bg-black/30 rounded-2xl p-4 border border-teal-500/20 max-h-80 overflow-y-auto">
+                                                <div className="bg-black/30 rounded-2xl p-4 border border-teal-500/20 max-h-96 overflow-y-auto">
                                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                         {OMTENTA2_TOPICS.map((topic, index) => {
                                                             const info = OMTENTA2_TOPIC_INFO[topic]
                                                             const isSelected = omtenta2SelectedNodes.includes(topic)
-                                                            const questionCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic).length
+                                                            const quizCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic && q.type === 'quiz').length
+                                                            const scenarioCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic && q.type === 'scenario').length
+                                                            const filteredCount = omtenta2QuestionType === 'mix' 
+                                                                ? quizCount + scenarioCount 
+                                                                : omtenta2QuestionType === 'quiz' ? quizCount : scenarioCount
                                                             // Extrahera kort namn: 'Nod 1: Filsystem & Grunder' -> 'Filsystem & Grunder'
                                                             const shortName = info.name.includes(':') ? info.name.split(':')[1].trim() : info.name
                                                             return (
@@ -648,13 +705,15 @@ export default function StudyPage() {
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className="font-medium truncate">{shortName}</div>
-                                                                        <div className="text-xs opacity-60 truncate">{info.description}</div>
+                                                                        <div className="text-xs opacity-60">
+                                                                            📝 {quizCount} quiz · 🎬 {scenarioCount} scenarios
+                                                                        </div>
                                                                     </div>
                                                                     <span className={cn(
                                                                         "text-xs px-2 py-1 rounded-lg shrink-0",
-                                                                        questionCount > 0 ? "bg-teal-500/20 text-teal-300" : "bg-zinc-700 text-zinc-500"
+                                                                        filteredCount > 0 ? "bg-teal-500/20 text-teal-300" : "bg-zinc-700 text-zinc-500"
                                                                     )}>
-                                                                        {questionCount} frågor
+                                                                        {filteredCount} frågor
                                                                     </span>
                                                                 </motion.button>
                                                             )
@@ -673,7 +732,7 @@ export default function StudyPage() {
                             )}
 
                             {/* Start button */}
-                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}` : ''}`}>
+                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}&questionType=${omtenta2QuestionType}` : ''}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}

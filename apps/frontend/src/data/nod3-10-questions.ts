@@ -15,7 +15,7 @@ interface Nod3to10Question {
     type: 'quiz' | 'scenario'
 }
 
-// ===== NOD3 PROCESSHANTERING (48 frågor) =====
+// ===== NOD3 PROCESSHANTERING (48 quiz + 22 scenarios) =====
 export const NOD3_PROCESSHANTERING_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod3-processhantering-q1',
@@ -545,9 +545,251 @@ export const NOD3_PROCESSHANTERING_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod3-processhantering',
         type: 'quiz'
     },
+    {
+        id: 'nod3-processhantering-s1',
+        question: 'SCENARIO: Din webbserver är superseg. Du kör `uptime` och ser `load average: 30.0, 15.0, 5.0`. Du har 4 CPU-kärnor. Vad drar du för slutsats?',
+        options: ['Servern mår bra', 'Servern är överbelastad', 'Minnet är slut', 'Disken är full'],
+        correctIndices: [0],
+        explanation: 'Servern är extremt överbelastad just nu (30 > 4), och belastningen har ökat snabbt senaste minuten.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s2',
+        question: 'SCENARIO: Du vill stänga ner en process som heter `my_script.py` som hängt sig. Du vet inte PID.',
+        options: ['`kill my_script.py`', '`pkill -f my_script.py`', '`stop my_script.py`', '`rm my_script.py`'],
+        correctIndices: [1],
+        explanation: '`pkill -f my_script.py` (eller `killall ...`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s3',
+        question: 'SCENARIO: Du startade en backup som tar 5 timmar i terminalen, men nu måste du gå hem och stänga datorn (stänga SSH). Vad händer med backupen om du bara stänger fönstret?',
+        options: ['Ja, `kill -9`', 'Nej, det är kärnan', 'Ja, `killall`', 'Starta om `top`'],
+        correctIndices: [0],
+        explanation: 'Den avbryts (Får SIGHUP). Du borde använt `nohup` eller `tmux`/`screen`. **Alternativ:** A) Den fortsätter i bakgrunden. B) Den avbryts. C) Den pausas. D) Den sparas. 4. **Scenario:** Du kör `top` och ser en process som drar 99% CPU. Det är `kworker`. Kan du döda den? **Rätt svar:** Nej, det är en kernel-tråd (systemprocess). Om den drar mycket CPU är det något hårdvaru/drivrutinsfel.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s5',
+        question: 'SCENARIO: Du försöker döda en process med `kill -9` men den försvinner inte ur `top` och har status `Z`. Varför dör den inte?',
+        options: ['`ls /home/kalle`', '`ps -u kalle`', '`top kalle`', '`who kalle`'],
+        correctIndices: [1],
+        explanation: 'Den är redan död (Zombie). Du måste döda *föräldern* (Parent) för att städa bort den. **Alternativ:** A) Den är en Super-Zombie. B) Den är redan död. C) Du måste vara root. D) Den ignorerar signaler. 6. **Scenario:** Du har startat `vim` men terminalen har låst sig. Du trycker `Ctrl+Z` och får tillbaka prompten. Vad gjorde du egentligen? **Rätt svar:** Du pausade vim och lade det i bakgrunden. Vim körs inte just nu. **Alternativ:** A) Du avslutade vim. B) Du pausade vim. C) Du kraschade vim. D) Du sparade filen. 7. **Scenario:** Du vill se vilka processer användaren `kalle` kör just nu. **Rätt svar:** `pgrep -u kalle -a` eller `ps -u kalle`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s8',
+        question: 'SCENARIO: Ett Python-script drar för mycket minne och får servern att krascha (OOM). Du vill begränsa det i framtiden. (Överkurs, men bra koncept).',
+        options: ['`ps aux | stop`', '`ps aux -slow`', '`ps aux | less`', '`read ps`'],
+        correctIndices: [2],
+        explanation: 'Använd Cgroups eller Docker med minnesgräns. (På enkel nivå: Skriv om koden). **Alternativ:** A) Köp mer RAM. B) Docker/Cgroups. C) Använd `nice`. D) `chmod`. 9. **Scenario:** Du kör `ps aux` men listan är för lång, den bara swishar förbi. Hur läser du den lugnt? **Rätt svar:** `ps aux | less`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s10',
+        question: 'SCENARIO: Du ser i `top` att `%wa` (IO Wait) är väldigt högt (50%). Vad betyder det?',
+        options: ['CPU är trasig', 'Disken är flaskhalsen', 'Nätverket är segt', 'RAM är slut'],
+        correctIndices: [0],
+        explanation: 'CPU:n rullar tummarna och väntar på hårddisken. Flaskhalsen är disken, inte CPU.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s11',
+        question: 'SCENARIO: Du vill starta en webbserver men porten "80 är upptagen". Hur hittar du vilken process som blockerar porten?',
+        options: ['`ps aux`', '`ls port 80`', '`lsof -i :80`', '`ping 80`'],
+        correctIndices: [0],
+        explanation: '`sudo lsof -i :80` (eller `netstat -tulpn`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s12',
+        question: 'SCENARIO: Du har råkat starta en `find /`-sökning som tar för evigt. Hur avbryter du den?',
+        options: ['`sudo make`', '`nice make`', '`fast make`', '`slow make`'],
+        correctIndices: [0],
+        explanation: '`Ctrl+C`. **Alternativ:** A) `Ctrl+Z`. B) `Ctrl+C`. C) `Exit`. D) `Esc`. 13. **Scenario:** Du ska köra en tung kompilering på en delad server och vill vara snäll mot kollegorna så din process inte segar ned deras jobb. **Rätt svar:** Starta med `nice -n 19 make`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s14',
+        question: 'SCENARIO: En process har PID 1234. Du vill se exakt vilket kommando som startade den.',
+        options: ['`ps 1234`', '`cat /proc/1234/cmdline`', '`show 1234`', '`whois 1234`'],
+        correctIndices: [1],
+        explanation: '`cat /proc/1234/cmdline` (eller `ps -p 1234 -o args`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s15',
+        question: 'SCENARIO: systemd (PID 1) har kraschat (Kernel panic). Vad händer?',
+        options: ['Det startar om automatiskt', 'Systemet stannar/kraschar', 'Init tar över', 'Ingenting markant'],
+        correctIndices: [0],
+        explanation: 'Hela systemet stannar (Kernel panic/Blue screen equivalent).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s16',
+        question: 'SCENARIO: Du har kört `bg` på ett jobb, men glömde omdirigera output. Nu spottar det text i din terminal medan du försöker skriva annat.',
+        options: ['`mute`', '`fg` och fixa', '`stop`', '`silent`'],
+        correctIndices: [0],
+        explanation: 'Jobbigt läge! Du får köra `fg`, avbryta, och starta om med `> logfil` (eller använda `disown` + magi). Enklast: Starta om.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s17',
+        question: 'SCENARIO: Du vill skicka signalen SIGUSR1 till nginx (för att rotera loggar).',
+        options: ['`kill nginx`', '`pkill -USR1 nginx`', '`signal nginx`', '`rotate nginx`'],
+        correctIndices: [1],
+        explanation: '`kill -USR1 $(cat /var/run/nginx.pid)` eller `pkill -USR1 nginx`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s18',
+        question: 'SCENARIO: Du kör `kill -9` på en databasprocess. Nästa gång du startar databasen klagar den på "Corrupt index file". Varför?',
+        options: ['`env 555`', '`ps 555`', '`cat /proc/555/environ`', '`show env`'],
+        correctIndices: [2],
+        explanation: 'Eftersom SIGKILL inte lät databasen skriva klart data till disken innan den dog. **Alternativ:** A) Slumpen. B) SIGKILL avbröt skrivningar. C) Databasen är dålig. D) Diskfel. 19. **Scenario:** Vad händer om du skriver `fork bomb` i terminalen (`:(){ :|:& };:`)? **Rätt svar:** Systemet skapar oändligt med processer tills det fryser (Resource exhaustion). **Alternativ:** A) Ingenting. B) Systemet kraschar/fryser. C) Datorn exploderar. D) Det är ett virus. 20. **Scenario:** Du vill se miljövariabler för en körande process (PID 555). **Rätt svar:** `cat /proc/555/environ`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s21',
+        question: 'SCENARIO: Du undrar varför ditt Java-program tar 4GB minne. Du kör `top`. Vilken kolumn tittar du på?',
+        options: ['VIRT', 'RES', 'SHR', '%MEM'],
+        correctIndices: [0],
+        explanation: 'RES (Resident Set Size) är det fysiska minnet. VIRT är ofta missvisande högt för Java.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s22',
+        question: 'SCENARIO: Är det säkert att radera filer i `/proc`?',
+        options: ['Ja, det rensar RAM', 'Nej', 'Ja, det är tempfiler', 'Kanske'],
+        correctIndices: [1],
+        explanation: 'Nej (och ja). Det går oftast inte, men om du försöker ändra värden där kan du krascha systemet. Det är direktkoppling till kärnan.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s23',
+        question: 'SCENARIO: Du har editerat en config-fil men tjänsten (daemon) har inte fattat ändringen.',
+        options: ['Vänta en stund', 'Starta om tjänsten', 'Spara igen', 'Logga ut'],
+        correctIndices: [0],
+        explanation: 'Du måste starta om eller "reloada" tjänsten/processen (SIGHUP).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s24',
+        question: 'SCENARIO: Du vill se om en process läcker minne över tid.',
+        options: ['`ps`', '`watch free`', 'Övervaka RES', '`memcheck`'],
+        correctIndices: [2],
+        explanation: 'Övervaka RES-kolumnen i `top`/`htop` över tid (eller använd grafana/prometheus i produktion).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s25',
+        question: 'SCENARIO: Kan du ändra prioritet (`renice`) på någon annans process?',
+        options: ['Ja', 'Nej, bara root', 'Ibland', 'Om man ber snällt'],
+        correctIndices: [1],
+        explanation: 'Nej, bara root kan ändra andras (och sänka nice-värde under 0).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s26',
+        question: 'SCENARIO: Du ser en process `[jbd2/sda1-8]` i top. Vad är det?',
+        options: ['`updatedb --max 1h`', '`timeout 1h updatedb`', '`limit 1h`', '`run 1h`'],
+        correctIndices: [1],
+        explanation: 'En kernel-tråd för filsystemet (Journaling Block Device). Rör ej. **Alternativ:** A) Virus. B) Kernel-tråd. C) Databas. D) Okänt. 27. **Scenario:** Du vill köra ett kommando `updatedb` men det får ta maximalt 1 timme, sen ska det dö. **Rätt svar:** `timeout 1h updatedb`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s28',
+        question: 'SCENARIO: Vad är skillnaden på `kill PID` och `kill -9 PID` i en mening?',
+        options: ['Samma sak', 'Artig vs Tvingande', '9 är snällare', '15 är farligt'],
+        correctIndices: [0],
+        explanation: '`kill` ber snällt (snälla sluta), `kill -9` tvingar (DÖ NU).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s29',
+        question: 'SCENARIO: Du har startat en process med `&`. Hur får du reda på dess PID?',
+        options: ['`ps`', '`echo $!`', '`pid`', '`who`'],
+        correctIndices: [1],
+        explanation: '`echo $!` precis efter start, eller `jobs -l`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod3-processhantering-s30',
+        question: 'SCENARIO: Du kör `htop` men musen fungerar inte att klicka med.',
+        options: ['Htop stöder inte mus', 'Använd tangentbordet', 'Starta om', 'Installera drivrutin'],
+        correctIndices: [0],
+        explanation: 'Det beror på terminalen, men du kan alltid använda tangenterna (F-tangenter, pilar).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod3-processhantering',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD4 NATVERK (50 frågor) =====
+// ===== NOD4 NATVERK (50 quiz + 22 scenarios) =====
 export const NOD4_NATVERK_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod4-natverk-q1',
@@ -1099,9 +1341,251 @@ export const NOD4_NATVERK_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod4-natverk',
         type: 'quiz'
     },
+    {
+        id: 'nod4-natverk-s1',
+        question: 'SCENARIO: Du försöker nå internet men det går inte. Du kan pinga `8.8.8.8` men inte `google.com`. Vad är felet?',
+        options: ['Internet är nere', 'DNS-problem', 'Gateway fel', 'Kabeln är trasig'],
+        correctIndices: [1],
+        explanation: 'DNS-problem. Du har nätverk (kan pinga IP) men namnupplösningen fungerar inte.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s2',
+        question: 'SCENARIO: Du startar en webbserver på port 80 men den kraschar med "Address already in use".',
+        options: ['`/etc/resolv.conf`', '`/etc/hosts`', '`/var/log`', 'I webbläsaren'],
+        correctIndices: [1],
+        explanation: 'En annan process använder redan port 80. Använd `ss -tulpn` för att hitta den. **Alternativ:** A) Servern är trasig. B) Porten är upptagen. C) Du har inte root. D) IP-adressen är fel. 3. **Scenario:** Du ska koppla upp dig mot en server men vet inte IP-adressen, bara namnet `db-prod`. Var kan du lägga in en manuell koppling? **Rätt svar:** I `/etc/hosts` filen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s4',
+        question: 'SCENARIO: Din chef säger "Blockera all trafik till port 22 förutom från mitt kontors-IP". Vilket verktyg använder du?',
+        options: ['`nginx`', '`iptables`/`ufw`', '`netstat`', '`ssh`'],
+        correctIndices: [0],
+        explanation: 'Brandväggen (t.ex. `iptables`, `ufw` eller `nftables`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s5',
+        question: 'SCENARIO: Du ser IP-adressen `169.254.5.10` på din server. Vad betyder det?',
+        options: ['`ping`', '`traceroute`', '`netstat`', '`jump`'],
+        correctIndices: [0],
+        explanation: 'Servern misslyckades att få en IP från DHCP. (APIPA). **Alternativ:** A) Allt är OK. B) DHCP misslyckades. C) Det är en WiFi-adress. D) Det är en publik IP. 6. **Scenario:** Du vill se vilka servrar ett IP-paket hoppar igenom för att nå `dn.se`. **Rätt svar:** Kör `traceroute dn.se` (eller `mtr`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s7',
+        question: 'SCENARIO: En utvecklare klagar på att "nätverket är segt". Hur kollar du om det är nätverket eller servern?',
+        options: ['Starta om', 'Ping & Load check', 'Byt kabel', 'Skyll på nätverksleverantören'],
+        correctIndices: [0],
+        explanation: 'Pinga för att kolla latency/packet loss, kolla `load` för serverlast. Om ping är bra men servern seg, är det servern.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s8',
+        question: 'SCENARIO: Du har konfigurerat din server med IP `192.168.1.10/24` men satt Gateway till `192.168.2.1`. Det fungerar inte. Varför?',
+        options: ['Gateway är nere', 'Gateway är i fel subnät', 'IP-konflikt', 'Kabeln är fel'],
+        correctIndices: [0],
+        explanation: 'Gateway måste ligga i samma subnät som servern. `192.168.2.1` är utanför `/24` nätet.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s9',
+        question: 'SCENARIO: Du vill kolla om din webbserver Nginx verkligen lyssnar på port 80.',
+        options: ['`ps aux`', '`ss/netstat`', '`ping 80`', '`ls /etc/nginx`'],
+        correctIndices: [0],
+        explanation: '`ss -tulpn | grep :80` (eller `netstat`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s10',
+        question: 'SCENARIO: Du kan pinga din server lokalt, men inte från en annan dator. Brandväggen är på. Vad saknas troligtvis?',
+        options: ['Servern är av', 'Brandväggsregel saknas', 'IP-konflikt', 'Fel kabel'],
+        correctIndices: [0],
+        explanation: 'En regel som tillåter ICMP (ping) eller ssh trafik genom brandväggen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s11',
+        question: 'SCENARIO: Du ser hundratals anslutningar i status `TIME_WAIT` när du kör `netstat`. Är det farligt?',
+        options: ['Ja, använd /29', 'Nej, /24 är bra standard', 'Använd /8', 'Använd IPv6'],
+        correctIndices: [0],
+        explanation: 'Oftast normalt TCP-beteende (stängda connections väntar lite innan de dör helt). Om det är `tusentals` kan det vara problem. **Alternativ:** A) Ja, farligt virus. B) Nej, normal TCP. C) Minnet är slut. D) Disken är full. 12. **Scenario:** Du kör `curl` och får "Connection refused". Vad betyder det? **Rätt svar:** Datorn du ansluter till svarar "Nej" (skickar RST). Porten är stängd eller inget program lyssnar. **Alternativ:** A) Timeout. B) Port stängd/inget lyssnar. C) DNS fel. D) Kabelbrott. 13. **Scenario:** Du kör `curl` och det hänger bara (timeout). Vad betyder det oftast? **Rätt svar:** Paketet försvinner på vägen (DROPPED), troligtvis en brandvägg som blockerar utan att skicka "Refused". **Alternativ:** A) Port stängd. B) Brandväggs-DROP. C) DNS fel. D) Servern är snabb. 14. **Scenario:** Du ska sätta upp ett nätverk för max 10 datorer. Är ett `/24` nät onödigt stort? **Rätt svar:** Ja, det har 254 adresser. Men det är standard och enklast att använda ändå.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s15',
+        question: 'SCENARIO: Du har två nätverkskort `eth0` och `eth1`. Trafiken går ut fel väg. Vad måste du ändra?',
+        options: ['IP-adressen', 'DNS', 'Routing-tabellen', 'MAC-adressen'],
+        correctIndices: [2],
+        explanation: 'Routing-tabellen (`ip route`) eller "metric"-värdet på routen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s16',
+        question: 'SCENARIO: Du vill veta vilken MAC-adress din router har.',
+        options: ['`ip link`', '`ip addr`', '`ip neigh`', '`macshow`'],
+        correctIndices: [2],
+        explanation: '`ip neigh` (eller `arp -a`) visar ARP-cachen med IP-till-MAC mappningar.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s17',
+        question: 'SCENARIO: Varför rekommenderas `127.0.0.1` istället för den publika IP:n när applikationer pratar med varandra på samma server?',
+        options: ['Nätverksfel', 'Nginx nere', 'Ogiltigt certifikat', 'Fel port'],
+        correctIndices: [0],
+        explanation: 'Säkerhet (trafiken lämnar aldrig servern) och prestanda (ingen routing). **Alternativ:** A) Det är snyggare. B) Säkerhet och prestanda. C) Det är lag på det. D) DHCP kräver det. 18. **Scenario:** Du får en "SSL Certificate Error" när du curlar en https-sida. **Rätt svar:** Certifikatet är ogiltigt, utgånget eller fel domän. Använd `-k` för att ignorera (osäkert) eller fixa certet.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s19',
+        question: 'SCENARIO: Du vill ta reda på din publika IP-adress från terminalen (som världen ser, bakom NAT).',
+        options: ['`ip addr`', '`ifconfig`', '`curl ifconfig.me`', '`whoami`'],
+        correctIndices: [2],
+        explanation: '`curl ifconfig.me` (eller liknande tjänst).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s20',
+        question: 'SCENARIO: SSH fungerar inte för root. "Permission denied".',
+        options: ['Fel lösenord', 'Root är inaktiverat', 'SSH-config blockerar root', 'Brandvägg'],
+        correctIndices: [0],
+        explanation: '`PermitRootLogin` är förmodligen satt till `no` i `/etc/ssh/sshd_config` (säkerhetsstandard).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s21',
+        question: 'SCENARIO: Du pingar en Windows-dator i samma nätverk men får inget svar, trots att den är på.',
+        options: ['Windows har inte IP', 'Brandvägg blockerar ping', 'Kabel fel', 'Fel subnät'],
+        correctIndices: [0],
+        explanation: 'Windows-brandväggen blockerar ofta ping (ICMP) som standard.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s22',
+        question: 'SCENARIO: Du har en server som agerar router. Vad måste du aktivera i kärnan?',
+        options: ['IP Routing', 'IP Forwarding', 'NAT tables', 'DHCP'],
+        correctIndices: [1],
+        explanation: 'IP Forwarding (`net.ipv4.ip_forward=1`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s23',
+        question: 'SCENARIO: En kollega frågar "Vilken port ska jag öppna för FTP?".',
+        options: ['20', '21', '22', '80'],
+        correctIndices: [1],
+        explanation: 'Standard är 21 (Control) och ofta data-portar. FTP är dock krångligt med brandväggar (Passive mode). SFTP (22) är bättre.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s24',
+        question: 'SCENARIO: Du vill spara all nätverkstrafik till en fil för att analysera senare i Wireshark.',
+        options: ['`tcpdump > fil`', '`tcpdump -w capture.pcap`', '`netstat -save`', '`wireshark -cli`'],
+        correctIndices: [1],
+        explanation: '`tcpdump -w capture.pcap`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s25',
+        question: 'SCENARIO: Din server svarar långsamt på SSH-inloggning (tar 10s innan prompt). Vad är en vanlig orsak?',
+        options: ['10.0.0.5', '10.0.0.1', '10.0.0.255', '8.8.8.8'],
+        correctIndices: [0],
+        explanation: 'SSH-servern försöker göra en DNS-uppslagning på ditt IP (UseDNS yes) och det failar/timeoutar. **Alternativ:** A) Servern är lastad. B) DNS timeout (UseDNS). C) Dåligt nätverk. D) Hackers. 26. **Scenario:** Du har IP 10.0.0.5/24. Vilken är din Gateway troligtvis? **Rätt svar:** Vanligtvis första (.1) eller sista (.254) adressen, dvs 10.0.0.1.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s27',
+        question: 'SCENARIO: Du vill skicka en fil säkert till en annan server.',
+        options: ['`ftp`', '`telnet`', '`scp`', '`cp`'],
+        correctIndices: [0],
+        explanation: '`scp fil user@server:/path` (eller `rsync`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s28',
+        question: 'SCENARIO: Du ser "Redirecting to /bin/systemctl start nginx.service" när du kör `service nginx start`.',
+        options: ['Felmeddelande', 'Normalt (legacy wrapper)', 'Virus', 'Du måste installera systemd'],
+        correctIndices: [0],
+        explanation: 'Det är normalt. `service`-kommandot är en wrapper för det moderna `systemctl`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod4-natverk-s29',
+        question: 'SCENARIO: Du ska felsöka en HTTP-koppling och vill se exakt vilka headers som skickas.',
+        options: ['`ping`', '`curl -v`', '`wget`', '`cat`'],
+        correctIndices: [0],
+        explanation: '`curl -v http://example.com` (verbose).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod4-natverk',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD5 SSH (50 frågor) =====
+// ===== NOD5 SSH (50 quiz + 26 scenarios) =====
 export const NOD5_SSH_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod5-ssh-q1',
@@ -1653,9 +2137,295 @@ export const NOD5_SSH_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod5-ssh',
         type: 'quiz'
     },
+    {
+        id: 'nod5-ssh-s1',
+        question: 'SCENARIO: Du försöker SSH:a till en ny server och får varningen "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!". Vad gör du?',
+        options: ['Ignorera det', 'Ta bort `known_hosts`-entryt', 'Ominstallera din dator', 'Byt lösenord'],
+        correctIndices: [0],
+        explanation: 'Om servern ominstallerats: kör `ssh-keygen -R hostname` för att ta bort gamla nyckeln. Om inte: Varning för attack!',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s2',
+        question: 'SCENARIO: Du har skapat en nyckel men SSH frågar fortfarande efter lösenord när du loggar in. Vad har du glömt?',
+        options: ['Att starta om', '`ssh-copy-id`', 'Att skapa en privat nyckel', 'Att öppna port 22'],
+        correctIndices: [1],
+        explanation: 'Att kopiera över den publika nyckeln till servern (`ssh-copy-id`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s3',
+        question: 'SCENARIO: Du ska kopiera en fil `config.txt` från din dator till serverns `/tmp` mapp.',
+        options: ['`ssh cp config.txt server`', '`scp config.txt user@server:/tmp`', '`ftp config.txt`', '`ls config.txt`'],
+        correctIndices: [1],
+        explanation: '`scp config.txt user@server:/tmp`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s4',
+        question: 'SCENARIO: Du har stängt av lösenordsinloggning på servern, men tappade bort din privata nyckel. Du är utelåst. Vad gör du?',
+        options: ['Hacka servern', 'Använd konsol/KVM', 'Ring support', '`ssh -force`'],
+        correctIndices: [0],
+        explanation: 'Använd webb-konsolen (KVM/VNC) hos din molnleverantör (fysisk åtkomst) för att logga in och fixa det. Eller återställ från backup.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s5',
+        question: 'SCENARIO: Du vill köra ett kommando `uptime` på servern utan att logga in interaktivt och stanna där.',
+        options: ['`ssh user@server -c uptime`', '`ssh user@server uptime`', '`ssh user@server && uptime`', 'Går inte'],
+        correctIndices: [1],
+        explanation: '`ssh user@server uptime`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s6',
+        question: 'SCENARIO: Du har en webbserver som bara lyssnar på `localhost:80` på servern. Du vill se hemsidan i din webbläsare på din laptop.',
+        options: ['`ssh -R`', '`ssh -L`', 'Öppna brandväggen', 'Använd FTP'],
+        correctIndices: [0],
+        explanation: '`ssh -L 8080:localhost:80 user@server` och surfa till `localhost:8080`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s7',
+        question: 'SCENARIO: Din chef ber dig byta SSH-port till 2222 för att minska antalet bot-attacker. Var ändrar du?',
+        options: ['I `ssh_config`', 'I `sshd_config`', 'I brandväggen', 'I BIOS'],
+        correctIndices: [0],
+        explanation: 'I `/etc/ssh/sshd_config`, ändra `Port 22` till `Port 2222` och starta om sshd.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s8',
+        question: 'SCENARIO: Du får felmeddelandet "Permissions 0644 for \'/home/user/.ssh/id_rsa\' are too open."',
+        options: ['`chmod 777`', '`chmod 600`', '`chown root`', 'Ta bort filen'],
+        correctIndices: [0],
+        explanation: 'Din privata nyckel är läsbar för andra. Kör `chmod 600 ~/.ssh/id_rsa`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s9',
+        question: 'SCENARIO: Du vill att SSH inte ska logga ut dig när du går på lunch (broken pipe).',
+        options: ['`KeepAlive yes`', '`ServerAliveInterval`', '`NoLogout yes`', '`StayConnect`'],
+        correctIndices: [1],
+        explanation: 'Använd `ServerAliveInterval` i din config eller `ClientAliveInterval` på servern.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s10',
+        question: 'SCENARIO: Du ska ansluta till `server1` men måste hoppa via `bastion`. Du har din nyckel på din laptop.',
+        options: ['Kopiera nyckeln till bastion (Osäkert!)', '`ssh -J bastion`', 'Använd telnet', 'Det går inte'],
+        correctIndices: [0],
+        explanation: '`ssh -J bastion user@server1` (ProxyJump) eller `ssh -A bastion` och sen vidare.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s11',
+        question: 'SCENARIO: Du vill generera en nyckel som är extra säker. Vilken typ väljer du?',
+        options: ['`cat id_rsa`', '`ssh-finger id_rsa`', '`ssh-keygen -lf`', '`md5sum`'],
+        correctIndices: [0],
+        explanation: '`ssh-keygen -t ed25519` **Alternativ:** A) RSA 1024. B) DSA. C) ED25519. D) MD5. 12. **Scenario:** Du undrar vilken fingeravtryck din nyckel har för att jämföra med serverns loggar. **Rätt svar:** `ssh-keygen -lf ~/.ssh/id_rsa`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s13',
+        question: 'SCENARIO: Du har många servrar och orkar inte skriva IP-adresser och användarnamn hela tiden. Vad gör du?',
+        options: ['`ssh -debug`', '`ssh -v`', '`ping`', '`time ssh`'],
+        correctIndices: [0],
+        explanation: 'Skapar alias i `~/.ssh/config` (Host myserver...). **Alternativ:** A) Skriver lappar. B) Använder `~/.ssh/config`. C) Använder DNS. D) Använder Excel. 14. **Scenario:** Du vill se debug-loggar för att förstå varför anslutningen tar 30 sekunder. **Rätt svar:** `ssh -v user@host`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s15',
+        question: 'SCENARIO: Du vill kopiera en mapp `data` rekursivt från servern till din dator.',
+        options: ['`scp data`', '`scp -r`', '`cp -r`', '`ssh download`'],
+        correctIndices: [0],
+        explanation: '`scp -r user@server:/path/data .`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s16',
+        question: 'SCENARIO: Du får "Permission denied (publickey)" men du VET att nyckeln ligger där. Vad kan vara fel med mappen på servern?',
+        options: ['Disken full', 'Fel ägare/rättigheter', 'Fel tidzon', 'Gamla nycklar'],
+        correctIndices: [0],
+        explanation: 'Ägaren till `~/.ssh` måste vara rätt användare, och rättigheterna får inte vara för öppna (max 700/755, inte 777).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s17',
+        question: 'SCENARIO: Du vill visa din kollega din lokala webbserver (localhost:3000) men ni sitter på olika nätverk. Du har en VPS.',
+        options: ['Local forward', 'Remote Forward', 'Skicka datorn med posten', 'Öppna brandväggen hemma'],
+        correctIndices: [1],
+        explanation: 'SSH Remote Forward: `ssh -R 8080:localhost:3000 user@vps`. Kollegan går till `vps:8080`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s18',
+        question: 'SCENARIO: SSH-agenten verkar inte vara igång. Hur startar du den manuellt i nuvarande shell?',
+        options: ['`start ssh-agent`', '`ssh-agent`', '`eval "$(ssh-agent -s)"`', '`systemctl start agent`'],
+        correctIndices: [2],
+        explanation: '`eval "$(ssh-agent -s)"`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s19',
+        question: 'SCENARIO: Du vill radera alla nycklar ur agenten för du ska låna ut datorn en stund.',
+        options: ['`rm ~/.ssh`', '`ssh-add -D`', '`killall ssh`', '`logout`'],
+        correctIndices: [1],
+        explanation: '`ssh-add -D`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s20',
+        question: 'SCENARIO: Du vill ansluta till en server som lyssnar på port 2222 med scp.',
+        options: ['`scp -p 2222`', '`scp -P 2222`', '`scp --port 2222`', '`scp :2222`'],
+        correctIndices: [0],
+        explanation: '`scp -P 2222 fil user@host:/path` (Notera stort P för scp, litet p för ssh).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s21',
+        question: 'SCENARIO: Servern kastar ut dig "Connection closed" direkt efter inloggning.',
+        options: ['Fel lösenord', 'Shell-fel eller config', 'Nätverksfel', 'Slut på batteri'],
+        correctIndices: [0],
+        explanation: 'Det kan vara fel i ditt login-shell (t.ex. `.bashrc` har fel/echo) eller så tillåter inte servern din användare (AllowUsers).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s22',
+        question: 'SCENARIO: Du vill kolla vem som försökt hacka din SSH-server (brute force). Vilken loggfil kollar du i (Ubuntu)?',
+        options: ['`/var/log/syslog`', '`/var/log/auth.log`', '`/var/log/hackers`', '`dmesg`'],
+        correctIndices: [1],
+        explanation: '`/var/log/auth.log` (eller `/var/log/secure` på RHEL).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s23',
+        question: 'SCENARIO: Du vill låsa SSH så BARA användaren `admin` får logga in via SSH.',
+        options: ['`DenyAll`', '`AllowUsers admin`', '`OnlyAdmin yes`', '`BlockUsers *`'],
+        correctIndices: [1],
+        explanation: 'Lägg till `AllowUsers admin` i `sshd_config`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s24',
+        question: 'SCENARIO: Du har skapat en nyckel med lösenfras men ångrar dig och vill ta bort lösenfrasen.',
+        options: ['Skapa ny nyckel', '`ssh-keygen -p`', '`redigera filen`', 'Går inte'],
+        correctIndices: [0],
+        explanation: '`ssh-keygen -p -f ~/.ssh/id_rsa` (ändra passphrase, sätt till tomt).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s25',
+        question: 'SCENARIO: Du har flera nycklar `id_rsa_work` och `id_rsa_personal`. Hur vet SSH vilken den ska ta?',
+        options: ['Filen låses', 'Båda sparas', 'Sista vinner/överskrivning', 'Felmeddelande'],
+        correctIndices: [0],
+        explanation: 'Den provar default-namnen först. Du måste specifera med `-i` eller i `~/.ssh/config`. **Alternativ:** A) Den gissar. B) Den provar alla. C) Du måste konfigurera `config` eller `-i`. D) Den tar den nyaste. 26. **Scenario:** Vad händer om två personer redigerar `authorized_keys` samtidigt? **Rätt svar:** Sista som sparar vinner (race condition), en nyckel kan försvinna. Lägg till med `>>` eller `ssh-copy-id` för att vara säker.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s27',
+        question: 'SCENARIO: Du ansluter med `ssh -A` till en server du inte litar på (en kompis server). Är det smart?',
+        options: ['Ja, smidigt', 'Nej, säkerhetsrisk (Agent hijacking)', 'Spelar ingen roll', 'Ja, om den har brandvägg'],
+        correctIndices: [0],
+        explanation: 'Nej! Root på den servern kan kapa din agent-session och impersonera dig mot andra servrar.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s28',
+        question: 'SCENARIO: Du vill använda SOCKS-poxyn du skapade (`ssh -D 1080`) i Chrome.',
+        options: ['Det sker automatiskt', 'Ändra proxy-inställningar', 'Installera plugin', 'Gå till localhost:1080'],
+        correctIndices: [1],
+        explanation: 'Ändra proxy-inställningar i Chrome/OS till SOCKS host 127.0.0.1 port 1080.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
+    {
+        id: 'nod5-ssh-s29',
+        question: 'SCENARIO: Du får "Bad owner or permissions on /home/user/.ssh/config".',
+        options: ['`chmod 600`', '`chmod 777`', '`chown root`', '`rm config`'],
+        correctIndices: [0],
+        explanation: 'Config-filen får inte vara skrivbar för andra. `chmod 600 ~/.ssh/config`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod5-ssh',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD6 BASH SKRIPT (50 frågor) =====
+// ===== NOD6 BASH SKRIPT (50 quiz + 25 scenarios) =====
 export const NOD6_BASH_SKRIPT_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod6-bash-skript-q1',
@@ -2207,9 +2977,284 @@ export const NOD6_BASH_SKRIPT_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod6-bash-skript',
         type: 'quiz'
     },
+    {
+        id: 'nod6-bash-skript-s1',
+        question: 'SCENARIO: Ditt script kraschar halvvägs men genererar inga felmeddelanden och du vet inte varför.',
+        options: ['Starta om datorn', 'Kör `bash -x`', 'Ge upp', 'Ta bort `set -e`'],
+        correctIndices: [0],
+        explanation: 'Kör scriptet med `bash -x script.sh` för att se exekveringen rad för rad.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s2',
+        question: 'SCENARIO: Du har ett backup-script som skapar en tillfällig mapp. Om användaren avbryter med Ctrl+C ligger mappen kvar.',
+        options: ['`rm` i slutet av filen', '`trap ... EXIT`', 'Hoppas användaren raderar den', 'Kör i bakgrunden'],
+        correctIndices: [0],
+        explanation: 'Använd `trap \'rm -rf $TEMP_DIR\' EXIT` för att garantera städning.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s3',
+        question: 'SCENARIO: Du vill att ditt script ska avbrytas direkt om `cd` in i en katalog misslyckas, så du inte råkar radera filer i fel mapp.',
+        options: ['`set -e`', '`cd dir`', '`cd dir; rm *`', '`ls dir`'],
+        correctIndices: [0],
+        explanation: 'Använd `set -e` i toppen av scriptet (eller `cd dir || exit`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s4',
+        question: 'SCENARIO: Ditt script tar emot ett filnamn som argument. Filnamnet kan innehålla mellanslag, t.ex. "My File.txt". Hur hanterar du `$1`?',
+        options: ['`$1`', '`"$1"`', '`\'$1\'`', '`${1}`'],
+        correctIndices: [1],
+        explanation: 'Alltid inom citattecken: `"$1"`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s5',
+        question: 'SCENARIO: Du vill kolla ifall användaren är root i början av scriptet och avbryta om hen inte är det.',
+        options: ['`if user == root`', '`if [[ $EUID -ne 0 ]]`', '`check root`', '`sudo check`'],
+        correctIndices: [0],
+        explanation: '`if [[ $EUID -ne 0 ]]; then echo "Kör som root"; exit 1; fi`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s6',
+        question: 'SCENARIO: Du itererar över filer med `for f in *.jpg`. Om inga jpg-filer finns globbar bash till strängen "*.jpg" bokstavligen. Hur fixar du det?',
+        options: ['`shopt -s nullglob`', '`set -e`', '`rm *.jpg`', 'Ignorera det'],
+        correctIndices: [0],
+        explanation: 'Aktivera `shopt -s nullglob` (gör listan tom om inga matchningar finns) eller kolla om filen finns inne i loopen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s7',
+        question: 'SCENARIO: Du vill spara dagens datum i formatet YYYY-MM-DD i en variabel för att namnge en loggfil.',
+        options: ['`basename`', '`dirname`', '`cut`', '`echo`'],
+        correctIndices: [0],
+        explanation: '`DATE=$(date +%Y-%m-%d)` **Alternativ:** A) `DATE=date`. B) `DATE=$(date +%Y-%m-%d)`. C) `DATE={date}`. D) `DATE=$date`. 8. **Scenario:** Du har en variabel PATH_TO_FILE="/home/user/docs/report.pdf" och vill bara ha "report.pdf". **Lösning:** `basename "$PATH_TO_FILE"` eller `${PATH_TO_FILE##*/}`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s9',
+        question: 'SCENARIO: Du vill köra två kommandon parallellt för att spara tid.',
+        options: ['`cmd1 ; cmd2`', '`cmd1 & cmd2 & wait`', '`cmd1 && cmd2`', '`cmd1 | cmd2`'],
+        correctIndices: [0],
+        explanation: '`kommando1 & kommando2 & wait` (starta i bakgrunden och vänta).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s10',
+        question: 'SCENARIO: Du vill skriva till en loggfil OCH till skärmen samtidigt.',
+        options: ['`echo > log`', '`tee`', '`cat`', '`log`'],
+        correctIndices: [0],
+        explanation: '`echo "Logg" | tee -a logfile.txt` (flaggan -a för append).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s11',
+        question: 'SCENARIO: Du vill kolla om argument 1 är tomt (glömt argument).',
+        options: ['`if empty $1`', '`if [[ -z "$1" ]]`', '`if $1 == 0`', '`check $1`'],
+        correctIndices: [0],
+        explanation: '`if [[ -z "$1" ]]; then ... fi`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s12',
+        question: 'SCENARIO: Ditt script behöver läsa en konfigurationsfil rad för rad.',
+        options: ['`for line in $(cat config)`', '`while read ...`', '`read config`', '`cat config | while`'],
+        correctIndices: [0],
+        explanation: '`while IFS= read -r line; do ... done < config.txt`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s13',
+        question: 'SCENARIO: Du vill kolla om en katalog finns, om inte, skapa den.',
+        options: ['Många `if`-satser', '`case/shift` loop', '`getopts`', 'Ignorera flaggor'],
+        correctIndices: [0],
+        explanation: '`[[ -d "$DIR" ]] || mkdir -p "$DIR"` **Alternativ:** A) `mkdir $DIR`. B) `if not exist $DIR`. C) `[[ -d "$DIR" ]] || mkdir -p "$DIR"`. D) `check dir`. 14. **Scenario:** Du vill processa flaggor som `-v` och `--help` snyggt. **Lösning:** Använd en `while` loop med `case` och `shift`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s15',
+        question: 'SCENARIO: Ditt script kör `grep` i en pipe. Om grep inte hittar något dör hela scriptet pga `set -e` och `pipefail`. Du vill tillåta att grep misslyckas.',
+        options: ['Ta bort `set -e`', '`|| true`', '`grep --force`', '`ignore error`'],
+        correctIndices: [0],
+        explanation: '`grep "text" fil || true` (tvingar status 0).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s16',
+        question: 'SCENARIO: Du vill göra en enkel meny där användaren väljer 1, 2 eller 3.',
+        options: ['`menu`', '`select` eller `case`', '`choice`', 'GUI'],
+        correctIndices: [0],
+        explanation: 'Använd `select` loopen eller `read` och `case`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s17',
+        question: 'SCENARIO: Du behöver generera ett slumptal mellan 0 och 32767.',
+        options: ['`$RANDOM`', '`rand()`', '`random`', '`shuf`'],
+        correctIndices: [0],
+        explanation: 'Använd inbyggda variabeln `$RANDOM`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s18',
+        question: 'SCENARIO: Du vill skicka outputen från ett helt block kod (flera rader) till en fil.',
+        options: ['Redirecta varje rad', '`{ ... } > fil`', 'Pipe', 'Går inte'],
+        correctIndices: [0],
+        explanation: 'Omslut med `{ ... } > fil.txt`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s19',
+        question: 'SCENARIO: Du vill ta bort suffixet `.txt` från variabeln FILNAMN="test.txt".',
+        options: ['`cut`', '`${FILNAMN%.txt}`', '`sed`', '`rename`'],
+        correctIndices: [1],
+        explanation: '`${FILNAMN%.txt}`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s20',
+        question: 'SCENARIO: Du vill byta ut "Janne" mot "Kalle" i textsträngen.',
+        options: ['`replace`', '`${TEXT//Janne/Kalle}`', '`sed`', '`tr`'],
+        correctIndices: [1],
+        explanation: '`${TEXT//Janne/Kalle}` (dubbla slash för replace all).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s21',
+        question: 'SCENARIO: Du vill vänta 5 sekunder innan scriptet fortsätter.',
+        options: ['`wait 5`', '`sleep 5`', '`pause 5`', '`delay 5`'],
+        correctIndices: [1],
+        explanation: '`sleep 5`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s22',
+        question: 'SCENARIO: Scriptet behöver ladda miljövariabler från en `.env` fil.',
+        options: ['`read .env`', '`source .env`', '`import .env`', '`cat .env`'],
+        correctIndices: [1],
+        explanation: '`source .env` eller `. .env`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s23',
+        question: 'SCENARIO: Du vill skriva ut felmeddelanden till stderr istället för stdout.',
+        options: ['`echo "Fel!" > 2`', '`echo "Fel!" >&2`', '`print error`', '`stderr "Fel!"`'],
+        correctIndices: [1],
+        explanation: '`echo "Fel!" >&2`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s24',
+        question: 'SCENARIO: Du ska jämföra två heltal, A och B.',
+        options: ['`tee`', '`exec`', 'Kopiera texten', 'Screen rec'],
+        correctIndices: [0],
+        explanation: '`if (( A > B )); then ...` **Alternativ:** A) `if A > B`. B) `if (( A > B ))`. C) `if [ A > B ]` (fel syntax). D) `compare A B`. 25. **Scenario:** Du vill köra scriptet och logga ALLT som händer till en fil för revision. **Lösning:** Kör scriptet med `bash script.sh | tee logg.txt` eller använd `exec > logg.txt` inuti scriptet.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s26',
+        question: 'SCENARIO: Hur ser du till att en fil `script.sh` kan köras direkt som `./script.sh`?',
+        options: ['`chmod +x`', '`exe`', '`run`', '`start`'],
+        correctIndices: [0],
+        explanation: 'Lägg till shebang och gör den exekverbar: `chmod +x script.sh`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s27',
+        question: 'SCENARIO: Du vill använda argumenten till scriptet inuti en funktion, men funktionen har egna argument.',
+        options: ['`push`', '`+=`', '`add`', '`append`'],
+        correctIndices: [0],
+        explanation: 'Scriptets argument (`$1` etc) överskuggas av funktionens. Spara scriptets argument i variabler innan du anropar funktionen om du behöver dem globalt, eller skicka med dem. **Alternativ:** A) `$GLOBAL_1`. B) De försvinner. C) Man måste skicka med dem. D) Använd `$ARGS`. 28. **Scenario:** Du vill skapa en array med frukter. **Lösning:** `FRUKTER=("Äpple" "Banan" "Päron")` **Alternativ:** A) `FRUKTER="Äpple, Banan"`. B) `FRUKTER=(...)`. C) `list(...)`. D) `[ ... ]`. 29. **Scenario:** Du vill lägga till ett element till arrayen. **Lösning:** `FRUKTER+=("Apelsin")`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
+    {
+        id: 'nod6-bash-skript-s30',
+        question: 'SCENARIO: Scriptet ska bara köras på Linux, inte Mac. Hur kollar du OS?',
+        options: ['`check os`', '`uname -s`', '`os.name`', '`linux`'],
+        correctIndices: [1],
+        explanation: '`uname -s`. Om output är "Linux", kör.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod6-bash-skript',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD7 BASH VERKTYG (49 frågor) =====
+// ===== NOD7 BASH VERKTYG (49 quiz + 30 scenarios) =====
 export const NOD7_BASH_VERKTYG_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod7-bash-verktyg-q1',
@@ -2750,9 +3795,339 @@ export const NOD7_BASH_VERKTYG_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod7-bash-verktyg',
         type: 'quiz'
     },
+    {
+        id: 'nod7-bash-verktyg-s1',
+        question: 'SCENARIO: Du vill se vilka IP-adresser som attackerar din webbserver i access.log. Du vill ha en topplista.',
+        options: ['`grep IP access.log`', '`cat access.log | sort`', '`awk ... sort ... uniq -c ... sort -nr`', '`top`'],
+        correctIndices: [0],
+        explanation: '`awk \'{print $1}\' access.log | sort | uniq -c | sort -nr | head`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s2',
+        question: 'SCENARIO: Du ska byta ut alla förekomster av "http://" till "https://" i filen `config.php` direkt på disken.',
+        options: ['`nano config.php`', '`sed -i ...`', '`grep ...`', '`replace ...`'],
+        correctIndices: [0],
+        explanation: '`sed -i \'s/http:\/\//https:\/\//g\' config.php` (eller använd annan delimiter `s|http://|https://|g`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s3',
+        question: 'SCENARIO: Du har en process som vägrar dö och skriver massor av felmeddelanden till skärmen så du inte kan jobba.',
+        options: ['Stäng skärmen', '`2> /dev/null`', '`1> /dev/null`', '`exit`'],
+        correctIndices: [0],
+        explanation: '`kommando 2> /dev/null` (eller döda den).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s4',
+        question: 'SCENARIO: Du vill hitta vilken fil i `/etc` som innehåller texten "192.168.1.50".',
+        options: ['`ls -R /etc`', '`find /etc`', '`grep -r ...`', '`cat /etc/*`'],
+        correctIndices: [0],
+        explanation: '`grep -r "192.168.1.50" /etc`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s5',
+        question: 'SCENARIO: Du har en CSV-fil `users.csv` (namn,email,id) och vill bara ha ut email-adresserna (kolumn 2).',
+        options: ['`cut -d, -f2`', '`grep email`', '`sort email`', '`sed email`'],
+        correctIndices: [0],
+        explanation: '`cut -d, -f2 users.csv` eller `awk -F, \'{print $2}\' users.csv`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s6',
+        question: 'SCENARIO: Du vill kolla hur många rader kod ditt projekt innehåller totalt (alla .js filer).',
+        options: ['`wc -l`', '`find ... | xargs wc -l`', '`ls *.js`', '`count code`'],
+        correctIndices: [0],
+        explanation: '`find . -name "*.js" | xargs wc -l` (eller `cat *.js | wc -l`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s7',
+        question: 'SCENARIO: Du vill se vad som händer i system-loggen just nu, i realtid.',
+        options: ['`cat /var/log/syslog`', '`tail -f ...`', '`less ...`', '`grep ...`'],
+        correctIndices: [0],
+        explanation: '`tail -f /var/log/syslog`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s8',
+        question: 'SCENARIO: Du vill ta bort alla tomma rader från en fil.',
+        options: ['`rm empty`', '`sed \'/^$/d\'`', '`cut empty`', '`clean file`'],
+        correctIndices: [0],
+        explanation: '`sed \'/^$/d\' fil.txt` eller `grep -v "^$"`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s9',
+        question: 'SCENARIO: Du vill köra ett script och spara loggen till `deploy.log`, men du vill OCKSÅ se outputen på skärmen medan det körs.',
+        options: ['`./deploy.sh > deploy.log`', '`tee`', '`cat`', '`log`'],
+        correctIndices: [0],
+        explanation: '`./deploy.sh 2>&1 | tee deploy.log`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s10',
+        question: 'SCENARIO: Du behöver generera en slumpmässig lösenordssträng på 16 tecken.',
+        options: ['`echo random`', '`tr -dc ... | head -c 16`', '`pwgen`', '`make pass`'],
+        correctIndices: [0],
+        explanation: '`tr -dc \'A-Za-z0-9\' < /dev/urandom | head -c 16`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s11',
+        question: 'SCENARIO: Du har en lista med namn i gemener men behöver dem i VERSALER för en databasimport.',
+        options: ['`sed up`', '`tr \'a-z\' \'A-Z\'`', '`grep upper`', '`capslock`'],
+        correctIndices: [0],
+        explanation: '`tr \'a-z\' \'A-Z\' < namn.txt` (eller `awk \'{print toupper($0)}\'`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s12',
+        question: 'SCENARIO: Du vill sortera `passwd` filen baserat på UID (kolumn 3).',
+        options: ['`sort /etc/passwd`', '`sort -k3`', '`sort -t: -k3 -n`', '`order uid`'],
+        correctIndices: [0],
+        explanation: '`sort -t: -k3 -n /etc/passwd`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s13',
+        question: 'SCENARIO: Du vill rensa bort gamla backups (filer äldre än 30 dagar).',
+        options: ['`rm old`', '`find ... -delete`', '`clean backup`', '`ls -t`'],
+        correctIndices: [0],
+        explanation: '`find /backup -mtime +30 -delete` (eller `| xargs rm`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s14',
+        question: 'SCENARIO: Du vill snabbt tömma en loggfil utan att radera själva filen (för att behålla rättigheter/ägare).',
+        options: ['`rm fil.log`', '`> fil.log`', '`echo null`', '`del fil.log`'],
+        correctIndices: [1],
+        explanation: '`> fil.log` eller `truncate -s 0 fil.log`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s15',
+        question: 'SCENARIO: Du vill veta vilken rad (nummer) i en fil som innehåller ett specifikt felkonfigurationsvärde.',
+        options: ['`cat -n`', '`grep -n`', '`wc -l`', '`find -n`'],
+        correctIndices: [0],
+        explanation: '`grep -n "värde" fil.conf`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s16',
+        question: 'SCENARIO: Du vill summera storleken på alla filer i en mapp (som `ls -l` visar i kolumn 5).',
+        options: ['`du -sh`', '`ls -l | awk ...`', '`count size`', '`sum files`'],
+        correctIndices: [0],
+        explanation: '`ls -l | awk \'{sum += $5} END {print sum}\'`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s17',
+        question: 'SCENARIO: Du har en fil med Windows-radbrytningar (`\r\n`) som strular i Linux.',
+        options: ['`rm \r`', '`sed ...` / `dos2unix`', '`fix file`', '`linuxify`'],
+        correctIndices: [0],
+        explanation: '`dos2unix fil.txt` eller `sed -i \'s/\r//\' fil.txt` eller `tr -d \'\r\'`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s18',
+        question: 'SCENARIO: Du vill lista de 10 största filerna i nuvarande mapp.',
+        options: ['`ls big`', '`sort -rh | head`', '`dir /size`', '`find big`'],
+        correctIndices: [0],
+        explanation: '`ls -lS | head -11` (11 för att inkludera header eller skippa den). Eller `du -ah | sort -rh | head`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s19',
+        question: 'SCENARIO: Du vill extrahera alla URL:er från en HTML-fil.',
+        options: ['`grep http`', '`grep -o ...`', '`cut http`', '`awk url`'],
+        correctIndices: [0],
+        explanation: '`grep -o \'http[s]*://[^"]*\'` (använd `-o` för only-matching).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s20',
+        question: 'SCENARIO: Du vill köra 4 stycken `gzip` kommandon parallellt för att packa loggar.',
+        options: ['`gzip * &`', '`xargs -P 4`', '`parallel gzip`', '`fastzip`'],
+        correctIndices: [0],
+        explanation: '`ls *.log | xargs -n 1 -P 4 gzip`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s21',
+        question: 'SCENARIO: Du vill jämföra innehållet i två mappar.',
+        options: ['`cmp mapp1 mapp2`', '`diff -r`', '`ls mapp1 mapp2`', '`compare`'],
+        correctIndices: [0],
+        explanation: '`diff -r mapp1 mapp2`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s22',
+        question: 'SCENARIO: Du vill se vilka användare som är inloggade och sortera dem unikt.',
+        options: ['`who -u`', '`users`', '`who | sort | uniq`', '`id`'],
+        correctIndices: [0],
+        explanation: '`who | awk \'{print $1}\' | sort | uniq`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s23',
+        question: 'SCENARIO: Du vill hämta din publika IP (via extern tjänst) från terminalen.',
+        options: ['`ip addr`', '`curl ifconfig.me`', '`ping google`', '`get ip`'],
+        correctIndices: [1],
+        explanation: '`curl ifconfig.me` (eller liknande).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s24',
+        question: 'SCENARIO: Du vill ersätta alla mellanslag i filnamn med underscores `_`.',
+        options: ['`sed`', '`mv loop`', '`rename`', '`tr`'],
+        correctIndices: [2],
+        explanation: 'Loopa med `mv "$f" "${f// /_}"` eller använd `rename` verktyget.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s25',
+        question: 'SCENARIO: Du vill kolla om en specifik port (80) är öppen på en server med `nc` (netcat).',
+        options: ['`ping`', '`telnet`', '`nc -zv`', '`ssh`'],
+        correctIndices: [0],
+        explanation: '`nc -zv server.com 80`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s26',
+        question: 'SCENARIO: Du behöver dela upp en jättestor loggfil i mindre bitar på 1000 rader var.',
+        options: ['`cut`', '`split`', '`break`', '`part`'],
+        correctIndices: [0],
+        explanation: '`split -l 1000 storfil.log`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s27',
+        question: 'SCENARIO: Du vill se ASCII-tabellen eller hexadecimala värden i en fil.',
+        options: ['`cat -hex`', '`hexdump`', '`show bytes`', '`ascii`'],
+        correctIndices: [0],
+        explanation: '`hexdump -C fil` eller `od -c fil`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s28',
+        question: 'SCENARIO: Du har råkat radera en fil men en process håller den fortfarande öppen. Kan du återställa den?',
+        options: ['Nej', 'Ja, via `/proc`', 'Ja, från papperskorgen', 'Kanske'],
+        correctIndices: [0],
+        explanation: 'Ja, genom `/proc/[pid]/fd/[fd]`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s29',
+        question: 'SCENARIO: Du försöker `grep`:a i en binär fil men får "Binary file matches". Du vill se textsträngarna.',
+        options: ['`cat -v`', '`strings`', '`text mode`', '`grep -a`'],
+        correctIndices: [0],
+        explanation: '`strings binärfil | grep "text"`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
+    {
+        id: 'nod7-bash-verktyg-s30',
+        question: 'SCENARIO: Du vill köra ett kommando `updatedb` men det tar tid, du vill lägga det i bakgrunden och logga ut.',
+        options: ['`updatedb &`', '`nohup ... &`', '`bg updatedb`', '`run back`'],
+        correctIndices: [0],
+        explanation: '`nohup updatedb &` (eller kör i `tmux`/`screen`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod7-bash-verktyg',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD8 DOCKER ISOLERING (50 frågor) =====
+// ===== NOD8 DOCKER ISOLERING (50 quiz + 27 scenarios) =====
 export const NOD8_DOCKER_ISOLERING_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod8-docker-isolering-q1',
@@ -3304,9 +4679,306 @@ export const NOD8_DOCKER_ISOLERING_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod8-docker-isolering',
         type: 'quiz'
     },
+    {
+        id: 'nod8-docker-isolering-s1',
+        question: 'SCENARIO: Du gör en ändring i din källkod (`app.js`) och bygger om imagen. Det tar väldigt lång tid för att den kör `npm install` igen. Varför?',
+        options: ['Docker är långsamt', 'Du har inte optimerat lager-ordningen', 'Nätverket är segt', 'Du glömde `.dockerignore`'],
+        correctIndices: [0],
+        explanation: 'Du har troligen lagt `COPY . .` FÖRE `RUN npm install`. Eftersom `app.js` ändrats, ogiltigförklaras cachen för `COPY` och alla efterföljande steg (inklusive `npm install`) måste köras om.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s2',
+        question: 'SCENARIO: En container kraschar direkt vid start. Hur felsöker du?',
+        options: ['`docker start` igen', '`docker logs`', '`docker build`', 'Starta om datorn'],
+        correctIndices: [0],
+        explanation: '`docker logs <container_id>` för att se felmeddelandet (stdout/stderr).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s3',
+        question: 'SCENARIO: Du vill gå in i en container och kolla filsystemet, men `docker attach` hänger bara.',
+        options: ['`attach` fungerar inte så', '`docker exec -it`', '`ssh`', '`telnet`'],
+        correctIndices: [0],
+        explanation: 'Använd `docker exec -it <container> /bin/bash` istället för att starta en ny shell-process.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s4',
+        question: 'SCENARIO: Hårddisken är full. Du ser massor av images `<none>`. Vad gör du?',
+        options: ['Köper större disk', '`rm -rf /`', '`docker image prune`', 'Avinstallerar docker'],
+        correctIndices: [2],
+        explanation: 'Kör `docker image prune` (eller `docker system prune` för att rensa mer).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s5',
+        question: 'SCENARIO: Du vill köra en gammal version av nginx (1.19) istället för latest.',
+        options: ['`docker run nginx --version 1.19`', '`docker run nginx:1.19`', '`docker run nginx -old`', 'Går inte'],
+        correctIndices: [1],
+        explanation: '`docker run nginx:1.19`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s6',
+        question: 'SCENARIO: Du kör en webbserver på port 80 i containern, men kommer inte åt den på `localhost:80`.',
+        options: ['Använd `--persistent`', 'Det går inte', 'Använd volym (`-v`)', 'Spara på USB'],
+        correctIndices: [0],
+        explanation: 'Du glömde publicera porten. Använd `-p 80:80`. **Alternativ:** A) Brandväggen. B) `-p 80:80`. C) Containern är trasig. D) Använd HTTPS. 7. **Scenario:** Du vill att din databas-container ska ha persistent data som överlever om containern raderas. **Lösning:** Mappa en volym: `docker run -v min_data:/var/lib/mysql ...`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s8',
+        question: 'SCENARIO: Du behöver skicka in en miljövariabel `API_KEY` till containern utan att hårdkoda den i Dockerfile.',
+        options: ['`ENV` i Dockerfile', '`-e API_KEY=...`', 'Kopiera en fil', 'Skriv den i chatten'],
+        correctIndices: [0],
+        explanation: '`docker run -e API_KEY="hemlig" ...`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s9',
+        question: 'SCENARIO: Du har byggt en image `min-app` men vill döpa om den till `min-app:v2` för att pusha till registret.',
+        options: ['`docker rename`', '`docker tag`', '`docker build` igen', '`mv`'],
+        correctIndices: [0],
+        explanation: '`docker tag min-app min-app:v2`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s10',
+        question: 'SCENARIO: Du vill veta exakt vilket kommando som startade en container som körs nu.',
+        options: ['`ps`', '`docker info`', '`docker inspect`', '`docker cmd`'],
+        correctIndices: [0],
+        explanation: '`docker inspect <container> | grep Path` (eller titta i outputen manuellt).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s11',
+        question: 'SCENARIO: Du vill rensa upp ALLT som inte används (slägga).',
+        options: ['`rm -rf /var/lib/docker`', '`docker nuke`', '`docker system prune -a`', '`format c:`'],
+        correctIndices: [0],
+        explanation: '`docker system prune -a --volumes` (Varning! Raderar allt stoppat och oanvänt).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s12',
+        question: 'SCENARIO: Du vill kopiera en konfig-fil `nginx.conf` till en container som redan körs.',
+        options: ['`docker cp`', 'Bygg om imagen', '`scp`', 'Går inte'],
+        correctIndices: [0],
+        explanation: '`docker cp nginx.conf <id>:/etc/nginx/nginx.conf` och sedan `docker exec <id> nginx -s reload`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s13',
+        question: 'SCENARIO: Din container avslutas med kod 137 (OOM Killed). Vad hände?',
+        options: ['CPU peak', 'Minnet tog slut (OOM)', 'Hårddiskfel', 'Nätverksfel'],
+        correctIndices: [0],
+        explanation: 'Out Of Memory. Containern använde mer minne än gränsen (eller hostens minne tog slut).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s14',
+        question: 'SCENARIO: Docker build klagar på "Context too large" (flera GB).',
+        options: ['Köp mer RAM', '`.dockerignore`', 'Bygg i molnet', 'Zippa mappen'],
+        correctIndices: [1],
+        explanation: 'Du har antagligen stora onödiga filer i mappen (kanske `build/` artifacts eller `.git`). Lägg till dem i `.dockerignore`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s15',
+        question: 'SCENARIO: Du vill köra ett script `setup.sh` och SEDAN starta `npm start`. Hur skriver du CMD?',
+        options: ['`top`', '`docker stats`', '`htop`', '`task manager`'],
+        correctIndices: [1],
+        explanation: '`CMD ["/bin/sh", "-c", "./setup.sh && npm start"]` eller använd ett entrypoint-script. **Alternativ:** A) `CMD ./setup.sh && npm start`. B) `RUN ./setup.sh`. C) Två CMD rader. D) Använd cron. 16. **Scenario:** Du vill se hur mycket CPU din container drar just nu. **Lösning:** `docker stats`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s17',
+        question: 'SCENARIO: Du vill ansluta till en databas-container från en ANNAN container på samma nätverk. Vad använder du som hostnamn?',
+        options: ['IP-adressen', 'localhost', 'Containerns namn', '127.0.0.1'],
+        correctIndices: [2],
+        explanation: 'Containerns namn (Docker har inbyggd DNS-resolution mellan containers på samma user-defined network).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s18',
+        question: 'SCENARIO: Du vill att containern automatiskt startar om om servern startar om.',
+        options: ['`docker export`', '`docker save`', '`zip`', '`cp`'],
+        correctIndices: [0],
+        explanation: '`docker run --restart unless-stopped` (eller always). **Alternativ:** A) Lägg i autostart. B) `--restart policy`. C) Det gör den alltid. D) Crontab. 19. **Scenario:** Du vill exportera en image till en fil (`image.tar`) för att flytta till en annan dator utan internet. **Lösning:** `docker save -o image.tar <image_name>`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s20',
+        question: 'SCENARIO: Hur laddar du in den imagen på den andra datorn?',
+        options: ['`docker import`', '`docker load`', '`unzip`', '`install`'],
+        correctIndices: [0],
+        explanation: '`docker load -i image.tar`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s21',
+        question: 'SCENARIO: Du vill bara se IDt på den senast startade containern.',
+        options: ['`docker id`', '`docker ps -lq`', '`last container`', '`whoami`'],
+        correctIndices: [0],
+        explanation: '`docker ps -l -q`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s22',
+        question: 'SCENARIO: Du vill köra nginx men ändra default index.html utan att bygga om imagen.',
+        options: ['Det går inte', 'Volym-mount (`-v`)', '`docker cp`', '`docker edit`'],
+        correctIndices: [0],
+        explanation: 'Mounta filen: `docker run -v $(pwd)/index.html:/usr/share/nginx/html/index.html nginx`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s23',
+        question: 'SCENARIO: Du märker att klockan i containern går fel (fel tidszon).',
+        options: ['Ställ klockan manuellt', '`-e TZ=...`', 'Starta om', 'Installera ntp'],
+        correctIndices: [0],
+        explanation: 'Mappa hostens tidszon-filer ro: `-v /etc/localtime:/etc/localtime:ro` eller sätt TZ-variabel `-e TZ=Europe/Stockholm`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s24',
+        question: 'SCENARIO: Du vill söka efter "error" i loggarna på alla containers samtidigt.',
+        options: ['`docker logs all`', 'Script med loop/xargs', '`grep /var/lib/docker`', 'Går inte'],
+        correctIndices: [0],
+        explanation: 'Det är svårt med standard CLI, man får loopa. T.ex. `docker ps -q | xargs -L 1 docker logs 2>&1 | grep "error"`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s25',
+        question: 'SCENARIO: Du vill bygga en image för en annan arkitektur (t.ex. ARM på en x86 maskin).',
+        options: ['`cross-compile`', '`buildx`', 'Köp en ARM dator', '`emulate`'],
+        correctIndices: [0],
+        explanation: 'Använd `docker buildx` (multi-arch build).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s26',
+        question: 'SCENARIO: Du har glömt vilket kommando en image kör som default.',
+        options: ['Gissa', 'Läs Dockerfile', '`docker inspect`', '`run --help`'],
+        correctIndices: [0],
+        explanation: '`docker inspect <image>` och leta efter `Cmd`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s27',
+        question: 'SCENARIO: Du vill starta en Ubuntu-container som bara kör `ls -l` och sedan avslutas.',
+        options: ['`docker run ubuntu`', '`docker run ubuntu ls -l`', '`docker exec ls`', '`docker start ls`'],
+        correctIndices: [1],
+        explanation: '`docker run ubuntu ls -l`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s28',
+        question: 'SCENARIO: Du vill radera alla containers, men får felmeddelandet "You cannot remove a running container".',
+        options: ['`-f`', '`stop` sen `rm`', 'Båda funkar', 'Starta om daemon'],
+        correctIndices: [0],
+        explanation: 'Stoppa dem först (`docker stop $(docker ps -q)`) eller tvinga (`docker rm -f $(docker ps -aq)`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s29',
+        question: 'SCENARIO: Du vill se vilka portar en container exponerar mot hosten.',
+        options: ['`netstat`', '`docker port`', '`nmap`', '`ls ports`'],
+        correctIndices: [0],
+        explanation: '`docker port <container>` eller kolla `docker ps`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
+    {
+        id: 'nod8-docker-isolering-s30',
+        question: 'SCENARIO: Du vill bygga en image utan att använda cachead data (force rebuild).',
+        options: ['`--clean`', '`--no-cache`', '`--force`', '`--new`'],
+        correctIndices: [0],
+        explanation: '`docker build --no-cache .`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod8-docker-isolering',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD9 DOCKER NATVERK (48 frågor) =====
+// ===== NOD9 DOCKER NATVERK (48 quiz + 20 scenarios) =====
 export const NOD9_DOCKER_NATVERK_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod9-docker-natverk-q1',
@@ -3836,9 +5508,229 @@ export const NOD9_DOCKER_NATVERK_QUESTIONS: Nod3to10Question[] = [
         topic: 'nod9-docker-natverk',
         type: 'quiz'
     },
+    {
+        id: 'nod9-docker-natverk-s1',
+        question: 'SCENARIO: Du utvecklar en Node.js-app och vill slippa bygga om imagen varje gång du ändrar en rad kod.',
+        options: ['Du glömde spara', 'Inget, det är normalt', 'Glömde Volym', 'Fel version'],
+        correctIndices: [0],
+        explanation: 'Använd Bind Mount: `docker run -v $(pwd):/app ...` så att containern ser din kod live. **Alternativ:** A) Bygg om varje gång. B) Bind Mount. C) Volym. D) tmpfs. 2. **Scenario:** Din databas-container startades om och all data är borta. Vad glömde du? **Lösning:** Du glömde skapa en volym för datan (t.ex. `-v dbdata:/var/lib/mysql`). Utan volym är datan flyktig.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s3',
+        question: 'SCENARIO: Två containers försöker binda port 80 på din host (två webbservrar). Den andra kraschar.',
+        options: ['Använd 127.0.0.1', 'Använd hostnamnet `db`', 'Öppna brandväggen', 'Byt till port 80'],
+        correctIndices: [0],
+        explanation: 'Du kan inte binda samma host-port två gånger. Ge den andra containern en annan extern port, t.ex. `-p 8081:80`. **Alternativ:** A) Använd olika host-portar. B) Starta om. C) Använd UDP. D) Dela port. 4. **Scenario:** App-containern får "Connection refused" när den försöker ansluta till DB-containern via "localhost:3306". **Lösning:** "Localhost" i App-containern betyder App-containern själv, inte DB. Du måste använda DB-containerns namn (t.ex. `db`) eller IP.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s5',
+        question: 'SCENARIO: Du försöker ansluta till DB-containern med namnet "db" men får "Name or service not known".',
+        options: ['Docker DNS är nere', 'Använd Default Bridge', 'Skapa eget nätverk', 'Use IP'],
+        correctIndices: [0],
+        explanation: 'De ligger troligen på "Default Bridge Network". Skapa ett eget nätverk (`docker network create`) och lägg båda där för att få DNS.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s6',
+        question: 'SCENARIO: Du har en full disk och `docker volume ls` visar massor av volymer med konstiga namn (hashar).',
+        options: ['Spara dem', '`docker volume prune`', 'Formatera disken', 'Byt namn på dem'],
+        correctIndices: [1],
+        explanation: 'Dessa är "Anonyma volymer" som lämnats kvar (orphaned). Kör `docker volume prune` för att rensa dem.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s7',
+        question: 'SCENARIO: Du vill dela en config-fil mellan tre containers.',
+        options: ['Kopiera filen 3 gånger', 'Bind mount/Volume', 'Emaila den', 'Ladda upp till GitHub'],
+        correctIndices: [0],
+        explanation: 'Skapa en volym, eller använd bind mount till samma fil för alla tre.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s8',
+        question: 'SCENARIO: Du vill verifiera att din webbserver i containern svarar, inifrån containern själv.',
+        options: ['`ping`', '`curl localhost` inifrån', 'Öppna browser', '`cat index.html`'],
+        correctIndices: [0],
+        explanation: '`docker exec -it <id> curl localhost` (om curl finns, annars wget).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s9',
+        question: 'SCENARIO: Du vill koppla upp dig mot en databas i en container från din lokala dator (GUI-klient).',
+        options: ['Anslut till containerns IP', '`-p 3306:3306`', 'VPN', 'SSH-tunnel'],
+        correctIndices: [1],
+        explanation: 'Publicera porten med `-p 3306:3306` vid start. Anslut till `localhost:3306`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s10',
+        question: 'SCENARIO: Du vill flytta en volym "mydata" till en annan server.',
+        options: ['Volym', 'tmpfs', 'Bind mount', '`/dev/null`'],
+        correctIndices: [0],
+        explanation: 'Starta en container som monterar volymen, tar:a innehållet till en fil, flytta filen, packa upp i en ny volym på nya servern. **Alternativ:** A) `scp /var/lib/docker/volumes`. B) Tar-export/import. C) Docker Cloud. D) Det går inte. 11. **Scenario:** Du vill att din container ska använda företagets DNS-server (10.0.0.1). **Lösning:** `docker run --dns 10.0.0.1 ...` **Alternativ:** A) Ändra `/etc/resolv.conf` på hosten. B) `--dns`. C) Det går inte. D) Ändra i imagen. 12. **Scenario:** Din applikation skriver temporära filer som slöar ner containern och fyller disken. De behövs inte sparas. **Lösning:** Montera en `tmpfs` på den sökvägen (`--tmpfs /path`) för snabb RAM-lagring som töms vid stop.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s13',
+        question: 'SCENARIO: `docker network inspect` visar att två containers har samma IP. Är det möjligt?',
+        options: ['Ja, alltid', 'Bara på olika nätverk', 'Nej, aldrig', 'Wi-Fi bugg'],
+        correctIndices: [0],
+        explanation: 'Bara om de är på OLIKA nätverk. På samma nätverk är det omöjligt (konflikt).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s14',
+        question: 'SCENARIO: Du vill snabbt se vilka volymer en specifik container använder.',
+        options: ['`ls`', '`docker volume ls`', '`docker inspect`', '`mount`'],
+        correctIndices: [0],
+        explanation: '`docker inspect -f \'{{ .Mounts }}\' <container>`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s15',
+        question: 'SCENARIO: Du utvecklar på Windows och bind mounts går väldigt långsamt.',
+        options: ['`--network host`', '`--network container:id`', '`--link`', '`--sidecar`'],
+        correctIndices: [0],
+        explanation: 'Detta är ett känt problem med WSL2/Docker Desktop. Använd WSL2-filsystemet istället för Windows-mounts (/mnt/c), eller acceptera prestandan. **Alternativ:** A) Byt till Mac. B) WSL2 filesystem. C) Använd Linux. D) Volymer. 16. **Scenario:** Container A ska *bara* kunna prata med Container B, men inte med Container C. **Lösning:** Lägg A och B i ett nätverk, och C i ett annat. Isolering sker på nätverksnivå. **Alternativ:** A) Brandväggsregler. B) Separata nätverk. C) Lösenord. D) `deny all`. 17. **Scenario:** Du vill ansluta en container som redan körs till ett nytt nätverk för felsökning. **Lösning:** `docker network connect debug-net my-container` **Alternativ:** A) Starta om den. B) `network connect`. C) Det går inte. D) `attach`. 18. **Scenario:** Du vill starta en container som använder samma nätverksstack som en *annan* container (Sidecar pattern). **Lösning:** `docker run --network container:target-container ...`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s19',
+        question: 'SCENARIO: Du har raderat en volym av misstag. Kan du få tillbaka den?',
+        options: ['Ja, `undelete`', 'Nej', 'Kolla i `/tmp`', 'Ring support'],
+        correctIndices: [1],
+        explanation: 'Nej, inte om du inte har backup. Docker volumes har ingen papperskorg.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s20',
+        question: 'SCENARIO: Du får felmeddelandet "Bind mount denied" på Mac.',
+        options: ['`chmod`', 'Inställningar -> File sharing', 'Sudo', 'Flytta mappen'],
+        correctIndices: [0],
+        explanation: 'Du måste tillåta mappen i Docker Desktop inställningar (File sharing).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s21',
+        question: 'SCENARIO: Du vill köra en container helt utan internetåtkomst.',
+        options: ['Dra ur sladden', '`--network none`', 'Blockera ip', '`--offline`'],
+        correctIndices: [0],
+        explanation: '`docker run --network none ...`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s22',
+        question: 'SCENARIO: Du vill att din container ska ha en specifik MAC-adress.',
+        options: ['`ls`', '`docker volume inspect`', '`find`', '`whereis`'],
+        correctIndices: [0],
+        explanation: '`docker run --mac-address ...` **Alternativ:** A) Det går inte. B) `--mac-address`. C) I Dockerfile. D) Spoofa. 23. **Scenario:** Hur hittar du vilken host-mapp en Named Volume pekar på? **Lösning:** `docker volume inspect volymnamn` (Mountpoint).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s24',
+        question: 'SCENARIO: Du vill ändra innehållet i en fil inuti en volym utan att gå in i containern.',
+        options: ['Använd `-p`', 'Ändra app-config', 'Byt IP', 'Använd bridge'],
+        correctIndices: [0],
+        explanation: 'Du kan redigera filen direkt på hosten om du vet var volymen ligger (`/var/lib/docker/volumes/...`), men det rekommenderas inte på Mac/Windows (där VM döljer det). Bättre att använda en tillfällig container som monterar volymen. **Alternativ:** A) Redigera direkt (Linux). B) Helper container (Mac/Win). C) Det går inte. D) Både A och B. 25. **Scenario:** Du använder `--network host` men portarna krockar. **Lösning:** Eftersom du inte har port-mapping (nat) i host-mode kan du inte mappa om portar. Du måste ändra lyssningsporten inuti applikationen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s26',
+        question: 'SCENARIO: Du har en app som kräver att databasen är redo innan den startar. `depends_on` funkar inte.',
+        options: ['`depends_on`', '`wait-for-it` script', '`sleep 10`', 'Hoppas på det bästa'],
+        correctIndices: [0],
+        explanation: '`depends_on` startar bara containern, det väntar inte på tjänsten. Använd ett script (t.ex. `wait-for-it.sh`) som loopar tills DB-porten svarar.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s27',
+        question: 'SCENARIO: Du vill se trafiken in/ut ur en container med `tcpdump`.',
+        options: ['Installera tcpdump i appen', 'Sidecar container', 'Wireshark på hosten', 'Går inte'],
+        correctIndices: [0],
+        explanation: 'Kör en sidecar-container med nätverket kopplat till target (`--net container:target`) som kör tcpdump.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s28',
+        question: 'SCENARIO: Vad är risken med `docker volume rm $(docker volume ls -q)`?',
+        options: ['`--bandwidth`', 'Kräver extra verktyg/plugins', '`--net-limit`', '`limit`'],
+        correctIndices: [0],
+        explanation: 'Du raderar ALLA volymer, inklusive de med viktig data. **Alternativ:** A) Inget. B) Dataförlust. C) Det är säkert. D) Det frigör RAM. 29. **Scenario:** Du vill begränsa bandbredden för en container. **Lösning:** Docker har inget direkt stöd för detta i standard CLI, kräver Traffic Control (tc) på hosten eller plugins. (Detta är en "trick question" - cgroups hanterar inte nätverksbredd direkt lika enkelt som CPU).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
+    {
+        id: 'nod9-docker-natverk-s30',
+        question: 'SCENARIO: Du vill mappa en enstaka fil `/etc/hosts` från host till container.',
+        options: ['Funkar inte', '`-v fil:fil`', 'Bara mappar', 'Kopiera istället'],
+        correctIndices: [0],
+        explanation: '`docker run -v /etc/hosts:/etc/hosts ...` (fungerar, men kan ge problem om editorn byter inode vid sparande).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod9-docker-natverk',
+        type: 'scenario'
+    },
 ]
 
-// ===== NOD10 DOCKER COMPOSE (49 frågor) =====
+// ===== NOD10 DOCKER COMPOSE (49 quiz + 26 scenarios) =====
 export const NOD10_DOCKER_COMPOSE_QUESTIONS: Nod3to10Question[] = [
     {
         id: 'nod10-docker-compose-q1',
@@ -4378,6 +6270,292 @@ export const NOD10_DOCKER_COMPOSE_QUESTIONS: Nod3to10Question[] = [
         category: 'Quiz',
         topic: 'nod10-docker-compose',
         type: 'quiz'
+    },
+    {
+        id: 'nod10-docker-compose-s1',
+        question: 'SCENARIO: Du har kört `docker-compose up` men din ändring i koden syns inte.',
+        options: ['Starta om datorn', 'Använd bind mount eller bygg om', 'Vänta 5 min', 'Ändra kodspråk'],
+        correctIndices: [0],
+        explanation: 'Du saknar troligen en volym (bind mount) eller så behöver du bygga om imagen (`--build`) om du koperar in koden.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s2',
+        question: 'SCENARIO: Din databascontainer startar, men webbcontainern kraschar direkt för att den inte kan nå databasen.',
+        options: ['depends_on räcker', 'Healthcheck/wait-script', 'Starta om manuellt', 'Öka CPU'],
+        correctIndices: [0],
+        explanation: 'Webbcontainern startar för snabbt. `depends_on` väntar inte på att *porten* är öppen. Lägg till en `healthcheck` eller ett script (wait-for-it).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s3',
+        question: 'SCENARIO: Du vill köra din applikation på port 80, men får "Bind for 0.0.0.0:80 failed: port is already allocated".',
+        options: ['Hårdkoda i koden', 'Override-filer', 'Manuellt inmatning', 'Olika Dockerfiles'],
+        correctIndices: [1],
+        explanation: 'Något annat på din dator (t.ex. inbyggd Apache, Skype eller en annan container) använder redan port 80. Byt host-port: `- "8080:80"`. **Alternativ:** A) Byt port. B) Stäng av allt annat. C) Använd sudo. D) Byt dator. 4. **Scenario:** Du vill ha olika miljövariabler i PROD vs DEV. **Lösning:** Använd olika `.env`-filer eller override-filer (`docker-compose.prod.yml`).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s5',
+        question: 'SCENARIO: Din kollega kan inte köra ditt projekt för att hon saknar `.env`-filen.',
+        options: ['Skicka via mail', '`git add .env` (Nej!)', 'Skapa `.env.example`', 'Be henne gissa'],
+        correctIndices: [0],
+        explanation: 'Du har (korrekt) lagt `.env` i `.gitignore`. Skapa en `.env.example` som hon kan kopiera.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s6',
+        question: 'SCENARIO: Du vill rensa allt data i din dev-miljö och börja om från noll.',
+        options: ['`docker rm`', '`down -v`', 'Starta om', 'Radera mappen'],
+        correctIndices: [0],
+        explanation: '`docker-compose down -v` (Tar bort volymer).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s7',
+        question: 'SCENARIO: Du vill se realtidsloggar för alla tjänster i terminalen.',
+        options: ['`tail`', '`logs -f`', 'Titta i filerna', 'Både A och B'],
+        correctIndices: [0],
+        explanation: 'Kör `docker-compose up` (utan -d) eller `docker-compose logs -f`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s8',
+        question: 'SCENARIO: Du har MÅNGA tjänster och vill bara starta databasen och redis för att köra tester lokalt.',
+        options: ['Starta allt', 'Starta specifika tjänster', 'Kommentera ut resten i filen', 'Det går inte'],
+        correctIndices: [0],
+        explanation: '`docker-compose up -d db redis`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s9',
+        question: 'SCENARIO: Du vill köra ett engångsskript (migrering) i miljön.',
+        options: ['Starta en separat VM', '`run`', '`ssh`', '`exec` (om den redan körs)'],
+        correctIndices: [0],
+        explanation: '`docker-compose run web npm run migrate`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s10',
+        question: 'SCENARIO: Appen klagar på "Connection refused" mot Redis på 127.0.0.1.',
+        options: ['Öppna portar', 'Använd tjänstenamnet', 'Använd hostens IP', 'Byt databas'],
+        correctIndices: [0],
+        explanation: 'I Docker landar 127.0.0.1 i *samma* container. Ändra config till att peka på tjänstenamnet `redis`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s11',
+        question: 'SCENARIO: Du vill testa att bygga projektet helt rent utan cache för att säkra att det funkar.',
+        options: ['Radera Docker', '`--no-cache`', '`clean`', '`purge`'],
+        correctIndices: [0],
+        explanation: '`docker-compose build --no-cache`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s12',
+        question: 'SCENARIO: Din disk börjar bli full av gamla images efter många builds.',
+        options: ['Köp ny disk', '`prune`', '`rm *`', 'Formatera'],
+        correctIndices: [0],
+        explanation: '`docker system prune -a` (eller bara `docker image prune` för dangling).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s13',
+        question: 'SCENARIO: Hur konfigurerar du en tjänst att starta om automatiskt om den kraschar, men inte om du stoppar den manuellt?',
+        options: ['`always`', '`on-failure`', '`unless-stopped`', '`never`'],
+        correctIndices: [0],
+        explanation: '`restart: unless-stopped`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s14',
+        question: 'SCENARIO: Du vill använda en färdig image för databasen, men bygga din egen kod för webbservern.',
+        options: ['Går inte blanda', 'Kombinera image och build', 'Bygg båda', 'Ladda ner båda'],
+        correctIndices: [0],
+        explanation: 'Använd `image: mysql` för db, och `build: .` för webbservern i YAML.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s15',
+        question: 'SCENARIO: Du vill verifiera din YAML-fil innan du kör den.',
+        options: ['`cat file`', '`config`', '`verify`', '`check`'],
+        correctIndices: [0],
+        explanation: '`docker-compose config`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s16',
+        question: 'SCENARIO: Du vill skala upp antalet workers, men port 80 kan bara bindas en gång.',
+        options: ['Slumpa port', 'Ta bort port-mapping', 'Skala inte', 'Dela port'],
+        correctIndices: [0],
+        explanation: 'Ta bort host-port-mappningen för workers (de behövs oftast inte nås utifrån), eller använd en lastbalanserare (Nginx/Traefik) framför.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s17',
+        question: 'SCENARIO: Du vill kopiera en fil FRÅN en körande container till din host.',
+        options: ['`ftp`', '`cp`', '`docker cp`', '`scp`'],
+        correctIndices: [0],
+        explanation: '`docker cp <container_id>:/path/file .`',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s18',
+        question: 'SCENARIO: Du behöver köra en äldre version av MySQL.',
+        options: ['`name:`', '`container_name:`', '`id:`', '`hostname:`'],
+        correctIndices: [0],
+        explanation: 'Ändra i YAML: `image: mysql:5.7`. **Alternativ:** A) Avinstallera MySQL. B) Byt tag i YAML. C) Det går inte. D) Nedgradera hosten. 19. **Scenario:** Du vill att dina containers ska ha statiska namn så script funkar. **Lösning:** `container_name: mitt-namn`. (Men tänk på att det hindrar skalning > 1).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s20',
+        question: 'SCENARIO: Du har ändrat `.env`-filen men inget händer när du startar om.',
+        options: ['Starta om datorn', 'Kör `up -d` igen', 'Vänta', '`reset`'],
+        correctIndices: [0],
+        explanation: 'Du måste oftast köra `docker-compose up` igen för att återskapa containrarna med nya variabler. `restart` räcker inte alltid om variablerna bakas in.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s21',
+        question: 'SCENARIO: Vissa filer i din volym (på hosten) har fel ägare (root) och du kan inte redigera dem.',
+        options: ['`sudo chmod`', 'Byt user i compose', 'Hacka root', 'Både A och B funkar'],
+        correctIndices: [0],
+        explanation: 'Containern körs som root. Du kan sätta `user: "${UID}:${GID}"` i compose-filen för att köra som din användare.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s22',
+        question: 'SCENARIO: Du vill köra en "stack" men utan Docker Swarm.',
+        options: ['`ports: all`', '`network: bridge`', '`network_mode: "host"`', 'Brygga'],
+        correctIndices: [2],
+        explanation: 'Docker Compose ÄR lösningen för single-node orkestrering. **Alternativ:** A) Kubernetes. B) Compose. C) Nomad. D) Bash script. 23. **Scenario:** Du vill dela nätverk med hosten för en specifik tjänst (t.ex. nätverksövervakning). **Lösning:** `network_mode: "host"`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s24',
+        question: 'SCENARIO: Du vill ansluta till en databas som körs på din host-maskin (utanför Docker) från en container.',
+        options: ['Localhost', '`host.docker.internal`', '`192.168.0.1`', 'Det går inte'],
+        correctIndices: [1],
+        explanation: 'Använd `host.docker.internal` (Mac/Win) eller `--add-host host.docker.internal:host-gateway` (Linux).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s25',
+        question: 'SCENARIO: Du råkade radera `docker-compose.yml`. Kan du återskapa den från de körande containrarna?',
+        options: ['Ja, `docker restore`', 'Nej, manuell rekonstruktion', 'Kolla papperskorgen', 'Fråga AI'],
+        correctIndices: [0],
+        explanation: 'Inte exakt originalfilen, men du kan inspektera containers och försöka rekonstruera den ("Reverse engineering"). Docker sparar inte YAML-filen.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s26',
+        question: 'SCENARIO: Du vill förhindra att Compose skapar ett default-nätverk och istället använda ett existerande.',
+        options: ['`network: none`', '`external: true`', '`use_existing: true`', '`import`'],
+        correctIndices: [1],
+        explanation: 'Definiera `networks:` med `external: true`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s27',
+        question: 'SCENARIO: Vad är felet? `ports: - 80:80` (utan citattecken) i YAML.',
+        options: ['Köp mer RAM', 'Begränsa i YAML', 'Konfigurera Java', 'Både B och C'],
+        correctIndices: [0],
+        explanation: 'YAML kan tolka `80:80` som bas-60 tal (!) under vissa omständigheter (om det är under 60). Alltid bäst att använda citattecken `"80:80"`. **Alternativ:** A) Det funkar alltid. B) Citattecken är säkrast. C) Syntaxfel. D) Ingen port öppnas. 28. **Scenario:** Du vill begränsa minnet för en Java-tjänst som äter allt RAM. **Lösning:** `deploy: resources: limits: memory: 512M`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s29',
+        question: 'SCENARIO: Du vill köra två helt separata instanser av samma projekt på samma dator.',
+        options: ['Går inte', 'Olika mappar / `-p`', 'Olika användare', 'Virtuell maskin'],
+        correctIndices: [0],
+        explanation: 'Lägg dem i olika mappar, eller använd `-p projekt_namn` flaggan för att ge dem olika projektnamn (namespace).',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
+    },
+    {
+        id: 'nod10-docker-compose-s30',
+        question: 'SCENARIO: Du har en "init-container" som ska köra en gång (t.ex. skapa databas-schema) och sen dö.',
+        options: ['`restart: never`', '`profiles`', 'Manuellt', 'Alla ovan'],
+        correctIndices: [1],
+        explanation: 'Definiera den som en tjänst, använd `profiles` för att inte starta den alltid, eller kör den manuellt med `run`.',
+        difficulty: 'VG',
+        category: 'Scenario',
+        topic: 'nod10-docker-compose',
+        type: 'scenario'
     },
 ]
 

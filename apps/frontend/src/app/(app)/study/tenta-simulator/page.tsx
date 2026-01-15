@@ -58,6 +58,7 @@ interface SimulatorQuestion {
     scenario?: string // Optional scenario context
     isMultiSelect: boolean
     nodeTopic?: Omtenta2Topic // For Omtenta 2.0 node filtering
+    questionType?: 'quiz' | 'scenario' // For question type filtering
 }
 
 interface SimulatorSettings {
@@ -197,7 +198,8 @@ function convertOmtenta2Question(q: Omtenta2Question): SimulatorQuestion {
         category: q.category,
         source: 'omtenta-2',
         isMultiSelect: isMulti,
-        nodeTopic: q.topic
+        nodeTopic: q.topic,
+        questionType: q.type // Pass through quiz/scenario type
     }
 }
 
@@ -258,7 +260,7 @@ export default function TentaSimulatorPage() {
         }
         if (settings.selectedSources.includes('omtenta-2')) {
             // Filter by selected nodes
-            const filtered = omtenta2Questions.filter(q => 
+            const filtered = omtenta2Questions.filter(q =>
                 !q.nodeTopic || settings.selectedNodes.includes(q.nodeTopic)
             )
             questions.push(...filtered)
@@ -276,6 +278,7 @@ export default function TentaSimulatorPage() {
         const difficultyParam = searchParams?.get('difficulty')
         const sourceParam = searchParams?.get('source')
         const nodesParam = searchParams?.get('nodes')
+        const questionTypeParam = searchParams?.get('questionType')
 
         if (timeParam || countParam || gradingParam || difficultyParam || sourceParam) {
             // Parse difficulty param: 'G', 'VG', or 'both'
@@ -304,6 +307,11 @@ export default function TentaSimulatorPage() {
                 selectedNodes = nodes.filter(n => OMTENTA2_TOPICS.includes(n))
                 if (selectedNodes.length === 0) selectedNodes = OMTENTA2_TOPICS
             }
+            
+            // Parse questionType param: 'quiz', 'scenario', or 'mix'
+            const questionType: 'quiz' | 'scenario' | 'mix' = 
+                questionTypeParam === 'quiz' ? 'quiz' : 
+                questionTypeParam === 'scenario' ? 'scenario' : 'mix'
 
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
@@ -324,10 +332,14 @@ export default function TentaSimulatorPage() {
             if (selectedSources.includes('linux-commands')) sourceQuestions.push(...linuxCommandsQuestions)
             if (selectedSources.includes('linux-tenta')) sourceQuestions.push(...linuxTentaQuestions)
             if (selectedSources.includes('omtenta-2')) {
-                // Filter by selected nodes
-                const filtered = omtenta2Questions.filter(q => 
-                    !q.nodeTopic || selectedNodes.includes(q.nodeTopic)
-                )
+                // Filter by selected nodes and question type
+                const filtered = omtenta2Questions.filter(q => {
+                    // Filter by nodes
+                    if (q.nodeTopic && !selectedNodes.includes(q.nodeTopic)) return false
+                    // Filter by question type (quiz/scenario/mix)
+                    if (questionType !== 'mix' && q.questionType !== questionType) return false
+                    return true
+                })
                 sourceQuestions.push(...filtered)
             }
 
