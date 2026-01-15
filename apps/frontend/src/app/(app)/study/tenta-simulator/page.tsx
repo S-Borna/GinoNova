@@ -307,11 +307,11 @@ export default function TentaSimulatorPage() {
                 selectedNodes = nodes.filter(n => OMTENTA2_TOPICS.includes(n))
                 if (selectedNodes.length === 0) selectedNodes = OMTENTA2_TOPICS
             }
-            
+
             // Parse questionType param: 'quiz', 'scenario', or 'mix'
-            const questionType: 'quiz' | 'scenario' | 'mix' = 
-                questionTypeParam === 'quiz' ? 'quiz' : 
-                questionTypeParam === 'scenario' ? 'scenario' : 'mix'
+            const questionType: 'quiz' | 'scenario' | 'mix' =
+                questionTypeParam === 'quiz' ? 'quiz' :
+                    questionTypeParam === 'scenario' ? 'scenario' : 'mix'
 
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
