@@ -16,6 +16,18 @@
  * TOTAL: ~800 frågor
  */
 
+// Import NOD3-10 från auto-genererad fil
+import {
+    NOD3_PROCESSHANTERING_QUESTIONS,
+    NOD4_NATVERK_QUESTIONS,
+    NOD5_SSH_QUESTIONS,
+    NOD6_BASH_SKRIPT_QUESTIONS,
+    NOD7_BASH_VERKTYG_QUESTIONS,
+    NOD8_DOCKER_ISOLERING_QUESTIONS,
+    NOD9_DOCKER_NATVERK_QUESTIONS,
+    NOD10_DOCKER_COMPOSE_QUESTIONS
+} from './nod3-10-questions'
+
 export type Omtenta2Topic =
     | 'nod1-filsystem'
     | 'nod2-rattigheter'
@@ -890,16 +902,15 @@ export const NOD2_QUESTIONS: Omtenta2Question[] = [
     }
 ]
 
-// Fortsätt med NOD 3-10...
-// För att hålla filen hanterbar exporterar vi de som tomma arrayer att fyllas i
-export const NOD3_QUESTIONS: Omtenta2Question[] = []
-export const NOD4_QUESTIONS: Omtenta2Question[] = []
-export const NOD5_QUESTIONS: Omtenta2Question[] = []
-export const NOD6_QUESTIONS: Omtenta2Question[] = []
-export const NOD7_QUESTIONS: Omtenta2Question[] = []
-export const NOD8_QUESTIONS: Omtenta2Question[] = []
-export const NOD9_QUESTIONS: Omtenta2Question[] = []
-export const NOD10_QUESTIONS: Omtenta2Question[] = []
+// Re-exportera NOD3-10 med enkla namn för bakåtkompatibilitet
+export const NOD3_QUESTIONS: Omtenta2Question[] = NOD3_PROCESSHANTERING_QUESTIONS as Omtenta2Question[]
+export const NOD4_QUESTIONS: Omtenta2Question[] = NOD4_NATVERK_QUESTIONS as Omtenta2Question[]
+export const NOD5_QUESTIONS: Omtenta2Question[] = NOD5_SSH_QUESTIONS as Omtenta2Question[]
+export const NOD6_QUESTIONS: Omtenta2Question[] = NOD6_BASH_SKRIPT_QUESTIONS as Omtenta2Question[]
+export const NOD7_QUESTIONS: Omtenta2Question[] = NOD7_BASH_VERKTYG_QUESTIONS as Omtenta2Question[]
+export const NOD8_QUESTIONS: Omtenta2Question[] = NOD8_DOCKER_ISOLERING_QUESTIONS as Omtenta2Question[]
+export const NOD9_QUESTIONS: Omtenta2Question[] = NOD9_DOCKER_NATVERK_QUESTIONS as Omtenta2Question[]
+export const NOD10_QUESTIONS: Omtenta2Question[] = NOD10_DOCKER_COMPOSE_QUESTIONS as Omtenta2Question[]
 
 // ===== AGGREGERAD EXPORT =====
 export const ALL_OMTENTA_2_QUESTIONS: Omtenta2Question[] = [

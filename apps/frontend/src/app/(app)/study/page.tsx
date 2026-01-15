@@ -161,6 +161,7 @@ export default function StudyPage() {
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
     const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2'>('omtenta-2')
     const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
+    const [showNodeSelector, setShowNodeSelector] = useState(false)
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -552,59 +553,122 @@ export default function StudyPage() {
                                 </p>
                             </div>
 
-                            {/* Omtenta 2.0 Node Selection */}
+                            {/* Omtenta 2.0 Node Selection - Hidden by default with toggle */}
                             {tentaSource === 'omtenta-2' && (
-                                <div className="bg-black/30 rounded-2xl p-5 border border-teal-500/20 mb-6">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-2">
+                                <div className="mb-6">
+                                    {/* Header with toggle */}
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-3">
                                             <Layers className="w-5 h-5 text-teal-400" />
-                                            <span className="text-white font-bold">Välj Nod-moduler</span>
+                                            <span className="text-white font-bold">Välj moduler</span>
+                                            <span className="text-sm font-normal text-zinc-500">
+                                                ({omtenta2SelectedNodes.length}/{OMTENTA2_TOPICS.length} valda)
+                                            </span>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => setOmtenta2SelectedNodes(OMTENTA2_TOPICS)}
-                                                className="px-3 py-1 text-xs rounded-lg bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 transition-all"
-                                            >
-                                                Välj alla
-                                            </button>
-                                            <button
-                                                onClick={() => setOmtenta2SelectedNodes([])}
-                                                className="px-3 py-1 text-xs rounded-lg bg-zinc-700/50 text-zinc-400 hover:bg-zinc-700 transition-all"
-                                            >
-                                                Avmarkera
-                                            </button>
-                                        </div>
+                                        <button
+                                            onClick={() => setShowNodeSelector(!showNodeSelector)}
+                                            className={cn(
+                                                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm",
+                                                "bg-zinc-800/50 border border-zinc-700/50",
+                                                "hover:bg-zinc-800 transition-colors"
+                                            )}
+                                        >
+                                            {showNodeSelector ? 'Dölj' : 'Visa tasks'}
+                                            <ChevronDown className={cn(
+                                                "w-4 h-4 transition-transform",
+                                                showNodeSelector && "rotate-180"
+                                            )} />
+                                        </button>
                                     </div>
-                                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                                        {OMTENTA2_TOPICS.map(topic => {
-                                            const info = OMTENTA2_TOPIC_INFO[topic]
-                                            const isSelected = omtenta2SelectedNodes.includes(topic)
-                                            const questionCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic).length
-                                            return (
-                                                <button
-                                                    key={topic}
-                                                    onClick={() => setOmtenta2SelectedNodes(prev =>
-                                                        isSelected ? prev.filter(t => t !== topic) : [...prev, topic]
-                                                    )}
-                                                    className={cn(
-                                                        "py-2 px-3 rounded-lg text-xs font-medium transition-all flex flex-col items-center gap-1",
-                                                        isSelected
-                                                            ? "bg-teal-500/30 text-teal-200 border border-teal-500/50"
-                                                            : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
-                                                    )}
-                                                >
-                                                    <span className="font-bold">{info.name.split(':')[0]}</span>
-                                                    <span className="opacity-70 text-[10px]">{questionCount} frågor</span>
-                                                </button>
-                                            )
-                                        })}
+
+                                    {/* Quick select buttons */}
+                                    <div className="flex gap-3 mb-3">
+                                        <button
+                                            onClick={() => setOmtenta2SelectedNodes(OMTENTA2_TOPICS)}
+                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors text-zinc-300"
+                                        >
+                                            Välj alla
+                                        </button>
+                                        <button
+                                            onClick={() => setOmtenta2SelectedNodes([])}
+                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors text-zinc-300"
+                                        >
+                                            Avmarkera alla
+                                        </button>
+                                        {omtenta2SelectedNodes.length > 0 && (
+                                            <span className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-sm bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                                                <Brain className="w-4 h-4" />
+                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                            </span>
+                                        )}
                                     </div>
-                                    <p className="text-xs text-zinc-500 mt-3 text-center">
-                                        {omtenta2SelectedNodes.length === 0
-                                            ? "⚠️ Välj minst en nod"
-                                            : `✅ ${omtenta2SelectedNodes.length} noder valda (${ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor)`
-                                        }
-                                    </p>
+
+                                    {/* Node list - hidden by default */}
+                                    <AnimatePresence>
+                                        {showNodeSelector && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="bg-black/30 rounded-2xl p-4 border border-teal-500/20 max-h-80 overflow-y-auto">
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                        {OMTENTA2_TOPICS.map((topic, index) => {
+                                                            const info = OMTENTA2_TOPIC_INFO[topic]
+                                                            const isSelected = omtenta2SelectedNodes.includes(topic)
+                                                            const questionCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic).length
+                                                            // Extrahera kort namn: 'Nod 1: Filsystem & Grunder' -> 'Filsystem & Grunder'
+                                                            const shortName = info.name.includes(':') ? info.name.split(':')[1].trim() : info.name
+                                                            return (
+                                                                <motion.button
+                                                                    key={topic}
+                                                                    initial={{ opacity: 0, x: -10 }}
+                                                                    animate={{ opacity: 1, x: 0 }}
+                                                                    transition={{ delay: index * 0.02 }}
+                                                                    onClick={() => setOmtenta2SelectedNodes(prev =>
+                                                                        isSelected ? prev.filter(t => t !== topic) : [...prev, topic]
+                                                                    )}
+                                                                    className={cn(
+                                                                        "flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium transition-all text-left",
+                                                                        isSelected
+                                                                            ? "bg-teal-500/20 text-teal-200 border border-teal-500/50"
+                                                                            : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                                    )}
+                                                                >
+                                                                    <div className={cn(
+                                                                        "w-6 h-6 rounded-lg flex items-center justify-center shrink-0",
+                                                                        isSelected ? "bg-teal-500" : "bg-zinc-700"
+                                                                    )}>
+                                                                        {isSelected ? (
+                                                                            <Check className="w-4 h-4 text-white" />
+                                                                        ) : (
+                                                                            <Square className="w-4 h-4 text-zinc-500" />
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium truncate">{shortName}</div>
+                                                                        <div className="text-xs opacity-60 truncate">{info.description}</div>
+                                                                    </div>
+                                                                    <span className={cn(
+                                                                        "text-xs px-2 py-1 rounded-lg shrink-0",
+                                                                        questionCount > 0 ? "bg-teal-500/20 text-teal-300" : "bg-zinc-700 text-zinc-500"
+                                                                    )}>
+                                                                        {questionCount} frågor
+                                                                    </span>
+                                                                </motion.button>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* Status message */}
+                                    {omtenta2SelectedNodes.length === 0 && (
+                                        <p className="text-xs text-orange-400 mt-2 text-center">⚠️ Välj minst en modul för att starta</p>
+                                    )}
                                 </div>
                             )}
 
