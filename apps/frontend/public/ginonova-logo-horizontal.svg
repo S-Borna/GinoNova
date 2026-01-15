@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" fill="none">
+  <defs>
+    <!-- Gradient Definitions -->
+    <linearGradient id="primary-gradient-h" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="accent-gradient-h" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="text-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+
+    <radialGradient id="cloud-gradient-h" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.05" />
+    </radialGradient>
+
+    <!-- Filters for glow effects -->
+    <filter id="glow-h" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="soft-glow-h" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 6 0" result="glow" />
+      <feComposite in="SourceGraphic" in2="glow" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Logo Mark (left side) -->
+  <g transform="translate(10, 10)">
+    <!-- Outer glow -->
+    <circle cx="40" cy="40" r="35" fill="url(#primary-gradient-h)" filter="url(#soft-glow-h)" opacity="0.2" />
+
+    <!-- Neural network nodes -->
+    <circle cx="28" cy="32" r="2" fill="url(#accent-gradient-h)" filter="url(#glow-h)" opacity="0.7" />
+    <circle cx="52" cy="32" r="2" fill="url(#accent-gradient-h)" filter="url(#glow-h)" opacity="0.7" />
+    <circle cx="24" cy="48" r="2" fill="url(#accent-gradient-h)" filter="url(#glow-h)" opacity="0.7" />
+    <circle cx="56" cy="48" r="2" fill="url(#accent-gradient-h)" filter="url(#glow-h)" opacity="0.7" />
+
+    <!-- Neural connections -->
+    <line x1="28" y1="32" x2="40" y2="40" stroke="url(#accent-gradient-h)" stroke-width="0.5" opacity="0.3" />
+    <line x1="52" y1="32" x2="40" y2="40" stroke="url(#accent-gradient-h)" stroke-width="0.5" opacity="0.3" />
+
+    <!-- Main circle -->
+    <circle cx="40" cy="40" r="30" fill="url(#primary-gradient-h)" filter="url(#glow-h)" />
+
+    <!-- Stylized "G" -->
+    <path d="M 52 30 A 18 18 0 1 0 52 50"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          fill="none"
+          filter="url(#glow-h)" />
+    <line x1="52" y1="40" x2="44" y2="40"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          filter="url(#glow-h)" />
+
+    <!-- Stylized "N" -->
+    <path d="M 30 33 L 30 47 M 30 33 L 38 47 M 38 33 L 38 47"
+          stroke="white"
+          stroke-width="3.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+          filter="url(#glow-h)" />
+
+    <!-- Orbital rings -->
+    <ellipse cx="40" cy="40" rx="35" ry="12"
+             fill="none"
+             stroke="rgba(139,92,246,0.2)"
+             stroke-width="1"
+             transform="rotate(30 50 50)" />
+    <ellipse cx="40" cy="40" rx="35" ry="12"
+             fill="none"
+             stroke="rgba(6,182,212,0.2)"
+             stroke-width="1"
+             transform="rotate(-30 50 50)" />
+  </g>
+
+  <!-- Text "GinoNova" -->
+  <g transform="translate(100, 0)">
+    <!-- Gino -->
+    <text x="0" y="50"
+          font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+          font-size="42"
+          font-weight="800"
+          fill="url(#text-gradient)"
+          filter="url(#glow-h)"
+          letter-spacing="-1">
+      Gino<tspan fill="url(#accent-gradient-h)">Nova</tspan>
+    </text>
+
+    <!-- Subtle tagline -->
+    <text x="2" y="70"
+          font-family="system-ui, -apple-system, 'Segoe UI', sans-serif"
+          font-size="11"
+          font-weight="500"
+          fill="rgba(139,92,246,0.6)"
+          letter-spacing="3">
+      AI-POWERED LEARNING
+    </text>
+  </g>
+
+  <!-- Decorative elements -->
+  <circle cx="95" cy="25" r="1.5" fill="#06b6d4" opacity="0.6">
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="95" cy="75" r="1.5" fill="#ec4899" opacity="0.6">
+    <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite" />
+  </circle>
+</svg>

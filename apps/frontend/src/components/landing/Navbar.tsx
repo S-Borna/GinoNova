@@ -19,6 +19,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
@@ -27,6 +28,8 @@ import {
     ChevronRight,
     Sparkles,
 } from "lucide-react"
+// TentaCountdown removed
+import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -94,6 +97,61 @@ export function Navbar() {
                             isScrolled ? "h-16" : "h-20"
                         )}
                     >
+
+                        {/* Spotify Live Player - Desktop */}
+                        <div className="hidden lg:block">
+                            <SpotifyLivePlayer />
+                        </div>
+
+                        {/* Center Logo */}
+                        <Link
+                            href="/"
+                            className="absolute left-1/2 -translate-x-1/2 flex items-center group"
+                        >
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="relative"
+                            >
+                                {/* Glow effect */}
+                                <motion.div
+                                    className="absolute -inset-2 rounded-xl opacity-40"
+                                    style={{
+                                        background: "radial-gradient(circle, rgba(139,92,246,0.5), transparent)",
+                                        filter: "blur(12px)",
+                                    }}
+                                    animate={{
+                                        opacity: [0.3, 0.5, 0.3],
+                                        scale: [1, 1.1, 1],
+                                    }}
+                                    transition={{ duration: 3, repeat: Infinity }}
+                                />
+
+                                {/* Logo */}
+                                <motion.div
+                                    animate={{
+                                        filter: [
+                                            "drop-shadow(0 0 10px rgba(139,92,246,0.4))",
+                                            "drop-shadow(0 0 18px rgba(139,92,246,0.6))",
+                                            "drop-shadow(0 0 10px rgba(139,92,246,0.4))"
+                                        ]
+                                    }}
+                                    transition={{ duration: 2.5, repeat: Infinity }}
+                                >
+                                    <Image
+                                        src="/ginonova-logo-horizontal.svg"
+                                        alt="GinoNova"
+                                        width={160}
+                                        height={40}
+                                        className={cn(
+                                            "w-auto transition-all duration-300",
+                                            isScrolled ? "h-9" : "h-10"
+                                        )}
+                                        priority
+                                    />
+                                </motion.div>
+                            </motion.div>
+                        </Link>
 
                         {/* Mobile menu button */}
                         <motion.button
