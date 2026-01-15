@@ -6,19 +6,20 @@
  * ============================================================================
  *
  * A mesmerizing intro animation that plays once when the landing page loads.
- * Premium GinoNivo brand reveal with dramatic explosion effect.
+ * Premium GinoNova brand reveal with dramatic explosion effect.
  *
  * Sequence:
  * 1. Pure darkness with subtle pulse (0-0.5s)
- * 2. Central core ignites with golden/purple energy (0.5-1.2s)
+ * 2. Central core ignites with cyan/purple energy (0.5-1.2s)
  * 3. Shockwave rings expand outward (1-2s)
  * 4. Energy beams radiate from center (1.5-2.5s)
- * 5. GinoNivo logo reveal with glow (2-3s)
+ * 5. GinoNova logo reveal with epic tagline (2-3s)
  * 6. Graceful fade to landing page (3-4s)
  *
- * Inspired by: Bose, Apple, luxury brand intros
+ * Tagline: "Engineer the Future" — AI • DevOps • MLOps • Cloud
+ * Inspired by: Cutting-edge tech, Apple, luxury brand intros
  *
- * @phase MILESTONE-2.0-COSMIC-RELAUNCH
+ * @phase MILESTONE-3.0-EPIC-RELAUNCH
  */
 
 import * as React from "react"
@@ -367,13 +368,9 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                             </span>
                         </motion.div>
 
-                        {/* Subtle tagline */}
-                        <motion.span
-                            className="text-sm md:text-base font-medium tracking-[0.3em] uppercase"
-                            style={{
-                                color: "rgba(200, 180, 255, 0.8)",
-                                textShadow: "0 0 15px rgba(139, 92, 246, 0.3)",
-                            }}
+                        {/* Epic tagline */}
+                        <motion.div
+                            className="flex flex-col items-center gap-1"
                             initial={{ opacity: 0, y: 10 }}
                             animate={{
                                 opacity: [0, 0, 1, 1, 0],
@@ -386,8 +383,29 @@ export function CosmicIntro({ onComplete, duration = 4 }: CosmicIntroProps) {
                                 ease: "easeOut",
                             }}
                         >
-                            Master the Cloud
-                        </motion.span>
+                            <span
+                                className="text-base md:text-lg font-bold tracking-[0.25em] uppercase"
+                                style={{
+                                    background: "linear-gradient(90deg, #06b6d4 0%, #8b5cf6 50%, #ec4899 100%)",
+                                    backgroundClip: "text",
+                                    WebkitBackgroundClip: "text",
+                                    color: "transparent",
+                                    textShadow: "0 0 20px rgba(139, 92, 246, 0.5)",
+                                    filter: "drop-shadow(0 0 15px rgba(139, 92, 246, 0.4))",
+                                }}
+                            >
+                                Engineer the Future
+                            </span>
+                            <span
+                                className="text-xs md:text-sm font-medium tracking-[0.35em] uppercase"
+                                style={{
+                                    color: "rgba(167, 139, 250, 0.7)",
+                                    textShadow: "0 0 10px rgba(139, 92, 246, 0.3)",
+                                }}
+                            >
+                                AI • DevOps • MLOps • Cloud
+                            </span>
+                        </motion.div>
                     </motion.div>
                 </motion.div>
             ) : null}

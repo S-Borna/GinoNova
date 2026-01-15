@@ -1,10 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#8b5cf6"/>
-      <stop offset="100%" style="stop-color:#6366f1"/>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a12;stop-opacity:1" />
     </linearGradient>
+    <linearGradient id="primary-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
   </defs>
-  <rect width="100" height="100" rx="20" fill="url(#grad)"/>
-  <text x="50" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="50" font-weight="bold" fill="white" text-anchor="middle">D</text>
+
+  <!-- Background -->
+  <rect width="100" height="100" rx="22" fill="url(#bg-gradient)"/>
+
+  <!-- Neural nodes -->
+  <circle cx="35" cy="40" r="1.5" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.6" />
+  <circle cx="65" cy="40" r="1.5" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.6" />
+  <circle cx="30" cy="60" r="1.5" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.6" />
+  <circle cx="70" cy="60" r="1.5" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.6" />
+
+  <!-- Connections -->
+  <line x1="35" y1="40" x2="50" y2="50" stroke="url(#accent-gradient)" stroke-width="0.5" opacity="0.3" />
+  <line x1="65" y1="40" x2="50" y2="50" stroke="url(#accent-gradient)" stroke-width="0.5" opacity="0.3" />
+
+  <!-- Main circle -->
+  <circle cx="50" cy="50" r="32" fill="url(#primary-gradient)" filter="url(#glow)" />
+
+  <!-- Inner ring -->
+  <circle cx="50" cy="50" r="29" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" />
+
+  <!-- "G" letter -->
+  <path d="M 60 38 A 20 20 0 1 0 60 62"
+        stroke="white"
+        stroke-width="4"
+        stroke-linecap="round"
+        fill="none"
+        filter="url(#glow)" />
+  <line x1="60" y1="50" x2="52" y2="50"
+        stroke="white"
+        stroke-width="4"
+        stroke-linecap="round"
+        filter="url(#glow)" />
+
+  <!-- "N" letter -->
+  <path d="M 37 42 L 37 58 M 37 42 L 45 58 M 45 42 L 45 58"
+        stroke="white"
+        stroke-width="3.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        filter="url(#glow)" />
+
+  <!-- Orbital rings -->
+  <ellipse cx="50" cy="50" rx="37" ry="12"
+           fill="none"
+           stroke="rgba(139,92,246,0.15)"
+           stroke-width="1"
+           transform="rotate(30 50 50)" />
+  <ellipse cx="50" cy="50" rx="37" ry="12"
+           fill="none"
+           stroke="rgba(6,182,212,0.15)"
+           stroke-width="1"
+           transform="rotate(-30 50 50)" />
 </svg>

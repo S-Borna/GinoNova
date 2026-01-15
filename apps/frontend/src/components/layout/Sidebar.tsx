@@ -18,6 +18,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -440,97 +441,48 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 >
                     {!collapsed ? (
                         <motion.div
-                            className="relative"
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            className="relative flex items-center justify-center w-full"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                         >
                             {/* Outer glow */}
                             <motion.div
-                                className="absolute -inset-3 rounded-2xl opacity-60"
+                                className="absolute -inset-2 rounded-2xl opacity-50"
                                 style={{
-                                    background: "linear-gradient(135deg, rgba(139,92,246,0.4), rgba(236,72,153,0.3), rgba(6,182,212,0.3))",
-                                    filter: "blur(16px)",
+                                    background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.3), transparent)",
+                                    filter: "blur(20px)",
                                 }}
                                 animate={{
                                     opacity: [0.3, 0.6, 0.3],
-                                    scale: [1, 1.05, 1],
+                                    scale: [1, 1.08, 1],
                                 }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             />
 
-                            {/* Main logo container */}
-                            <div className={cn(
-                                "relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl",
-                                "bg-gradient-to-r from-[#0d0d14] via-[#13131d] to-[#0d0d14]",
-                                "border border-purple-500/30",
-                                "shadow-[0_0_30px_rgba(139,92,246,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]"
-                            )}>
-                                {/* Nova star icon */}
-                                <motion.div
-                                    className="relative"
-                                    animate={{ rotate: [0, 360] }}
-                                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                                >
-                                    <div className={cn(
-                                        "w-8 h-8 rounded-lg",
-                                        "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-400",
-                                        "flex items-center justify-center",
-                                        "shadow-[0_0_20px_rgba(168,85,247,0.6)]"
-                                    )}>
-                                        <Sparkles className="w-4 h-4 text-white" />
-                                    </div>
-                                </motion.div>
-
-                                {/* GinoNova text */}
-                                <div className="flex items-baseline">
-                                    <motion.span
-                                        className="text-lg font-black tracking-tight"
-                                        style={{
-                                            background: "linear-gradient(135deg, #fff 0%, #e9d5ff 50%, #fff 100%)",
-                                            backgroundSize: "200% auto",
-                                            WebkitBackgroundClip: "text",
-                                            WebkitTextFillColor: "transparent",
-                                        }}
-                                        animate={{
-                                            backgroundPosition: ["0% center", "200% center"],
-                                        }}
-                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                                    >
-                                        Gino
-                                    </motion.span>
-                                    <motion.span
-                                        className="text-lg font-black tracking-tight"
-                                        style={{
-                                            background: "linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)",
-                                            backgroundSize: "200% auto",
-                                            WebkitBackgroundClip: "text",
-                                            WebkitTextFillColor: "transparent",
-                                            filter: "drop-shadow(0 0 8px rgba(168,85,247,0.5))",
-                                        }}
-                                        animate={{
-                                            backgroundPosition: ["0% center", "200% center"],
-                                        }}
-                                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                                    >
-                                        Nova
-                                    </motion.span>
-                                </div>
-
-                                {/* Sparkle accent */}
-                                <motion.div
-                                    className="absolute -top-1 -right-1"
-                                    animate={{
-                                        scale: [1, 1.3, 1],
-                                        opacity: [0.5, 1, 0.5],
-                                    }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    <span className="text-xs">✨</span>
-                                </motion.div>
-                            </div>
+                            {/* Logo Image */}
+                            <motion.div
+                                className="relative"
+                                animate={{
+                                    filter: [
+                                        "drop-shadow(0 0 15px rgba(139,92,246,0.6))",
+                                        "drop-shadow(0 0 25px rgba(139,92,246,0.8))",
+                                        "drop-shadow(0 0 15px rgba(139,92,246,0.6))"
+                                    ]
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Image
+                                    src="/ginonova-logo-horizontal.svg"
+                                    alt="GinoNova"
+                                    width={180}
+                                    height={45}
+                                    className="w-auto h-11"
+                                    priority
+                                />
+                            </motion.div>
                         </motion.div>
                     ) : (
-                        /* Collapsed: Nova star only */
+                        /* Collapsed: Logo icon only */
                         <motion.div
                             className="relative"
                             whileHover={{ scale: 1.1 }}
@@ -539,21 +491,32 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                             <motion.div
                                 className="absolute -inset-2 rounded-xl opacity-60"
                                 style={{
-                                    background: "linear-gradient(135deg, rgba(168,85,247,0.5), rgba(236,72,153,0.4))",
-                                    filter: "blur(10px)",
+                                    background: "radial-gradient(circle, rgba(139,92,246,0.6), rgba(236,72,153,0.4))",
+                                    filter: "blur(12px)",
                                 }}
-                                animate={{ opacity: [0.4, 0.7, 0.4] }}
-                                transition={{ duration: 2, repeat: Infinity }}
+                                animate={{ opacity: [0.4, 0.8, 0.4] }}
+                                transition={{ duration: 2.5, repeat: Infinity }}
                             />
-                            <div className={cn(
-                                "relative w-10 h-10 rounded-xl",
-                                "bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-400",
-                                "flex items-center justify-center",
-                                "shadow-[0_0_25px_rgba(168,85,247,0.5)]",
-                                "border border-purple-400/30"
-                            )}>
-                                <Sparkles className="w-5 h-5 text-white" />
-                            </div>
+                            <motion.div
+                                className="relative"
+                                animate={{
+                                    filter: [
+                                        "drop-shadow(0 0 10px rgba(139,92,246,0.7))",
+                                        "drop-shadow(0 0 20px rgba(139,92,246,0.9))",
+                                        "drop-shadow(0 0 10px rgba(139,92,246,0.7))"
+                                    ]
+                                }}
+                                transition={{ duration: 2.5, repeat: Infinity }}
+                            >
+                                <Image
+                                    src="/ginonova-logo.svg"
+                                    alt="GinoNova"
+                                    width={44}
+                                    height={44}
+                                    className="w-11 h-11"
+                                    priority
+                                />
+                            </motion.div>
                         </motion.div>
                     )}
                 </Link>

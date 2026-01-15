@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Gradient Definitions -->
+    <linearGradient id="primary-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a78bfa;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+
+    <linearGradient id="glow-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.6" />
+      <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.6" />
+    </linearGradient>
+
+    <radialGradient id="cloud-gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.15" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.05" />
+    </radialGradient>
+
+    <!-- Filters for glow effects -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="soft-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 8 0" result="glow" />
+      <feComposite in="SourceGraphic" in2="glow" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer glow circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#glow-gradient)" filter="url(#soft-glow)" opacity="0.3" />
+
+  <!-- Cloud formation base -->
+  <path d="M100 30 Q 140 35 150 55 Q 165 50 170 65 Q 175 80 165 90 Q 170 100 160 110 Q 150 125 130 120 Q 120 135 100 135 Q 80 135 70 120 Q 50 125 40 110 Q 30 100 35 90 Q 25 80 30 65 Q 35 50 50 55 Q 60 35 100 30 Z"
+        fill="url(#cloud-gradient)" opacity="0.4" />
+
+  <!-- Neural network nodes (small) -->
+  <circle cx="70" cy="80" r="3" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.7" />
+  <circle cx="130" cy="80" r="3" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.7" />
+  <circle cx="60" cy="120" r="3" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.7" />
+  <circle cx="140" cy="120" r="3" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.7" />
+  <circle cx="100" cy="140" r="3" fill="url(#accent-gradient)" filter="url(#glow)" opacity="0.7" />
+
+  <!-- Neural connections -->
+  <line x1="70" y1="80" x2="100" y2="100" stroke="url(#accent-gradient)" stroke-width="1" opacity="0.3" />
+  <line x1="130" y1="80" x2="100" y2="100" stroke="url(#accent-gradient)" stroke-width="1" opacity="0.3" />
+  <line x1="60" y1="120" x2="100" y2="100" stroke="url(#accent-gradient)" stroke-width="1" opacity="0.3" />
+  <line x1="140" y1="120" x2="100" y2="100" stroke="url(#accent-gradient)" stroke-width="1" opacity="0.3" />
+
+  <!-- Main logo circle background -->
+  <circle cx="100" cy="100" r="65" fill="url(#primary-gradient)" filter="url(#glow)" />
+
+  <!-- Inner circle for depth -->
+  <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+
+  <!-- Stylized "G" - outer arc -->
+  <path d="M 120 60 A 40 40 0 1 0 120 140"
+        stroke="white"
+        stroke-width="8"
+        stroke-linecap="round"
+        fill="none"
+        filter="url(#glow)" />
+
+  <!-- G inner line -->
+  <line x1="120" y1="100" x2="105" y2="100"
+        stroke="white"
+        stroke-width="8"
+        stroke-linecap="round"
+        filter="url(#glow)" />
+
+  <!-- Stylized "N" - integrated with G -->
+  <path d="M 75 80 L 75 120 M 75 80 L 90 120 M 90 80 L 90 120"
+        stroke="white"
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        fill="none"
+        filter="url(#glow)" />
+
+  <!-- Decorative cloud wisps -->
+  <path d="M 50 100 Q 45 95 50 90"
+        stroke="rgba(255,255,255,0.3)"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none" />
+  <path d="M 150 100 Q 155 105 150 110"
+        stroke="rgba(255,255,255,0.3)"
+        stroke-width="2"
+        stroke-linecap="round"
+        fill="none" />
+
+  <!-- AI spark particles -->
+  <circle cx="85" cy="70" r="2" fill="#06b6d4" opacity="0.8" />
+  <circle cx="115" cy="70" r="2" fill="#ec4899" opacity="0.8" />
+  <circle cx="85" cy="130" r="2" fill="#22d3ee" opacity="0.8" />
+  <circle cx="115" cy="130" r="2" fill="#a78bfa" opacity="0.8" />
+
+  <!-- Orbital rings for tech theme -->
+  <ellipse cx="100" cy="100" rx="75" ry="25"
+           fill="none"
+           stroke="rgba(139,92,246,0.15)"
+           stroke-width="1.5"
+           transform="rotate(30 100 100)" />
+  <ellipse cx="100" cy="100" rx="75" ry="25"
+           fill="none"
+           stroke="rgba(6,182,212,0.15)"
+           stroke-width="1.5"
+           transform="rotate(-30 100 100)" />
+</svg>
