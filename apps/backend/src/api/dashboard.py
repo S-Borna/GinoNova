@@ -1,10 +1,10 @@
 """
 Dashboard API - Aggregated summary endpoint
 Phase 6.0: Dashboard Foundation
-Phase SECURITY: Added authentication and fixed IDOR vulnerabilities
 """
 from fastapi import APIRouter, HTTPException
 from uuid import UUID
+from typing import Optional
 import logging
 
 from ..core.settings import settings
@@ -13,22 +13,16 @@ from ..services.task_service import task_service
 from ..services.studyflow_service import studyflow_service
 from ..services.progress_service import progress_service
 from ..db import user_repository
-from ..core.deps import CurrentUser
 
 dashboard_router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
 @dashboard_router.get("/status")
-def dashboard_status(current_user: CurrentUser):
+def dashboard_status():
     """
     Phase 6.0 status check.
-    
-    **Authentication required**: Must be logged in.
-    
-    Args:
-        current_user: Authenticated user (injected)
-        
+
     Returns:
         Dashboard status information
     """
@@ -40,36 +34,29 @@ def dashboard_status(current_user: CurrentUser):
 
 
 @dashboard_router.get("/summary")
-def dashboard_summary(current_user: CurrentUser):
+def dashboard_summary(user_id: Optional[UUID] = None):
     """
-    Aggregated dashboard summary for the authenticated user.
+    Aggregated dashboard summary.
 
     Combines data from:
-    - user (authenticated user)
+    - user (optional)
     - modules
     - tasks
     - studyflow
-    - progress (for authenticated user)
+    - progress (if user_id provided)
     - system info
     - version info
 
-    **Authentication required**: Must be logged in.
-    **Authorization**: Users can only access their own dashboard data.
-
     Args:
-        current_user: Authenticated user (injected)
+        user_id: Optional UUID to filter progress by user
 
     Returns:
-        Aggregated JSON object with all dashboard data for the authenticated user
-        
-    Raises:
-        401: If not authenticated
+        Aggregated JSON object with all dashboard data
     """
     try:
-        # User data for authenticated user
+        # User data (optional)
         user_data = None
         progress_data = []
-        user_id = current_user.id
         if user_id:
             try:
                 user = user_repository.get_user_by_id(user_id)

@@ -29,7 +29,7 @@ import {
     Sparkles,
 } from "lucide-react"
 // TentaCountdown removed
-import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
+// Spotify removed from landing page - only available after login
 
 /* ============================================================================
    🚀 MAIN COMPONENT
@@ -98,10 +98,8 @@ export function Navbar() {
                         )}
                     >
 
-                        {/* Spotify Live Player - Desktop */}
-                        <div className="hidden lg:block">
-                            <SpotifyLivePlayer />
-                        </div>
+                        {/* Left spacer for logo centering */}
+                        <div className="hidden lg:block w-48" />
 
                         {/* Center Logo */}
                         <Link
@@ -141,11 +139,11 @@ export function Navbar() {
                                     <Image
                                         src="/ginonova-logo-horizontal.svg"
                                         alt="GinoNova"
-                                        width={160}
-                                        height={40}
+                                        width={220}
+                                        height={55}
                                         className={cn(
                                             "w-auto transition-all duration-300",
-                                            isScrolled ? "h-9" : "h-10"
+                                            isScrolled ? "h-12" : "h-14"
                                         )}
                                         priority
                                     />

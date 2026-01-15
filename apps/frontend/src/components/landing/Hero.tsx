@@ -207,12 +207,12 @@ function GinoNovaCloudOverlay() {
                 />
 
                 {/* Logo SVG */}
-                <div className="relative" style={{ filter: "drop-shadow(0 0 40px rgba(139,92,246,0.6))" }}>
+                <div className="relative" style={{ filter: "drop-shadow(0 0 50px rgba(139,92,246,0.7))" }}>
                     <Image
                         src="/ginonova-logo.svg"
                         alt="GinoNova"
-                        width={500}
-                        height={500}
+                        width={700}
+                        height={700}
                         className="opacity-90"
                         priority
                     />
@@ -492,15 +492,12 @@ export function Hero() {
                     </motion.div>
                 </motion.div>
 
-                {/* Tech Stack Visual Showcase */}
-                <TechStackShowcase />
-
-                {/* CTA Button */}
+                {/* CTA Button - Above Tech Stack */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.5 }}
-                    className="flex items-center justify-center mb-8"
+                    transition={{ duration: 0.6, delay: 1.2 }}
+                    className="flex items-center justify-center mb-10"
                 >
                     <Link href="/skillsmaps">
                         <Button
@@ -523,15 +520,8 @@ export function Hero() {
                     </Link>
                 </motion.div>
 
-                {/* Trust indicator */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.7 }}
-                    className="text-sm text-zinc-500"
-                >
-                    Gå med tusentals utvecklare som redan bygger framtidens teknologi
-                </motion.p>
+                {/* Tech Stack Visual Showcase */}
+                <TechStackShowcase />
             </div>
 
             {/* Scroll indicator */}
