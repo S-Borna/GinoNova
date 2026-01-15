@@ -432,7 +432,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
 
             {/* Logo Section */}
             <div className={cn(
-                "relative flex items-center h-16 px-4",
+                "relative flex items-center h-44 px-4",
                 "border-b border-white/5",
                 collapsed ? "justify-center px-2" : "justify-center"
             )}>

@@ -374,7 +374,7 @@ import tomli_w  # För att skriva TOML
 # Läs TOML (Python 3.11+)
 with open("pyproject.toml", "rb") as f:
     config = tomllib.load(f)
-    
+
 print(config["project"]["name"])
 print(config["project"]["dependencies"])
 
@@ -1669,7 +1669,7 @@ def process_data(items, multiplier=1, verbose=False):
 # Wrapper som lägger till defaults
 def with_defaults(func):
     default_kwargs = {"timeout": 30, "retry": True}
-    
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         merged = {**default_kwargs, **kwargs}
@@ -1700,10 +1700,10 @@ def with_defaults(func):
                 language: "python",
                 code: `class Server:
     """En server-klass för DevOps-hantering."""
-    
+
     # Class attribute (delad av alla instanser)
     server_count = 0
-    
+
     def __init__(self, hostname: str, ip: str, port: int = 22):
         # Instance attributes
         self.hostname = hostname
@@ -1711,18 +1711,18 @@ def with_defaults(func):
         self.port = port
         self.status = "stopped"
         Server.server_count += 1
-    
+
     def start(self):
         """Starta servern."""
         self.status = "running"
         print(f"{self.hostname} is now running")
-    
+
     def stop(self):
         self.status = "stopped"
-    
+
     def __str__(self):
         return f"Server({self.hostname} @ {self.ip})"
-    
+
     def __repr__(self):
         return f"Server(hostname='{self.hostname}', ip='{self.ip}')"
 
@@ -1743,11 +1743,11 @@ class Container(ABC):
     def __init__(self, name: str, image: str):
         self.name = name
         self.image = image
-    
+
     @abstractmethod
     def start(self):
         pass
-    
+
     @abstractmethod
     def stop(self):
         pass
@@ -1755,14 +1755,14 @@ class Container(ABC):
 class DockerContainer(Container):
     def start(self):
         print(f"docker run {self.image} --name {self.name}")
-    
+
     def stop(self):
         print(f"docker stop {self.name}")
 
 class PodmanContainer(Container):
     def start(self):
         print(f"podman run {self.image} --name {self.name}")
-    
+
     def stop(self):
         print(f"podman stop {self.name}")
 
@@ -1786,22 +1786,22 @@ from datetime import datetime
 
 class Deployment:
     _deployments = []  # Class-level tracking
-    
+
     def __init__(self, service: str, version: str):
         self._service = service
         self._version = version
         self._deployed_at = None
         Deployment._deployments.append(self)
-    
+
     @property
     def service(self):
         """Getter - read-only access."""
         return self._service
-    
+
     @property
     def version(self):
         return self._version
-    
+
     @version.setter
     def version(self, value: str):
         """Setter med validering."""
@@ -1809,12 +1809,12 @@ class Deployment:
             raise ValueError("Version cannot be empty")
         self._version = value
         self._deployed_at = datetime.now()
-    
+
     @classmethod
     def get_all(cls) -> list:
         """Class method - tillgång till class state."""
         return cls._deployments
-    
+
     @staticmethod
     def validate_version(version: str) -> bool:
         """Static method - ingen tillgång till self/cls."""

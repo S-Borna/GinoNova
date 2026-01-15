@@ -93,8 +93,8 @@ export function Navbar() {
                     <div
                         className={cn(
                             "flex items-center justify-between",
-                            "transition-all duration-300",
-                            isScrolled ? "h-16" : "h-20"
+                            "transition-all duration-500 ease-out",
+                            isScrolled ? "h-20" : "h-56"
                         )}
                     >
 
@@ -107,34 +107,43 @@ export function Navbar() {
                             className="absolute left-1/2 -translate-x-1/2 flex items-center group"
                         >
                             <motion.div
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 className="relative"
                             >
-                                {/* Glow effect */}
+                                {/* Glow effect - stronger when not scrolled */}
                                 <motion.div
-                                    className="absolute -inset-2 rounded-xl opacity-40"
+                                    className={cn(
+                                        "absolute rounded-xl transition-all duration-500",
+                                        isScrolled ? "-inset-1 opacity-20" : "-inset-4 opacity-50"
+                                    )}
                                     style={{
-                                        background: "radial-gradient(circle, rgba(139,92,246,0.5), transparent)",
-                                        filter: "blur(12px)",
+                                        background: "radial-gradient(circle, rgba(139,92,246,0.6), rgba(236,72,153,0.3), transparent)",
+                                        filter: isScrolled ? "blur(8px)" : "blur(20px)",
                                     }}
                                     animate={{
-                                        opacity: [0.3, 0.5, 0.3],
-                                        scale: [1, 1.1, 1],
+                                        opacity: isScrolled ? [0.15, 0.25, 0.15] : [0.4, 0.6, 0.4],
+                                        scale: [1, 1.08, 1],
                                     }}
-                                    transition={{ duration: 3, repeat: Infinity }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                 />
 
-                                {/* Logo */}
+                                {/* Logo with smooth scaling */}
                                 <motion.div
                                     animate={{
-                                        filter: [
-                                            "drop-shadow(0 0 10px rgba(139,92,246,0.4))",
-                                            "drop-shadow(0 0 18px rgba(139,92,246,0.6))",
-                                            "drop-shadow(0 0 10px rgba(139,92,246,0.4))"
-                                        ]
+                                        filter: isScrolled 
+                                            ? [
+                                                "drop-shadow(0 0 6px rgba(139,92,246,0.3))",
+                                                "drop-shadow(0 0 10px rgba(139,92,246,0.4))",
+                                                "drop-shadow(0 0 6px rgba(139,92,246,0.3))"
+                                            ]
+                                            : [
+                                                "drop-shadow(0 0 15px rgba(139,92,246,0.5))",
+                                                "drop-shadow(0 0 25px rgba(139,92,246,0.7))",
+                                                "drop-shadow(0 0 15px rgba(139,92,246,0.5))"
+                                            ]
                                     }}
-                                    transition={{ duration: 2.5, repeat: Infinity }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                                 >
                                     <Image
                                         src="/ginonova-logo-horizontal.svg"
@@ -142,8 +151,8 @@ export function Navbar() {
                                         width={510}
                                         height={127}
                                         className={cn(
-                                            "w-auto transition-all duration-300",
-                                            isScrolled ? "h-[108px]" : "h-[132px]"
+                                            "w-auto transition-all duration-500 ease-out",
+                                            isScrolled ? "h-[72px]" : "h-[200px]"
                                         )}
                                         priority
                                     />
