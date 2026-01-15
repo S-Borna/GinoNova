@@ -1,22 +1,16 @@
 /**
  * OMTENTA 2.0 - Komplett frågebank från alla 10 NOD-moduler
  *
- * INNEHÅLL:
- * - Nod 1: Linux Filsystem & Grunder (50 frågor)
- * - Nod 2: Rättigheter & Säkerhet (50 frågor)
- * - Nod 3: Processhantering (50 frågor)
- * - Nod 4: Nätverk & Server (50 frågor)
- * - Nod 5: SSH & Kommunikation (50 frågor)
- * - Nod 6: Bash Skriptprogrammering (50 frågor)
- * - Nod 7: Bash Verktyg (50 frågor)
- * - Nod 8: Docker Isolering & Images (50 frågor)
- * - Nod 9: Docker Nätverk & Lagring (50 frågor)
- * - Nod 10: Docker Compose & IaC (50 frågor)
+ * INNEHÅLL QUIZ (500 frågor):
+ * - Nod 1-10: 50 quiz-frågor per nod
  *
- * TOTAL: 500 exam-style frågor
+ * INNEHÅLL SCENARIOS (200 frågor):
+ * - Nod 1-10: 20 scenariofrågor per nod
+ *
+ * TOTAL: 700 frågor (500 quiz + 200 scenarios)
  */
 
-// Import alla 10 NOD exam frågor
+// Import alla 10 NOD exam frågor (quiz)
 import { EXAM_NOD1_QUESTIONS } from './exam-nod1-questions'
 import { EXAM_NOD2_QUESTIONS } from './exam-nod2-questions'
 import { EXAM_NOD3_QUESTIONS } from './exam-nod3-questions'
@@ -27,6 +21,18 @@ import { EXAM_NOD7_QUESTIONS } from './exam-nod7-questions'
 import { EXAM_NOD8_QUESTIONS } from './exam-nod8-questions'
 import { EXAM_NOD9_QUESTIONS } from './exam-nod9-questions'
 import { EXAM_NOD10_QUESTIONS } from './exam-nod10-questions'
+
+// Import alla 10 NOD scenario frågor
+import { SCENARIO_NOD1_QUESTIONS } from './scenario-nod1-questions'
+import { SCENARIO_NOD2_QUESTIONS } from './scenario-nod2-questions'
+import { SCENARIO_NOD3_QUESTIONS } from './scenario-nod3-questions'
+import { SCENARIO_NOD4_QUESTIONS } from './scenario-nod4-questions'
+import { SCENARIO_NOD5_QUESTIONS } from './scenario-nod5-questions'
+import { SCENARIO_NOD6_QUESTIONS } from './scenario-nod6-questions'
+import { SCENARIO_NOD7_QUESTIONS } from './scenario-nod7-questions'
+import { SCENARIO_NOD8_QUESTIONS } from './scenario-nod8-questions'
+import { SCENARIO_NOD9_QUESTIONS } from './scenario-nod9-questions'
+import { SCENARIO_NOD10_QUESTIONS } from './scenario-nod10-questions'
 
 export type Omtenta2Topic =
     | 'nod1-filsystem'
@@ -77,8 +83,8 @@ export const NOD8_QUESTIONS: Omtenta2Question[] = EXAM_NOD8_QUESTIONS
 export const NOD9_QUESTIONS: Omtenta2Question[] = EXAM_NOD9_QUESTIONS
 export const NOD10_QUESTIONS: Omtenta2Question[] = EXAM_NOD10_QUESTIONS
 
-// ===== AGGREGERAD EXPORT =====
-export const ALL_OMTENTA_2_QUESTIONS: Omtenta2Question[] = [
+// ===== QUIZ FRÅGOR (500 st) =====
+export const ALL_QUIZ_QUESTIONS: Omtenta2Question[] = [
     ...EXAM_NOD1_QUESTIONS,
     ...EXAM_NOD2_QUESTIONS,
     ...EXAM_NOD3_QUESTIONS,
@@ -89,6 +95,26 @@ export const ALL_OMTENTA_2_QUESTIONS: Omtenta2Question[] = [
     ...EXAM_NOD8_QUESTIONS,
     ...EXAM_NOD9_QUESTIONS,
     ...EXAM_NOD10_QUESTIONS
+]
+
+// ===== SCENARIO FRÅGOR (200 st) =====
+export const ALL_SCENARIO_QUESTIONS: Omtenta2Question[] = [
+    ...SCENARIO_NOD1_QUESTIONS,
+    ...SCENARIO_NOD2_QUESTIONS,
+    ...SCENARIO_NOD3_QUESTIONS,
+    ...SCENARIO_NOD4_QUESTIONS,
+    ...SCENARIO_NOD5_QUESTIONS,
+    ...SCENARIO_NOD6_QUESTIONS,
+    ...SCENARIO_NOD7_QUESTIONS,
+    ...SCENARIO_NOD8_QUESTIONS,
+    ...SCENARIO_NOD9_QUESTIONS,
+    ...SCENARIO_NOD10_QUESTIONS
+]
+
+// ===== AGGREGERAD EXPORT (700 st) =====
+export const ALL_OMTENTA_2_QUESTIONS: Omtenta2Question[] = [
+    ...ALL_QUIZ_QUESTIONS,
+    ...ALL_SCENARIO_QUESTIONS
 ]
 
 export const OMTENTA2_TOPICS: Omtenta2Topic[] = [
@@ -147,7 +173,10 @@ export function getQuestionsByDifficulty(difficulty: 'G' | 'VG', topics?: Omtent
 // Statistik
 export const QUIZ_STATS = {
     totalQuestions: ALL_OMTENTA_2_QUESTIONS.length,
+    quizQuestions: ALL_QUIZ_QUESTIONS.length,
+    scenarioQuestions: ALL_SCENARIO_QUESTIONS.length,
     questionsPerNod: 50,
+    scenariosPerNod: 20,
     totalNods: 10,
     gLevel: ALL_OMTENTA_2_QUESTIONS.filter(q => q.difficulty === 'G').length,
     vgLevel: ALL_OMTENTA_2_QUESTIONS.filter(q => q.difficulty === 'VG').length
