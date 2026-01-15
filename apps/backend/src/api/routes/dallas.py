@@ -190,7 +190,7 @@ Python:
 
 Cloud:
 - AWS: /skillsmaps/aws-fundamentals
-- Azure: /skillsmaps/azure-fundamentals  
+- Azure: /skillsmaps/azure-fundamentals
 - GCP: /skillsmaps/gcp-fundamentals
 - Multi-cloud: /skillsmaps/multicloud-architecture
 

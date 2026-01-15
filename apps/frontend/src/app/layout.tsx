@@ -98,12 +98,9 @@ export const metadata: Metadata = {
         creator: siteConfig.twitterHandle,
     },
     icons: {
-        icon: [
-            { url: '/favicon.svg', type: 'image/svg+xml' },
-            { url: '/icon.svg', type: 'image/svg+xml' },
-        ],
-        shortcut: '/favicon.svg',
-        apple: '/icon.svg',
+        icon: '/icon',
+        shortcut: '/icon',
+        apple: '/apple-icon',
     },
     manifest: '/site.webmanifest',
     alternates: {

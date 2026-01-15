@@ -216,11 +216,11 @@ export function initializeErrorMonitoring(): void {
       originalConsoleError.apply(console, args);
       return;
     }
-    
-    const message = args.map((arg) => 
+
+    const message = args.map((arg) =>
       typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
     ).join(' ');
-    
+
     logError(message, { type: 'console.error' });
     originalConsoleError.apply(console, args);
   };

@@ -171,7 +171,7 @@ function GinoNovaCloudOverlay() {
         <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{
-                opacity: [0, 0.12, 0.12],
+                opacity: [0, 1, 1],
                 y: [-50, 0, 0],
             }}
             transition={{
@@ -179,7 +179,7 @@ function GinoNovaCloudOverlay() {
                 times: [0, 0.5, 1],
                 ease: [0.16, 1, 0.3, 1]
             }}
-            className="absolute top-12 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+            className="absolute top-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
         >
             <motion.div
                 animate={{
@@ -207,13 +207,13 @@ function GinoNovaCloudOverlay() {
                 />
 
                 {/* Logo SVG */}
-                <div className="relative" style={{ filter: "drop-shadow(0 0 50px rgba(139,92,246,0.7))" }}>
+                <div className="relative" style={{ filter: "drop-shadow(0 0 60px rgba(139,92,246,0.8))" }}>
                     <Image
-                        src="/ginonova-logo.svg"
+                        src="/ginonova-logo-horizontal.svg"
                         alt="GinoNova"
-                        width={700}
-                        height={700}
-                        className="opacity-90"
+                        width={500}
+                        height={150}
+                        className="w-auto h-24 sm:h-28 md:h-32"
                         priority
                     />
                 </div>
@@ -355,7 +355,7 @@ export function Hero() {
             <GinoNovaCloudOverlay />
 
             {/* Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 text-center">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-56 pb-20 text-center">
 
                 {/* Tech Stack Indicators */}
                 <TechStackIndicator />

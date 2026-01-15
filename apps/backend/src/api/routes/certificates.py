@@ -49,7 +49,7 @@ async def get_my_certificates(
 ):
     """
     Get all certificates for the authenticated user.
-    
+
     **Authentication required**: Must be logged in.
     **Authorization**: Users can only view their own certificates.
 
@@ -58,7 +58,7 @@ async def get_my_certificates(
 
     Returns:
         List of user's certificates
-        
+
     Raises:
         401: If not authenticated
     """
@@ -74,7 +74,7 @@ async def get_my_certificates(
 async def verify_certificate(code: str):
     """
     Verify a certificate by its verification code.
-    
+
     **Public endpoint**: No authentication required.
     This endpoint is intentionally public to allow anyone to verify certificate authenticity.
 
@@ -112,9 +112,9 @@ async def generate_module_certificate(
 ):
     """
     Generate a certificate for completing a module.
-    
+
     Requires 100% completion of all tasks in the module.
-    
+
     **Authentication required**: Must be logged in.
     **Authorization**: Users can only generate certificates for themselves.
 
@@ -124,7 +124,7 @@ async def generate_module_certificate(
 
     Returns:
         Generated certificate with verification code
-        
+
     Raises:
         401: If not authenticated
         400: If module not completed
@@ -168,9 +168,9 @@ async def generate_track_certificate(
 ):
     """
     Generate a certificate for completing an entire track.
-    
+
     Requires completion of all modules in the track.
-    
+
     **Authentication required**: Must be logged in.
     **Authorization**: Users can only generate certificates for themselves.
 
@@ -180,7 +180,7 @@ async def generate_track_certificate(
 
     Returns:
         Generated certificate with verification code
-        
+
     Raises:
         401: If not authenticated
         400: If track not completed
@@ -206,7 +206,7 @@ async def download_certificate(
 ):
     """
     Download certificate as PDF.
-    
+
     **Authentication required**: Must be logged in.
     **Authorization**: Users can only download their own certificates.
 
@@ -216,7 +216,7 @@ async def download_certificate(
 
     Returns:
         Certificate PDF file
-        
+
     Raises:
         401: If not authenticated
         403: If user tries to download another user's certificate

@@ -131,7 +131,7 @@ export function Navbar() {
                                 {/* Logo with smooth scaling */}
                                 <motion.div
                                     animate={{
-                                        filter: isScrolled 
+                                        filter: isScrolled
                                             ? [
                                                 "drop-shadow(0 0 6px rgba(139,92,246,0.3))",
                                                 "drop-shadow(0 0 10px rgba(139,92,246,0.4))",

@@ -178,7 +178,7 @@ def seed_content():
 
     # Hämta slugs som SKA finnas (från content)
     content_slugs = {m.get("slug") for m in modules_to_seed}
-    
+
     # 🗑️ Ta bort moduler som finns i DB men INTE i content
     orphan_slugs = existing_slugs - content_slugs
     if orphan_slugs and use_postgres:

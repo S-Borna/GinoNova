@@ -2,11 +2,12 @@
 
 /**
  * ============================================================================
- * TOP BAR - Enterprise Level 5 Header
+ * TOP BAR - Enterprise Level 5 Header with GinoNova Branding
  * ============================================================================
  *
  * Design Philosophy:
- * - Premium glassmorphism with subtle animations
+ * - Premium glassmorphism with GinoNova glow radiation
+ * - Centered logo with effects spilling across entire bar
  * - Command palette ready (⌘K)
  * - Enterprise-grade polish
  *
@@ -15,7 +16,9 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
@@ -469,12 +472,74 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
     return (
         <header className={cn(
-            "sticky top-0 z-30 h-14",
-            "bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl",
-            "border-b border-neutral-200/50 dark:border-neutral-800/50",
+            "sticky top-0 z-30 h-20",
+            "bg-[#0a0a12]/90 backdrop-blur-xl",
+            "border-b border-purple-500/10",
+            "overflow-hidden",
             className
         )}>
-            <div className="h-full px-4 flex items-center gap-4">
+            {/* GinoNova Glow Radiation - Full width */}
+            <div className="absolute inset-0 pointer-events-none">
+                {/* Left glow */}
+                <motion.div
+                    className="absolute left-0 top-0 bottom-0 w-1/3 mix-blend-screen"
+                    style={{
+                        background: "linear-gradient(90deg, rgba(139,92,246,0.24) 0%, rgba(139,92,246,0.08) 55%, transparent 100%)",
+                    }}
+                    animate={{
+                        opacity: [0.5, 0.8, 0.5],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                {/* Center intense glow under logo */}
+                <motion.div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-36 mix-blend-screen"
+                    style={{
+                        background: "radial-gradient(ellipse, rgba(139,92,246,0.55) 0%, rgba(236,72,153,0.28) 42%, transparent 72%)",
+                        filter: "blur(22px)",
+                    }}
+                    animate={{
+                        opacity: [0.4, 0.7, 0.4],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                {/* Right glow */}
+                <motion.div
+                    className="absolute right-0 top-0 bottom-0 w-1/3 mix-blend-screen"
+                    style={{
+                        background: "linear-gradient(270deg, rgba(236,72,153,0.2) 0%, rgba(139,92,246,0.07) 55%, transparent 100%)",
+                    }}
+                    animate={{
+                        opacity: [0.4, 0.7, 0.4],
+                    }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                />
+
+                {/* Shimmer effect across the bar */}
+                <motion.div
+                    className="absolute inset-0"
+                    style={{
+                        background: "linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.12) 50%, transparent 100%)",
+                        backgroundSize: "200% 100%",
+                    }}
+                    animate={{
+                        backgroundPosition: ["-200% 0%", "200% 0%"],
+                    }}
+                    transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear",
+                    }}
+                />
+
+                {/* Bottom glow line */}
+                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
+            </div>
+
+            <div className="relative h-full px-4 flex items-center">
                 {/* Left side */}
                 <div className="flex items-center gap-4 shrink-0">
                     {/* Mobile menu button */}
@@ -483,8 +548,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                             onClick={onMenuClick}
                             className={cn(
                                 "lg:hidden p-2 rounded-xl",
-                                "text-neutral-600 dark:text-neutral-400",
-                                "hover:bg-neutral-100 dark:hover:bg-neutral-800",
+                                "text-zinc-400",
+                                "hover:bg-white/5",
                                 "transition-colors"
                             )}
                             aria-label="Open menu"
@@ -497,14 +562,54 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     <SearchBar />
                 </div>
 
-                {/* Center spacer */}
-                <div className="flex-1" />
+                {/* CENTER - GinoNova Logo */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <Link href="/dashboard" className="block">
+                        <motion.div
+                            className="relative"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            {/* Logo glow */}
+                            <motion.div
+                                className="absolute -inset-4 rounded-2xl"
+                                style={{
+                                    background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.3), transparent)",
+                                    filter: "blur(15px)",
+                                }}
+                                animate={{
+                                    opacity: [0.4, 0.7, 0.4],
+                                    scale: [1, 1.1, 1],
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            />
+
+                            {/* Logo */}
+                            <motion.div
+                                animate={{
+                                    filter: [
+                                        "drop-shadow(0 0 10px rgba(139,92,246,0.5))",
+                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))",
+                                        "drop-shadow(0 0 10px rgba(139,92,246,0.5))"
+                                    ]
+                                }}
+                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Image
+                                    src="/ginonova-logo-horizontal.svg"
+                                    alt="GinoNova"
+                                    width={500}
+                                    height={120}
+                                    className="h-10 w-auto min-w-[200px]"
+                                    priority
+                                />
+                            </motion.div>
+                        </motion.div>
+                    </Link>
+                </div>
 
                 {/* Right side */}
                 <div className="flex items-center gap-3 shrink-0 ml-auto">
-                    {/* Now Playing Widget - Same design as pulse meter, compact for topbar */}
-                    <NowPlayingWidget variant="mini" className="hidden xl:flex" />
-
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}
 

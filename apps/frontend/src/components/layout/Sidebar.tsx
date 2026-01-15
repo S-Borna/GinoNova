@@ -11,6 +11,7 @@
  * - Magical micro-interactions
  * - Netflix-smooth animations
  * - Apple-level polish
+ * - Now Playing widget at top
  *
  * @phase D.3 - Navigation + Layout
  * @polish Premium Polish v2.0 - Cosmic Edition
@@ -23,6 +24,7 @@ import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
+import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
 import {
     Home,
     BookOpen,
@@ -430,97 +432,18 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 <div className="absolute inset-0 bg-gradient-to-b from-purple-500/50 via-transparent to-cyan-500/30" />
             </div>
 
-            {/* Logo Section */}
+            {/* Now Playing Widget Section (Top-left corner) */}
             <div className={cn(
-                "relative flex items-center h-44 px-4",
-                "border-b border-white/5",
-                collapsed ? "justify-center px-2" : "justify-center"
+                "relative px-3 py-3 h-16 flex items-center",
+                "border-b border-white/5"
             )}>
-                <Link
-                    href="/dashboard"
-                    className="flex items-center transition-all duration-300 hover:opacity-90 group"
-                >
-                    {!collapsed ? (
-                        <motion.div
-                            className="relative flex items-center justify-center w-full"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                        >
-                            {/* Outer glow */}
-                            <motion.div
-                                className="absolute -inset-2 rounded-2xl opacity-50"
-                                style={{
-                                    background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.3), transparent)",
-                                    filter: "blur(20px)",
-                                }}
-                                animate={{
-                                    opacity: [0.3, 0.6, 0.3],
-                                    scale: [1, 1.08, 1],
-                                }}
-                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            />
-
-                            {/* Logo Image */}
-                            <motion.div
-                                className="relative"
-                                animate={{
-                                    filter: [
-                                        "drop-shadow(0 0 15px rgba(139,92,246,0.6))",
-                                        "drop-shadow(0 0 25px rgba(139,92,246,0.8))",
-                                        "drop-shadow(0 0 15px rgba(139,92,246,0.6))"
-                                    ]
-                                }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <Image
-                                    src="/ginonova-logo-horizontal.svg"
-                                    alt="GinoNova"
-                                    width={600}
-                                    height={150}
-                                    className="w-auto h-[165px]"
-                                    priority
-                                />
-                            </motion.div>
-                        </motion.div>
-                    ) : (
-                        /* Collapsed: Logo icon only */
-                        <motion.div
-                            className="relative"
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            <motion.div
-                                className="absolute -inset-2 rounded-xl opacity-60"
-                                style={{
-                                    background: "radial-gradient(circle, rgba(139,92,246,0.6), rgba(236,72,153,0.4))",
-                                    filter: "blur(12px)",
-                                }}
-                                animate={{ opacity: [0.4, 0.8, 0.4] }}
-                                transition={{ duration: 2.5, repeat: Infinity }}
-                            />
-                            <motion.div
-                                className="relative"
-                                animate={{
-                                    filter: [
-                                        "drop-shadow(0 0 10px rgba(139,92,246,0.7))",
-                                        "drop-shadow(0 0 20px rgba(139,92,246,0.9))",
-                                        "drop-shadow(0 0 10px rgba(139,92,246,0.7))"
-                                    ]
-                                }}
-                                transition={{ duration: 2.5, repeat: Infinity }}
-                            >
-                                <Image
-                                    src="/ginonova-logo.svg"
-                                    alt="GinoNova"
-                                    width={135}
-                                    height={135}
-                                    className="w-[135px] h-[135px]"
-                                    priority
-                                />
-                            </motion.div>
-                        </motion.div>
+                <NowPlayingWidget
+                    variant="mini"
+                    className={cn(
+                        "w-full",
+                        collapsed && "justify-center px-2 [&_.npw-track]:hidden [&_.npw-eq]:hidden"
                     )}
-                </Link>
+                />
             </div>
 
             {/* Navigation Section Label */}

@@ -15,8 +15,8 @@
 
 export interface AnalyticsEvent {
   type: 'task_completed' | 'module_started' | 'module_completed' | 'quiz_passed' |
-        'quiz_failed' | 'session_started' | 'session_ended' | 'break_taken' |
-        'streak_continued' | 'achievement_unlocked' | 'skill_learned'
+  'quiz_failed' | 'session_started' | 'session_ended' | 'break_taken' |
+  'streak_continued' | 'achievement_unlocked' | 'skill_learned'
   timestamp: Date
   duration?: number
   metadata: Record<string, any>
@@ -500,9 +500,9 @@ class AnalyticsTracker {
     const completedSessions = analytics.sessionHistory.filter(s => s.endTime)
     const averageSessionLength = completedSessions.length > 0
       ? completedSessions.reduce((sum, s) => {
-          const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
-          return sum + duration
-        }, 0) / completedSessions.length
+        const duration = Math.floor((s.endTime!.getTime() - s.startTime.getTime()) / 1000 / 60)
+        return sum + duration
+      }, 0) / completedSessions.length
       : 0
 
     // Find most productive day

@@ -13,30 +13,40 @@ export default function AppleIcon() {
         (
             <div
                 style={{
-                    width: '100%',
-                    height: '100%',
+                    width: 180,
+                    height: 180,
+                    borderRadius: 40,
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a12 100%)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: 'transparent',
                 }}
             >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                    src="https://ginonova.com/ginonova-logo.svg"
-                    alt="GinoNova"
-                    width={180}
-                    height={180}
+                <div
                     style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
+                        width: 140,
+                        height: 140,
+                        borderRadius: '50%',
+                        background: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #6366f1 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 0 40px rgba(139, 92, 246, 0.6)',
                     }}
-                />
+                >
+                    <span
+                        style={{
+                            color: 'white',
+                            fontSize: 80,
+                            fontWeight: 800,
+                            fontFamily: 'sans-serif',
+                        }}
+                    >
+                        G
+                    </span>
+                </div>
             </div>
         ),
-        {
-            ...size,
-        }
+        { ...size }
     )
 }
