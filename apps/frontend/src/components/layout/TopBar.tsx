@@ -7,7 +7,6 @@
  *
  * Design Philosophy:
  * - Premium glassmorphism with subtle animations
- * - Dallas AI Orb integrated under user area
  * - Command palette ready (⌘K)
  * - Enterprise-grade polish
  *
@@ -20,7 +19,6 @@ import { usePathname, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth"
 import { Button } from "@/components/ui/button"
-import { DallasOrb } from "@/components/ai/DallasOrb"
 import { ThemeToggle } from "@/components/ui/ThemeToggle"
 import {
     Search,
@@ -271,7 +269,7 @@ function SearchBar() {
                     setTimeout(() => inputRef.current?.focus(), 100)
                 }}
                 className={cn(
-                    "flex items-center gap-2 px-3 py-2",
+                    "flex items-center gap-2 px-3 py-2 ml-8",
                     "bg-neutral-100 dark:bg-neutral-800/50",
                     "rounded-xl border border-transparent",
                     "hover:border-neutral-300 dark:hover:border-neutral-600",
@@ -509,9 +507,6 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}
-
-                    {/* Dallas AI Orb - NO wrapper, direct component */}
-                    <DallasOrb />
 
                     {/* User dropdown - Only show when authenticated */}
                     {isAuthenticated && <UserDropdown />}

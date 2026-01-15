@@ -43,8 +43,8 @@ import {
 const FEATURES = [
     {
         id: "learning-path",
-        title: "31+ Comprehensive Modules",
-        description: "Hela DevOps-ekosystemet: Kubernetes, AWS, Azure, GCP, Terraform, Ansible, CI/CD, Monitoring, Security, Databases och mer.",
+        title: "20+ Premium Learning Paths",
+        description: "Hela DevOps-ekosystemet: Linux, Kubernetes, Docker, AWS, Azure, GCP, Terraform, Ansible, CI/CD, Python, Go, Monitoring, Security och mer.",
         icon: Route,
         gradient: "from-indigo-500 to-violet-600",
         glowColor: "rgba(99,102,241,0.4)",
@@ -54,7 +54,7 @@ const FEATURES = [
     {
         id: "code-playground",
         title: "Interactive Code Playground",
-        description: "Testa kod direkt i browsern: Python, Bash, Docker, Kubernetes, Terraform. Monaco Editor med syntax highlighting.",
+        description: "Testa kod direkt i browsern: Python, Bash, Docker, Kubernetes, Terraform. Monaco Editor med syntax highlighting och real-time feedback.",
         icon: Code2,
         gradient: "from-purple-500 to-indigo-600",
         glowColor: "rgba(139,92,246,0.4)",
@@ -73,8 +73,8 @@ const FEATURES = [
     },
     {
         id: "ai-assistant",
-        title: "Dallas AI-Assistent",
-        description: "Persistent AI-assistent på varje sida. Kontextmedveten hjälp, personliga rekommendationer, och 24/7 support.",
+        title: "Dallas AI-Assistent 🐺",
+        description: "Persistent AI-assistent på varje sida. Kontextmedveten hjälp, personliga rekommendationer, quiz-generering och 24/7 support.",
         icon: Brain,
         gradient: "from-violet-500 to-purple-600",
         glowColor: "rgba(139,92,246,0.4)",
@@ -114,7 +114,7 @@ const FEATURES = [
     {
         id: "studyflow",
         title: "Enhanced Study Experience",
-        description: "Spotify integration med music visualizer, Pomodoro timers, study room modes. Last.fm scrobbling.",
+        description: "Spotify integration med music visualizer, Pomodoro timers, study room modes. Last.fm scrobbling stöd.",
         icon: Timer,
         gradient: "from-orange-500 to-red-600",
         glowColor: "rgba(249,115,22,0.4)",

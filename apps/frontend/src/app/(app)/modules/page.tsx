@@ -2,13 +2,13 @@
 
 /**
  * ============================================================================
- * MODULES LIST PAGE — Single Source of Truth Architecture
+ * MODULES LIST PAGE — Camp DevOps (ALL MODULES)
  * ============================================================================
  *
- * Fetches modules from backend content source: /api/modules/full
- * This ensures Camp DevOps uses the SAME data as SkillsMaps.
+ * Fetches ALL modules from backend content source: /api/modules/full
+ * No filtering - shows all available modules for learning.
  *
- * @phase ARCHITECTURE-UNIFICATION
+ * @phase CAMP-DEVOPS-ALL-MODULES
  */
 
 import React, { useState, useEffect } from "react"
@@ -16,11 +16,9 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { useAuth } from "@/components/auth"
-import { usePlatform } from "@/hooks/useOperatingSystem"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { ModuleCard, ModuleStatus } from "@/components/modules"
-import { PlatformBadge } from "@/components/onboarding"
 import { BookOpen, Trophy, RefreshCw, AlertCircle, Sparkles } from "lucide-react"
 import { ModuleFilters, type FilterState, type SortState, applyFilters, applySorting } from "@/components/modules/ModuleFilters"
 
@@ -282,9 +280,6 @@ function Header({
                     </div>
 
                     <div className="flex items-center gap-3">
-                        {/* Platform Badge */}
-                        <PlatformBadge />
-
                         {/* Trophy badge with glow */}
                         <div className={cn(
                             "flex items-center gap-2 px-4 py-3 rounded-xl",
@@ -366,7 +361,7 @@ function Header({
 export default function ModulesPage() {
     const router = useRouter()
     const { user } = useAuth()
-    const { hasSelected, isLoading: platformLoading, os, distro } = usePlatform()
+    // Platform selection removed - show all modules directly
     const [modules, setModules] = useState<EnhancedModule[]>([])
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
@@ -474,6 +469,7 @@ export default function ModulesPage() {
                     } as EnhancedModule
                 })
 
+                // Show ALL modules - no filtering
                 setModules(enhancedModules)
             } else {
                 // No fallback - show empty state when backend unavailable
@@ -521,26 +517,7 @@ export default function ModulesPage() {
     const overallProgress =
         totalModules > 0 ? Math.round((completedModules / totalModules) * 100) : 0
 
-    // Redirect to /learn if OS not selected
-    useEffect(() => {
-        if (!platformLoading && !hasSelected) {
-            console.log("[Modules] No OS selected, redirecting to /learn")
-            router.push("/learn")
-        }
-    }, [platformLoading, hasSelected, router])
-
-    // Platform selection loading or redirecting
-    if (platformLoading || !hasSelected) {
-        return (
-            <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
-                <CosmicAurora />
-                <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <PageSkeleton />
-                </div>
-            </div>
-        )
-    }
-
+    // Loading state only
     if (loading) {
         return (
             <div className="min-h-screen bg-[#05050a] relative overflow-hidden">
@@ -638,39 +615,39 @@ export default function ModulesPage() {
                                     </Button>
                                 </div>
                             ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {filteredModules.map((module, index) => (
-                                    <motion.div
-                                        key={module.id}
-                                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        transition={{
-                                            type: "spring",
-                                            stiffness: 100,
-                                            damping: 15,
-                                            delay: 0.2 + index * 0.08, // Wave effect
-                                        }}
-                                    >
-                                        <ModuleCard
-                                            id={module.id}
-                                            slug={module.slug || module.id}
-                                            orderIndex={module.orderIndex}
-                                            title={module.name}
-                                            description={module.description || "No description available"}
-                                            icon={module.icon}
-                                            progress={module.progress}
-                                            tasksCompleted={module.tasksCompleted}
-                                            totalTasks={module.totalTasks}
-                                            status={module.status}
-                                            estimatedHours={module.estimatedHours}
-                                            prerequisiteModule={module.prerequisiteModule}
-                                            tags={module.tags}
-                                            xp={module.xp}
-                                            difficulty={module.difficulty as "beginner" | "intermediate" | "advanced" | "expert"}
-                                        />
-                                    </motion.div>
-                                ))}
-                            </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {filteredModules.map((module, index) => (
+                                        <motion.div
+                                            key={module.id}
+                                            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            transition={{
+                                                type: "spring",
+                                                stiffness: 100,
+                                                damping: 15,
+                                                delay: 0.2 + index * 0.08, // Wave effect
+                                            }}
+                                        >
+                                            <ModuleCard
+                                                id={module.id}
+                                                slug={module.slug || module.id}
+                                                orderIndex={module.orderIndex}
+                                                title={module.name}
+                                                description={module.description || "No description available"}
+                                                icon={module.icon}
+                                                progress={module.progress}
+                                                tasksCompleted={module.tasksCompleted}
+                                                totalTasks={module.totalTasks}
+                                                status={module.status}
+                                                estimatedHours={module.estimatedHours}
+                                                prerequisiteModule={module.prerequisiteModule}
+                                                tags={module.tags}
+                                                xp={module.xp}
+                                                difficulty={module.difficulty as "beginner" | "intermediate" | "advanced" | "expert"}
+                                            />
+                                        </motion.div>
+                                    ))}
+                                </div>
                             )}
                         </Section>
                     </motion.div>

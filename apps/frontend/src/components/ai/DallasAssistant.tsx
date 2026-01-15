@@ -22,7 +22,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
-    Brain,
     X,
     Send,
     Sparkles,
@@ -133,11 +132,14 @@ function DallasAvatar({ size = "md", pulsate = true }: { size?: "sm" | "md" | "l
             <div className={cn(
                 sizeMap[size],
                 "relative rounded-full",
-                "bg-gradient-to-br from-purple-600 via-purple-500 to-cyan-500",
+                "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-800",
                 "flex items-center justify-center",
-                "shadow-[0_0_20px_rgba(139,92,246,0.6)]"
+                "shadow-[0_0_20px_rgba(59,130,246,0.4)]",
+                "border border-gray-500/30"
             )}>
-                <Brain className={cn(iconSizeMap[size], "text-white")} />
+                <span className={cn(
+                    size === "sm" ? "text-base" : size === "md" ? "text-xl" : "text-2xl"
+                )}>🐺</span>
             </div>
         </div>
     )
@@ -238,8 +240,8 @@ export function DallasAssistant() {
     const generateAIResponse = async (userMessage: string): Promise<string> => {
         // Context-aware responses based on pathname
         const context = pathname.includes("/modules/") ? "module" :
-                       pathname.includes("/dashboard") ? "dashboard" :
-                       pathname.includes("/modules") ? "modules-list" : "general"
+            pathname.includes("/dashboard") ? "dashboard" :
+                pathname.includes("/modules") ? "modules-list" : "general"
 
         // Simulate typing delay
         await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000))
@@ -353,7 +355,7 @@ export function DallasAssistant() {
                             "border-2 border-white/20"
                         )}
                     >
-                        <Brain className="w-8 h-8 text-white group-hover:scale-110 transition-transform" />
+                        <span className="text-3xl group-hover:scale-110 transition-transform">🐺</span>
 
                         {/* Notification dot (example for new recommendations) */}
                         <motion.div

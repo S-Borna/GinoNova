@@ -423,7 +423,7 @@ export default function FastTrackPage() {
                                     </div>
                                 )}
 
-                                <div className="flex items-start gap-4 mb-4">
+                                <div className="flex items-start gap-4 mb-3">
                                     <motion.div
                                         className={cn(
                                             "w-14 h-14 rounded-xl flex items-center justify-center text-2xl",
@@ -445,6 +445,15 @@ export default function FastTrackPage() {
                                         </p>
                                     </div>
                                 </div>
+
+                                {/* Code Preview Snippet */}
+                                {tool.installation && (tool.installation.apt || tool.installation.brew || tool.installation.pip) && (
+                                    <div className="mb-3 p-2 rounded-lg bg-zinc-900/80 border border-zinc-800/50 overflow-hidden">
+                                        <code className="text-xs text-emerald-400 font-mono truncate block">
+                                            {tool.installation.apt || tool.installation.brew || tool.installation.pip || tool.installation.npm || tool.installation.other}
+                                        </code>
+                                    </div>
+                                )}
 
                                 <div className="flex items-center gap-2 mb-3">
                                     <CategoryIcon className="w-3.5 h-3.5 text-zinc-500" />

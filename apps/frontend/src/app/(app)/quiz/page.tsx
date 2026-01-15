@@ -132,7 +132,7 @@ export default function QuizPage() {
   const [selectedModule, setSelectedModule] = useState<string>("");
   const [quizType, setQuizType] = useState<"mcq" | "flashcard">("mcq");
   const [difficulty, setDifficulty] = useState<"beginner" | "intermediate" | "advanced">("intermediate");
-  const [questionCount, setQuestionCount] = useState(10);
+  const [questionCount, setQuestionCount] = useState(25);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [quiz, setQuiz] = useState<QuizState | null>(null);
@@ -152,7 +152,7 @@ export default function QuizPage() {
 
       // Fetch both in parallel with better error handling
       try {
-        const headers = { 
+        const headers = {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         };
@@ -192,12 +192,24 @@ export default function QuizPage() {
           console.log("Modules data:", modulesData);
           setModules(modulesData.modules || []);
         } else {
-          // Fallback to hardcoded modules if API fails
+          // Fallback to all available modules if API fails
           console.log("Using fallback modules");
           setModules([
             { slug: "doe25-tenta", title: "DOE25 Tentaplugg", description: "Komplett tentaplugg för Linux-tentan" },
             { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar för Linux och DevOps" },
-            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" }
+            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" },
+            { slug: "kubernetes-fundamentals", title: "Kubernetes Fundamentals", description: "Container orchestration med K8s" },
+            { slug: "cicd-pipelines-advanced", title: "CI/CD Advanced", description: "Avancerade CI/CD pipelines" },
+            { slug: "aws-fundamentals", title: "AWS Fundamentals", description: "Amazon Web Services grunderna" },
+            { slug: "azure-fundamentals", title: "Azure Fundamentals", description: "Microsoft Azure grunderna" },
+            { slug: "gcp-fundamentals", title: "GCP Fundamentals", description: "Google Cloud Platform grunderna" },
+            { slug: "terraform-iac", title: "Terraform IaC", description: "Infrastructure as Code med Terraform" },
+            { slug: "ansible-automation", title: "Ansible Automation", description: "Configuration management med Ansible" },
+            { slug: "python-for-devops", title: "Python for DevOps", description: "Python scripting för automation" },
+            { slug: "prompt-engineering-devops", title: "AI Prompt Engineering", description: "Prompt engineering för DevOps" },
+            { slug: "prometheus-monitoring", title: "Prometheus Monitoring", description: "Metrics och alerting" },
+            { slug: "grafana-visualization", title: "Grafana Visualization", description: "Dashboard och visualization" },
+            { slug: "devsecops", title: "DevSecOps", description: "Security integration i DevOps" }
           ]);
           setError("Kunde inte hämta moduler från servern. Använder lokal lista.");
         }
@@ -208,7 +220,16 @@ export default function QuizPage() {
         setModules([
           { slug: "doe25-tenta", title: "DOE25 Tentaplugg", description: "Komplett tentaplugg för Linux-tentan" },
           { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar för Linux och DevOps" },
-          { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" }
+          { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" },
+          { slug: "kubernetes-fundamentals", title: "Kubernetes Fundamentals", description: "Container orchestration med K8s" },
+          { slug: "cicd-pipelines-advanced", title: "CI/CD Advanced", description: "Avancerade CI/CD pipelines" },
+          { slug: "aws-fundamentals", title: "AWS Fundamentals", description: "Amazon Web Services grunderna" },
+          { slug: "azure-fundamentals", title: "Azure Fundamentals", description: "Microsoft Azure grunderna" },
+          { slug: "gcp-fundamentals", title: "GCP Fundamentals", description: "Google Cloud Platform grunderna" },
+          { slug: "terraform-iac", title: "Terraform IaC", description: "Infrastructure as Code med Terraform" },
+          { slug: "ansible-automation", title: "Ansible Automation", description: "Configuration management med Ansible" },
+          { slug: "python-for-devops", title: "Python for DevOps", description: "Python scripting för automation" },
+          { slug: "prometheus-monitoring", title: "Prometheus Monitoring", description: "Metrics och alerting" }
         ]);
         setError("Anslutningsfel. Använder lokal modullista.");
       }
@@ -263,7 +284,7 @@ export default function QuizPage() {
         } catch {
           // Response wasn't JSON
         }
-        
+
         if (res.status === 401) {
           errorMessage = "Session har gått ut. Logga in igen.";
         } else if (res.status === 403) {
@@ -273,7 +294,7 @@ export default function QuizPage() {
         } else if (res.status === 503) {
           errorMessage = "AI-tjänsten är tillfälligt otillgänglig. Försök igen.";
         }
-        
+
         throw new Error(errorMessage);
       }
 
@@ -967,10 +988,10 @@ export default function QuizPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-[#0d0d14] border-purple-500/30">
-                    <SelectItem value="5" className="text-white hover:bg-purple-500/20">5 frågor</SelectItem>
-                    <SelectItem value="10" className="text-white hover:bg-purple-500/20">10 frågor</SelectItem>
-                    <SelectItem value="15" className="text-white hover:bg-purple-500/20">15 frågor</SelectItem>
-                    <SelectItem value="20" className="text-white hover:bg-purple-500/20">20 frågor</SelectItem>
+                    <SelectItem value="25" className="text-white hover:bg-purple-500/20">25 frågor</SelectItem>
+                    <SelectItem value="50" className="text-white hover:bg-purple-500/20">50 frågor</SelectItem>
+                    <SelectItem value="75" className="text-white hover:bg-purple-500/20">75 frågor</SelectItem>
+                    <SelectItem value="100" className="text-white hover:bg-purple-500/20">100 frågor</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

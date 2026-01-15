@@ -471,11 +471,11 @@ export function Hero() {
                         className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-sm text-zinc-400"
                     >
                         {[
-                            "36+ moduler",
-                            "80+ hands-on labs",
-                            "AI, DevOps, MLOps",
-                            "GCP, AWS, Azure",
-                            "Docker, K8s, Terraform",
+                            "31+ moduler",
+                            "700+ quiz-frågor",
+                            "500+ flashcards",
+                            "200+ scenarios",
+                            "AI Quiz Generator",
                             "Dallas AI-assistent",
                         ].map((item, i) => (
                             <motion.span

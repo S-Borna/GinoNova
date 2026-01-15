@@ -99,11 +99,11 @@ export const metadata: Metadata = {
     },
     icons: {
         icon: [
-            { url: '/favicon.ico', sizes: 'any' },
+            { url: '/favicon.svg', type: 'image/svg+xml' },
             { url: '/icon.svg', type: 'image/svg+xml' },
         ],
-        shortcut: '/favicon-16x16.png',
-        apple: '/apple-touch-icon.png',
+        shortcut: '/favicon.svg',
+        apple: '/icon.svg',
     },
     manifest: '/site.webmanifest',
     alternates: {

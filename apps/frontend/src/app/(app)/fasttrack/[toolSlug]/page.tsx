@@ -39,7 +39,7 @@ import {
     Layers,
     Container,
 } from "lucide-react"
-import { TOOLS_DATA, TOOL_CATEGORIES, type Tool } from "@/data/fasttrack-tools"
+import { TOOLS_DATA, TOOL_CATEGORIES, type Tool, type CodeExample } from "@/data/fasttrack-tools"
 
 /* ============================================================================
    COPY BUTTON COMPONENT
@@ -290,6 +290,42 @@ export default function ToolDetailPage() {
                         </div>
                     </div>
                 </section>
+
+                {/* CODE EXAMPLES - NEW SECTION */}
+                {tool.codeExamples && tool.codeExamples.length > 0 && (
+                    <section className="mb-8">
+                        <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                            <Code className="w-5 h-5 text-emerald-400" />
+                            Kodexempel
+                        </h2>
+                        <div className="space-y-6">
+                            {tool.codeExamples.map((example, i) => (
+                                <div
+                                    key={i}
+                                    className="bg-zinc-900/60 border border-zinc-800 rounded-xl overflow-hidden"
+                                >
+                                    <div className="flex items-center justify-between px-5 py-3 bg-zinc-800/50 border-b border-zinc-700">
+                                        <div>
+                                            <h3 className="font-medium text-white">{example.title}</h3>
+                                            <p className="text-sm text-zinc-400">{example.description}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="px-2 py-1 rounded text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                                {example.language}
+                                            </span>
+                                            <CopyButton text={example.code} />
+                                        </div>
+                                    </div>
+                                    <div className="p-4 overflow-x-auto">
+                                        <pre className="text-sm font-mono text-zinc-300 whitespace-pre">
+                                            <code>{example.code}</code>
+                                        </pre>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
                 {/* External Links */}
                 {(tool.officialUrl || tool.docsUrl) && (

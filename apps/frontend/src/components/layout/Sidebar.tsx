@@ -381,6 +381,7 @@ function NavItemComponent({ item, isActive, collapsed, index }: NavItemProps) {
 export function Sidebar({ collapsed = false, onToggleCollapse, className }: SidebarProps) {
     const pathname = usePathname()
     const { user } = useAuth()
+    const [systemExpanded, setSystemExpanded] = React.useState(false)
 
     const isAdmin = user?.email?.toLowerCase() === ADMIN_EMAIL
     const isAuthenticated = !!user
@@ -474,9 +475,9 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 <Image
                                     src="/ginonova-logo-horizontal.svg"
                                     alt="GinoNova"
-                                    width={220}
-                                    height={55}
-                                    className="w-auto h-14"
+                                    width={400}
+                                    height={100}
+                                    className="w-auto h-[110px]"
                                     priority
                                 />
                             </motion.div>
@@ -511,9 +512,9 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 <Image
                                     src="/ginonova-logo.svg"
                                     alt="GinoNova"
-                                    width={52}
-                                    height={52}
-                                    className="w-13 h-13"
+                                    width={90}
+                                    height={90}
+                                    className="w-[90px] h-[90px]"
                                     priority
                                 />
                             </motion.div>
@@ -549,33 +550,49 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 ))}
             </nav>
 
-            {/* Bottom Section */}
+            {/* Bottom Section - System (Collapsible) */}
             <div className={cn(
                 "relative px-3 py-4 space-y-1",
                 "border-t border-white/5"
             )}>
-                {/* Section label */}
+                {/* Section label - clickable to collapse */}
                 {!collapsed && (
-                    <motion.div
+                    <motion.button
+                        onClick={() => setSystemExpanded(!systemExpanded)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="px-3 pb-2"
+                        className="w-full flex items-center justify-between px-3 pb-2 cursor-pointer hover:opacity-80 transition-opacity"
                     >
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">
                             System
                         </span>
-                    </motion.div>
+                        <motion.div
+                            animate={{ rotate: systemExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <ChevronLeft className="h-3 w-3 text-zinc-600 -rotate-90" />
+                        </motion.div>
+                    </motion.button>
                 )}
 
-                {bottomNavItems.map((item, index) => (
-                    <NavItemComponent
-                        key={item.href}
-                        item={item}
-                        isActive={isActive(item.href)}
-                        collapsed={collapsed}
-                        index={visibleNavItems.length + index}
-                    />
-                ))}
+                <AnimatePresence>
+                    {(systemExpanded || collapsed) && bottomNavItems.map((item, index) => (
+                        <motion.div
+                            key={item.href}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <NavItemComponent
+                                item={item}
+                                isActive={isActive(item.href)}
+                                collapsed={collapsed}
+                                index={visibleNavItems.length + index}
+                            />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
 
                 {/* Collapse Toggle */}
                 <motion.button
