@@ -31,7 +31,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
     ArrowLeft, ArrowRight, Clock, CheckCircle, XCircle,
     Trophy, Brain, RotateCcw, Play, Pause, Target,
-    Zap, Award, BookOpen, AlertTriangle
+    Zap, Award, BookOpen, AlertTriangle, Sparkles, ChevronRight
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 
