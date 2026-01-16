@@ -266,12 +266,39 @@ export function DallasAssistant() {
         } catch (error) {
             console.error("Dallas API error:", error)
 
-            // Smart fallback responses (Swedish)
+            // Smart fallback responses (Swedish) - with ACTUAL technical answers
             const lowerMessage = userMessage.toLowerCase()
 
-            // Help with concepts
-            if (lowerMessage.includes("förklara") || lowerMessage.includes("vad är") || lowerMessage.includes("explain") || lowerMessage.includes("what is")) {
-                return "Bra fråga! Låt mig bryta ner det:\n\n1. Börja med grunderna - förstå 'varför' innan 'hur'\n2. Testa hands-on övningarna - de får koncepten att klicka\n3. Stressa inte - mästerskap kommer med övning\n\nVill du att jag går djupare in på någon specifik del?"
+            // TECHNICAL QUESTIONS - Give actual answers!
+            
+            // Symbolic vs Hard links
+            if (lowerMessage.includes("symbolic") || lowerMessage.includes("symlink") || lowerMessage.includes("hard link") || lowerMessage.includes("länk")) {
+                return "**Symbolic link vs Hard link:**\n\n🔗 **Symbolic link (soft link):**\n- Pekar på filens SÖKVÄG (som en genväg)\n- Kan peka på mappar\n- Kan peka över filsystem\n- Går sönder om originalet tas bort\n- `ln -s target link`\n\n🔗 **Hard link:**\n- Pekar på filens INODE (samma data)\n- Kan INTE peka på mappar\n- Måste vara på samma filsystem\n- Originalet kan tas bort, datan finns kvar\n- `ln target link`\n\n📖 Man page: https://man7.org/linux/man-pages/man1/ln.1.html"
+            }
+
+            // Permissions
+            if (lowerMessage.includes("chmod") || lowerMessage.includes("permission") || lowerMessage.includes("rättighet") || lowerMessage.includes("755") || lowerMessage.includes("644")) {
+                return "**Linux-rättigheter:**\n\n`rwx` = read(4) + write(2) + execute(1)\n\n**Vanliga värden:**\n- `755` = rwxr-xr-x (körbara filer)\n- `644` = rw-r--r-- (vanliga filer)\n- `700` = rwx------ (privat)\n\n**Kommandon:**\n- `chmod 755 fil` - numeriskt\n- `chmod u+x fil` - symboliskt\n- `chown user:group fil` - ändra ägare\n\n📖 Man page: https://man7.org/linux/man-pages/man1/chmod.1.html"
+            }
+
+            // Process management
+            if (lowerMessage.includes("process") || lowerMessage.includes("kill") || lowerMessage.includes("ps aux") || lowerMessage.includes("signal")) {
+                return "**Processhantering:**\n\n**Visa processer:**\n- `ps aux` - alla processer\n- `top` / `htop` - realtid\n- `pgrep namn` - hitta PID\n\n**Avsluta processer:**\n- `kill PID` - SIGTERM (snällt)\n- `kill -9 PID` - SIGKILL (tvinga)\n- `killall namn` - efter namn\n\n**Bakgrund:**\n- `command &` - kör i bakgrund\n- `nohup command &` - överlev logout\n- `jobs` - lista bakgrundsjobb\n\n📖 Man page: https://man7.org/linux/man-pages/man1/kill.1.html"
+            }
+
+            // Docker basics
+            if (lowerMessage.includes("docker") || lowerMessage.includes("container") || lowerMessage.includes("image")) {
+                return "**Docker grunderna:**\n\n**Image vs Container:**\n- Image = mall/blueprint (som en klass)\n- Container = körande instans (som ett objekt)\n\n**Vanliga kommandon:**\n- `docker build -t namn .` - bygg image\n- `docker run -d -p 8080:80 image` - kör container\n- `docker ps` - visa körande containers\n- `docker logs container` - visa loggar\n- `docker exec -it container bash` - gå in\n\n📖 Docs: https://docs.docker.com/get-started/"
+            }
+
+            // Grep/find/search
+            if (lowerMessage.includes("grep") || lowerMessage.includes("find") || lowerMessage.includes("sök") || lowerMessage.includes("hitta")) {
+                return "**Söka i Linux:**\n\n**grep - sök i filinnehåll:**\n- `grep 'text' fil` - sök i fil\n- `grep -r 'text' mapp/` - rekursivt\n- `grep -i 'text'` - case-insensitive\n- `grep -n 'text'` - visa radnummer\n\n**find - sök filer:**\n- `find /sökväg -name '*.log'` - efter namn\n- `find . -type f -size +100M` - stora filer\n- `find . -mtime -7` - ändrade senaste 7 dagar\n\n📖 Man pages: https://man7.org/linux/man-pages/man1/grep.1.html"
+            }
+
+            // Help with concepts (generic)
+            if (lowerMessage.includes("förklara") || lowerMessage.includes("vad är") || lowerMessage.includes("explain") || lowerMessage.includes("what is") || lowerMessage.includes("skillnad")) {
+                return "Bra fråga! Kan du specificera lite mer vad du undrar över? 🤔\n\nJag kan hjälpa med:\n- Linux-kommandon och filsystem\n- Docker och containers\n- Nätverk och SSH\n- Bash-skript\n- Rättigheter och säkerhet\n\nVilket område gäller din fråga?"
             }
 
             // Hints
