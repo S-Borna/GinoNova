@@ -17,7 +17,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { usePlatform } from "@/hooks/useOperatingSystem"
 import { SkillsMapSelector, SkillsMapCardProps } from "@/components/skillsmaps"
 import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import {
@@ -174,7 +173,6 @@ function ErrorState({ error, onRetry }: { error: string; onRetry: () => void }) 
 
 export default function SkillsMapsPage() {
     const router = useRouter()
-    const { hasSelected, isLoading: platformLoading } = usePlatform()
     const [skillsmaps, setSkillsmaps] = useState<SkillsMapCardProps[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -220,17 +218,6 @@ export default function SkillsMapsPage() {
     useEffect(() => {
         fetchSkillsMaps()
     }, [])
-
-    useEffect(() => {
-        if (!platformLoading && !hasSelected) {
-            console.log("[SkillsMaps] No OS selected, redirecting to /learn")
-            router.push("/learn")
-        }
-    }, [platformLoading, hasSelected, router])
-
-    if (platformLoading || !hasSelected) {
-        return <PageSkeleton />
-    }
 
     if (loading) {
         return <PageSkeleton />

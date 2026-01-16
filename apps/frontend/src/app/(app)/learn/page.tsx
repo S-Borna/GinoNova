@@ -5,7 +5,7 @@
  * LEARNING PATH SELECTOR — Choose Between Bootcamp & SkillsMaps
  * ============================================================================
  *
- * After OS selection, users choose their learning path:
+ * Users choose their learning path:
  * - Bootcamp v3.0: Structured 4-track curriculum
  * - SkillsMaps: À la carte skill-based learning
  *
@@ -17,8 +17,6 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { PageLayout } from "@saas/ui"
-import { usePlatform } from "@/hooks/useOperatingSystem"
-import { PlatformSelector, PlatformBadge } from "@/components/onboarding"
 import { cn } from "@/lib/utils"
 import {
     GraduationCap,
@@ -198,33 +196,6 @@ function PathCard({
 
 export default function LearnPage() {
     const router = useRouter()
-    const { hasSelected, isLoading: platformLoading, os, distro } = usePlatform()
-
-    // Platform loading
-    if (platformLoading) {
-        return (
-            <PageLayout maxWidth="wide" background="gray">
-                <div className="animate-pulse space-y-8">
-                    <div className="h-32 rounded-3xl bg-zinc-800/50" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="h-96 rounded-3xl bg-zinc-800/50" />
-                        <div className="h-96 rounded-3xl bg-zinc-800/50" />
-                    </div>
-                </div>
-            </PageLayout>
-        )
-    }
-
-    // Show platform selector if not yet selected
-    if (!hasSelected) {
-        return (
-            <PageLayout maxWidth="wide" background="gray">
-                <div className="min-h-[70vh] flex items-center justify-center py-12">
-                    <PlatformSelector redirectTo="/learn" />
-                </div>
-            </PageLayout>
-        )
-    }
 
     return (
         <PageLayout maxWidth="wide" background="gray">
@@ -257,7 +228,6 @@ export default function LearnPage() {
                 <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
                     Två kraftfulla sätt att lära sig DevOps — välj det som passar dig bäst
                 </p>
-                <PlatformBadge className="mx-auto" />
             </motion.div>
 
             {/* Path Cards */}
