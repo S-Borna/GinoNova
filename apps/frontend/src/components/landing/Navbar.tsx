@@ -94,7 +94,7 @@ export function Navbar() {
                         className={cn(
                             "flex items-center justify-between",
                             "transition-all duration-500 ease-out",
-                            isScrolled ? "h-20" : "h-56"
+                            isScrolled ? "h-20" : "h-36 md:h-56"
                         )}
                     >
 
@@ -152,7 +152,7 @@ export function Navbar() {
                                         height={127}
                                         className={cn(
                                             "w-auto transition-all duration-500 ease-out",
-                                            isScrolled ? "h-[72px]" : "h-[200px]"
+                                            isScrolled ? "h-[72px]" : "h-[120px] md:h-[200px]"
                                         )}
                                         priority
                                     />
@@ -160,23 +160,8 @@ export function Navbar() {
                             </motion.div>
                         </Link>
 
-                        {/* Mobile menu button */}
-                        <motion.button
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className={cn(
-                                "md:hidden p-2.5 rounded-xl",
-                                "text-zinc-400 hover:text-white",
-                                "hover:bg-white/5 transition-colors duration-200"
-                            )}
-                            whileTap={{ scale: 0.9 }}
-                            aria-label="Toggle menu"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="w-6 h-6" />
-                            ) : (
-                                <Menu className="w-6 h-6" />
-                            )}
-                        </motion.button>
+                        {/* Mobile menu button - hidden on landing page, users scroll or use CTA */}
+                        {/* Removed: Landing page doesn't need hamburger menu */}
                     </div>
                 </nav>
             </header>
