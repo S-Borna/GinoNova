@@ -16,7 +16,6 @@
 
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -35,6 +34,7 @@ import {
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
 import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
+import { SpotifyTopBarWidget } from "@/components/spotify/SpotifyTopBarWidget"
 
 /* ============================================================================
    TYPES
@@ -538,9 +538,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
             </div>
 
-            <div className="relative h-full px-4 flex items-center">
+            <div className="relative h-full px-4 flex items-center justify-between">
                 {/* Left side */}
-                <div className="flex items-center gap-4 shrink-0">
+                <div className="flex items-center gap-4 shrink-0 flex-1">
                     {/* Mobile menu button */}
                     {showMenuButton && (
                         <button
@@ -561,54 +561,13 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     <SearchBar />
                 </div>
 
-                {/* CENTER - GinoNova Logo */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <Link href="/dashboard" className="block">
-                        <motion.div
-                            className="relative"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
-                            {/* Logo glow */}
-                            <motion.div
-                                className="absolute -inset-4 rounded-2xl"
-                                style={{
-                                    background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.3), transparent)",
-                                    filter: "blur(15px)",
-                                }}
-                                animate={{
-                                    opacity: [0.4, 0.7, 0.4],
-                                    scale: [1, 1.1, 1],
-                                }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            />
-
-                            {/* Logo */}
-                            <motion.div
-                                animate={{
-                                    filter: [
-                                        "drop-shadow(0 0 10px rgba(139,92,246,0.5))",
-                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))",
-                                        "drop-shadow(0 0 10px rgba(139,92,246,0.5))"
-                                    ]
-                                }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                            >
-                                <Image
-                                    src="/ginonova-logo-horizontal.svg"
-                                    alt="GinoNova"
-                                    width={500}
-                                    height={120}
-                                    className="h-10 w-auto min-w-[200px]"
-                                    priority
-                                />
-                            </motion.div>
-                        </motion.div>
-                    </Link>
+                {/* Center - Spotify Widget */}
+                <div className="flex items-center justify-center flex-shrink-0">
+                    {isAuthenticated && <SpotifyTopBarWidget />}
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-3 shrink-0 ml-auto">
+                <div className="flex items-center gap-3 shrink-0 flex-1 justify-end">
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}
 

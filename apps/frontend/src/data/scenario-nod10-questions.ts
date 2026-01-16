@@ -119,8 +119,8 @@ export const SCENARIO_NOD10_QUESTIONS: Omtenta2Question[] = [
     {
         id: 'nod10-s11',
         question: 'Du vill köra ett engångskommando i web-servicen. Compose-kommando?',
-        options: ['docker-compose exec web command', 'docker-compose run web command', 'Båda fungerar men har skillnader', 'docker-compose command web'],
-        correctIndices: [2],
+        options: ['docker-compose exec web command', 'docker-compose run web command', 'docker-compose command web', 'Båda A och B fungerar men har skillnader'],
+        correctIndices: [3],
         explanation: 'exec kör i KÖRANDE container. run startar NY container för kommandot. Använd exec för debugging.',
         difficulty: 'VG',
         category: 'Compose',
@@ -163,9 +163,9 @@ export const SCENARIO_NOD10_QUESTIONS: Omtenta2Question[] = [
     {
         id: 'nod10-s15',
         question: 'Du har compose v2 plugin istället för standalone. Hur kör du?',
-        options: ['docker-compose up', 'docker compose up', 'Båda fungerar i v2', 'compose up'],
-        correctIndices: [1],
-        explanation: 'docker compose (utan bindestreck) är v2 plugin-syntax. Gamla docker-compose är standalone binary.',
+        options: ['docker-compose up', 'docker compose up', 'compose up', 'Båda A och B fungerar i v2'],
+        correctIndices: [3],
+        explanation: 'docker compose (utan bindestreck) är v2 plugin-syntax. docker-compose är standalone binary. Båda fungerar i v2!',
         difficulty: 'G',
         category: 'Compose',
         topic: 'nod10-docker-compose',

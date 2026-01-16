@@ -408,8 +408,8 @@ const TASK_2_QUIZ: TaskQuizQuestion[] = [
     {
         id: 't2-q16',
         question: 'Var installeras tredjepartsprogram enligt FHS?',
-        options: ['/usr/local', '/opt', 'Båda A och B är korrekta', '/bin'],
-        correctIndex: 2, // C
+        options: ['/usr/local', '/opt', '/bin', 'Båda A och B är korrekta'],
+        correctIndex: 3, // D
         explanation: 'Tredjepartsprogram kan installeras i /opt eller /usr/local.',
         difficulty: 'VG',
         category: 'FHS Grunder'
@@ -2050,9 +2050,9 @@ const TASK_10_QUIZ: TaskQuizQuestion[] = [
     {
         id: 't10-q12',
         question: 'Hur ökar du en variabel i loop?',
-        options: ['i++', '((i++))', 'i += 1', 'Alla fungerar'],
-        correctIndex: 1, // B
-        explanation: '((i++)) är korrekt syntax för inkrement i bash.',
+        options: ['i++', 'i += 1', 'let i++', 'Alla A, B och C fungerar med rätt syntax'],
+        correctIndex: 3, // D
+        explanation: 'Alla varianter fungerar i bash: ((i++)), i=$((i+1)), let i++, etc. Viktigast är korrekt syntax.',
         difficulty: 'VG',
         category: 'while'
     },

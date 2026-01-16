@@ -1,25 +1,21 @@
 "use client"
 
 /**
- * Spotify Live Player - Widget + Flyout
+ * Spotify TopBar Widget - Compact player for TopBar
  *
  * Features:
- * - Shows currently playing track from Last.fm
- * - Click widget → Flyout with Spotify embed player
- * - Music plays directly in browser (no external links)
- * - Auto-fetches Spotify embed URL
- * - Continues polling even when music is playing
+ * - Compact widget showing currently playing track
+ * - Click → Flyout expands LEFT (not down)
+ * - Spotify embed player in flyout
+ * - All controls visible without scroll
  */
 
 import * as React from "react"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     Music,
-    Volume2,
-    Radio,
-    Headphones,
     Loader2,
     Play,
     X
@@ -33,18 +29,29 @@ interface Track {
     albumArt: string | null
 }
 
-interface SpotifyLivePlayerProps {
+interface SpotifyTopBarWidgetProps {
     className?: string
 }
 
-export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
+export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
-    const [musicPlaying, setMusicPlaying] = useState(false) // Flyout open state
+    const [isOpen, setIsOpen] = useState(false)
     const [embedUrl, setEmbedUrl] = useState<string | null>(null)
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
-    const iframeRef = React.useRef<HTMLIFrameElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    // Close on outside click
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [])
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -56,8 +63,6 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 const data = await res.json()
                 if (data.track) {
                     const newKey = `${data.track.name}-${data.track.artist}`
-
-                    // Only update if track actually changed (prevent re-renders)
                     if (newKey !== lastTrackKey) {
                         setTrack({
                             isPlaying: data.isPlaying,
@@ -67,7 +72,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                             albumArt: data.track.albumArt,
                         })
                         setLastTrackKey(newKey)
-                        setEmbedUrl(null) // Reset embed for new track
+                        setEmbedUrl(null)
                     }
                 } else {
                     if (track !== null) {
@@ -108,7 +113,6 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     // Initial fetch and polling
     useEffect(() => {
         fetchNowPlaying()
-        // Poll every 30 seconds (even when flyout is open)
         const interval = setInterval(fetchNowPlaying, 30000)
         return () => clearInterval(interval)
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -120,19 +124,17 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
         }
     }, [track, embedUrl, embedLoading, fetchSpotifyEmbed])
 
-    // Handle widget click - toggle flyout
-    const handleWidgetClick = async () => {
+    // Handle widget click
+    const handleClick = async () => {
         if (!track) return
 
-        if (!musicPlaying) {
-            // Open flyout
+        if (!isOpen) {
             if (!embedUrl && !embedLoading) {
                 await fetchSpotifyEmbed()
             }
-            setMusicPlaying(true)
+            setIsOpen(true)
         } else {
-            // Close flyout
-            setMusicPlaying(false)
+            setIsOpen(false)
         }
     }
 
@@ -140,14 +142,12 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (loading) {
         return (
             <div className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
+                "flex items-center gap-2 px-3 py-1.5 rounded-xl",
+                "bg-zinc-900/50 border border-zinc-800",
                 className
             )}>
-                <div className="w-8 h-8 rounded-md bg-zinc-800 animate-pulse" />
-                <div className="flex-1 space-y-1">
-                    <div className="h-3 w-20 bg-zinc-800 rounded animate-pulse" />
-                    <div className="h-2 w-14 bg-zinc-800 rounded animate-pulse" />
-                </div>
+                <div className="w-6 h-6 rounded bg-zinc-800 animate-pulse" />
+                <div className="h-3 w-16 bg-zinc-800 rounded animate-pulse hidden sm:block" />
             </div>
         )
     }
@@ -156,27 +156,28 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (!track?.name) {
         return (
             <div className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
+                "flex items-center gap-2 px-3 py-1.5 rounded-xl",
+                "bg-zinc-900/50 border border-zinc-800",
                 className
             )}>
                 <Music className="w-4 h-4 text-zinc-500" />
-                <span className="text-xs text-zinc-500">No music</span>
+                <span className="text-xs text-zinc-500 hidden sm:block">No music</span>
             </div>
         )
     }
 
     return (
-        <div className={cn("w-full", className)}>
+        <div ref={containerRef} className={cn("relative", className)}>
             {/* WIDGET - Compact clickable bar */}
-            <motion.div
+            <motion.button
                 className={cn(
-                    "flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer w-full",
+                    "flex items-center gap-2 px-3 py-1.5 rounded-xl cursor-pointer",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
-                    musicPlaying && "border-green-500/60 rounded-b-none"
+                    isOpen && "border-green-500/60"
                 )}
-                onClick={handleWidgetClick}
+                onClick={handleClick}
                 whileTap={{ scale: 0.98 }}
             >
                 {/* Album Art */}
@@ -185,66 +186,67 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-8 h-8 rounded object-cover"
+                            className="w-6 h-6 rounded object-cover"
                         />
                     ) : (
-                        <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+                        <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center">
                             <Music className="w-3 h-3 text-zinc-500" />
                         </div>
                     )}
-                    {/* Live indicator */}
                     {track.isPlaying && (
                         <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     )}
                 </div>
 
-                {/* Track Info */}
-                <div className="flex-1 min-w-0">
+                {/* Track Info - Hidden on mobile */}
+                <div className="hidden sm:block min-w-0 max-w-[120px]">
                     <p className="text-[10px] font-medium text-white truncate leading-tight">{track.name}</p>
                     <p className="text-[8px] text-zinc-400 truncate leading-tight">{track.artist}</p>
                 </div>
 
-                {/* Play/Close Button */}
+                {/* Play/Close Icon */}
                 <div className={cn(
                     "p-1 rounded-full flex-shrink-0",
-                    musicPlaying ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
+                    isOpen ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
                 )}>
                     {embedLoading ? (
                         <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : musicPlaying ? (
+                    ) : isOpen ? (
                         <X className="w-3 h-3" />
                     ) : (
                         <Play className="w-3 h-3" fill="currentColor" />
                     )}
                 </div>
-            </motion.div>
+            </motion.button>
 
-            {/* SPOTIFY PLAYER - Inline expansion (not overlay) */}
+            {/* POPUP - Fixed bottom-right corner */}
             <AnimatePresence>
-                {musicPlaying && embedUrl && (
+                {isOpen && embedUrl && (
                     <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
                         className={cn(
-                            "overflow-hidden",
-                            "rounded-b-lg",
-                            "bg-zinc-900/95",
-                            "border border-t-0 border-green-500/20"
+                            "fixed bottom-4 right-4",
+                            "w-[320px]",
+                            "rounded-xl overflow-hidden",
+                            "bg-zinc-900/95 backdrop-blur-xl",
+                            "border border-green-500/30",
+                            "shadow-2xl shadow-green-500/10",
+                            "z-50"
                         )}
                     >
-                        {/* Spotify Embed - Compact 80px */}
+                        {/* Spotify Embed - Compact */}
                         <iframe
-                            ref={iframeRef}
                             key={embedUrl}
-                            src={`${embedUrl}?autoplay=1`}
+                            src={`${embedUrl}?theme=0`}
                             width="100%"
                             height="80"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                             loading="eager"
-                            className="rounded-b-lg"
+                            className="rounded-xl"
                         />
                     </motion.div>
                 )}
@@ -253,4 +255,4 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     )
 }
 
-export default SpotifyLivePlayer
+export default SpotifyTopBarWidget

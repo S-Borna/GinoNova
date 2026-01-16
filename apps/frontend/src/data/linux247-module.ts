@@ -769,10 +769,10 @@ journalctl -u nginx --since "1 hour ago" -p err`
                     options: [
                         'tail -f /var/log/nginx/error.log',
                         'journalctl -u nginx -f',
-                        'Båda fungerar!',
-                        'cat /var/log/nginx/error.log'
+                        'cat /var/log/nginx/error.log',
+                        'Båda A och B fungerar!'
                     ],
-                    correctIndex: 2,
+                    correctIndex: 3,
                     explanation: 'Både tail -f och journalctl -f fungerar! tail -f är för filer, journalctl -f för systemd-services.'
                 },
                 {
@@ -3164,10 +3164,10 @@ cat /etc/crontab`
                     options: [
                         'Editera crontab med "0 * * * *"',
                         'Lägg scriptet i /etc/cron.hourly/',
-                        'Båda fungerar!',
-                        'Skapa systemd timer'
+                        'Skapa systemd timer',
+                        'Båda A och B fungerar!'
                     ],
-                    correctIndex: 2,
+                    correctIndex: 3,
                     explanation: 'Både crontab och /etc/cron.hourly/ fungerar! cron.hourly är enklare för enkla scripts, crontab ger mer kontroll.'
                 },
                 {

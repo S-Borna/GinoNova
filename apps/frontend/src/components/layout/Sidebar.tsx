@@ -24,7 +24,6 @@ import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
-import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 import {
     Home,
     BookOpen,
@@ -410,7 +409,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
             className={cn(
                 "fixed left-0 top-0 z-40 h-screen flex flex-col",
                 "transition-all duration-300 ease-out",
-                collapsed ? "w-[72px]" : "w-[260px]",
+                collapsed ? "w-[72px]" : "w-[240px]",
                 className
             )}
         >
@@ -432,18 +431,65 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 <div className="absolute inset-0 bg-gradient-to-b from-purple-500/50 via-transparent to-cyan-500/30" />
             </div>
 
-            {/* Spotify Live Player (Top-left corner) */}
+            {/* GinoNova Logo (moved from TopBar) */}
             <div className={cn(
-                "relative px-3 py-3 flex items-center",
-                "border-b border-white/5",
-                collapsed ? "h-16 justify-center" : "min-h-[64px]"
+                "relative px-3 py-4 flex items-center justify-center",
+                "border-b border-white/10",
+                collapsed ? "h-20" : "min-h-[72px]"
             )}>
-                <SpotifyLivePlayer
-                    className={cn(
-                        "w-full",
-                        collapsed && "[&>div]:p-2"
-                    )}
-                />
+                <Link href="/dashboard" className="block">
+                    <motion.div
+                        className="relative"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        {/* Logo glow */}
+                        <motion.div
+                            className="absolute -inset-2 rounded-xl"
+                            style={{
+                                background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.25), transparent)",
+                                filter: "blur(12px)",
+                            }}
+                            animate={{
+                                opacity: [0.4, 0.7, 0.4],
+                                scale: [1, 1.1, 1],
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        />
+
+                        {/* Logo */}
+                        <motion.div
+                            animate={{
+                                filter: [
+                                    "drop-shadow(0 0 10px rgba(139,92,246,0.5))",
+                                    "drop-shadow(0 0 20px rgba(139,92,246,0.7))",
+                                    "drop-shadow(0 0 10px rgba(139,92,246,0.5))"
+                                ]
+                            }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                            {collapsed ? (
+                                <Image
+                                    src="/ginonova-logo.svg"
+                                    alt="GinoNova"
+                                    width={48}
+                                    height={48}
+                                    className="w-12 h-12"
+                                    priority
+                                />
+                            ) : (
+                                <Image
+                                    src="/ginonova-logo-horizontal.svg"
+                                    alt="GinoNova"
+                                    width={200}
+                                    height={48}
+                                    className="h-12 w-auto"
+                                    priority
+                                />
+                            )}
+                        </motion.div>
+                    </motion.div>
+                </Link>
             </div>
 
             {/* Navigation Section Label */}
