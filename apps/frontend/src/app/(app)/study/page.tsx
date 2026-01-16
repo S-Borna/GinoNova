@@ -269,37 +269,6 @@ export default function StudyPage() {
                     </p>
                 </motion.div>
 
-                {/* Stats Overview */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
-                >
-                    {[
-                        { icon: <Layers className="w-5 h-5" />, label: "Moduler", value: STUDY_MODULES.length, color: "text-blue-400" },
-                        { icon: <BookOpen className="w-5 h-5" />, label: "Flashcards", value: totalFlashcards.toLocaleString(), color: "text-purple-400" },
-                        { icon: <Brain className="w-5 h-5" />, label: "Quiz-frågor", value: totalQuiz.toLocaleString(), color: "text-emerald-400" },
-                        { icon: <Trophy className="w-5 h-5" />, label: "XP möjligt", value: "5000+", color: "text-amber-400" }
-                    ].map((stat, i) => (
-                        <motion.div
-                            key={stat.label}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.1 + i * 0.05 }}
-                            className={cn(
-                                "rounded-xl p-4",
-                                "bg-zinc-900/50 border border-zinc-800/50",
-                                "backdrop-blur-xl"
-                            )}
-                        >
-                            <div className={cn("mb-2", stat.color)}>{stat.icon}</div>
-                            <div className="text-2xl font-bold text-white">{stat.value}</div>
-                            <div className="text-sm text-zinc-500">{stat.label}</div>
-                        </motion.div>
-                    ))}
-                </motion.div>
-
                 {/* Tenta-Simulator Banner - Glassmorphism Design */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

@@ -167,7 +167,12 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     }
 
     return (
-        <div ref={containerRef} className={cn("relative", className)}>
+        <motion.div 
+            ref={containerRef} 
+            className={cn("relative", className)}
+            animate={{ x: isOpen ? 150 : 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+        >
             {/* WIDGET - Compact clickable bar */}
             <motion.button
                 className={cn(
@@ -203,6 +208,27 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                     <p className="text-sm font-medium text-white truncate">{track.name}</p>
                     <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
+
+                {/* Equalizer Bars - Dancing when playing */}
+                {track.isPlaying && (
+                    <div className="flex items-end gap-[2px] h-4 mr-1">
+                        {[0, 1, 2, 3].map((i) => (
+                            <motion.div
+                                key={i}
+                                className="w-[3px] bg-green-500 rounded-full"
+                                animate={{
+                                    height: ["40%", "100%", "60%", "80%", "40%"],
+                                }}
+                                transition={{
+                                    duration: 0.8,
+                                    repeat: Infinity,
+                                    delay: i * 0.15,
+                                    ease: "easeInOut",
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
 
                 {/* Play/Close Icon */}
                 <div className={cn(
@@ -251,7 +277,7 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </motion.div>
     )
 }
 
