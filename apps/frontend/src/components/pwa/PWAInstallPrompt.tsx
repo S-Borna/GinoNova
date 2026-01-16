@@ -81,7 +81,23 @@ export function PWAInstallPrompt() {
     }, [])
 
     const handleInstall = useCallback(async () => {
-        if (!deferredPrompt) return
+        if (!deferredPrompt) {
+            // No prompt available (localhost, unsupported browser, etc.)
+            // Show instructions based on browser
+            const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+            const isEdge = /Edg/.test(navigator.userAgent)
+            
+            if (isChrome || isEdge) {
+                alert('Klicka på meny-ikonen (⋮) i webbläsaren och välj "Installera app" eller "Lägg till på hemskärmen"')
+            } else {
+                alert('PWA-installation kräver HTTPS. Testa på produktion!')
+            }
+            
+            // Still dismiss the prompt
+            setShowPrompt(false)
+            localStorage.setItem('pwa-install-dismissed', Date.now().toString())
+            return
+        }
 
         deferredPrompt.prompt()
         const { outcome } = await deferredPrompt.userChoice
@@ -92,6 +108,7 @@ export function PWAInstallPrompt() {
 
         setDeferredPrompt(null)
         setShowPrompt(false)
+        localStorage.setItem('pwa-install-dismissed', Date.now().toString())
     }, [deferredPrompt])
 
     const handleDismiss = useCallback(() => {
