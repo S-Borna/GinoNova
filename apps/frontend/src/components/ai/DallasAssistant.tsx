@@ -270,7 +270,7 @@ export function DallasAssistant() {
             const lowerMessage = userMessage.toLowerCase()
 
             // TECHNICAL QUESTIONS - Give actual answers!
-            
+
             // Symbolic vs Hard links
             if (lowerMessage.includes("symbolic") || lowerMessage.includes("symlink") || lowerMessage.includes("hard link") || lowerMessage.includes("länk")) {
                 return "**Symbolic link vs Hard link:**\n\n🔗 **Symbolic link (soft link):**\n- Pekar på filens SÖKVÄG (som en genväg)\n- Kan peka på mappar\n- Kan peka över filsystem\n- Går sönder om originalet tas bort\n- `ln -s target link`\n\n🔗 **Hard link:**\n- Pekar på filens INODE (samma data)\n- Kan INTE peka på mappar\n- Måste vara på samma filsystem\n- Originalet kan tas bort, datan finns kvar\n- `ln target link`\n\n📖 Man page: https://man7.org/linux/man-pages/man1/ln.1.html"

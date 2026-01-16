@@ -17,7 +17,7 @@ Markera frågor du vill ta bort med ❌ så fixar jag det.
 
 const nodNames = {
     'nod1-filsystem': 'Filsystem & Grunder',
-    'nod2-rattigheter': 'Rättigheter & Säkerhet', 
+    'nod2-rattigheter': 'Rättigheter & Säkerhet',
     'nod3-processhantering': 'Processhantering',
     'nod4-natverk': 'Nätverk & Server',
     'nod5-ssh': 'SSH & Kommunikation',
@@ -30,18 +30,18 @@ const nodNames = {
 
 // Process each nod
 for (let nod = 1; nod <= 10; nod++) {
-    const topicKey = `nod${nod}-${['filsystem','rattigheter','processhantering','natverk','ssh','bash-skript','bash-verktyg','docker-isolering','docker-natverk','docker-compose'][nod-1]}`;
+    const topicKey = `nod${nod}-${['filsystem', 'rattigheter', 'processhantering', 'natverk', 'ssh', 'bash-skript', 'bash-verktyg', 'docker-isolering', 'docker-natverk', 'docker-compose'][nod - 1]}`;
     const topicName = nodNames[topicKey] || `Nod ${nod}`;
-    
+
     output += `## NOD ${nod}: ${topicName}\n\n`;
-    
+
     // QUIZ questions
     try {
         const examFile = fs.readFileSync(`./apps/frontend/src/data/exam-nod${nod}-questions.ts`, 'utf8');
-        
+
         // Simple regex to extract questions
         const questionRegex = /\{\s*id:\s*'([^']+)'[\s\S]*?question:\s*'([^']*(?:\\.[^']*)*)'[\s\S]*?difficulty:\s*'([^']+)'/g;
-        
+
         output += `### Quiz (50 frågor)\n\n`;
         let match;
         let qNum = 1;
@@ -56,13 +56,13 @@ for (let nod = 1; nod <= 10; nod++) {
     } catch (e) {
         output += `*Kunde inte läsa exam-nod${nod}-questions.ts*\n\n`;
     }
-    
-    // SCENARIO questions  
+
+    // SCENARIO questions
     try {
         const scenFile = fs.readFileSync(`./apps/frontend/src/data/scenario-nod${nod}-questions.ts`, 'utf8');
-        
+
         const questionRegex = /\{\s*id:\s*'([^']+)'[\s\S]*?question:\s*'([^']*(?:\\.[^']*)*)'[\s\S]*?difficulty:\s*'([^']+)'/g;
-        
+
         output += `### Scenarios (20 frågor)\n\n`;
         let match;
         let sNum = 1;
@@ -76,7 +76,7 @@ for (let nod = 1; nod <= 10; nod++) {
     } catch (e) {
         output += `*Kunde inte läsa scenario-nod${nod}-questions.ts*\n\n`;
     }
-    
+
     output += `---\n\n`;
 }
 
