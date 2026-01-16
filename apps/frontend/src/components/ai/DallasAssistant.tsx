@@ -19,6 +19,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import ReactMarkdown from "react-markdown"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -169,15 +170,39 @@ function MessageBubble({ message }: MessageBubbleProps) {
             {!isUser && <DallasAvatar size="sm" pulsate={false} />}
 
             <div className={cn(
-                "max-w-[80%] p-4 rounded-2xl",
+                "max-w-[80%] p-4 rounded-2xl relative",
                 isUser
-                    ? "bg-gradient-to-br from-purple-600 to-purple-500 text-white rounded-tr-none"
-                    : "bg-gradient-to-br from-zinc-800 to-zinc-900 text-zinc-100 border border-zinc-700 rounded-tl-none"
+                    ? "bg-gradient-to-br from-cyan-500 to-cyan-600 text-white rounded-tr-none shadow-[0_0_20px_rgba(34,211,238,0.4)]"
+                    : "bg-gradient-to-br from-purple-900/80 to-purple-950/90 text-zinc-100 border border-purple-500/30 rounded-tl-none shadow-[0_0_25px_rgba(168,85,247,0.3)]"
             )}>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                {/* Markdown-rendered content */}
+                <div className={cn(
+                    "text-sm leading-relaxed prose prose-invert prose-sm max-w-none",
+                    "prose-strong:text-white prose-strong:font-semibold",
+                    "prose-code:bg-black/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-cyan-300 prose-code:font-mono prose-code:text-xs",
+                    "prose-a:text-cyan-400 prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-cyan-300",
+                    "prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5"
+                )}>
+                    <ReactMarkdown
+                        components={{
+                            a: ({ href, children }) => (
+                                <a href={href} target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors">
+                                    {children}
+                                </a>
+                            ),
+                            code: ({ children }) => (
+                                <code className="bg-black/40 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-xs">
+                                    {children}
+                                </code>
+                            ),
+                        }}
+                    >
+                        {message.content}
+                    </ReactMarkdown>
+                </div>
                 <p className={cn(
                     "text-xs mt-2",
-                    isUser ? "text-purple-200" : "text-zinc-500"
+                    isUser ? "text-cyan-200" : "text-purple-300/60"
                 )}>
                     {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </p>
@@ -451,20 +476,39 @@ export function DallasAssistant() {
                             isMinimized
                                 ? "bottom-6 right-6 w-80 h-16"
                                 : "bottom-6 right-6 w-[400px] h-[600px]",
-                            "bg-gradient-to-br from-zinc-900/98 via-zinc-900/98 to-zinc-950/98",
+                            "bg-[#0a0a12]",
                             "backdrop-blur-xl",
                             "rounded-3xl",
-                            "border border-white/10",
-                            "shadow-[0_0_80px_rgba(139,92,246,0.3)]",
+                            "border border-purple-500/20",
+                            "shadow-[0_0_60px_rgba(168,85,247,0.25),0_0_120px_rgba(34,211,238,0.1)]",
                             "flex flex-col",
                             "overflow-hidden",
                             "transition-all duration-300"
                         )}
                     >
+                        {/* Subtle animated background glow */}
+                        <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+                            <motion.div
+                                className="absolute -top-20 -right-20 w-60 h-60 bg-purple-600/10 rounded-full blur-3xl"
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.3, 0.5, 0.3],
+                                }}
+                                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            <motion.div
+                                className="absolute -bottom-20 -left-20 w-60 h-60 bg-cyan-600/8 rounded-full blur-3xl"
+                                animate={{
+                                    scale: [1.2, 1, 1.2],
+                                    opacity: [0.2, 0.4, 0.2],
+                                }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                        </div>
                         {/* Header */}
                         <div className={cn(
-                            "p-4 border-b border-white/10",
-                            "bg-gradient-to-r from-purple-600/20 to-cyan-600/20",
+                            "p-4 border-b border-purple-500/20 relative z-10",
+                            "bg-gradient-to-r from-purple-900/40 to-cyan-900/30",
                             "flex items-center justify-between"
                         )}>
                             <div className="flex items-center gap-3">
@@ -508,7 +552,7 @@ export function DallasAssistant() {
                         {!isMinimized && (
                             <>
                                 {/* Quick Actions */}
-                                <div className="p-4 border-b border-white/10 bg-zinc-900/50">
+                                <div className="p-4 border-b border-purple-500/20 bg-black/30 relative z-10">
                                     <p className="text-xs text-zinc-500 mb-2 uppercase tracking-wider">Snabbval</p>
                                     <div className="flex flex-wrap gap-2">
                                         {quickActions.map((action, index) => (
@@ -537,7 +581,7 @@ export function DallasAssistant() {
                                 </div>
 
                                 {/* Messages */}
-                                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                                <div className="flex-1 overflow-y-auto p-4 space-y-4 relative z-10 bg-gradient-to-b from-transparent via-black/20 to-black/40">
                                     {messages.map((message) => (
                                         <MessageBubble key={message.id} message={message} />
                                     ))}
@@ -575,7 +619,7 @@ export function DallasAssistant() {
                                 </div>
 
                                 {/* Input */}
-                                <div className="p-4 border-t border-white/10 bg-zinc-900/50">
+                                <div className="p-4 border-t border-purple-500/20 bg-black/40 relative z-10">
                                     <div className="flex gap-2">
                                         <input
                                             type="text"

@@ -58,9 +58,15 @@ Svara ALLTID på svenska. Behåll engelska tekniska termer (container, pod, etc.
 - Om du är osäker, säg det - gissa aldrig
 
 === DOKUMENTATION (KRITISKT!) ===
-VARJE tekniskt svar MÅSTE avslutas med länk till officiell dokumentation:
+VARJE tekniskt svar MÅSTE BÖRJA med en klickbar länk till officiell dokumentation!
 
-- Linux-kommandon: https://man7.org/linux/man-pages/man1/KOMMANDO.1.html
+Format:
+📖 [Dokumentationsnamn](URL)
+
+Svaret kommer EFTER länken.
+
+Vanliga dokumentationskällor:
+- Linux: https://man7.org/linux/man-pages/man1/KOMMANDO.1.html
 - Docker: https://docs.docker.com/
 - Kubernetes: https://kubernetes.io/docs/
 - Git: https://git-scm.com/docs/KOMMANDO
@@ -70,7 +76,6 @@ VARJE tekniskt svar MÅSTE avslutas med länk till officiell dokumentation:
 - Python: https://docs.python.org/3/
 
 Använd din kunskap för att länka till RÄTT sida/sektion baserat på frågan.
-Du har tillgång till all offentlig dokumentation - använd den!
 
 === GINONOVA NAVIGATION ===
 - Dashboard: /dashboard
@@ -84,14 +89,16 @@ Du har tillgång till all offentlig dokumentation - använd den!
 === EXEMPELSVAR ===
 
 Fråga: "Skillnaden mellan symbolic och hard link?"
-Svar: "**Symbolic link** pekar på filens sökväg (som genväg), kan peka på mappar och över filsystem. **Hard link** pekar på samma inode (samma data), kan inte peka på mappar. Om originalet tas bort: symlink går sönder, hard link fungerar fortfarande.
+Svar:
+📖 [Linux Man Page - ln](https://man7.org/linux/man-pages/man1/ln.1.html)
 
-📖 Man page: https://man7.org/linux/man-pages/man1/ln.1.html"
+**Symbolic link** pekar på filens sökväg (som genväg), kan peka på mappar och över filsystem. **Hard link** pekar på samma inode (samma data), kan inte peka på mappar. Om originalet tas bort: symlink går sönder, hard link fungerar fortfarande.
 
 Fråga: "Hur kör jag en Docker container?"
-Svar: "`docker run -d -p 8080:80 --name myapp nginx` startar en nginx-container i bakgrunden (-d), mappar port 8080 till 80, och namnger den 'myapp'.
+Svar:
+📖 [Docker Run Reference](https://docs.docker.com/engine/reference/run/)
 
-📖 Docker docs: https://docs.docker.com/engine/reference/run/"
+`docker run -d -p 8080:80 --name myapp nginx` startar en nginx-container i bakgrunden (-d), mappar port 8080 till 80, och namnger den 'myapp'.
 """
 
 @router.post("/chat", response_model=ChatResponse)
