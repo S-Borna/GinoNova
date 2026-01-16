@@ -176,24 +176,41 @@ function MessageBubble({ message }: MessageBubbleProps) {
                     : "bg-gradient-to-br from-purple-900/80 to-purple-950/90 text-zinc-100 border border-purple-500/30 rounded-tl-none shadow-[0_0_25px_rgba(168,85,247,0.3)]"
             )}>
                 {/* Markdown-rendered content */}
-                <div className={cn(
-                    "text-sm leading-relaxed prose prose-invert prose-sm max-w-none",
-                    "prose-strong:text-white prose-strong:font-semibold",
-                    "prose-code:bg-black/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-cyan-300 prose-code:font-mono prose-code:text-xs",
-                    "prose-a:text-cyan-400 prose-a:underline prose-a:underline-offset-2 hover:prose-a:text-cyan-300",
-                    "prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5"
-                )}>
+                <div className="text-sm leading-relaxed dallas-markdown">
                     <ReactMarkdown
                         components={{
+                            p: ({ children }) => (
+                                <p className="mb-2 last:mb-0">{children}</p>
+                            ),
+                            strong: ({ children }) => (
+                                <strong className="font-bold text-white">{children}</strong>
+                            ),
+                            em: ({ children }) => (
+                                <em className="italic text-purple-200">{children}</em>
+                            ),
                             a: ({ href, children }) => (
-                                <a href={href} target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors">
+                                <a 
+                                    href={href} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors font-medium"
+                                >
                                     {children}
                                 </a>
                             ),
                             code: ({ children }) => (
-                                <code className="bg-black/40 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-xs">
+                                <code className="bg-black/50 px-1.5 py-0.5 rounded text-cyan-300 font-mono text-xs">
                                     {children}
                                 </code>
+                            ),
+                            ul: ({ children }) => (
+                                <ul className="list-disc list-inside my-2 space-y-1">{children}</ul>
+                            ),
+                            ol: ({ children }) => (
+                                <ol className="list-decimal list-inside my-2 space-y-1">{children}</ol>
+                            ),
+                            li: ({ children }) => (
+                                <li className="text-zinc-100">{children}</li>
                             ),
                         }}
                     >
