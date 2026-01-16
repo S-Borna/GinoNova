@@ -515,9 +515,15 @@ async def chat_with_dallas(request: ChatRequest):
             )
 
         except Exception as e:
-            # Om OpenAI failar, använd fallback
-            print(f"Dallas OpenAI error: {type(e).__name__}: {e}")
-            pass
+            # Om OpenAI failar, logga och returnera faktiskt felmeddelande för debugging
+            error_msg = f"{type(e).__name__}: {str(e)}"
+            print(f"Dallas OpenAI error: {error_msg}")
+            
+            # Returnera felet temporärt för debugging (ta bort i produktion)
+            return ChatResponse(
+                response=f"⚠️ Dallas kunde inte nå GPT-4o-mini. Fel: {error_msg[:200]}. Kontakta support om detta fortsätter.",
+                context=request.context
+            )
 
     # Fallback-svar (no AI usage logged for fallback)
     context_key = request.context or "general"
