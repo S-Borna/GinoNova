@@ -171,7 +171,7 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
             {/* WIDGET - Compact clickable bar */}
             <motion.button
                 className={cn(
-                    "flex items-center gap-2 px-3 py-1.5 rounded-xl cursor-pointer",
+                    "flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer w-[300px]",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
@@ -186,27 +186,27 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-6 h-6 rounded object-cover"
+                            className="w-10 h-10 rounded object-cover"
                         />
                     ) : (
-                        <div className="w-6 h-6 rounded bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-3 h-3 text-zinc-500" />
+                        <div className="w-10 h-10 rounded bg-zinc-800 flex items-center justify-center">
+                            <Music className="w-5 h-5 text-zinc-500" />
                         </div>
                     )}
                     {track.isPlaying && (
-                        <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
                     )}
                 </div>
 
-                {/* Track Info - Hidden on mobile */}
-                <div className="hidden sm:block min-w-0 max-w-[120px]">
-                    <p className="text-[10px] font-medium text-white truncate leading-tight">{track.name}</p>
-                    <p className="text-[8px] text-zinc-400 truncate leading-tight">{track.artist}</p>
+                {/* Track Info */}
+                <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{track.name}</p>
+                    <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
 
                 {/* Play/Close Icon */}
                 <div className={cn(
-                    "p-1 rounded-full flex-shrink-0",
+                    "p-1.5 rounded-full flex-shrink-0",
                     isOpen ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
                 )}>
                     {embedLoading ? (
@@ -219,17 +219,17 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                 </div>
             </motion.button>
 
-            {/* POPUP - Fixed bottom-right corner */}
+            {/* FLYOUT - Opens to the LEFT of widget */}
             <AnimatePresence>
                 {isOpen && embedUrl && (
                     <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        initial={{ opacity: 0, x: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: 10, scale: 0.95 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
                         className={cn(
-                            "fixed bottom-4 right-4",
-                            "w-[320px]",
+                            "absolute right-full top-1/2 -translate-y-1/2 mr-2",
+                            "w-[300px]",
                             "rounded-xl overflow-hidden",
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-green-500/30",
