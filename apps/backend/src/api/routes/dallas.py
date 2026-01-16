@@ -82,7 +82,7 @@ DÅLIGT svar: "Bra fråga! Låt oss utforska det tillsammans."
 **LINUX MAN PAGES - Direktlänkar:**
 När användaren frågar om ett Linux-kommando, ge ALLTID direktlänk:
 
-Format: https://man7.org/linux/man-pages/man1/{command}.1.html
+Format: https://man7.org/linux/man-pages/man1/{{command}}.1.html
 
 Vanliga sektioner:
 - man1 = användarkommandon (ls, cd, grep, etc.)
@@ -99,13 +99,13 @@ Svar: "`grep` söker efter mönster i text/filer. Exempel: `grep -r "error" /var
 **OFFICIELL DOKUMENTATION - Direktlänkar:**
 
 Linux:
-- Man pages: https://man7.org/linux/man-pages/man1/{command}.1.html
+- Man pages: https://man7.org/linux/man-pages/man1/{{command}}.1.html
 - Bash manual: https://www.gnu.org/software/bash/manual/
 - Linux Documentation Project: https://tldp.org/
 
 Docker:
 - Referens: https://docs.docker.com/reference/
-- CLI: https://docs.docker.com/engine/reference/commandline/{command}/
+- CLI: https://docs.docker.com/engine/reference/commandline/{{command}}/
 - Dockerfile: https://docs.docker.com/engine/reference/builder/
 - Compose: https://docs.docker.com/compose/compose-file/
 
@@ -116,7 +116,7 @@ Kubernetes:
 - Helm: https://helm.sh/docs/
 
 Git:
-- Docs: https://git-scm.com/docs/{command}
+- Docs: https://git-scm.com/docs/{{command}}
 - Book: https://git-scm.com/book/en/v2
 
 Terraform:
@@ -133,7 +133,7 @@ AWS:
 
 Python:
 - Docs: https://docs.python.org/3/
-- PyPI: https://pypi.org/project/{package}/
+- PyPI: https://pypi.org/project/{{package}}/
 
 YAML:
 - Spec: https://yaml.org/spec/1.2.2/
