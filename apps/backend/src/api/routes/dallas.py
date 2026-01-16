@@ -490,27 +490,33 @@ async def chat_with_dallas(request: ChatRequest):
                 temperature=0.7
             )
 
-            # Log AI usage
-            usage = response.usage
-            if usage:
-                user_uuid = None
-                if request.user_id:
-                    try:
-                        user_uuid = UUIDType(request.user_id)
-                    except ValueError:
-                        pass
+            # Get the response content FIRST before any logging
+            response_content = response.choices[0].message.content
 
-                log_ai_usage(
-                    feature="dallas",
-                    model="gpt-4o-mini",
-                    prompt_tokens=usage.prompt_tokens,
-                    completion_tokens=usage.completion_tokens,
-                    user_id=user_uuid,
-                    request_type=request.context or "general",
-                )
+            # Try to log AI usage (don't let it fail the request)
+            try:
+                usage = response.usage
+                if usage:
+                    user_uuid = None
+                    if request.user_id:
+                        try:
+                            user_uuid = UUIDType(request.user_id)
+                        except ValueError:
+                            pass
+
+                    log_ai_usage(
+                        feature="dallas",
+                        model="gpt-4o-mini",
+                        prompt_tokens=usage.prompt_tokens,
+                        completion_tokens=usage.completion_tokens,
+                        user_id=user_uuid,
+                        request_type=request.context or "general",
+                    )
+            except Exception as log_error:
+                print(f"Dallas: Failed to log usage (non-critical): {log_error}")
 
             return ChatResponse(
-                response=response.choices[0].message.content,
+                response=response_content,
                 context=request.context
             )
 
