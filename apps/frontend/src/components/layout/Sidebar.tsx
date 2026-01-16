@@ -24,7 +24,7 @@ import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
-import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
+import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 import {
     Home,
     BookOpen,
@@ -432,16 +432,16 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 <div className="absolute inset-0 bg-gradient-to-b from-purple-500/50 via-transparent to-cyan-500/30" />
             </div>
 
-            {/* Now Playing Widget Section (Top-left corner) */}
+            {/* Spotify Live Player (Top-left corner) */}
             <div className={cn(
-                "relative px-3 py-3 h-16 flex items-center",
-                "border-b border-white/5"
+                "relative px-3 py-3 flex items-center",
+                "border-b border-white/5",
+                collapsed ? "h-16 justify-center" : "min-h-[64px]"
             )}>
-                <NowPlayingWidget
-                    variant="mini"
+                <SpotifyLivePlayer
                     className={cn(
                         "w-full",
-                        collapsed && "justify-center px-2 [&_.npw-track]:hidden [&_.npw-eq]:hidden"
+                        collapsed && "[&>div]:p-2"
                     )}
                 />
             </div>

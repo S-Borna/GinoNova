@@ -157,7 +157,7 @@ Exempel på BRA flervalsfråga:
   "explanation": "Genom att kopiera requirements.txt först kan Docker cacha pip install-lagret. Om endast kod ändras återanvänder Docker det cachade pip install-lagret, vilket gör ombyggnader snabbare."
 }
 
-VIKTIGT: 
+VIKTIGT:
 - Det korrekta svaret ska slumpmässigt fördelas över A, B, C, D - gör INTE alltid A till rätt svar
 - Variera positionen för det korrekta svaret för varje fråga
 - Gör felaktiga svar rimliga men tydligt felaktiga
@@ -165,7 +165,7 @@ VIKTIGT:
 - ALLT innehåll (frågor, svar, förklaringar) ska vara på SVENSKA!"""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
-    
+
     # Add unique variation instruction when generating fresh (not cached) - SWEDISH
     variation_seed = ""
     if not use_cache:
@@ -224,7 +224,7 @@ Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
     # Build enhanced user prompt - SWEDISH
     difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
     difficulty_guide = difficulty_instructions.get(difficulty, difficulty_instructions["intermediate"])
-    
+
     prompt = f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
 
 VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hints.
@@ -255,14 +255,14 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
         # Higher temperature when not caching (force_new mode) for more variation
         # Lower temperature when caching for consistency
         temperature = 0.95 if not use_cache else 0.75  # More creative when generating fresh
-        
+
         # Scale max_tokens based on question count
         # MCQ: ~150 tokens per question, Flashcard: ~80 tokens per question
         base_tokens = 200 if quiz_type == "mcq" else 120
         max_tokens = min(count * base_tokens + 500, 16000)  # Cap at 16k
-        
+
         logger.info(f"🎲 Generating {count} questions with temperature={temperature}, max_tokens={max_tokens}")
-        
+
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -285,7 +285,7 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
             result_text = result_text[:-3]
 
         result = json.loads(result_text.strip())
-        
+
         # Log AI usage for cost tracking
         try:
             from ..services.ai_usage_service import log_ai_usage
@@ -301,7 +301,7 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
             logger.info(f"💰 Quiz generated: {usage_info.total_tokens} tokens, ${cost:.4f}")
         except Exception as e:
             logger.debug(f"Failed to log AI usage: {e}")
-        
+
         # Cache the result (24 hours TTL for quiz content)
         if use_cache:
             from ..db.redis_client import cache_set
@@ -335,7 +335,7 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
 
     # Normalize slug for matching
     normalized_slug = module_slug.lower().strip()
-    
+
     # Find the module by slug (with multiple matching strategies)
     module_data = None
     for mod in ALL_MODULES:
@@ -362,12 +362,12 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
 
     # Extract content from each task/node
     tasks = module_data.get("tasks", [])
-    
+
     # Calculate per-node limit based on total desired (8000-12000 chars)
     # Distribute more evenly across nodes
     total_desired = 10000  # Increased from 4000 to 10000
     per_node_limit = max(1500, total_desired // max(len(tasks), 1))
-    
+
     for i, task in enumerate(tasks, 1):
         title = task.get("title", f"Node {i}")
         node_content = task.get("content", "")
@@ -395,19 +395,19 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
 def clear_quiz_cache(module_slug: Optional[str] = None) -> int:
     """
     Clear quiz cache for a specific module or all modules.
-    
+
     Args:
         module_slug: Optional module slug to clear cache for. If None, clears all quiz cache.
-    
+
     Returns:
         Number of keys deleted
     """
     from ..db.redis_client import get_redis_client
-    
+
     client = get_redis_client()
     if not client:
         return 0
-    
+
     try:
         if module_slug:
             # Clear cache for specific module (pattern matching)
@@ -416,7 +416,7 @@ def clear_quiz_cache(module_slug: Optional[str] = None) -> int:
         else:
             # Clear all quiz cache
             keys = client.keys("quiz:*")
-        
+
         if keys:
             deleted = client.delete(*keys)
             logger.info(f"🗑️  Cleared {deleted} quiz cache entries")

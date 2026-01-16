@@ -75,6 +75,7 @@ const FEATURES: ComparisonFeature[] = [
         udemy: false,
         coursera: "Begränsat",
         pluralsight: "Begränsat",
+        highlight: true,
     },
     {
         feature: "Realtidsfeedback",
@@ -82,6 +83,7 @@ const FEATURES: ComparisonFeature[] = [
         udemy: false,
         coursera: false,
         pluralsight: "Begränsat",
+        highlight: true,
     },
     {
         feature: "Svenskt Innehåll",
@@ -97,6 +99,7 @@ const FEATURES: ComparisonFeature[] = [
         udemy: "Begränsat",
         coursera: true,
         pluralsight: "Begränsat",
+        highlight: true,
     },
     {
         feature: "Portfolio-Projekt",
@@ -104,6 +107,7 @@ const FEATURES: ComparisonFeature[] = [
         udemy: "Varierande",
         coursera: "Varierande",
         pluralsight: true,
+        highlight: true,
     },
     {
         feature: "Certifikat",
@@ -111,6 +115,7 @@ const FEATURES: ComparisonFeature[] = [
         udemy: true,
         coursera: true,
         pluralsight: true,
+        highlight: true,
     },
     {
         feature: "Ingen Registrering",
