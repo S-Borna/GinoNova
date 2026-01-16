@@ -15,7 +15,6 @@
  */
 
 import { useState } from "react"
-import { useTheme } from "next-themes"
 import { motion } from "framer-motion"
 import { useAuth } from "@/components/auth"
 import { cn } from "@/lib/utils"
@@ -28,8 +27,6 @@ import {
     Calendar,
     Shield,
     Bell,
-    Moon,
-    Sun,
     LogOut,
     Save,
     Camera,
@@ -459,7 +456,6 @@ function ConfirmResetModal({ isOpen, onClose, onConfirm, isLoading }: ConfirmMod
 
 export default function ProfilePage() {
     const { user, logout, refreshUser } = useAuth()
-    const { theme, setTheme } = useTheme()
     const [notificationsEnabled, setNotificationsEnabled] = useState(true)
     const [emailNotifications, setEmailNotifications] = useState(true)
     const [isSaving, setIsSaving] = useState(false)
@@ -492,9 +488,6 @@ export default function ProfilePage() {
             setIsResetting(false)
         }
     }
-
-    const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark")
-    const isDark = theme === "dark"
 
     const initials = user?.full_name?.split(" ").map((n) => n[0]).join("").toUpperCase() || user?.email?.[0].toUpperCase() || "U"
     const joinDate = new Date(user?.created_at || Date.now()).toLocaleDateString("en-US", { year: "numeric", month: "long" })
@@ -679,31 +672,8 @@ export default function ProfilePage() {
                             </div>
 
                             <div className="p-6 space-y-4">
-                                {/* Theme Toggle */}
-                                <div className="flex items-center justify-between py-3">
-                                    <div className="flex items-center gap-3">
-                                        {isDark ? <Moon className="w-5 h-5 text-purple-400" /> : <Sun className="w-5 h-5 text-amber-400" />}
-                                        <div>
-                                            <p className="font-medium text-zinc-200">Dark Mode</p>
-                                            <p className="text-sm text-zinc-500">Toggle dark/light theme</p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={toggleTheme}
-                                        className={cn(
-                                            "relative w-12 h-6 rounded-full transition-all",
-                                            isDark ? "bg-purple-600 shadow-[0_0_10px_rgba(139,92,246,0.5)]" : "bg-zinc-700"
-                                        )}
-                                    >
-                                        <span className={cn(
-                                            "absolute top-1 w-4 h-4 rounded-full bg-white transition-transform",
-                                            isDark ? "left-7" : "left-1"
-                                        )} />
-                                    </button>
-                                </div>
-
                                 {/* Notifications */}
-                                <div className="flex items-center justify-between py-3 border-t border-purple-500/20">
+                                <div className="flex items-center justify-between py-3">
                                     <div className="flex items-center gap-3">
                                         <Bell className="w-5 h-5 text-cyan-400" />
                                         <div>
