@@ -4,18 +4,18 @@
  * ============================================================================
  * APP SHELL - Main Application Layout Wrapper
  * ============================================================================
- * 
+ *
  * Design Philosophy:
  * - Responsive layout with sidebar, topbar, and mobile nav
  * - Smooth transitions between breakpoints
  * - Persistent sidebar state
  * - Clean content area with proper spacing
- * 
+ *
  * Breakpoints:
  * - Mobile: < 768px (bottom nav, no sidebar)
  * - Tablet: 768px - 1024px (collapsed sidebar)
  * - Desktop: > 1024px (full sidebar)
- * 
+ *
  * @phase D.3 - Navigation + Layout
  */
 
@@ -49,7 +49,7 @@ function useMediaQuery(query: string): boolean {
         if (media.matches !== matches) {
             setMatches(media.matches)
         }
-        
+
         const listener = () => setMatches(media.matches)
         media.addEventListener("change", listener)
         return () => media.removeEventListener("change", listener)
@@ -60,7 +60,7 @@ function useMediaQuery(query: string): boolean {
 
 function useSidebarState() {
     const [collapsed, setCollapsed] = React.useState(false)
-    
+
     // Load from localStorage on mount
     React.useEffect(() => {
         const stored = localStorage.getItem("sidebar-collapsed")
@@ -107,9 +107,9 @@ export function AppShell({ children, showBreadcrumbs = true, className }: AppShe
         <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
             {/* Mobile Side Menu */}
             {isMobile && (
-                <MobileSideMenu 
-                    isOpen={mobileMenuOpen} 
-                    onClose={handleCloseMobileMenu} 
+                <MobileSideMenu
+                    isOpen={mobileMenuOpen}
+                    onClose={handleCloseMobileMenu}
                 />
             )}
 
@@ -128,8 +128,8 @@ export function AppShell({ children, showBreadcrumbs = true, className }: AppShe
                 isMobile && "pb-20" // Space for mobile nav
             )}>
                 {/* Top bar */}
-                <TopBar 
-                    showMenuButton={isMobile} 
+                <TopBar
+                    showMenuButton={isMobile}
                     onMenuClick={handleOpenMobileMenu}
                 />
 

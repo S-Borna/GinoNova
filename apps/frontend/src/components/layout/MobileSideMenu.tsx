@@ -198,8 +198,8 @@ function NavItemComponent({ item, isActive, onClose, index }: NavItemComponentPr
             >
                 <div className={cn(
                     "w-10 h-10 rounded-lg flex items-center justify-center",
-                    isActive 
-                        ? "bg-white/20" 
+                    isActive
+                        ? "bg-white/20"
                         : `bg-gradient-to-br ${item.gradient} bg-opacity-20`
                 )}>
                     <Icon className="w-5 h-5" />

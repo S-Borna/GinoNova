@@ -84,7 +84,7 @@ function NavItemComponent({ item, isActive }: NavItemProps) {
                     : "text-zinc-500"
             )}
         >
-            <motion.div 
+            <motion.div
                 className="relative"
                 animate={isActive ? { scale: 1.1, y: -2 } : { scale: 1, y: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 20 }}
@@ -101,7 +101,7 @@ function NavItemComponent({ item, isActive }: NavItemProps) {
                         style={{ filter: "blur(8px)" }}
                     />
                 )}
-                
+
                 <div className={cn(
                     "relative p-2 rounded-xl transition-all duration-200",
                     isActive && `bg-gradient-to-br ${item.gradient}`
@@ -115,7 +115,7 @@ function NavItemComponent({ item, isActive }: NavItemProps) {
                     />
                 </div>
             </motion.div>
-            
+
             <span className={cn(
                 "text-[10px] font-medium transition-all duration-200",
                 isActive ? "text-white font-semibold" : "text-zinc-500"
@@ -152,7 +152,7 @@ export function MobileNav({ className }: MobileNavProps) {
         )}>
             {/* Top glow line */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
-            
+
             <div className="flex items-center justify-around px-1 py-1">
                 {navItems.map((item) => (
                     <NavItemComponent

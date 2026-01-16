@@ -30,6 +30,7 @@ import {
     HelpCircle,
     Minimize2,
     Maximize2,
+    Trash2,
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 
@@ -58,35 +59,35 @@ function getQuickActionsForPage(pathname: string): QuickAction[] {
     // Dashboard
     if (pathname.includes("/dashboard")) {
         return [
-            { icon: TrendingUp, label: "What should I learn next?", prompt: "Based on my progress, what module should I focus on next?" },
-            { icon: Sparkles, label: "How am I doing?", prompt: "Give me a summary of my learning progress and achievements." },
-            { icon: Lightbulb, label: "Study tips", prompt: "Give me tips on how to learn DevOps effectively." },
+            { icon: TrendingUp, label: "Vad ska jag lära mig härnäst?", prompt: "Baserat på min progress, vilken modul borde jag fokusera på?" },
+            { icon: Sparkles, label: "Hur går det för mig?", prompt: "Ge mig en sammanfattning av min lärandeframgång och prestationer." },
+            { icon: Lightbulb, label: "Studietips", prompt: "Ge mig tips på hur jag lär mig DevOps effektivt." },
         ]
     }
 
     // Modules page
     if (pathname.includes("/modules") && !pathname.match(/\/modules\/[^/]+/)) {
         return [
-            { icon: HelpCircle, label: "Which module first?", prompt: "I'm looking at the modules list. Which one should I start with?" },
-            { icon: Lightbulb, label: "Explain prerequisites", prompt: "Can you explain what prerequisites are and why they matter?" },
-            { icon: TrendingUp, label: "Career path advice", prompt: "Which modules are most important for getting a DevOps job?" },
+            { icon: HelpCircle, label: "Vilken modul först?", prompt: "Jag tittar på modullistan. Vilken bör jag börja med?" },
+            { icon: Lightbulb, label: "Förklara förkunskaper", prompt: "Kan du förklara vad förkunskaper är och varför de är viktiga?" },
+            { icon: TrendingUp, label: "Karriärråd", prompt: "Vilka moduler är viktigast för att få ett DevOps-jobb?" },
         ]
     }
 
     // Inside a module
     if (pathname.match(/\/modules\/[^/]+/)) {
         return [
-            { icon: HelpCircle, label: "Explain this concept", prompt: "Can you explain the main concept of this module in simple terms?" },
-            { icon: Lightbulb, label: "Give me a hint", prompt: "I'm stuck on the current task. Can you give me a hint without the full answer?" },
-            { icon: Sparkles, label: "Real-world example", prompt: "Can you give me a real-world example of how this is used in production?" },
+            { icon: HelpCircle, label: "Förklara detta koncept", prompt: "Kan du förklara huvudkonceptet i denna modul på ett enkelt sätt?" },
+            { icon: Lightbulb, label: "Ge mig en ledtråd", prompt: "Jag har kört fast på uppgiften. Kan du ge mig en ledtråd utan hela svaret?" },
+            { icon: Sparkles, label: "Verkligt exempel", prompt: "Kan du ge mig ett verkligt exempel på hur detta används i produktion?" },
         ]
     }
 
     // Default quick actions
     return [
-        { icon: HelpCircle, label: "How does this work?", prompt: "Can you explain how this page works?" },
-        { icon: Lightbulb, label: "Give me tips", prompt: "What tips do you have for using this feature effectively?" },
-        { icon: TrendingUp, label: "What's next?", prompt: "What should I do next on my learning journey?" },
+        { icon: HelpCircle, label: "Hur fungerar detta?", prompt: "Kan du förklara hur den här sidan fungerar?" },
+        { icon: Lightbulb, label: "Ge mig tips", prompt: "Vilka tips har du för att använda denna funktion effektivt?" },
+        { icon: TrendingUp, label: "Vad händer sen?", prompt: "Vad borde jag göra härnäst på min läranderesa?" },
     ]
 }
 
@@ -210,7 +211,7 @@ export function DallasAssistant() {
                 const welcomeMessage: Message = {
                     id: "welcome",
                     role: "assistant",
-                    content: "Hey there! I'm Dallas, your AI learning companion. I'm here to help you master DevOps!\n\nAsk me anything about modules, concepts, or your learning path. I can also give you hints when you're stuck!",
+                    content: "Hej! Jag är Dallas, din AI-studiekompis 🐺\n\nJag finns här för att hjälpa dig bemästra DevOps! Fråga mig om moduler, koncept eller din lärandeväg. Jag kan också ge dig ledtrådar när du kör fast!",
                     timestamp: new Date(),
                 }
                 setMessages([welcomeMessage])
@@ -265,37 +266,37 @@ export function DallasAssistant() {
         } catch (error) {
             console.error("Dallas API error:", error)
 
-            // Smart fallback responses
+            // Smart fallback responses (Swedish)
             const lowerMessage = userMessage.toLowerCase()
 
             // Help with concepts
-            if (lowerMessage.includes("explain") || lowerMessage.includes("what is")) {
-                return "Great question! Let me break this down for you:\n\n1. Start with the basics - understand the 'why' before the 'how'\n2. Try the hands-on exercises - they'll make concepts click\n3. Don't rush - mastery comes from practice\n\nNeed me to dive deeper into any specific part?"
+            if (lowerMessage.includes("förklara") || lowerMessage.includes("vad är") || lowerMessage.includes("explain") || lowerMessage.includes("what is")) {
+                return "Bra fråga! Låt mig bryta ner det:\n\n1. Börja med grunderna - förstå 'varför' innan 'hur'\n2. Testa hands-on övningarna - de får koncepten att klicka\n3. Stressa inte - mästerskap kommer med övning\n\nVill du att jag går djupare in på någon specifik del?"
             }
 
             // Hints
-            if (lowerMessage.includes("hint") || lowerMessage.includes("stuck")) {
-                return "I can see you're working through this challenge! Here's a nudge in the right direction:\n\n💡 Think about the command structure you learned earlier. What flag would help you see hidden files?\n\nTry it out and let me know how it goes!"
+            if (lowerMessage.includes("ledtråd") || lowerMessage.includes("fast") || lowerMessage.includes("hint") || lowerMessage.includes("stuck")) {
+                return "Jag ser att du jobbar dig igenom denna utmaning! Här är en knuff i rätt riktning:\n\n💡 Tänk på kommandostrukturen du lärde dig tidigare. Vilken flagga skulle hjälpa dig se dolda filer?\n\nTesta och berätta hur det går!"
             }
 
             // Next steps
-            if (lowerMessage.includes("next") || lowerMessage.includes("should i learn")) {
-                return "Based on your progress, I recommend:\n\n🚀 Focus on Docker next - it's foundational for modern DevOps\n⏱️ Should take about 8-10 hours to complete\n💼 95% of DevOps jobs require container knowledge\n\nReady to dive in? The 'Docker Containers' module is waiting!"
+            if (lowerMessage.includes("nästa") || lowerMessage.includes("härnäst") || lowerMessage.includes("next") || lowerMessage.includes("should i learn")) {
+                return "Baserat på din progress rekommenderar jag:\n\n🚀 Fokusera på Docker härnäst - det är grundläggande för modern DevOps\n⏱️ Bör ta ca 8-10 timmar att slutföra\n💼 95% av DevOps-jobb kräver containerkunskap\n\nRedo att köra? Kolla /skillsmaps/kubernetes-fundamentals!"
             }
 
             // Progress check
-            if (lowerMessage.includes("progress") || lowerMessage.includes("how am i doing")) {
-                return "You're crushing it! 🎉\n\n✅ 3 modules completed\n⚡ 450 XP earned\n🔥 5-day learning streak\n\nYou're in the top 20% of learners this month. Keep up the amazing work!"
+            if (lowerMessage.includes("progress") || lowerMessage.includes("hur går det")) {
+                return "Du krossar det! 🎉\n\n✅ 3 moduler slutförda\n⚡ 450 XP intjänat\n🔥 5 dagars lärandestreak\n\nDu är bland topp 20% av alla studenter denna månad. Fortsätt så!"
             }
 
             // Study tips
-            if (lowerMessage.includes("tips") || lowerMessage.includes("how to learn")) {
-                return "Here are my proven DevOps learning strategies:\n\n1. **Hands-on practice** - Don't just read, do!\n2. **Build real projects** - Portfolio > certificates\n3. **Learn in public** - Share what you learn\n4. **Join communities** - DevOps Reddit, Discord servers\n5. **Consistency > intensity** - 1 hour daily beats 7 hours Sunday\n\nWhich area do you want to focus on?"
+            if (lowerMessage.includes("tips") || lowerMessage.includes("hur lär")) {
+                return "Här är mina beprövade DevOps-lärandestrategier:\n\n1. **Hands-on övning** - Läs inte bara, gör!\n2. **Bygg riktiga projekt** - Portfolio > certifikat\n3. **Lär dig offentligt** - Dela vad du lär dig\n4. **Gå med i communities** - DevOps Reddit, Discord\n5. **Konsistens > intensitet** - 1 timme dagligen slår 7 timmar på söndag\n\nVilket område vill du fokusera på?"
             }
 
             // Career advice
-            if (lowerMessage.includes("job") || lowerMessage.includes("career")) {
-                return "Let's talk career strategy! 💼\n\n**Most in-demand skills right now:**\n- Kubernetes (top priority)\n- CI/CD pipelines\n- Cloud platforms (AWS/Azure)\n- Infrastructure as Code\n\n**My advice:** Master Docker first, then Kubernetes. That combo will open doors at 90% of companies.\n\nWant specific job search tips?"
+            if (lowerMessage.includes("jobb") || lowerMessage.includes("karriär") || lowerMessage.includes("job") || lowerMessage.includes("career")) {
+                return "Låt oss prata karriärstrategi! 💼\n\n**Mest efterfrågade skills just nu:**\n- Kubernetes (högsta prioritet)\n- CI/CD pipelines\n- Molnplattformar (AWS/Azure)\n- Infrastructure as Code\n\n**Mitt råd:** Bemästra Docker först, sedan Kubernetes. Den kombon öppnar dörrar hos 90% av företagen.\n\nVill du ha specifika jobbsökningstips?"
             }
 
             // Default contextual response
@@ -337,7 +338,7 @@ export function DallasAssistant() {
             const errorMessage: Message = {
                 id: `error-${Date.now()}`,
                 role: "assistant",
-                content: "Oops! I had a hiccup. Can you try asking that again?",
+                content: "Hoppsan! Något gick fel. Kan du försöka fråga igen?",
                 timestamp: new Date(),
             }
             setMessages(prev => [...prev, errorMessage])
@@ -349,6 +350,18 @@ export function DallasAssistant() {
     const handleQuickAction = (prompt: string) => {
         setInput(prompt)
         setTimeout(() => handleSend(), 100)
+    }
+
+    // Clear chat and start fresh
+    const handleClearChat = () => {
+        const welcomeMessage: Message = {
+            id: "welcome-" + Date.now(),
+            role: "assistant",
+            content: "Chatten har rensats! 🐺\n\nJag är redo för nya frågor. Hur kan jag hjälpa dig idag?",
+            timestamp: new Date(),
+        }
+        setMessages([welcomeMessage])
+        localStorage.removeItem("dallas-chat-history")
     }
 
     const quickActions = getQuickActionsForPage(pathname)
@@ -431,15 +444,25 @@ export function DallasAssistant() {
                                 <DallasAvatar size="sm" />
                                 <div>
                                     <h3 className="font-bold text-white">Dallas</h3>
-                                    <p className="text-xs text-zinc-400">Your AI Learning Companion</p>
+                                    <p className="text-xs text-zinc-400">Din AI-studiekompis</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleClearChat}
+                                    className="text-zinc-400 hover:text-amber-400 p-2 h-auto"
+                                    title="Rensa chatt"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => setIsMinimized(!isMinimized)}
                                     className="text-zinc-400 hover:text-white p-2 h-auto"
+                                    title={isMinimized ? "Maximera" : "Minimera"}
                                 >
                                     {isMinimized ? <Maximize2 className="w-4 h-4" /> : <Minimize2 className="w-4 h-4" />}
                                 </Button>
@@ -447,7 +470,8 @@ export function DallasAssistant() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => setIsOpen(false)}
-                                    className="text-zinc-400 hover:text-white p-2 h-auto"
+                                    className="text-zinc-400 hover:text-red-400 p-2 h-auto"
+                                    title="Stäng"
                                 >
                                     <X className="w-4 h-4" />
                                 </Button>
@@ -458,7 +482,7 @@ export function DallasAssistant() {
                             <>
                                 {/* Quick Actions */}
                                 <div className="p-4 border-b border-white/10 bg-zinc-900/50">
-                                    <p className="text-xs text-zinc-500 mb-2 uppercase tracking-wider">Quick Actions</p>
+                                    <p className="text-xs text-zinc-500 mb-2 uppercase tracking-wider">Snabbval</p>
                                     <div className="flex flex-wrap gap-2">
                                         {quickActions.map((action, index) => (
                                             <motion.button
@@ -536,7 +560,7 @@ export function DallasAssistant() {
                                                     handleSend()
                                                 }
                                             }}
-                                            placeholder="Ask Dallas anything..."
+                                            placeholder="Fråga Dallas vad som helst..."
                                             className={cn(
                                                 "flex-1 px-4 py-3 rounded-xl",
                                                 "bg-zinc-800 border border-zinc-700",
@@ -560,7 +584,7 @@ export function DallasAssistant() {
                                         </Button>
                                     </div>
                                     <p className="text-xs text-zinc-600 mt-2 text-center">
-                                        Press Enter to send, Shift+Enter for new line
+                                        Tryck Enter för att skicka, Shift+Enter för ny rad
                                     </p>
                                 </div>
                             </>
