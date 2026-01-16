@@ -176,7 +176,7 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
             {/* WIDGET - Compact clickable bar */}
             <motion.button
                 className={cn(
-                    "flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer w-[300px]",
+                    "flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
@@ -185,50 +185,30 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                 onClick={handleClick}
                 whileTap={{ scale: 0.98 }}
             >
-                {/* Album Art */}
-                <div className="relative flex-shrink-0">
-                    {track.albumArt ? (
-                        <img
-                            src={track.albumArt}
-                            alt={track.album || 'Album'}
-                            className="w-10 h-10 rounded object-cover"
+                {/* Equalizer Bars - Always show when track exists */}
+                <div className="flex items-end gap-[2px] h-4">
+                    {[0, 1, 2, 3].map((i) => (
+                        <motion.div
+                            key={i}
+                            className="w-[3px] bg-green-500 rounded-full"
+                            animate={{
+                                height: ["40%", "100%", "60%", "80%", "40%"],
+                            }}
+                            transition={{
+                                duration: 0.8,
+                                repeat: Infinity,
+                                delay: i * 0.15,
+                                ease: "easeInOut",
+                            }}
                         />
-                    ) : (
-                        <div className="w-10 h-10 rounded bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-5 h-5 text-zinc-500" />
-                        </div>
-                    )}
-                    {track.isPlaying && (
-                        <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-                    )}
+                    ))}
                 </div>
 
                 {/* Track Info */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0">
                     <p className="text-sm font-medium text-white truncate">{track.name}</p>
                     <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
-
-                {/* Equalizer Bars - Dancing when playing */}
-                {track.isPlaying && (
-                    <div className="flex items-end gap-[2px] h-4 mr-1">
-                        {[0, 1, 2, 3].map((i) => (
-                            <motion.div
-                                key={i}
-                                className="w-[3px] bg-green-500 rounded-full"
-                                animate={{
-                                    height: ["40%", "100%", "60%", "80%", "40%"],
-                                }}
-                                transition={{
-                                    duration: 0.8,
-                                    repeat: Infinity,
-                                    delay: i * 0.15,
-                                    ease: "easeInOut",
-                                }}
-                            />
-                        ))}
-                    </div>
-                )}
 
                 {/* Play/Close Icon */}
                 <div className={cn(

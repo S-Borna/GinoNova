@@ -472,7 +472,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
     return (
         <header className={cn(
-            "sticky top-0 z-30 h-20",
+            "sticky top-0 z-30 h-24",
             "bg-[#0a0a12]/90 backdrop-blur-xl",
             "border-b border-purple-500/10",
             className
