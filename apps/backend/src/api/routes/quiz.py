@@ -121,7 +121,7 @@ async def generate_quiz(
         logger.error(f"❌ Module content not found for: {request.module_slug}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Module '{request.module_slug}' not found. Available modules: doe25-tenta, hands-on-lab, linux-247"
+            detail=f"Module '{request.module_slug}' not found. Available modules: linux-247, linux-tentaplugg, hands-on-lab"
         )
 
     logger.info(f"✅ Found content for {request.module_slug}: {len(content)} chars")
@@ -175,25 +175,25 @@ async def generate_quiz(
 async def get_available_modules(
     current_user: UserPublic = Depends(get_current_user)
 ):
-    """Get list of modules available for quiz generation."""
-    # Hardcoded list of all live modules for AI Quiz
-    # This ensures all modules are always available regardless of database state
+    """Get list of modules available for quiz generation.
+    
+    Returns the same modules that are shown in Camp DevOps:
+    - Linux 24/7
+    - Linux Tentaplugg  
+    - Hands-On Lab
+    """
+    # Get Camp DevOps modules dynamically from content source
+    from src.db.seeds.content import get_camp_devops_modules
+    
+    camp_modules = get_camp_devops_modules()
+    
     available_modules = [
         {
-            "slug": "doe25-tenta",
-            "title": "DOE25 Tentaplugg",
-            "description": "Komplett tentaplugg med 25 tasks för Linux-tentan"
-        },
-        {
-            "slug": "hands-on-lab",
-            "title": "Hands-On Lab",
-            "description": "Praktiska labbar för Linux och DevOps"
-        },
-        {
-            "slug": "linux-247",
-            "title": "Linux 24/7",
-            "description": "Komplett Linux för DevOps - från grunden till produktion"
+            "slug": m.get("slug"),
+            "title": m.get("name", m.get("slug", "").replace("-", " ").title()),
+            "description": m.get("description", "")
         }
+        for m in camp_modules
     ]
-
+    
     return {"modules": available_modules}

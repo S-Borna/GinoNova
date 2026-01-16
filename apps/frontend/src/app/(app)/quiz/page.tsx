@@ -208,42 +208,13 @@ export default function QuizPage() {
               throw new Error("Content fetch failed");
             }
           } catch {
-            // Fallback to comprehensive list if everything fails
-            console.log("Using fallback modules");
+            // Fallback to Camp DevOps modules only
+            console.log("Using fallback modules (Camp DevOps)");
             setModules([
-              { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" },
-              { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "Tentaplugg för Linux" },
-              { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar" },
-              { slug: "kubernetes-fundamentals", title: "Kubernetes Fundamentals", description: "Container orchestration" },
-              { slug: "cicd-pipelines-advanced", title: "CI/CD Advanced", description: "Avancerade pipelines" },
-              { slug: "aws-fundamentals", title: "AWS Fundamentals", description: "Amazon Web Services" },
-              { slug: "azure-fundamentals", title: "Azure Fundamentals", description: "Microsoft Azure" },
-              { slug: "gcp-fundamentals", title: "GCP Fundamentals", description: "Google Cloud Platform" },
-              { slug: "multicloud-architecture", title: "Multicloud Architecture", description: "Multicloud strategi" },
-              { slug: "terraform-iac", title: "Terraform IaC", description: "Infrastructure as Code" },
-              { slug: "ansible-automation", title: "Ansible Automation", description: "Configuration management" },
-              { slug: "python-for-devops", title: "Python for DevOps", description: "Python automation" },
-              { slug: "prompt-engineering-devops", title: "AI Prompt Engineering", description: "Prompt engineering" },
-              { slug: "go-devops", title: "Go for DevOps", description: "Golang för DevOps" },
-              { slug: "yaml-json-mastery", title: "YAML & JSON Mastery", description: "Dataformat" },
-              { slug: "prometheus-monitoring", title: "Prometheus Monitoring", description: "Metrics och alerting" },
-              { slug: "grafana-visualization", title: "Grafana Visualization", description: "Dashboard" },
-              { slug: "elk-stack", title: "ELK Stack", description: "Logging och analys" },
-              { slug: "datadog-monitoring", title: "Datadog Monitoring", description: "SaaS monitoring" },
-              { slug: "postgresql-fundamentals", title: "PostgreSQL Fundamentals", description: "Relationsdatabas" },
-              { slug: "redis-caching", title: "Redis Caching", description: "In-memory databas" },
-              { slug: "mongodb-fundamentals", title: "MongoDB Fundamentals", description: "NoSQL databas" },
-              { slug: "kafka-messaging", title: "Apache Kafka", description: "Event streaming" },
-              { slug: "rabbitmq-messaging", title: "RabbitMQ", description: "Message broker" },
-              { slug: "istio-service-mesh", title: "Istio Service Mesh", description: "Service mesh" },
-              { slug: "nginx-mastery", title: "NGINX Mastery", description: "Web server & proxy" },
-              { slug: "devsecops", title: "DevSecOps", description: "Security integration" },
-              { slug: "vault-secrets", title: "HashiCorp Vault", description: "Secrets management" },
-              { slug: "jenkins-advanced", title: "Jenkins Advanced", description: "CI/CD server" },
-              { slug: "gitlab-ci", title: "GitLab CI/CD", description: "GitLab pipelines" },
-              { slug: "argocd-gitops", title: "ArgoCD GitOps", description: "Kubernetes GitOps" }
+              { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps - från grunden till produktion" },
+              { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder: Linux Filsystem, Rättigheter, Processhantering, Nätverk, SSH, Bash" },
+              { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar som tar dig från grunderna till avancerade Linux- och DevOps-koncept" }
             ]);
-            setError("Hämtar moduler från lokal cache.");
           }
         }
       } catch (err) {
@@ -264,26 +235,11 @@ export default function QuizPage() {
             throw new Error("Fetch failed");
           }
         } catch {
-          // Ultimate fallback
+          // Ultimate fallback - Camp DevOps modules only
           setModules([
-            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux-kurs" },
-            { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "Tentaplugg för Linux" },
-            { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar" },
-            { slug: "kubernetes-fundamentals", title: "Kubernetes Fundamentals", description: "Container orchestration" },
-            { slug: "cicd-pipelines-advanced", title: "CI/CD Advanced", description: "Avancerade pipelines" },
-            { slug: "aws-fundamentals", title: "AWS Fundamentals", description: "Amazon Web Services" },
-            { slug: "azure-fundamentals", title: "Azure Fundamentals", description: "Microsoft Azure" },
-            { slug: "gcp-fundamentals", title: "GCP Fundamentals", description: "Google Cloud Platform" },
-            { slug: "terraform-iac", title: "Terraform IaC", description: "Infrastructure as Code" },
-            { slug: "ansible-automation", title: "Ansible Automation", description: "Configuration management" },
-            { slug: "python-for-devops", title: "Python for DevOps", description: "Python automation" },
-            { slug: "prometheus-monitoring", title: "Prometheus Monitoring", description: "Metrics och alerting" },
-            { slug: "grafana-visualization", title: "Grafana Visualization", description: "Dashboard" },
-            { slug: "postgresql-fundamentals", title: "PostgreSQL Fundamentals", description: "Relationsdatabas" },
-            { slug: "redis-caching", title: "Redis Caching", description: "In-memory databas" },
-            { slug: "mongodb-fundamentals", title: "MongoDB Fundamentals", description: "NoSQL databas" },
-            { slug: "devsecops", title: "DevSecOps", description: "Security integration" },
-            { slug: "vault-secrets", title: "HashiCorp Vault", description: "Secrets management" }
+            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps - från grunden till produktion" },
+            { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder för tentaförberedelse" },
+            { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar för Linux och DevOps" }
           ]);
         }
         setError("Anslutningsfel. Använder lokal modullista.");
