@@ -6,18 +6,19 @@
  * ============================================================================
  *
  * Netflix + Disney + Tesla premium animated background
+ * OPTIMIZED for mobile performance with CSS animations
  *
  * Features:
  * - Animated purple, cyan, and pink aurora orbs
  * - Subtle grid overlay
  * - Blur effects for depth
- * - Consistent across ALL module pages
+ * - GPU-accelerated CSS animations (no JS on mobile)
  *
  * @phase MILESTONE-2.0-COSMIC-REVOLUTION
- * @phase DESIGN-UNIFICATION
+ * @phase MOBILE-PERFORMANCE-FIX
  */
 
-import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
 interface CosmicAuroraProps {
     /** Intensity of the aurora effect (default: 1) */
@@ -33,8 +34,60 @@ export function CosmicAurora({
     showGrid = true,
     zIndex = 0,
 }: CosmicAuroraProps) {
-    const opacityMultiplier = intensity
+    const [isMobile, setIsMobile] = useState(false)
+    
+    useEffect(() => {
+        // Check for mobile/low-power device
+        const checkMobile = () => {
+            const mobile = window.innerWidth < 768 || 
+                          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            setIsMobile(mobile)
+        }
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
+    const opacityMultiplier = intensity
+    
+    // Mobile: Use lightweight CSS-only version
+    if (isMobile) {
+        return (
+            <div
+                className="fixed inset-0 overflow-hidden pointer-events-none"
+                style={{ zIndex }}
+            >
+                {/* Static purple gradient - no animation */}
+                <div
+                    className="absolute w-[400px] h-[400px] rounded-full animate-pulse-slow"
+                    style={{
+                        background: "radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%)",
+                        filter: "blur(40px)",
+                        top: "-5%",
+                        right: "-5%",
+                        willChange: "opacity",
+                    }}
+                />
+                
+                {/* Static cyan gradient */}
+                <div
+                    className="absolute w-[300px] h-[300px] rounded-full animate-pulse-slow"
+                    style={{
+                        background: "radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 70%)",
+                        filter: "blur(40px)",
+                        bottom: "10%",
+                        left: "-5%",
+                        willChange: "opacity",
+                        animationDelay: "2s",
+                    }}
+                />
+            </div>
+        )
+    }
+
+    // Desktop: Full Framer Motion animations
+    const { motion } = require("framer-motion")
+    
     return (
         <div
             className="fixed inset-0 overflow-hidden pointer-events-none"
@@ -48,6 +101,7 @@ export function CosmicAurora({
                     filter: "blur(60px)",
                     top: "-10%",
                     right: "-5%",
+                    willChange: "transform, opacity",
                 }}
                 animate={{
                     scale: [1, 1.2, 1],

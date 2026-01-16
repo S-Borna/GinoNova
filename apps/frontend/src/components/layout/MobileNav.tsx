@@ -19,7 +19,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     Home,
@@ -58,7 +57,7 @@ const navItems: NavItem[] = [
 ]
 
 /* ============================================================================
-   NAV ITEM COMPONENT
+   NAV ITEM COMPONENT - Optimized for mobile performance
    ============================================================================ */
 
 interface NavItemProps {
@@ -74,50 +73,45 @@ function NavItemComponent({ item, isActive }: NavItemProps) {
             href={item.href}
             className={cn(
                 "flex flex-col items-center justify-center gap-1 flex-1",
-                "min-h-[56px] min-w-[56px]", // Min 44px touch target + padding
+                "min-h-[56px] min-w-[56px]",
                 "py-2 px-1",
-                "transition-all duration-200 ease-out",
-                "active:scale-90", // Haptic-feel tap feedback
-                "touch-manipulation", // Optimize for touch
-                isActive
-                    ? "text-white"
-                    : "text-zinc-500"
+                "transition-transform duration-150 ease-out",
+                "active:scale-90",
+                "touch-manipulation",
+                isActive ? "text-white" : "text-zinc-500"
             )}
         >
-            <motion.div
-                className="relative"
-                animate={isActive ? { scale: 1.1, y: -2 } : { scale: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            >
-                {/* Active glow background */}
+            <div className={cn(
+                "relative transition-transform duration-150",
+                isActive && "scale-110 -translate-y-0.5"
+            )}>
+                {/* Active glow - CSS only, no JS animation */}
                 {isActive && (
-                    <motion.div
+                    <div
                         className={cn(
-                            "absolute -inset-2 rounded-xl opacity-60",
+                            "absolute -inset-2 rounded-xl opacity-40",
                             `bg-gradient-to-br ${item.gradient}`
                         )}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 0.4 }}
                         style={{ filter: "blur(8px)" }}
                     />
                 )}
 
                 <div className={cn(
-                    "relative p-2 rounded-xl transition-all duration-200",
+                    "relative p-2 rounded-xl transition-colors duration-150",
                     isActive && `bg-gradient-to-br ${item.gradient}`
                 )}>
                     <Icon
                         className={cn(
-                            "h-6 w-6 transition-all duration-200",
+                            "h-6 w-6",
                             isActive ? "text-white" : "text-zinc-400"
                         )}
                         strokeWidth={isActive ? 2.5 : 2}
                     />
                 </div>
-            </motion.div>
+            </div>
 
             <span className={cn(
-                "text-[10px] font-medium transition-all duration-200",
+                "text-[10px] font-medium",
                 isActive ? "text-white font-semibold" : "text-zinc-500"
             )}>
                 {item.label}
