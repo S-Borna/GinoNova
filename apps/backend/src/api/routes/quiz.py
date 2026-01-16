@@ -18,7 +18,7 @@ router = APIRouter(prefix="/quiz", tags=["quiz"])
 class QuizGenerateRequest(BaseModel):
     module_slug: str = Field(..., description="Module slug to generate quiz from")
     quiz_type: Literal["flashcard", "mcq"] = Field(default="mcq")
-    count: int = Field(default=10, ge=1, le=20)
+    count: int = Field(default=10, ge=1, le=100)
     difficulty: Literal["beginner", "intermediate", "advanced"] = Field(default="intermediate")
     focus_area: Optional[str] = Field(default=None)
     force_new: bool = Field(default=True, description="Generate fresh questions (skip cache)")
@@ -110,7 +110,7 @@ async def generate_quiz(
     # Import service
     import logging
     logger = logging.getLogger(__name__)
-    
+
     from src.services.quiz_service import generate_quiz as gen_quiz, get_module_content_for_quiz
 
     logger.info(f"🎯 Quiz request: module={request.module_slug}, type={request.quiz_type}, difficulty={request.difficulty}, count={request.count}")
@@ -176,17 +176,17 @@ async def get_available_modules(
     current_user: UserPublic = Depends(get_current_user)
 ):
     """Get list of modules available for quiz generation.
-    
+
     Returns the same modules that are shown in Camp DevOps:
     - Linux 24/7
-    - Linux Tentaplugg  
+    - Linux Tentaplugg
     - Hands-On Lab
     """
     # Get Camp DevOps modules dynamically from content source
     from src.db.seeds.content import get_camp_devops_modules
-    
+
     camp_modules = get_camp_devops_modules()
-    
+
     available_modules = [
         {
             "slug": m.get("slug"),
@@ -195,5 +195,5 @@ async def get_available_modules(
         }
         for m in camp_modules
     ]
-    
+
     return {"modules": available_modules}

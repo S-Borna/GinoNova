@@ -264,11 +264,14 @@ export default function QuizPage() {
 
     try {
       const token = getToken();
+      console.log("Token present:", !!token, token ? `${token.substring(0, 20)}...` : "null");
+
       if (!token) {
         throw new Error("Du måste vara inloggad för att generera quiz");
       }
 
       console.log("Generating quiz:", { selectedModule, quizType, questionCount, difficulty });
+      console.log("API URL:", `${API_BASE_URL}/api/quiz/generate`);
 
       const res = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
         method: "POST",
@@ -291,10 +294,22 @@ export default function QuizPage() {
         let errorMessage = "Kunde inte generera quiz";
         try {
           const errData = await res.json();
-          errorMessage = errData.detail || errorMessage;
-        } catch {
-          // Response wasn't JSON
+          console.log("Error response data:", errData);
+          // Handle different error formats from backend
+          if (typeof errData.detail === 'string') {
+            errorMessage = errData.detail;
+          } else if (errData.detail?.message) {
+            errorMessage = errData.detail.message;
+          } else if (errData.message) {
+            errorMessage = errData.message;
+          } else if (typeof errData === 'string') {
+            errorMessage = errData;
+          }
+        } catch (parseErr) {
+          console.log("Could not parse error response as JSON:", parseErr);
         }
+
+        console.log("Final error message:", errorMessage, "Status:", res.status);
 
         if (res.status === 401) {
           errorMessage = "Session har gått ut. Logga in igen.";
@@ -945,7 +960,7 @@ export default function QuizPage() {
                   animate={{ opacity: 1, x: 0 }}
                   className="p-4 bg-red-500/10 border border-red-500/50 rounded-xl text-red-400"
                 >
-                  {error}
+                  {typeof error === 'string' ? error : JSON.stringify(error)}
                 </motion.div>
               )}
 
