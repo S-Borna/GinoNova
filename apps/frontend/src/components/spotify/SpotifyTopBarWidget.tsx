@@ -167,8 +167,8 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     }
 
     return (
-        <motion.div 
-            ref={containerRef} 
+        <motion.div
+            ref={containerRef}
             className={cn("relative", className)}
             animate={{ x: isOpen ? 150 : 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
