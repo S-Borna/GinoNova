@@ -221,18 +221,18 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                 <Zap className="w-4 h-4" />
             </motion.div>
 
-            <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="relative flex flex-col gap-4 sm:gap-6">
                 <div>
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                        className="flex items-center gap-3 mb-3"
+                        className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3"
                     >
                         {/* Pulsating icon container */}
                         <motion.div
                             className={cn(
-                                "relative p-2.5 rounded-xl",
+                                "relative p-2 sm:p-2.5 rounded-xl",
                                 "bg-gradient-to-br from-purple-500/30 to-purple-600/20",
                                 "border border-purple-500/40"
                             )}
@@ -245,9 +245,9 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                             }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         >
-                            <Rocket className="w-5 h-5 text-purple-400" />
+                            <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                         </motion.div>
-                        <span className="text-purple-400 font-semibold text-sm uppercase tracking-wider">
+                        <span className="text-purple-400 font-semibold text-xs sm:text-sm uppercase tracking-wider">
                             Command Center
                         </span>
                     </motion.div>
@@ -257,7 +257,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className={cn(
-                            "text-3xl md:text-4xl lg:text-5xl font-black mb-3",
+                            "text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-2 sm:mb-3",
                             "bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
                         )}
                     >
@@ -268,23 +268,23 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                        className="text-zinc-400 text-lg max-w-xl"
+                        className="text-zinc-400 text-sm sm:text-base lg:text-lg max-w-xl"
                     >
                         Your DevOps journey awaits. Let&apos;s crush some goals today!
                     </motion.p>
                 </div>
 
-                {/* Stats badges with cosmic glow */}
+                {/* Stats badges with cosmic glow - responsive grid */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex gap-4"
+                    className="flex flex-wrap gap-3 sm:gap-4"
                 >
                     {/* Level Badge */}
                     <motion.div
                         className={cn(
-                            "flex items-center gap-3 px-5 py-4 rounded-2xl",
+                            "flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl",
                             "bg-gradient-to-br from-purple-600/25 to-purple-500/10",
                             "border border-purple-500/40",
                             "backdrop-blur-sm"
@@ -301,7 +301,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     >
                         <motion.div
                             className={cn(
-                                "w-12 h-12 rounded-xl",
+                                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl",
                                 "bg-gradient-to-br from-purple-500 to-purple-700",
                                 "flex items-center justify-center"
                             )}
@@ -314,18 +314,18 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                             }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         >
-                            <Zap className="w-6 h-6 text-white" />
+                            <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </motion.div>
                         <div>
-                            <p className="text-zinc-500 text-xs uppercase tracking-wider">Level</p>
-                            <p className="text-2xl font-bold text-purple-400">{level}</p>
+                            <p className="text-zinc-500 text-[10px] sm:text-xs uppercase tracking-wider">Level</p>
+                            <p className="text-xl sm:text-2xl font-bold text-purple-400">{level}</p>
                         </div>
                     </motion.div>
 
                     {/* Streak Badge */}
                     <motion.div
                         className={cn(
-                            "flex items-center gap-3 px-5 py-4 rounded-2xl",
+                            "flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 sm:py-4 rounded-xl sm:rounded-2xl",
                             "bg-gradient-to-br from-orange-600/25 to-orange-500/10",
                             "border border-orange-500/40",
                             "backdrop-blur-sm"
@@ -342,7 +342,7 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                     >
                         <motion.div
                             className={cn(
-                                "w-12 h-12 rounded-xl",
+                                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl",
                                 "bg-gradient-to-br from-orange-500 to-red-600",
                                 "flex items-center justify-center"
                             )}
@@ -355,11 +355,11 @@ function PremiumHero({ userName, level, streak }: { userName: string; level: num
                             }}
                             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         >
-                            <Flame className="w-6 h-6 text-white" />
+                            <Flame className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </motion.div>
                         <div>
-                            <p className="text-zinc-500 text-xs uppercase tracking-wider">Streak</p>
-                            <p className="text-2xl font-bold text-orange-400">{streak} days</p>
+                            <p className="text-zinc-500 text-[10px] sm:text-xs uppercase tracking-wider">Streak</p>
+                            <p className="text-xl sm:text-2xl font-bold text-orange-400">{streak} <span className="text-sm sm:text-base">days</span></p>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -567,20 +567,21 @@ function QuickActionCard({ icon, title, description, href, color, delay = 0 }: Q
             <Link href={href} prefetch={false}>
                 <motion.div
                     className={cn(
-                        "group relative p-6 rounded-2xl",
+                        "group relative p-4 sm:p-6 rounded-xl sm:rounded-2xl",
                         "bg-gradient-to-br from-[#0a0a0f] to-[#0d0d14]",
                         "border border-zinc-800/80",
                         styles.bg,
                         styles.border,
                         styles.hoverGlow,
-                        "transition-all duration-300 cursor-pointer"
+                        "transition-all duration-300 cursor-pointer",
+                        "touch-manipulation active:scale-[0.98]" // Better touch feedback
                     )}
                     whileHover={{ scale: 1.02, y: -3 }}
                 >
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-start gap-3 sm:gap-4">
                         <motion.div
                             className={cn(
-                                "w-12 h-12 rounded-xl shrink-0",
+                                "w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl shrink-0",
                                 "bg-gradient-to-br",
                                 styles.iconBg,
                                 "flex items-center justify-center",
@@ -592,16 +593,16 @@ function QuickActionCard({ icon, title, description, href, color, delay = 0 }: Q
                         >
                             {icon}
                         </motion.div>
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                             <h3 className={cn(
-                                "text-lg font-semibold text-white mb-1 transition-colors",
+                                "text-base sm:text-lg font-semibold text-white mb-0.5 sm:mb-1 transition-colors truncate",
                                 styles.textHover
                             )}>
                                 {title}
                             </h3>
-                            <p className="text-zinc-500 text-sm">{description}</p>
+                            <p className="text-zinc-500 text-xs sm:text-sm line-clamp-2">{description}</p>
                         </div>
-                        <ChevronRight className="w-5 h-5 text-zinc-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all shrink-0" />
                     </div>
                 </motion.div>
             </Link>
@@ -828,10 +829,10 @@ export default function DashboardPage() {
                         streak={streak}
                     />
 
-                    {/* Stats Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Stats Grid - Responsive */}
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
                         <PremiumStatCard
-                            icon={<Zap className="w-5 h-5 text-white" />}
+                            icon={<Zap className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                             label="Total XP"
                             value={levelInfo.level * 100 + levelInfo.currentXP}
                             subtext="Keep earning!"
@@ -839,7 +840,7 @@ export default function DashboardPage() {
                             delay={0.1}
                         />
                         <PremiumStatCard
-                            icon={<Target className="w-5 h-5 text-white" />}
+                            icon={<Target className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                             label="Tasks Done"
                             value={completedTasks}
                             subtext={`of ${totalTasks} tasks`}
@@ -847,7 +848,7 @@ export default function DashboardPage() {
                             delay={0.2}
                         />
                         <PremiumStatCard
-                            icon={<BookOpen className="w-5 h-5 text-white" />}
+                            icon={<BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                             label="Modules"
                             value={completedModules}
                             subtext={`of ${totalModules} completed`}
@@ -855,7 +856,7 @@ export default function DashboardPage() {
                             delay={0.3}
                         />
                         <PremiumStatCard
-                            icon={<Flame className="w-5 h-5 text-white" />}
+                            icon={<Flame className="w-4 h-4 sm:w-5 sm:h-5 text-white" />}
                             label="Streak"
                             value={`${streak} days`}
                             subtext="Don't break it!"
@@ -873,11 +874,11 @@ export default function DashboardPage() {
                     {/* AI-Powered Recommendations */}
                     <AIRecommendations />
 
-                    {/* Quick Actions + XP Progress */}
-                    <div className="grid lg:grid-cols-3 gap-6">
+                    {/* Quick Actions + XP Progress - Responsive */}
+                    <div className="grid gap-6 lg:grid-cols-3">
                         {/* Quick Actions */}
                         <div className="lg:col-span-2 space-y-4">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                 <motion.div
                                     animate={{
                                         scale: [1, 1.15, 1],
@@ -885,11 +886,11 @@ export default function DashboardPage() {
                                     }}
                                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                                 >
-                                    <Play className="w-5 h-5 text-purple-400" />
+                                    <Play className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                                 </motion.div>
                                 Quick Actions
                             </h2>
-                            <div className="grid md:grid-cols-2 gap-4">
+                            <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
                                 <QuickActionCard
                                     icon={<BookOpen className="w-5 h-5 text-white" />}
                                     title="Continue Learning"

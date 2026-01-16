@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils"
 import { Sidebar } from "./Sidebar"
 import { TopBar } from "./TopBar"
 import { MobileNav } from "./MobileNav"
+import { MobileSideMenu } from "./MobileSideMenu"
 import { Breadcrumbs } from "./Breadcrumbs"
 
 /* ============================================================================
@@ -85,6 +86,7 @@ function useSidebarState() {
 
 export function AppShell({ children, showBreadcrumbs = true, className }: AppShellProps) {
     const { collapsed, toggle } = useSidebarState()
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
     const isDesktop = useMediaQuery("(min-width: 1024px)")
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
@@ -92,8 +94,25 @@ export function AppShell({ children, showBreadcrumbs = true, className }: AppShe
     // Auto-collapse on tablet
     const effectiveCollapsed = isTablet && !isDesktop ? true : collapsed
 
+    // Handle mobile menu
+    const handleOpenMobileMenu = React.useCallback(() => {
+        setMobileMenuOpen(true)
+    }, [])
+
+    const handleCloseMobileMenu = React.useCallback(() => {
+        setMobileMenuOpen(false)
+    }, [])
+
     return (
         <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950">
+            {/* Mobile Side Menu */}
+            {isMobile && (
+                <MobileSideMenu 
+                    isOpen={mobileMenuOpen} 
+                    onClose={handleCloseMobileMenu} 
+                />
+            )}
+
             {/* Sidebar - hidden on mobile */}
             {isTablet && (
                 <Sidebar
@@ -109,13 +128,16 @@ export function AppShell({ children, showBreadcrumbs = true, className }: AppShe
                 isMobile && "pb-20" // Space for mobile nav
             )}>
                 {/* Top bar */}
-                <TopBar showMenuButton={isMobile} />
+                <TopBar 
+                    showMenuButton={isMobile} 
+                    onMenuClick={handleOpenMobileMenu}
+                />
 
                 {/* Page content */}
-                <main className={cn("px-4 py-6 md:px-6 lg:px-8", className)}>
+                <main className={cn("px-3 py-4 sm:px-4 sm:py-6 md:px-6 lg:px-8", className)}>
                     {/* Breadcrumbs */}
                     {showBreadcrumbs && (
-                        <div className="mb-6">
+                        <div className="mb-4 sm:mb-6">
                             <Breadcrumbs />
                         </div>
                     )}

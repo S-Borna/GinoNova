@@ -240,19 +240,19 @@ function Header({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-                "relative overflow-hidden rounded-3xl mb-8",
+                "relative overflow-hidden rounded-2xl sm:rounded-3xl mb-6 sm:mb-8",
                 "bg-gradient-to-br from-zinc-900 via-purple-950/30 to-zinc-900",
                 "border border-purple-500/20",
-                "p-8"
+                "p-4 sm:p-6 md:p-8"
             )}
         >
             {/* Ambient glow effects */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/15 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4" />
-            <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-emerald-500/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4" />
+            <div className="absolute top-0 right-0 w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-purple-500/15 rounded-full blur-[60px] sm:blur-[100px] -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-0 w-[150px] sm:w-[300px] h-[150px] sm:h-[300px] bg-emerald-500/10 rounded-full blur-[50px] sm:blur-[80px] translate-y-1/2 -translate-x-1/4" />
 
-            {/* Animated sparkles */}
+            {/* Animated sparkles - hidden on mobile */}
             <motion.div
-                className="absolute top-6 right-16 text-purple-400/50"
+                className="absolute top-6 right-16 text-purple-400/50 hidden sm:block"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             >
@@ -260,47 +260,47 @@ function Header({
             </motion.div>
 
             <div className="relative">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                <div className="flex flex-col gap-4 sm:gap-6">
                     <div>
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                             <div className={cn(
-                                "p-2 rounded-xl",
+                                "p-1.5 sm:p-2 rounded-lg sm:rounded-xl",
                                 "bg-gradient-to-br from-purple-500/20 to-purple-600/10",
                                 "border border-purple-500/30"
                             )}>
-                                <BookOpen className="w-5 h-5 text-purple-400" />
+                                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                             </div>
-                            <span className="text-purple-400 font-semibold text-sm uppercase tracking-wider">
+                            <span className="text-purple-400 font-semibold text-xs sm:text-sm uppercase tracking-wider">
                                 Learning Path
                             </span>
                         </div>
                         <h1 className={cn(
-                            "text-3xl md:text-4xl font-black mb-2",
+                            "text-2xl sm:text-3xl md:text-4xl font-black mb-1 sm:mb-2",
                             "bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
                         )}>
                             Your DevOps Journey
                         </h1>
-                        <p className="text-zinc-400">
+                        <p className="text-zinc-400 text-sm sm:text-base">
                             {totalModules} modules • {completedModules} completed
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                         {/* Trophy badge with glow */}
                         <div className={cn(
-                            "flex items-center gap-2 px-4 py-3 rounded-xl",
+                            "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl",
                             "bg-gradient-to-br from-amber-600/20 to-amber-500/10",
                             "border border-amber-500/30",
                             "shadow-[0_0_25px_rgba(245,158,11,0.15)]"
                         )}>
                             <div className={cn(
-                                "w-8 h-8 rounded-lg",
+                                "w-6 h-6 sm:w-8 sm:h-8 rounded-md sm:rounded-lg",
                                 "bg-gradient-to-br from-amber-500 to-orange-600",
                                 "flex items-center justify-center"
                             )}>
-                                <Trophy className="w-4 h-4 text-white" />
+                                <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                             </div>
-                            <span className="font-bold text-amber-400">
+                            <span className="font-bold text-amber-400 text-sm sm:text-base">
                                 {completedModules}/{totalModules}
                             </span>
                         </div>
@@ -311,7 +311,7 @@ function Header({
                             size="sm"
                             onClick={onRefresh}
                             disabled={isRefreshing}
-                            className="rounded-xl text-zinc-400 hover:text-white hover:bg-white/10"
+                            className="rounded-lg sm:rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 min-h-[40px] min-w-[40px]"
                         >
                             <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
                         </Button>
@@ -320,20 +320,20 @@ function Header({
 
                 {/* Overall progress bar with glow */}
                 <div className={cn(
-                    "mt-6 p-5 rounded-2xl",
+                    "mt-4 sm:mt-6 p-3 sm:p-5 rounded-xl sm:rounded-2xl",
                     "bg-gradient-to-br from-zinc-800/80 to-zinc-900/80",
                     "border border-zinc-700/50"
                 )}>
-                    <div className="flex items-center justify-between text-sm mb-3">
+                    <div className="flex items-center justify-between text-xs sm:text-sm mb-2 sm:mb-3">
                         <span className="text-zinc-400 font-medium">Overall Progress</span>
                         <span className={cn(
-                            "font-bold text-lg",
+                            "font-bold text-base sm:text-lg",
                             overallProgress === 100 ? "text-emerald-400" : "text-purple-400"
                         )}>
                             {overallProgress}%
                         </span>
                     </div>
-                    <div className="relative w-full h-3 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="relative w-full h-2 sm:h-3 bg-zinc-800 rounded-full overflow-hidden">
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${overallProgress}%` }}
@@ -349,7 +349,7 @@ function Header({
                             )}
                         />
                     </div>
-                    <p className="text-sm text-zinc-500 mt-3">
+                    <p className="text-xs sm:text-sm text-zinc-500 mt-2 sm:mt-3">
                         {overallProgress === 100
                             ? "🎉 Amazing! You've completed all modules!"
                             : `Keep crushing it! ${totalModules - completedModules} modules to go 🚀`}
@@ -622,7 +622,7 @@ export default function ModulesPage() {
                                     </Button>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                     {filteredModules.map((module, index) => (
                                         <motion.div
                                             key={module.id}

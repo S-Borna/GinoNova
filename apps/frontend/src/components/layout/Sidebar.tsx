@@ -435,7 +435,7 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
             <div className={cn(
                 "relative px-3 py-4 flex items-center justify-center",
                 "border-b border-white/10",
-                collapsed ? "h-20" : "min-h-[72px]"
+                collapsed ? "h-24" : "h-24"
             )}>
                 <Link href="/dashboard" className="block">
                     <motion.div
@@ -445,10 +445,10 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                     >
                         {/* Logo glow */}
                         <motion.div
-                            className="absolute -inset-2 rounded-xl"
+                            className="absolute -inset-3 rounded-xl"
                             style={{
                                 background: "radial-gradient(circle, rgba(139,92,246,0.5), rgba(236,72,153,0.25), transparent)",
-                                filter: "blur(12px)",
+                                filter: "blur(14px)",
                             }}
                             animate={{
                                 opacity: [0.4, 0.7, 0.4],
@@ -472,18 +472,18 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                                 <Image
                                     src="/ginonova-logo.svg"
                                     alt="GinoNova"
-                                    width={48}
-                                    height={48}
-                                    className="w-12 h-12"
+                                    width={56}
+                                    height={56}
+                                    className="w-14 h-14"
                                     priority
                                 />
                             ) : (
                                 <Image
                                     src="/ginonova-logo-horizontal.svg"
                                     alt="GinoNova"
-                                    width={200}
-                                    height={48}
-                                    className="h-12 w-auto"
+                                    width={220}
+                                    height={56}
+                                    className="h-14 w-auto"
                                     priority
                                 />
                             )}

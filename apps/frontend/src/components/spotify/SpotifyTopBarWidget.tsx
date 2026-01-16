@@ -185,20 +185,27 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                 onClick={handleClick}
                 whileTap={{ scale: 0.98 }}
             >
-                {/* Equalizer Bars - Always show when track exists */}
+                {/* Equalizer Bars - Only animate when music is playing */}
                 <div className="flex items-end gap-[2px] h-4">
                     {[0, 1, 2, 3].map((i) => (
                         <motion.div
                             key={i}
-                            className="w-[3px] bg-green-500 rounded-full"
-                            animate={{
+                            className={cn(
+                                "w-[3px] rounded-full",
+                                track.isPlaying ? "bg-green-500" : "bg-green-500/50"
+                            )}
+                            animate={track.isPlaying ? {
                                 height: ["40%", "100%", "60%", "80%", "40%"],
+                            } : {
+                                height: ["30%", "50%", "40%", "60%"][i] + "%"
                             }}
-                            transition={{
+                            transition={track.isPlaying ? {
                                 duration: 0.8,
                                 repeat: Infinity,
                                 delay: i * 0.15,
                                 ease: "easeInOut",
+                            } : {
+                                duration: 0.3
                             }}
                         />
                     ))}

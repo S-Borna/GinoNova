@@ -272,16 +272,18 @@ function SearchBar() {
                     setTimeout(() => inputRef.current?.focus(), 100)
                 }}
                 className={cn(
-                    "flex items-center gap-2 px-3 py-2 ml-8",
+                    "flex items-center gap-2 px-3 py-2",
+                    "ml-2 sm:ml-8", // Less margin on mobile
                     "bg-neutral-100 dark:bg-neutral-800/50",
                     "rounded-xl border border-transparent",
                     "hover:border-neutral-300 dark:hover:border-neutral-600",
                     "transition-all duration-200",
-                    "cursor-pointer"
+                    "cursor-pointer",
+                    "min-h-[44px]" // Touch target
                 )}
             >
                 <Search className="h-4 w-4 text-neutral-400" />
-                <span className="hidden md:block text-sm text-neutral-400 w-32">Search...</span>
+                <span className="hidden sm:block text-sm text-neutral-400 w-24 md:w-32">Search...</span>
                 <kbd className="hidden xl:inline-flex h-5 items-center gap-1 rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-1.5 font-mono text-[10px] text-neutral-500">
                     ⌘K
                 </kbd>
@@ -472,7 +474,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
     return (
         <header className={cn(
-            "sticky top-0 z-30 h-24",
+            "sticky top-0 z-30",
+            "h-16 sm:h-20 lg:h-24", // Responsive height
             "bg-[#0a0a12]/90 backdrop-blur-xl",
             "border-b border-purple-500/10",
             className
@@ -538,18 +541,19 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent" />
             </div>
 
-            <div className="relative h-full px-4 flex items-center justify-between">
+            <div className="relative h-full px-2 sm:px-4 flex items-center justify-between">
                 {/* Left side */}
-                <div className="flex items-center gap-4 shrink-0 flex-1">
+                <div className="flex items-center gap-2 sm:gap-4 shrink-0 flex-1">
                     {/* Mobile menu button */}
                     {showMenuButton && (
                         <button
                             onClick={onMenuClick}
                             className={cn(
-                                "lg:hidden p-2 rounded-xl",
+                                "lg:hidden p-2.5 rounded-xl",
                                 "text-zinc-400",
                                 "hover:bg-white/5",
-                                "transition-colors"
+                                "transition-colors",
+                                "min-h-[44px] min-w-[44px] flex items-center justify-center" // Touch target
                             )}
                             aria-label="Open menu"
                         >
@@ -561,17 +565,17 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     <SearchBar />
                 </div>
 
-                {/* Center - Spotify Widget */}
-                <div className="flex items-center justify-center flex-shrink-0">
+                {/* Center - Spotify Widget (hidden on mobile) */}
+                <div className="hidden sm:flex items-center justify-center flex-shrink-0">
                     {isAuthenticated && <SpotifyTopBarWidget />}
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-3 shrink-0 flex-1 justify-end">
-                    {/* Session Timer - Only show when authenticated */}
-                    {isAuthenticated && <SessionTimerDisplay />}
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-1 justify-end">
+                    {/* Session Timer - Only show on larger screens */}
+                    {isAuthenticated && <div className="hidden md:block"><SessionTimerDisplay /></div>}
 
-                    {/* User dropdown - Only show when authenticated */}
+                    {/* User dropdown */}
                     {isAuthenticated && <UserDropdown />}
                 </div>
             </div>
