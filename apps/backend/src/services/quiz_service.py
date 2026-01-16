@@ -255,9 +255,13 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
         # Higher temperature when not caching (force_new mode) for more variation
         # Lower temperature when caching for consistency
         temperature = 0.95 if not use_cache else 0.75  # More creative when generating fresh
-        max_tokens = 3500 if quiz_type == "mcq" else 2500  # MCQ needs more tokens for explanations
         
-        logger.info(f"🎲 Generating quiz with temperature={temperature}, use_cache={use_cache}")
+        # Scale max_tokens based on question count
+        # MCQ: ~150 tokens per question, Flashcard: ~80 tokens per question
+        base_tokens = 200 if quiz_type == "mcq" else 120
+        max_tokens = min(count * base_tokens + 500, 16000)  # Cap at 16k
+        
+        logger.info(f"🎲 Generating {count} questions with temperature={temperature}, max_tokens={max_tokens}")
         
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -267,6 +271,7 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
             ],
             temperature=temperature,
             max_tokens=max_tokens,
+            timeout=120.0,  # 2 minute timeout for large requests
         )
 
         result_text = response.choices[0].message.content.strip()
