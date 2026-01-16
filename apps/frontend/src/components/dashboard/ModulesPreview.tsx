@@ -71,9 +71,9 @@ export function ModulesPreview({
     const hasMore = modules.length > maxDisplay
 
     return (
-        <Card className="rounded-xl border-0 shadow-md bg-white">
+        <Card className="rounded-xl border-0 shadow-md bg-white dark:bg-neutral-900/80">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                <CardTitle className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                     <span className="text-lg">📚</span>
                     Learning Modules
                 </CardTitle>
@@ -84,11 +84,11 @@ export function ModulesPreview({
             <CardContent>
                 {modules.length === 0 ? (
                     <div className="text-center py-8">
-                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center">
                             <span className="text-xl">📚</span>
                         </div>
-                        <p className="text-sm font-medium text-gray-900 mb-1">No modules available</p>
-                        <p className="text-xs text-gray-500 mb-4">Modules will appear here once created.</p>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">No modules available</p>
+                        <p className="text-xs text-gray-500 dark:text-zinc-400 mb-4">Modules will appear here once created.</p>
                         <Link prefetch={false} href="/modules/new">
                             <Button variant="outline" size="sm" className="text-xs">
                                 Create Module
@@ -104,13 +104,13 @@ export function ModulesPreview({
                             return (
                                 <div
                                     key={module.id}
-                                    className="group p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white hover:shadow-sm hover:border-gray-200 transition-all duration-200"
+                                    className="group p-3 rounded-xl border border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 hover:shadow-sm hover:border-gray-200 dark:hover:border-white/20 transition-all duration-200"
                                 >
                                     <div className="flex items-start justify-between gap-3">
                                         {/* Module Info */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <h4 className="text-sm font-semibold text-gray-900 truncate">
+                                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                                                     {module.name}
                                                 </h4>
                                                 <Badge
@@ -121,20 +121,20 @@ export function ModulesPreview({
                                                 </Badge>
                                             </div>
                                             {module.description && (
-                                                <p className="text-xs text-gray-500 line-clamp-1 mb-2">
+                                                <p className="text-xs text-gray-500 dark:text-zinc-400 line-clamp-1 mb-2">
                                                     {module.description}
                                                 </p>
                                             )}
 
                                             {/* Progress Bar */}
                                             <div className="flex items-center gap-2">
-                                                <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                                <div className="flex-1 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                                                     <div
                                                         className={`h-full rounded-full transition-all duration-500 ${getProgressColor(moduleProgress)}`}
                                                         style={{ width: `${moduleProgress}%` }}
                                                     />
                                                 </div>
-                                                <span className="text-[10px] font-medium text-gray-500 w-8 text-right">
+                                                <span className="text-[10px] font-medium text-gray-500 dark:text-zinc-400 w-8 text-right">
                                                     {moduleProgress}%
                                                 </span>
                                             </div>
@@ -145,7 +145,7 @@ export function ModulesPreview({
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                className="h-8 px-3 text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="h-8 px-3 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity"
                                             >
                                                 {moduleProgress > 0 ? "Continue" : "Start"}
                                                 <span className="ml-1">→</span>

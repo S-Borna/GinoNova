@@ -99,10 +99,10 @@ export function RecommendationsPanel({
         : placeholderRecommendations
 
     return (
-        <Card className="rounded-xl border-0 shadow-md bg-white overflow-hidden">
-            <CardHeader className="pb-2 bg-gradient-to-r from-indigo-50 to-purple-50">
+        <Card className="rounded-xl border-0 shadow-md bg-white dark:bg-neutral-900/80 overflow-hidden">
+            <CardHeader className="pb-2 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <CardTitle className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                         <span className="text-lg">🤖</span>
                         AI Recommendations
                     </CardTitle>

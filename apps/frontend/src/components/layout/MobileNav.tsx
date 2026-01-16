@@ -53,7 +53,7 @@ const navItems: NavItem[] = [
     { label: "Home", href: "/dashboard", icon: Home, gradient: "from-violet-500 to-purple-600" },
     { label: "Camp", href: "/modules", icon: BookOpen, gradient: "from-emerald-500 to-teal-600" },
     { label: "Study", href: "/study", icon: GraduationCap, gradient: "from-amber-500 to-orange-600" },
-    { label: "AI Quiz", href: "/ai-quiz", icon: Brain, gradient: "from-pink-500 to-rose-600" },
+    { label: "AI Quiz", href: "/quiz", icon: Brain, gradient: "from-pink-500 to-rose-600" },
     { label: "Profile", href: "/profile", icon: User, gradient: "from-cyan-500 to-blue-600" },
 ]
 

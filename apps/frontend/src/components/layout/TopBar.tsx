@@ -30,7 +30,8 @@ import {
     ChevronDown,
     Menu,
     Command,
-    Clock
+    Clock,
+    X
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
 import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
@@ -326,9 +327,16 @@ function SearchBar() {
                                     "focus:outline-none"
                                 )}
                             />
-                            <kbd className="text-xs text-neutral-400 px-1.5 py-0.5 bg-neutral-100 dark:bg-neutral-800 rounded">
-                                ESC
-                            </kbd>
+                            <button
+                                onClick={() => {
+                                    setIsOpen(false)
+                                    setQuery("")
+                                }}
+                                className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                aria-label="Close search"
+                            >
+                                <X className="h-5 w-5 text-neutral-400" />
+                            </button>
                         </div>
 
                         {/* Results */}

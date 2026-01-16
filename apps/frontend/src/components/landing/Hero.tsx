@@ -223,23 +223,16 @@ function GinoNovaCloudOverlay() {
 }
 
 /* ============================================================================
-   🧠 AI & TECH STACK INDICATOR
+   🧠 AI & TECH STACK INDICATOR — GLOWING PILLS
    ============================================================================ */
 
 function TechStackIndicator() {
     const stacks = [
-        { icon: Brain, label: "AI & Machine Learning", color: "purple" },
-        { icon: Cloud, label: "Multi-Cloud Mastery", color: "cyan" },
-        { icon: Server, label: "DevOps Excellence", color: "emerald" },
-        { icon: Cpu, label: "MLOps Engineering", color: "pink" },
+        { icon: Brain, label: "AI & Machine Learning", gradient: "from-purple-500 to-violet-600", glow: "rgba(139,92,246,0.5)" },
+        { icon: Cloud, label: "Multi-Cloud Mastery", gradient: "from-cyan-500 to-blue-600", glow: "rgba(6,182,212,0.5)" },
+        { icon: Server, label: "DevOps Excellence", gradient: "from-emerald-500 to-green-600", glow: "rgba(16,185,129,0.5)" },
+        { icon: Cpu, label: "MLOps Engineering", gradient: "from-pink-500 to-rose-600", glow: "rgba(236,72,153,0.5)" },
     ]
-
-    const colorClasses = {
-        purple: { bg: "bg-purple-500/15", border: "border-purple-500/30", text: "text-purple-300", icon: "text-purple-400" },
-        cyan: { bg: "bg-cyan-500/15", border: "border-cyan-500/30", text: "text-cyan-300", icon: "text-cyan-400" },
-        emerald: { bg: "bg-emerald-500/15", border: "border-emerald-500/30", text: "text-emerald-300", icon: "text-emerald-400" },
-        pink: { bg: "bg-pink-500/15", border: "border-pink-500/30", text: "text-pink-300", icon: "text-pink-400" },
-    }
 
     return (
         <motion.div
@@ -249,26 +242,34 @@ function TechStackIndicator() {
             className="flex flex-wrap items-center justify-center gap-3 mb-8"
         >
             {stacks.map((stack, i) => {
-                const colors = colorClasses[stack.color as keyof typeof colorClasses]
                 const Icon = stack.icon
 
                 return (
                     <motion.div
                         key={i}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 + i * 0.1, duration: 0.5 }}
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm",
-                            colors.bg,
-                            colors.border,
-                            "border"
-                        )}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        transition={{ delay: 0.6 + i * 0.1, duration: 0.4 }}
+                        className="group relative"
                     >
-                        <Icon className={cn("w-4 h-4", colors.icon)} />
-                        <span className={cn("text-xs sm:text-sm font-semibold", colors.text)}>
-                            {stack.label}
-                        </span>
+                        {/* Glow effect */}
+                        <div 
+                            className="absolute inset-0 rounded-full blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-300"
+                            style={{ background: stack.glow }}
+                        />
+                        {/* Pill */}
+                        <div className={cn(
+                            "relative flex items-center gap-2 px-4 py-2 rounded-full",
+                            "bg-gradient-to-r", stack.gradient,
+                            "shadow-lg cursor-pointer",
+                            "border border-white/20"
+                        )}>
+                            <Icon className="w-4 h-4 text-white" />
+                            <span className="text-xs sm:text-sm font-bold text-white whitespace-nowrap">
+                                {stack.label}
+                            </span>
+                        </div>
                     </motion.div>
                 )
             })}
@@ -277,64 +278,94 @@ function TechStackIndicator() {
 }
 
 /* ============================================================================
-   💎 TECH STACK SHOWCASE — ANIMATED LOGOS
+   💎 TECH STACK SHOWCASE — FLOATING LOGOS
    ============================================================================ */
 
-function TechStackShowcase() {
-    const techStacks = [
-        // Row 1: Cloud Platforms
-        ["Google Cloud", "AWS", "Azure", "Kubernetes"],
-        // Row 2: DevOps & CI/CD
-        ["Docker", "Terraform", "GitHub Actions", "Jenkins"],
-        // Row 3: AI & ML
-        ["Python", "TensorFlow", "PyTorch", "Scikit-learn"],
-        // Row 4: Monitoring & More
-        ["Prometheus", "Grafana", "Linux", "Go"],
-    ]
+// Mix of Simple Icons + Devicon CDN for maximum coverage
+const TECH_LOGOS: { name: string; color: string; devicon?: string }[] = [
+    // Containers & Orchestration
+    { name: "docker", color: "2496ED" },
+    { name: "kubernetes", color: "326CE5" },
+    { name: "helm", color: "0F1689" },
+    // Cloud Providers
+    { name: "aws", color: "FF9900", devicon: "amazonwebservices/amazonwebservices-original-wordmark.svg" },
+    { name: "azure", color: "0078D4", devicon: "azure/azure-original.svg" },
+    { name: "googlecloud", color: "4285F4" },
+    { name: "digitalocean", color: "0080FF" },
+    { name: "cloudflare", color: "F38020" },
+    // IaC & Config
+    { name: "terraform", color: "844FBA" },
+    { name: "ansible", color: "EE0000" },
+    // CI/CD
+    { name: "githubactions", color: "2088FF" },
+    { name: "gitlab", color: "FC6D26" },
+    { name: "jenkins", color: "D24939" },
+    { name: "argocd", color: "EF7B4D", devicon: "argocd/argocd-original.svg" },
+    // Languages
+    { name: "python", color: "3776AB" },
+    { name: "go", color: "00ADD8" },
+    { name: "typescript", color: "3178C6" },
+    { name: "nodedotjs", color: "339933" },
+    // Databases
+    { name: "postgresql", color: "4169E1" },
+    { name: "mongodb", color: "47A248" },
+    { name: "redis", color: "DC382D" },
+    { name: "elasticsearch", color: "005571" },
+    // AI/ML
+    { name: "tensorflow", color: "FF6F00" },
+    { name: "pytorch", color: "EE4C2C" },
+    // Monitoring
+    { name: "prometheus", color: "E6522C" },
+    { name: "grafana", color: "F46800" },
+    // Web & Proxy
+    { name: "nginx", color: "009639" },
+    // Version Control
+    { name: "git", color: "F05032" },
+    { name: "github", color: "ffffff" },
+    // Linux Distros
+    { name: "linux", color: "FCC624", devicon: "linux/linux-original.svg" },
+    { name: "ubuntu", color: "E95420" },
+    { name: "debian", color: "A81D33" },
+    { name: "redhat", color: "EE0000" },
+    { name: "alpinelinux", color: "0D597F" },
+]
 
+function TechStackShowcase() {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1 }}
-            className="max-w-5xl mx-auto mb-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="max-w-5xl mx-auto mb-16"
         >
-            <div className="space-y-4">
-                {techStacks.map((row, rowIndex) => (
-                    <motion.div
-                        key={rowIndex}
-                        initial={{ opacity: 0, x: rowIndex % 2 === 0 ? -50 : 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1.2 + rowIndex * 0.1, duration: 0.6 }}
-                        className="flex flex-wrap items-center justify-center gap-3"
-                    >
-                        {row.map((tech, techIndex) => (
-                            <motion.div
-                                key={techIndex}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                whileHover={{ scale: 1.1, y: -5 }}
-                                transition={{
-                                    delay: 1.3 + rowIndex * 0.1 + techIndex * 0.05,
-                                    duration: 0.3
-                                }}
-                                className={cn(
-                                    "px-4 py-2 rounded-lg",
-                                    "bg-gradient-to-br from-white/[0.08] to-white/[0.02]",
-                                    "border border-white/10",
-                                    "backdrop-blur-sm",
-                                    "hover:border-purple-400/40",
-                                    "transition-all duration-300",
-                                    "shadow-lg shadow-black/20"
-                                )}
-                            >
-                                <span className="text-sm font-semibold text-zinc-300 whitespace-nowrap">
-                                    {tech}
-                                </span>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                ))}
+            <div className="flex flex-wrap items-center justify-center gap-5 md:gap-6">
+                {TECH_LOGOS.map((logo, i) => {
+                    const imgSrc = logo.devicon
+                        ? `https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${logo.devicon}`
+                        : `https://cdn.simpleicons.org/${logo.name}/${logo.color}`
+                    
+                    return (
+                        <motion.div
+                            key={logo.name}
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{
+                                delay: 1 + i * 0.02,
+                                duration: 0.3,
+                            }}
+                            className="cursor-pointer hover:scale-125 hover:-translate-y-2 transition-transform duration-200 ease-out"
+                            style={{
+                                filter: `drop-shadow(0 0 8px #${logo.color}80)`,
+                            }}
+                        >
+                            <img
+                                src={imgSrc}
+                                alt={logo.name}
+                                className="w-9 h-9 md:w-11 md:h-11"
+                            />
+                        </motion.div>
+                    )
+                })}
             </div>
         </motion.div>
     )
@@ -369,17 +400,17 @@ export function Hero() {
                         <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-cyan-500 to-pink-600" />
                     </div>
 
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tight leading-[1.05]">
-                        <motion.span
-                            className="block text-white mb-3"
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-[1.1]">
+                        <span
+                            className="text-white"
                             style={{
                                 textShadow: "0 0 80px rgba(255,255,255,0.4), 0 0 120px rgba(139,92,246,0.3)"
                             }}
                         >
-                            Master the Complete
-                        </motion.span>
+                            Master the{" "}
+                        </span>
                         <motion.span
-                            className="relative block"
+                            className="relative inline"
                             animate={{
                                 backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                             }}
@@ -396,7 +427,7 @@ export function Hero() {
                                 filter: "drop-shadow(0 0 50px rgba(139,92,246,0.7))",
                             }}
                         >
-                            Tech Stack
+                            Complete Tech Stack
                         </motion.span>
                     </h1>
                 </motion.div>
@@ -429,26 +460,27 @@ export function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.9 }}
-                        className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-6 text-sm text-zinc-400"
+                        className="flex flex-wrap items-center justify-center gap-4 mt-6"
                     >
                         {[
-                            "31+ moduler",
-                            "700+ quiz-frågor",
-                            "500+ flashcards",
-                            "200+ scenarios",
-                            "AI Quiz Generator",
-                            "Dallas AI-assistent",
+                            { label: "31+ moduler", icon: "📚" },
+                            { label: "700+ quiz-frågor", icon: "🧠" },
+                            { label: "500+ flashcards", icon: "🎴" },
+                            { label: "200+ scenarios", icon: "🎯" },
+                            { label: "AI Quiz Generator", icon: "⚡" },
+                            { label: "Dallas AI-assistent", icon: "🤖" },
                         ].map((item, i) => (
-                            <motion.span
+                            <motion.div
                                 key={i}
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 1 + i * 0.08 }}
-                                className="flex items-center gap-2"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ delay: 1 + i * 0.06 }}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-emerald-500/40 hover:bg-emerald-500/10 transition-colors cursor-default"
                             >
-                                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                                <span className="font-medium">{item}</span>
-                            </motion.span>
+                                <span className="text-sm">{item.icon}</span>
+                                <span className="text-sm font-medium text-zinc-300">{item.label}</span>
+                            </motion.div>
                         ))}
                     </motion.div>
                 </motion.div>

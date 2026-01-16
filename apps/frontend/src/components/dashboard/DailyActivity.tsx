@@ -64,9 +64,9 @@ export function DailyActivity({
     const activeStudyflows = studyflows.filter(sf => sf.is_active).length
 
     return (
-        <Card className="rounded-xl border-0 shadow-md bg-white">
+        <Card className="rounded-xl border-0 shadow-md bg-white dark:bg-neutral-900/80">
             <CardHeader className="pb-2">
-                <CardTitle className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                <CardTitle className="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                     <span className="text-lg">⚡</span>
                     Today&apos;s Activity
                 </CardTitle>
@@ -92,55 +92,55 @@ export function DailyActivity({
                 {/* Activity Stats Grid */}
                 <div className="grid grid-cols-2 gap-3">
                     {/* Study Time */}
-                    <div className="p-4 rounded-xl bg-blue-50 border border-blue-100">
+                    <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-500/10 border border-blue-100 dark:border-blue-500/20">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
                                 <span className="text-white text-sm">⏱️</span>
                             </div>
-                            <span className="text-xs font-medium text-blue-600 uppercase tracking-wider">Study Time</span>
+                            <span className="text-xs font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">Study Time</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">
                             {formatMinutes(studyMinutesToday)}
                         </p>
-                        <p className="text-xs text-gray-500">Today</p>
+                        <p className="text-xs text-gray-500 dark:text-zinc-400">Today</p>
                     </div>
 
                     {/* Tasks Completed */}
-                    <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
+                    <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20">
                         <div className="flex items-center gap-2 mb-2">
                             <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
                                 <span className="text-white text-sm">✅</span>
                             </div>
-                            <span className="text-xs font-medium text-emerald-600 uppercase tracking-wider">Tasks</span>
+                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">Tasks</span>
                         </div>
-                        <p className="text-2xl font-bold text-gray-900">{tasksCompletedToday}</p>
-                        <p className="text-xs text-gray-500">Completed</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{tasksCompletedToday}</p>
+                        <p className="text-xs text-gray-500 dark:text-zinc-400">Completed</p>
                     </div>
                 </div>
 
                 {/* Active Studyflows */}
-                <div className="p-4 rounded-xl bg-purple-50 border border-purple-100">
+                <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-500/10 border border-purple-100 dark:border-purple-500/20">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-lg bg-purple-500 flex items-center justify-center">
                                 <span className="text-white text-sm">🎯</span>
                             </div>
                             <div>
-                                <p className="text-sm font-medium text-gray-900">Active Studyflows</p>
-                                <p className="text-xs text-gray-500">{studyflows.length} total</p>
+                                <p className="text-sm font-medium text-gray-900 dark:text-white">Active Studyflows</p>
+                                <p className="text-xs text-gray-500 dark:text-zinc-400">{studyflows.length} total</p>
                             </div>
                         </div>
                         <div className="text-right">
-                            <p className="text-2xl font-bold text-purple-600">{activeStudyflows}</p>
-                            <p className="text-xs text-gray-500">in progress</p>
+                            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{activeStudyflows}</p>
+                            <p className="text-xs text-gray-500 dark:text-zinc-400">in progress</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Motivation Message */}
                 {studyMinutesToday === 0 && tasksCompletedToday === 0 && (
-                    <div className="text-center py-3 px-4 rounded-lg bg-gray-50 border border-dashed border-gray-200">
-                        <p className="text-sm text-gray-600">
+                    <div className="text-center py-3 px-4 rounded-lg bg-gray-50 dark:bg-white/5 border border-dashed border-gray-200 dark:border-white/10">
+                        <p className="text-sm text-gray-600 dark:text-zinc-400">
                             🌅 Start your day strong! Complete a task to keep your streak alive.
                         </p>
                     </div>

@@ -28,30 +28,34 @@ interface CosmicIntroProps {
 }
 
 export default function CosmicIntro({ onComplete, duration = 5 }: CosmicIntroProps) {
-    const [phase, setPhase] = React.useState<"float" | "approach" | "devour" | "done">("float")
+    const [phase, setPhase] = React.useState<"float" | "approach" | "devour" | "fadeout">("float")
 
     React.useEffect(() => {
         const t1 = setTimeout(() => setPhase("approach"), 800)
         const t2 = setTimeout(() => setPhase("devour"), 2200)
-        const t3 = setTimeout(() => setPhase("done"), duration * 1000 - 500)
-        const t4 = setTimeout(onComplete, duration * 1000)
+        // Start fadeout early and call onComplete to load landing underneath
+        const t3 = setTimeout(() => {
+            setPhase("fadeout")
+            onComplete() // Landing page starts loading NOW (underneath)
+        }, duration * 1000 - 1200)
 
         return () => {
             clearTimeout(t1)
             clearTimeout(t2)
             clearTimeout(t3)
-            clearTimeout(t4)
         }
     }, [duration, onComplete])
 
-    if (phase === "done") return null
-
     return (
         <motion.div
-            className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-black"
+            className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
             initial={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 5 }}
-            transition={{ duration: 0.8 }}
+            animate={{ 
+                opacity: phase === "fadeout" ? 0 : 1,
+                scale: phase === "fadeout" ? 1.5 : 1,
+            }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ pointerEvents: phase === "fadeout" ? "none" : "auto" }}
         >
             <div
                 className="absolute inset-0"

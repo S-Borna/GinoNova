@@ -21,6 +21,7 @@ import { useRouter, usePathname } from "next/navigation"
 import { Sidebar } from "@/components/layout/Sidebar"
 import { TopBar } from "@/components/layout/TopBar"
 import { MobileNav } from "@/components/layout/MobileNav"
+import { MobileSideMenu } from "@/components/layout/MobileSideMenu"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { RightSidebar } from "@/components/modules/RightSidebar"
 import { CosmicLockedOverlay } from "@/components/ui/cosmic-locked-overlay"
@@ -101,6 +102,11 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
 
+    // Mobile side menu state
+    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+    const isTablet = useMediaQuery("(min-width: 768px)")
+    const isMobile = !isTablet
+
     // RightSidebar disabled for modules - Camp DevOps uses clean full-width layout
     // const showRightSidebar = isDesktop && pathname?.includes("/modules/")
     const showRightSidebar = false
@@ -149,7 +155,10 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 )}
             >
                 {/* Top bar */}
-                <TopBar showMenuButton={isMobile} />
+                <TopBar 
+                    showMenuButton={isMobile} 
+                    onMenuClick={() => setMobileMenuOpen(true)}
+                />
 
                 {/* Page content */}
                 <main className="px-4 py-6 md:px-6 lg:px-8">
@@ -176,6 +185,14 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Mobile navigation - shown only on mobile */}
             {isMobile && <MobileNav />}
+
+            {/* Mobile Side Menu - slide-in panel */}
+            {isMobile && (
+                <MobileSideMenu 
+                    isOpen={mobileMenuOpen} 
+                    onClose={() => setMobileMenuOpen(false)} 
+                />
+            )}
 
             {/* Cosmic Locked Overlay - Shows on protected pages for non-authenticated users */}
             {showLockedOverlay && <CosmicLockedOverlay />}

@@ -104,7 +104,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         label: "AI Quiz",
-        href: "/ai-quiz",
+        href: "/quiz",
         icon: Brain,
         gradient: "from-violet-500 to-purple-600",
     },
