@@ -104,8 +104,6 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
     // Mobile side menu state
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
-    const isTablet = useMediaQuery("(min-width: 768px)")
-    const isMobile = !isTablet
 
     // RightSidebar disabled for modules - Camp DevOps uses clean full-width layout
     // const showRightSidebar = isDesktop && pathname?.includes("/modules/")
