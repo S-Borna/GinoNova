@@ -300,252 +300,255 @@ export default function StudyPage() {
                     ))}
                 </motion.div>
 
-                {/* Tenta-Simulator Banner */}
+                {/* Tenta-Simulator Banner - Glassmorphism Design */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
                     className="mb-12"
                 >
-                    <div className={cn(
-                        "relative overflow-hidden rounded-3xl p-10",
-                        "bg-gradient-to-br from-orange-600/30 via-red-600/20 to-purple-600/30",
-                        "border-2 border-orange-500/50",
-                        "shadow-2xl shadow-orange-500/20"
-                    )}>
-                        {/* Animated background pattern */}
-                        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
+                    {/* Hero Header */}
+                    <div className="text-center mb-6">
+                        <motion.div
+                            className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-xl border border-purple-500/20 mb-4 relative overflow-hidden"
+                            whileHover={{ scale: 1.05, rotate: 5 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                        >
+                            <motion.div
+                                className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20"
+                                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                            />
+                            <span className="text-4xl relative z-10">🎯</span>
+                        </motion.div>
+                        <h3 className="text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-2">
+                            Tenta-Simulator
+                        </h3>
+                        <p className="text-zinc-400">
+                            Välj <span className="text-purple-400 font-semibold">DOE25</span> för tentafokus, <span className="text-emerald-400 font-semibold">Hands-On</span> för praktik, eller <span className="text-orange-400 font-semibold">Linux Kommandon 💻</span>
+                        </p>
+                    </div>
 
-                        {/* Main content */}
+                    {/* Main Settings Card */}
+                    <div className="relative bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-3xl p-6 overflow-hidden">
+                        {/* Subtle glow */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl pointer-events-none" />
+
                         <div className="relative z-10">
-                            <div className="flex items-start justify-between mb-6">
-                                <div className="flex items-center gap-5">
-                                    <motion.div
-                                        className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500 via-red-500 to-purple-500 flex items-center justify-center text-4xl shadow-xl shadow-orange-500/40"
-                                        animate={{
-                                            rotate: [0, -5, 5, 0],
-                                            scale: [1, 1.05, 1]
-                                        }}
-                                        transition={{
-                                            duration: 3,
-                                            repeat: Infinity,
-                                            ease: "easeInOut"
-                                        }}
-                                    >
-                                        🎯
-                                    </motion.div>
-                                    <div>
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h3 className="text-3xl font-black text-white">Tenta-Simulator</h3>
-                                            <span className="px-3 py-1 rounded-full bg-orange-500/40 text-orange-200 text-sm font-bold uppercase tracking-wide animate-pulse">
-                                                🔥 Hot
-                                            </span>
-                                        </div>
-                                        <p className="text-zinc-300 text-lg">
-                                            Välj <span className="text-purple-400 font-bold">DOE25</span> för tentafokus, <span className="text-emerald-400 font-bold">Hands-On</span> för praktik, eller <span className="text-orange-400 font-bold">Linux Kommandon 💻</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Settings grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            {/* Settings grid - 3 columns */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                                 {/* Time selection */}
-                                <div className="bg-black/30 rounded-2xl p-5 border border-orange-500/20">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Clock className="w-5 h-5 text-orange-400" />
-                                        <span className="text-white font-bold">Tid</span>
+                                <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Clock className="w-4 h-4 text-purple-400" />
+                                        <span className="text-sm font-semibold text-white">Tid</span>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-2">
+                                    <div className="grid grid-cols-4 gap-1.5">
                                         {[60, 75, 90, 120].map(mins => (
-                                            <button
+                                            <motion.button
                                                 key={mins}
                                                 onClick={() => setTentaTime(mins)}
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
                                                 className={cn(
-                                                    "py-3 rounded-xl font-bold text-sm transition-all",
+                                                    "py-2 rounded-lg text-xs font-semibold transition-all",
                                                     tentaTime === mins
-                                                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30"
-                                                        : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                        ? "bg-gradient-to-br from-purple-500/40 to-pink-500/40 border border-purple-400/50 text-purple-200"
+                                                        : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                                 )}
                                             >
                                                 {mins} min
-                                            </button>
+                                            </motion.button>
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* Question count */}
-                                <div className="bg-black/30 rounded-2xl p-5 border border-purple-500/20">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <Brain className="w-5 h-5 text-purple-400" />
-                                        <span className="text-white font-bold">Antal frågor</span>
+                                <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Brain className="w-4 h-4 text-blue-400" />
+                                        <span className="text-sm font-semibold text-white">Antal frågor</span>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-2">
+                                    <div className="grid grid-cols-4 gap-1.5">
                                         {[100, 200, 300, 'Alla'].map(count => (
-                                            <button
+                                            <motion.button
                                                 key={count}
                                                 onClick={() => setTentaCount(count === 'Alla' ? 999 : count as number)}
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
                                                 className={cn(
-                                                    "py-3 rounded-xl font-bold text-sm transition-all",
+                                                    "py-2 rounded-lg text-xs font-semibold transition-all",
                                                     tentaCount === (count === 'Alla' ? 999 : count)
-                                                        ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
-                                                        : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                        ? "bg-gradient-to-br from-blue-500/40 to-cyan-500/40 border border-blue-400/50 text-blue-200"
+                                                        : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                                 )}
                                             >
                                                 {count}
-                                            </button>
+                                            </motion.button>
                                         ))}
                                     </div>
                                 </div>
 
                                 {/* Grading mode */}
-                                <div className="bg-black/30 rounded-2xl p-5 border border-emerald-500/20">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <CheckSquare className="w-5 h-5 text-emerald-400" />
-                                        <span className="text-white font-bold">Rättning</span>
+                                <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <CheckSquare className="w-4 h-4 text-emerald-400" />
+                                        <span className="text-sm font-semibold text-white">Rättning</span>
                                     </div>
-                                    <div className="grid grid-cols-1 gap-2">
-                                        <button
+                                    <div className="space-y-1.5">
+                                        <motion.button
                                             onClick={() => setTentaGradingMode('live')}
+                                            whileHover={{ scale: 1.01 }}
+                                            whileTap={{ scale: 0.99 }}
                                             className={cn(
-                                                "py-3 px-4 rounded-xl font-bold text-sm transition-all text-left flex items-center gap-3",
+                                                "w-full py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center gap-2",
                                                 tentaGradingMode === 'live'
-                                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                                                    : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                    ? "bg-gradient-to-br from-emerald-500/40 to-teal-500/40 border border-emerald-400/50 text-emerald-200"
+                                                    : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                             )}
                                         >
-                                            <Zap className="w-4 h-4" />
-                                            <div>
-                                                <div>Live-rättning</div>
-                                                <div className="text-xs opacity-70 font-normal">Direkt feedback</div>
-                                            </div>
-                                        </button>
-                                        <button
+                                            <Zap className="w-3 h-3" />
+                                            Live-rättning
+                                        </motion.button>
+                                        <motion.button
                                             onClick={() => setTentaGradingMode('end')}
+                                            whileHover={{ scale: 1.01 }}
+                                            whileTap={{ scale: 0.99 }}
                                             className={cn(
-                                                "py-3 px-4 rounded-xl font-bold text-sm transition-all text-left flex items-center gap-3",
+                                                "w-full py-2 px-3 rounded-lg text-xs font-semibold transition-all flex items-center gap-2",
                                                 tentaGradingMode === 'end'
-                                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                                                    : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                    ? "bg-gradient-to-br from-emerald-500/40 to-teal-500/40 border border-emerald-400/50 text-emerald-200"
+                                                    : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                             )}
                                         >
-                                            <Clock className="w-4 h-4" />
-                                            <div>
-                                                <div>Rättning efteråt</div>
-                                                <div className="text-xs opacity-70 font-normal">Som riktig tenta</div>
-                                            </div>
-                                        </button>
+                                            <Clock className="w-3 h-3" />
+                                            Rättning efteråt
+                                        </motion.button>
                                     </div>
                                 </div>
                             </div>
 
                             {/* G/VG Difficulty Selection */}
-                            <div className="bg-black/30 rounded-2xl p-5 border border-yellow-500/20 mb-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <Award className="w-5 h-5 text-yellow-400" />
-                                    <span className="text-white font-bold">Betygsnivå</span>
+                            <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30 mb-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Award className="w-4 h-4 text-yellow-400" />
+                                    <span className="text-sm font-semibold text-white">Betygsnivå</span>
                                 </div>
-                                <div className="grid grid-cols-3 gap-3">
-                                    <button
+                                <div className="grid grid-cols-3 gap-2">
+                                    <motion.button
                                         onClick={() => setTentaDifficulty('G')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaDifficulty === 'G'
-                                                ? "bg-green-500 text-white shadow-lg shadow-green-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-green-500/40 to-emerald-500/40 border border-green-400/50 text-green-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">G</span>
-                                        <span className="text-xs opacity-70 font-normal">Godkänt</span>
-                                    </button>
-                                    <button
+                                        <span className="text-xl font-bold">G</span>
+                                        <span className="text-[10px] opacity-70">Godkänt</span>
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setTentaDifficulty('VG')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaDifficulty === 'VG'
-                                                ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-purple-500/40 to-violet-500/40 border border-purple-400/50 text-purple-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">VG</span>
-                                        <span className="text-xs opacity-70 font-normal">Väl Godkänt</span>
-                                    </button>
-                                    <button
+                                        <span className="text-xl font-bold">VG</span>
+                                        <span className="text-[10px] opacity-70">Väl Godkänt</span>
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setTentaDifficulty('both')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaDifficulty === 'both'
-                                                ? "bg-gradient-to-r from-green-500 to-purple-500 text-white shadow-lg shadow-yellow-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-yellow-500/40 via-orange-500/40 to-pink-500/40 border border-yellow-400/50 text-yellow-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">G+VG</span>
-                                        <span className="text-xs opacity-70 font-normal">Mixad</span>
-                                    </button>
+                                        <span className="text-xl font-bold">G+VG</span>
+                                        <span className="text-[10px] opacity-70">Mixad</span>
+                                    </motion.button>
                                 </div>
                             </div>
 
                             {/* Question Source Selection */}
-                            <div className="bg-black/30 rounded-2xl p-5 border border-cyan-500/20 mb-6">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <BookOpen className="w-5 h-5 text-cyan-400" />
-                                    <span className="text-white font-bold">Frågekälla</span>
+                            <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30 mb-4">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <BookOpen className="w-4 h-4 text-cyan-400" />
+                                    <span className="text-sm font-semibold text-white">Frågekälla</span>
                                 </div>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                    <button
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                    <motion.button
                                         onClick={() => setTentaSource('omtenta-2')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'omtenta-2'
-                                                ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-teal-500/40 to-emerald-500/40 border border-teal-400/50 text-teal-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">🎯</span>
-                                        <span className="text-xs font-medium">Omtenta 2.0</span>
-                                        <span className="text-[10px] opacity-70 font-normal">{ALL_OMTENTA_2_QUESTIONS.length} frågor</span>
-                                    </button>
-                                    <button
+                                        <span className="text-lg">🎯</span>
+                                        <span className="text-[10px] font-semibold">Omtenta 2.0</span>
+                                        <span className="text-[9px] opacity-60">{ALL_OMTENTA_2_QUESTIONS.length} frågor</span>
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setTentaSource('handson')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'handson'
-                                                ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-emerald-500/40 to-green-500/40 border border-emerald-400/50 text-emerald-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">🔧</span>
-                                        <span className="text-xs font-medium">Hands-On</span>
-                                        <span className="text-[10px] opacity-70 font-normal">1051 frågor</span>
-                                    </button>
-                                    <button
+                                        <span className="text-lg">🔧</span>
+                                        <span className="text-[10px] font-semibold">Hands-On</span>
+                                        <span className="text-[9px] opacity-60">1051 frågor</span>
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setTentaSource('linux')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'linux'
-                                                ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-orange-500/40 to-amber-500/40 border border-orange-400/50 text-orange-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">💻</span>
-                                        <span className="text-xs font-medium">Linux Kommandon</span>
-                                        <span className="text-[10px] opacity-70 font-normal">350+ frågor</span>
-                                    </button>
-                                    <button
+                                        <span className="text-lg">💻</span>
+                                        <span className="text-[10px] font-semibold">Linux Kommandon</span>
+                                        <span className="text-[9px] opacity-60">350+ frågor</span>
+                                    </motion.button>
+                                    <motion.button
                                         onClick={() => setTentaSource('linux-tenta')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-4 rounded-xl font-bold transition-all flex flex-col items-center gap-1",
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
                                             tentaSource === 'linux-tenta'
-                                                ? "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30"
-                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700"
+                                                ? "bg-gradient-to-br from-red-500/40 to-rose-500/40 border border-red-400/50 text-red-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
                                         )}
                                     >
-                                        <span className="text-2xl">📝</span>
-                                        <span className="text-xs font-medium">Linux Tentan</span>
-                                        <span className="text-[10px] opacity-70 font-normal">20 frågor</span>
-                                    </button>
+                                        <span className="text-lg">📝</span>
+                                        <span className="text-[10px] font-semibold">Linux Tentan</span>
+                                        <span className="text-[9px] opacity-60">20 frågor</span>
+                                    </motion.button>
                                 </div>
-                                <p className="text-xs text-zinc-400 mt-3 text-center">
+                                <p className="text-[10px] text-zinc-500 mt-2 text-center">
                                     {tentaSource === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
                                     {tentaSource === 'handson' && "🔧 Praktiska frågor"}
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
@@ -553,110 +556,58 @@ export default function StudyPage() {
                                 </p>
                             </div>
 
-                            {/* Omtenta 2.0 Node Selection - Hidden by default with toggle */}
+                            {/* Omtenta 2.0 Node Selection */}
                             {tentaSource === 'omtenta-2' && (
-                                <div className="mb-6">
-                                    {/* Header with toggle */}
+                                <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30 mb-4">
                                     <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-3">
-                                            <Layers className="w-5 h-5 text-teal-400" />
-                                            <span className="text-white font-bold">Välj moduler</span>
-                                            <span className="text-sm font-normal text-zinc-500">
-                                                ({omtenta2SelectedNodes.length}/{OMTENTA2_TOPICS.length} valda)
-                                            </span>
+                                        <div className="flex items-center gap-2">
+                                            <Layers className="w-4 h-4 text-teal-400" />
+                                            <span className="text-sm font-semibold text-white">Välj moduler</span>
+                                            <span className="text-xs text-zinc-500">({omtenta2SelectedNodes.length}/{OMTENTA2_TOPICS.length})</span>
                                         </div>
                                         <button
                                             onClick={() => setShowNodeSelector(!showNodeSelector)}
-                                            className={cn(
-                                                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm",
-                                                "bg-zinc-800/50 border border-zinc-700/50",
-                                                "hover:bg-zinc-800 transition-colors"
-                                            )}
+                                            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400"
                                         >
-                                            {showNodeSelector ? 'Dölj' : 'Visa tasks'}
-                                            <ChevronDown className={cn(
-                                                "w-4 h-4 transition-transform",
-                                                showNodeSelector && "rotate-180"
-                                            )} />
+                                            {showNodeSelector ? 'Dölj' : 'Visa'}
+                                            <ChevronDown className={cn("w-3 h-3 transition-transform", showNodeSelector && "rotate-180")} />
                                         </button>
                                     </div>
 
-                                    {/* Quick select buttons */}
-                                    <div className="flex gap-3 mb-3">
-                                        <button
-                                            onClick={() => setOmtenta2SelectedNodes(OMTENTA2_TOPICS)}
-                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors text-zinc-300"
-                                        >
-                                            Välj alla
-                                        </button>
-                                        <button
-                                            onClick={() => setOmtenta2SelectedNodes([])}
-                                            className="px-4 py-2 rounded-xl text-sm font-medium bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 hover:border-zinc-600 transition-colors text-zinc-300"
-                                        >
-                                            Avmarkera alla
-                                        </button>
+                                    <div className="flex gap-2 mb-2">
+                                        <button onClick={() => setOmtenta2SelectedNodes(OMTENTA2_TOPICS)} className="px-3 py-1.5 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400">Alla</button>
+                                        <button onClick={() => setOmtenta2SelectedNodes([])} className="px-3 py-1.5 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400">Inga</button>
                                         {omtenta2SelectedNodes.length > 0 && (
-                                            <span className="ml-auto flex items-center gap-2 px-4 py-2 rounded-xl text-sm bg-teal-500/20 text-teal-300 border border-teal-500/30">
-                                                <Brain className="w-4 h-4" />
-                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length} frågor
+                                            <span className="ml-auto flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                                                <Brain className="w-3 h-3" />
+                                                {ALL_OMTENTA_2_QUESTIONS.filter(q => omtenta2SelectedNodes.includes(q.topic)).length}
                                             </span>
                                         )}
                                     </div>
 
-                                    {/* Node list - hidden by default */}
                                     <AnimatePresence>
                                         {showNodeSelector && (
-                                            <motion.div
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className="bg-black/30 rounded-2xl p-4 border border-teal-500/20 max-h-80 overflow-y-auto">
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                        {OMTENTA2_TOPICS.map((topic, index) => {
+                                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                                <div className="bg-zinc-900/50 rounded-xl p-2 max-h-48 overflow-y-auto">
+                                                    <div className="grid grid-cols-2 gap-1">
+                                                        {OMTENTA2_TOPICS.map((topic) => {
                                                             const info = OMTENTA2_TOPIC_INFO[topic]
                                                             const isSelected = omtenta2SelectedNodes.includes(topic)
-                                                            const questionCount = ALL_OMTENTA_2_QUESTIONS.filter(q => q.topic === topic).length
-                                                            // Extrahera kort namn: 'Nod 1: Filsystem & Grunder' -> 'Filsystem & Grunder'
                                                             const shortName = info.name.includes(':') ? info.name.split(':')[1].trim() : info.name
                                                             return (
-                                                                <motion.button
+                                                                <button
                                                                     key={topic}
-                                                                    initial={{ opacity: 0, x: -10 }}
-                                                                    animate={{ opacity: 1, x: 0 }}
-                                                                    transition={{ delay: index * 0.02 }}
-                                                                    onClick={() => setOmtenta2SelectedNodes(prev =>
-                                                                        isSelected ? prev.filter(t => t !== topic) : [...prev, topic]
-                                                                    )}
+                                                                    onClick={() => setOmtenta2SelectedNodes(prev => isSelected ? prev.filter(t => t !== topic) : [...prev, topic])}
                                                                     className={cn(
-                                                                        "flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium transition-all text-left",
-                                                                        isSelected
-                                                                            ? "bg-teal-500/20 text-teal-200 border border-teal-500/50"
-                                                                            : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 border border-zinc-700/30"
+                                                                        "flex items-center gap-2 py-2 px-2 rounded-lg text-xs transition-all text-left",
+                                                                        isSelected ? "bg-teal-500/20 text-teal-200 border border-teal-500/40" : "bg-zinc-800/30 text-zinc-400 hover:bg-zinc-800/50 border border-transparent"
                                                                     )}
                                                                 >
-                                                                    <div className={cn(
-                                                                        "w-6 h-6 rounded-lg flex items-center justify-center shrink-0",
-                                                                        isSelected ? "bg-teal-500" : "bg-zinc-700"
-                                                                    )}>
-                                                                        {isSelected ? (
-                                                                            <Check className="w-4 h-4 text-white" />
-                                                                        ) : (
-                                                                            <Square className="w-4 h-4 text-zinc-500" />
-                                                                        )}
+                                                                    <div className={cn("w-4 h-4 rounded flex items-center justify-center shrink-0", isSelected ? "bg-teal-500" : "bg-zinc-700")}>
+                                                                        {isSelected && <Check className="w-3 h-3 text-white" />}
                                                                     </div>
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className="font-medium truncate">{shortName}</div>
-                                                                        <div className="text-xs opacity-60 truncate">{info.description}</div>
-                                                                    </div>
-                                                                    <span className={cn(
-                                                                        "text-xs px-2 py-1 rounded-lg shrink-0",
-                                                                        questionCount > 0 ? "bg-teal-500/20 text-teal-300" : "bg-zinc-700 text-zinc-500"
-                                                                    )}>
-                                                                        {questionCount} frågor
-                                                                    </span>
-                                                                </motion.button>
+                                                                    <span className="truncate">{shortName}</span>
+                                                                </button>
                                                             )
                                                         })}
                                                     </div>
@@ -664,39 +615,35 @@ export default function StudyPage() {
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
-
-                                    {/* Status message */}
-                                    {omtenta2SelectedNodes.length === 0 && (
-                                        <p className="text-xs text-orange-400 mt-2 text-center">⚠️ Välj minst en modul för att starta</p>
-                                    )}
+                                    {omtenta2SelectedNodes.length === 0 && <p className="text-[10px] text-orange-400 mt-2 text-center">⚠️ Välj minst en modul</p>}
                                 </div>
                             )}
 
                             {/* Start button */}
                             <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}` : ''}`}>
                                 <motion.button
-                                    whileHover={{ scale: 1.02 }}
+                                    whileHover={{ scale: 1.02, y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     disabled={tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0}
                                     className={cn(
-                                        "w-full py-4 rounded-2xl font-black text-lg",
-                                        "bg-gradient-to-r from-orange-500 via-red-500 to-purple-500",
-                                        "text-white shadow-xl shadow-orange-500/30",
-                                        "hover:shadow-2xl hover:shadow-orange-500/40 transition-all",
-                                        "flex items-center justify-center gap-3",
+                                        "w-full py-4 rounded-2xl font-bold text-base relative overflow-hidden group",
+                                        "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white",
+                                        "shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all",
+                                        "flex items-center justify-center gap-2",
                                         tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0 && "opacity-50 cursor-not-allowed"
                                     )}
                                 >
-                                    <Zap className="w-6 h-6" />
-                                    Starta Tenta-Simulator
-                                    <ChevronRight className="w-6 h-6" />
+                                    <motion.div
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                                        animate={{ x: ['-200%', '200%'] }}
+                                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                                    />
+                                    <Zap className="w-5 h-5 relative z-10" />
+                                    <span className="relative z-10">Starta Tenta-Simulator</span>
+                                    <ChevronRight className="w-5 h-5 relative z-10" />
                                 </motion.button>
                             </Link>
                         </div>
-
-                        {/* Decorative glows */}
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl" />
-                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
                     </div>
                 </motion.div>
 
