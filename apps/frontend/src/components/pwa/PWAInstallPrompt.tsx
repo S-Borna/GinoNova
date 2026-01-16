@@ -36,8 +36,16 @@ export function PWAInstallPrompt() {
     const [showPrompt, setShowPrompt] = useState(false)
     const [isIOS, setIsIOS] = useState(false)
     const [isStandalone, setIsStandalone] = useState(false)
+    const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
+        // Check if mobile device (width < 768px)
+        const mobile = window.innerWidth < 768
+        setIsMobile(mobile)
+        
+        // Don't show on desktop at all
+        if (!mobile) return
+
         // Check if already installed (standalone mode)
         const standalone = window.matchMedia('(display-mode: standalone)').matches ||
                           (window.navigator as any).standalone === true
@@ -116,8 +124,8 @@ export function PWAInstallPrompt() {
         localStorage.setItem('pwa-install-dismissed', Date.now().toString())
     }, [])
 
-    // Don't show if already installed
-    if (isStandalone) return null
+    // Don't show if already installed or on desktop
+    if (isStandalone || !isMobile) return null
 
     return (
         <AnimatePresence>

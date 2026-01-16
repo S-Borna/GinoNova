@@ -24,13 +24,9 @@ import { useAuth } from "@/components/auth"
 import {
     Settings,
     User,
-    Palette,
     Bell,
     Shield,
     Trash2,
-    Moon,
-    Sun,
-    Monitor,
     Mail,
     Smartphone,
     Lock,
@@ -46,8 +42,6 @@ import {
    TYPES
    ============================================================================ */
 
-type Theme = "light" | "dark" | "system"
-
 interface SettingsSection {
     id: string
     label: string
@@ -61,7 +55,6 @@ interface SettingsSection {
 
 const SETTINGS_SECTIONS: SettingsSection[] = [
     { id: "account", label: "Account", icon: User, description: "Manage your account details" },
-    { id: "appearance", label: "Appearance", icon: Palette, description: "Customize your experience" },
     { id: "notifications", label: "Notifications", icon: Bell, description: "Configure alerts and updates" },
     { id: "security", label: "Security", icon: Shield, description: "Password and privacy settings" },
     { id: "danger", label: "Danger Zone", icon: AlertTriangle, description: "Irreversible actions" },
@@ -147,50 +140,6 @@ function AccountSection() {
                     <Save className="w-4 h-4" />
                     {isSaving ? "Saving..." : "Save Changes"}
                 </button>
-            </div>
-        </div>
-    )
-}
-
-function AppearanceSection() {
-    const [theme, setTheme] = useState<Theme>("dark")
-
-    const themes = [
-        { id: "light" as Theme, label: "Light", icon: Sun, description: "Light mode" },
-        { id: "dark" as Theme, label: "Dark", icon: Moon, description: "Dark mode (default)" },
-        { id: "system" as Theme, label: "System", icon: Monitor, description: "Follow system preference" },
-    ]
-
-    return (
-        <div className="space-y-6">
-            <div>
-                <h3 className="text-lg font-semibold text-zinc-100 mb-1">Appearance</h3>
-                <p className="text-sm text-zinc-400">Customize how DevOpsHub looks</p>
-            </div>
-
-            {/* Theme Selection */}
-            <div className="space-y-3">
-                <label className="block text-sm font-medium text-zinc-300">
-                    Theme
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                    {themes.map((t) => (
-                        <button
-                            key={t.id}
-                            onClick={() => setTheme(t.id)}
-                            className={cn(
-                                "flex flex-col items-center gap-2 p-4 rounded-xl",
-                                "border transition-all",
-                                theme === t.id
-                                    ? "bg-purple-500/20 border-purple-500/50 text-purple-300"
-                                    : "bg-zinc-800/30 border-zinc-700/30 text-zinc-400 hover:border-zinc-600"
-                            )}
-                        >
-                            <t.icon className="w-6 h-6" />
-                            <span className="text-sm font-medium">{t.label}</span>
-                        </button>
-                    ))}
-                </div>
             </div>
         </div>
     )
@@ -426,8 +375,6 @@ export default function SettingsPage() {
         switch (activeSection) {
             case "account":
                 return <AccountSection />
-            case "appearance":
-                return <AppearanceSection />
             case "notifications":
                 return <NotificationsSection />
             case "security":
