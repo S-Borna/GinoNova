@@ -166,15 +166,15 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     }
 
     return (
-        <div className={cn("relative w-full", className)}>
-            {/* WIDGET - Compact for sidebar */}
+        <div className={cn("w-full", className)}>
+            {/* WIDGET - Compact clickable bar */}
             <motion.div
                 className={cn(
                     "flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer w-full",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
-                    musicPlaying && "border-green-500/60"
+                    musicPlaying && "border-green-500/60 rounded-b-none"
                 )}
                 onClick={handleWidgetClick}
                 whileTap={{ scale: 0.98 }}
@@ -185,11 +185,11 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-10 h-10 rounded object-cover"
+                            className="w-8 h-8 rounded object-cover"
                         />
                     ) : (
-                        <div className="w-10 h-10 rounded bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-4 h-4 text-zinc-500" />
+                        <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
+                            <Music className="w-3 h-3 text-zinc-500" />
                         </div>
                     )}
                     {/* Live indicator */}
@@ -200,73 +200,52 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
                 {/* Track Info */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1">
-                        {track.isPlaying ? (
-                            <span className="text-[9px] text-green-400 font-medium">● LIVE</span>
-                        ) : (
-                            <span className="text-[9px] text-zinc-500">Senaste</span>
-                        )}
-                    </div>
-                    <p className="text-[11px] font-medium text-white truncate leading-tight">{track.name}</p>
-                    <p className="text-[9px] text-zinc-400 truncate leading-tight">{track.artist}</p>
+                    <p className="text-[10px] font-medium text-white truncate leading-tight">{track.name}</p>
+                    <p className="text-[8px] text-zinc-400 truncate leading-tight">{track.artist}</p>
                 </div>
 
-                {/* Play Button */}
+                {/* Play/Close Button */}
                 <div className={cn(
                     "p-1 rounded-full flex-shrink-0",
-                    "bg-green-500/20 text-green-400"
+                    musicPlaying ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
                 )}>
                     {embedLoading ? (
                         <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : musicPlaying ? (
+                        <X className="w-3 h-3" />
                     ) : (
                         <Play className="w-3 h-3" fill="currentColor" />
                     )}
                 </div>
             </motion.div>
 
-            {/* SPOTIFY PLAYER FLYOUT - Opens downward */}
+            {/* SPOTIFY PLAYER - Inline expansion (not overlay) */}
             <AnimatePresence>
                 {musicPlaying && embedUrl && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        transition={{ duration: 0.15 }}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
                         className={cn(
-                            "absolute top-full left-0 right-0 mt-2 z-50",
-                            "rounded-lg overflow-hidden",
-                            "bg-zinc-900/95 backdrop-blur-xl",
-                            "border border-zinc-700/50",
-                            "shadow-xl"
+                            "overflow-hidden",
+                            "rounded-b-lg",
+                            "bg-zinc-900/95",
+                            "border border-t-0 border-green-500/20"
                         )}
                     >
-                        {/* Close button - minimal */}
-                        <div className="flex justify-end px-2 pt-1.5">
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
-                                    setMusicPlaying(false)
-                                }}
-                                className="p-0.5 rounded hover:bg-zinc-800 transition-colors"
-                            >
-                                <X className="w-3.5 h-3.5 text-zinc-500" />
-                            </button>
-                        </div>
-
-                        {/* Spotify Embed - Compact */}
-                        <div className="px-2 pb-2">
-                            <iframe
-                                ref={iframeRef}
-                                key={embedUrl}
-                                src={`${embedUrl}?autoplay=1`}
-                                width="100%"
-                                height="80"
-                                frameBorder="0"
-                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                loading="eager"
-                                style={{ borderRadius: '6px' }}
-                            />
-                        </div>
+                        {/* Spotify Embed - Ultra compact 52px */}
+                        <iframe
+                            ref={iframeRef}
+                            key={embedUrl}
+                            src={`${embedUrl}?autoplay=1`}
+                            width="100%"
+                            height="52"
+                            frameBorder="0"
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            loading="eager"
+                            className="rounded-b-lg"
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>
