@@ -25,7 +25,7 @@ import {
     Navbar,
     TracksPreview,
 } from "@/components/landing"
-import { CosmicIntro } from "@/components/landing/CosmicIntro"
+import CosmicIntro from "@/components/landing/CosmicIntro"
 import { ComparisonSection } from "@/components/landing/ComparisonSection"
 
 export default function LandingPage() {

@@ -189,10 +189,10 @@ function MessageBubble({ message }: MessageBubbleProps) {
                                 <em className="italic text-purple-200">{children}</em>
                             ),
                             a: ({ href, children }) => (
-                                <a 
-                                    href={href} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
+                                <a
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-cyan-400 underline underline-offset-2 hover:text-cyan-300 transition-colors font-medium"
                                 >
                                     {children}
