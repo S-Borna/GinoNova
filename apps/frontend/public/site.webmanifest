@@ -1,21 +1,25 @@
 {
-    "name": "DevOpsHub",
-    "short_name": "DevOpsHub",
-    "description": "Master DevOps skills with interactive learning paths",
+    "name": "GinoNova - DevOps Learning Platform",
+    "short_name": "GinoNova",
+    "description": "Master DevOps skills with interactive learning",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0a0a0a",
+    "background_color": "#05050a",
     "theme_color": "#8b5cf6",
+    "orientation": "portrait-primary",
+    "lang": "sv",
     "icons": [
         {
-            "src": "/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
+            "src": "/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
         },
         {
-            "src": "/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png"
+            "src": "/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
         }
     ]
 }

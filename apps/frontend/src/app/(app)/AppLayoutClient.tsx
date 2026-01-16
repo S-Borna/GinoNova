@@ -26,6 +26,8 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { RightSidebar } from "@/components/modules/RightSidebar"
 import { CosmicLockedOverlay } from "@/components/ui/cosmic-locked-overlay"
 import { DallasAssistant } from "@/components/ai/DallasAssistant"
+import { PWAInstallPrompt } from "@/components/pwa"
+import { useServiceWorker } from "@/hooks/useServiceWorker"
 
 /* ============================================================================
    HOOKS
@@ -101,6 +103,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
     const isDesktop = useMediaQuery("(min-width: 1024px)")
     const isTablet = useMediaQuery("(min-width: 768px)")
     const isMobile = !isTablet
+
+    // PWA Service Worker
+    useServiceWorker()
 
     // Mobile side menu state
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
@@ -197,6 +202,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Dallas AI Assistant - Persistent floating assistant on all pages */}
             <DallasAssistant />
+
+            {/* PWA Install Prompt - Shows after delay for eligible users */}
+            <PWAInstallPrompt />
         </div>
     )
 }
