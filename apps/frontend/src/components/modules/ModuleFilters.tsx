@@ -162,12 +162,14 @@ export function ModuleFilters({
                 <div className="flex items-center gap-3 flex-wrap">
                     {/* Search Bar */}
                     <div className="flex-1 min-w-[240px] relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" aria-hidden="true" />
                         <input
                             type="text"
                             placeholder="Search modules..."
                             value={filters.searchQuery}
                             onChange={handleSearchChange}
+                            aria-label="Search modules by name"
+                            role="searchbox"
                             className={cn(
                                 "w-full h-10 pl-10 pr-4 rounded-xl",
                                 "bg-zinc-800/50 border border-zinc-700/50",
@@ -183,6 +185,9 @@ export function ModuleFilters({
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsExpanded(!isExpanded)}
+                        aria-expanded={isExpanded}
+                        aria-controls="module-filters-panel"
+                        aria-label={`${isExpanded ? "Hide" : "Show"} filters${hasActiveFilters ? ` (${activeFiltersCount} active)` : ""}`}
                         className={cn(
                             "rounded-xl h-10 px-4 gap-2",
                             "border border-zinc-700/50",
@@ -191,10 +196,10 @@ export function ModuleFilters({
                                 : "bg-zinc-800/50 text-zinc-400 hover:text-white"
                         )}
                     >
-                        <Filter className="w-4 h-4" />
+                        <Filter className="w-4 h-4" aria-hidden="true" />
                         <span className="font-medium">Filters</span>
                         {hasActiveFilters && (
-                            <span className="px-1.5 py-0.5 rounded-full bg-purple-500 text-white text-xs font-bold">
+                            <span className="px-1.5 py-0.5 rounded-full bg-purple-500 text-white text-xs font-bold" aria-label={`${activeFiltersCount} filters active`}>
                                 {activeFiltersCount}
                             </span>
                         )}
@@ -203,6 +208,7 @@ export function ModuleFilters({
                                 "w-4 h-4 transition-transform duration-200",
                                 isExpanded && "rotate-180"
                             )}
+                            aria-hidden="true"
                         />
                     </Button>
 
@@ -212,15 +218,18 @@ export function ModuleFilters({
                             variant="ghost"
                             size="sm"
                             onClick={() => setShowSortMenu(!showSortMenu)}
+                            aria-haspopup="menu"
+                            aria-expanded={showSortMenu}
+                            aria-label={`Sort by ${sort.sortBy} (${sort.sortDirection})`}
                             className={cn(
                                 "rounded-xl h-10 px-4 gap-2",
                                 "bg-zinc-800/50 border border-zinc-700/50",
                                 "text-zinc-400 hover:text-white"
                             )}
                         >
-                            <SortAsc className="w-4 h-4" />
+                            <SortAsc className="w-4 h-4" aria-hidden="true" />
                             <span className="font-medium">Sort</span>
-                            <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className="w-4 h-4" aria-hidden="true" />
                         </Button>
 
                         {/* Sort Menu */}

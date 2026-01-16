@@ -25,6 +25,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import { AIRecommendations } from "@/components/dashboard/AIRecommendations"
 import { FeatureShowcase } from "@/components/dashboard/FeatureShowcase"
+import { ContinueLearning } from "@/components/dashboard/ContinueLearning"
 import { DallasAssistant } from "@/components/ai/DallasAssistant"
 
 // 🛡️ SECURITY: Disable prefetching on all links
@@ -862,6 +863,9 @@ export default function DashboardPage() {
                             delay={0.4}
                         />
                     </div>
+
+                    {/* Continue Learning - Quick Resume */}
+                    <ContinueLearning />
 
                     {/* What's New - Feature Showcase */}
                     <FeatureShowcase />

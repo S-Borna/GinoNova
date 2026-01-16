@@ -475,7 +475,6 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
             "sticky top-0 z-30 h-20",
             "bg-[#0a0a12]/90 backdrop-blur-xl",
             "border-b border-purple-500/10",
-            "overflow-hidden",
             className
         )}>
             {/* GinoNova Glow Radiation - Full width */}

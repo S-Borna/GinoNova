@@ -7,8 +7,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 const TOKEN_KEY = "auth_token"
 
-// Validation constants - Strengthened for security
-export const PASSWORD_MIN_LENGTH = 12  // Increased from 8 to 12
+// Validation constants - User friendly
+export const PASSWORD_MIN_LENGTH = 6
 export const PASSWORD_MAX_LENGTH = 128
 
 // Types matching backend schemas
@@ -60,34 +60,20 @@ export function validateEmail(email: string): ValidationResult {
 }
 
 /**
- * Validate password strength - Enhanced security requirements
+ * Validate password strength - Simple requirements
+ * Only checks minimum length (6 characters)
  */
 export function validatePassword(password: string): ValidationResult {
     if (!password) {
         return { valid: false, error: "Password is required" }
     }
 
-    // Length check
+    // Length check only
     if (password.length < PASSWORD_MIN_LENGTH) {
         return { valid: false, error: `Password must be at least ${PASSWORD_MIN_LENGTH} characters` }
     }
     if (password.length > PASSWORD_MAX_LENGTH) {
         return { valid: false, error: `Password must be at most ${PASSWORD_MAX_LENGTH} characters` }
-    }
-
-    // Complexity requirements
-    const hasUppercase = /[A-Z]/.test(password)
-    const hasLowercase = /[a-z]/.test(password)
-    const hasNumber = /\d/.test(password)
-    const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
-
-    const complexityCount = [hasUppercase, hasLowercase, hasNumber, hasSpecial].filter(Boolean).length
-
-    if (complexityCount < 3) {
-        return {
-            valid: false,
-            error: "Password must contain at least 3 of: uppercase, lowercase, number, or special character"
-        }
     }
 
     return { valid: true }
