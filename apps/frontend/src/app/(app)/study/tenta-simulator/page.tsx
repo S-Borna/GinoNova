@@ -624,116 +624,213 @@ export default function TentaSimulatorPage() {
 
     // Render setup phase
     const renderSetup = () => (
-        <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-purple-500/20 mb-6">
-                    <Target className="w-10 h-10 text-purple-400" />
-                </div>
-                <h1 className="text-3xl font-bold text-white mb-3">Tenta-Simulator</h1>
-                <p className="text-zinc-400">Simulera tentaförhållanden med tidspressad quiz</p>
-            </div>
+        <div className="max-w-4xl mx-auto">
+            {/* Hero Header with Glassmorphism */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center mb-8"
+            >
+                <motion.div
+                    className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-xl border border-purple-500/20 mb-6 relative overflow-hidden"
+                    whileHover={{ scale: 1.05, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                >
+                    {/* Animated background glow */}
+                    <motion.div
+                        className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20"
+                        animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.5, 0.8, 0.5]
+                        }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    />
+                    <Target className="w-12 h-12 text-purple-300 relative z-10" />
+                </motion.div>
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-3">
+                    Tenta-Simulator
+                </h1>
+                <p className="text-zinc-400 text-lg">Simulera riktiga tentaförhållanden • Test your skills under pressure</p>
+            </motion.div>
 
-            {/* Settings */}
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-6 mb-8">
-                <h2 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-yellow-400" />
-                    Inställningar
-                </h2>
+            {/* Main Settings Card with Glassmorphism */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="relative bg-gradient-to-br from-zinc-900/80 via-zinc-900/50 to-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-3xl p-8 mb-6 overflow-hidden"
+            >
+                {/* Subtle glow effect */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
 
-                {/* Duration */}
-                <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Tidsgräns</label>
-                    <div className="flex gap-3">
-                        {[15, 30, 45, 60].map(mins => (
-                            <button
-                                key={mins}
-                                onClick={() => setSettings(s => ({ ...s, duration: mins }))}
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-8">
+                        <div className="p-2.5 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/20">
+                            <Zap className="w-5 h-5 text-yellow-400" />
+                        </div>
+                        <h2 className="text-xl font-bold text-white">Konfigurera din tentasimulering</h2>
+                    </div>
+
+                    {/* Grid layout for better organization */}
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                        {/* Duration */}
+                        <div>
+                            <label className="flex items-center gap-2 text-sm font-medium text-zinc-300 mb-3">
+                                <Clock className="w-4 h-4 text-purple-400" />
+                                Tidsgräns
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                {[15, 30, 45, 60].map(mins => (
+                                    <motion.button
+                                        key={mins}
+                                        onClick={() => setSettings(s => ({ ...s, duration: mins }))}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 px-4 rounded-xl border transition-all font-medium relative overflow-hidden",
+                                            settings.duration === mins
+                                                ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30 border-purple-400/50 text-purple-200 shadow-lg shadow-purple-500/20"
+                                                : "bg-zinc-800/30 border-zinc-700/50 text-zinc-400 hover:border-zinc-600 hover:bg-zinc-800/50"
+                                        )}
+                                    >
+                                        {settings.duration === mins && (
+                                            <motion.div
+                                                layoutId="duration-active"
+                                                className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10"
+                                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                            />
+                                        )}
+                                        <span className="relative z-10">{mins} min</span>
+                                    </motion.button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Question count */}
+                        <div>
+                            <label className="flex items-center gap-2 text-sm font-medium text-zinc-300 mb-3">
+                                <Target className="w-4 h-4 text-blue-400" />
+                                Antal frågor
+                            </label>
+                            <div className="grid grid-cols-2 gap-2">
+                                {[10, 25, 50, 100].map(count => (
+                                    <motion.button
+                                        key={count}
+                                        onClick={() => setSettings(s => ({ ...s, questionCount: count }))}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 px-4 rounded-xl border transition-all font-medium relative overflow-hidden",
+                                            settings.questionCount === count
+                                                ? "bg-gradient-to-br from-blue-500/30 to-cyan-500/30 border-blue-400/50 text-blue-200 shadow-lg shadow-blue-500/20"
+                                                : "bg-zinc-800/30 border-zinc-700/50 text-zinc-400 hover:border-zinc-600 hover:bg-zinc-800/50"
+                                        )}
+                                    >
+                                        {settings.questionCount === count && (
+                                            <motion.div
+                                                layoutId="count-active"
+                                                className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10"
+                                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                            />
+                                        )}
+                                        <span className="relative z-10">{count}</span>
+                                    </motion.button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Difficulty - G/VG Selection */}
+                    <div className="mb-6">
+                        <label className="flex items-center gap-2 text-sm font-medium text-zinc-300 mb-3">
+                            <Award className="w-4 h-4 text-yellow-400" />
+                            Betygsnivå
+                        </label>
+                        <div className="grid grid-cols-3 gap-3">
+                            <motion.button
+                                onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: false }))}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 className={cn(
-                                    "flex-1 py-3 px-4 rounded-xl border transition-all",
-                                    settings.duration === mins
-                                        ? "bg-purple-500/20 border-purple-500 text-purple-300"
-                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                                    "py-4 px-4 rounded-xl border transition-all flex flex-col items-center gap-2 relative overflow-hidden",
+                                    settings.includeG && !settings.includeVG
+                                        ? "bg-gradient-to-br from-green-500/30 to-emerald-500/30 border-green-400/50 text-green-200 shadow-lg shadow-green-500/20"
+                                        : "bg-zinc-800/30 border-zinc-700/50 text-zinc-500 hover:border-zinc-600 hover:bg-zinc-800/50"
                                 )}
                             >
-                                {mins} min
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Question count */}
-                <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Antal frågor</label>
-                    <div className="flex gap-3">
-                        {[10, 25, 50, 100].map(count => (
-                            <button
-                                key={count}
-                                onClick={() => setSettings(s => ({ ...s, questionCount: count }))}
+                                {settings.includeG && !settings.includeVG && (
+                                    <motion.div
+                                        layoutId="difficulty-active"
+                                        className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="text-2xl font-bold relative z-10">G</span>
+                                <span className="text-xs opacity-80 relative z-10">Godkänt</span>
+                            </motion.button>
+                            <motion.button
+                                onClick={() => setSettings(s => ({ ...s, includeG: false, includeVG: true }))}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
                                 className={cn(
-                                    "flex-1 py-3 px-4 rounded-xl border transition-all",
-                                    settings.questionCount === count
-                                        ? "bg-purple-500/20 border-purple-500 text-purple-300"
-                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                                    "py-4 px-4 rounded-xl border transition-all flex flex-col items-center gap-2 relative overflow-hidden",
+                                    !settings.includeG && settings.includeVG
+                                        ? "bg-gradient-to-br from-purple-500/30 to-violet-500/30 border-purple-400/50 text-purple-200 shadow-lg shadow-purple-500/20"
+                                        : "bg-zinc-800/30 border-zinc-700/50 text-zinc-500 hover:border-zinc-600 hover:bg-zinc-800/50"
                                 )}
                             >
-                                {count}
-                            </button>
-                        ))}
+                                {!settings.includeG && settings.includeVG && (
+                                    <motion.div
+                                        layoutId="difficulty-active"
+                                        className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-violet-500/10"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="text-2xl font-bold relative z-10">VG</span>
+                                <span className="text-xs opacity-80 relative z-10">Väl Godkänt</span>
+                            </motion.button>
+                            <motion.button
+                                onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: true }))}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={cn(
+                                    "py-4 px-4 rounded-xl border transition-all flex flex-col items-center gap-2 relative overflow-hidden",
+                                    settings.includeG && settings.includeVG
+                                        ? "bg-gradient-to-br from-yellow-500/30 via-orange-500/30 to-pink-500/30 border-yellow-400/50 text-yellow-200 shadow-lg shadow-yellow-500/20"
+                                        : "bg-zinc-800/30 border-zinc-700/50 text-zinc-500 hover:border-zinc-600 hover:bg-zinc-800/50"
+                                )}
+                            >
+                                {settings.includeG && settings.includeVG && (
+                                    <motion.div
+                                        layoutId="difficulty-active"
+                                        className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 via-orange-500/10 to-pink-500/10"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="text-2xl font-bold relative z-10">Mixad</span>
+                                <span className="text-xs opacity-80 relative z-10">G + VG</span>
+                            </motion.button>
+                        </div>
+                        <motion.p
+                            key={`${settings.includeG}-${settings.includeVG}`}
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-xs text-zinc-400 mt-3 flex items-center gap-2 bg-zinc-800/30 rounded-lg p-2"
+                        >
+                            <Brain className="w-3.5 h-3.5 flex-shrink-0" />
+                            {settings.includeG && !settings.includeVG && "Fokus på grundläggande förståelse för G-nivå"}
+                            {!settings.includeG && settings.includeVG && "Avancerade frågor för högre betyg"}
+                            {settings.includeG && settings.includeVG && "Blandade frågor för fullständig tentaförberedelse"}
+                        </motion.p>
                     </div>
-                </div>
 
-                {/* Difficulty - G/VG Selection */}
-                <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Betygsnivå</label>
-                    <div className="grid grid-cols-3 gap-3">
-                        <button
-                            onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: false }))}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.includeG && !settings.includeVG
-                                    ? "bg-green-500/20 border-green-500 text-green-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            <span className="text-lg font-bold">G</span>
-                            <span className="text-xs opacity-70">Godkänt</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => ({ ...s, includeG: false, includeVG: true }))}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                !settings.includeG && settings.includeVG
-                                    ? "bg-purple-500/20 border-purple-500 text-purple-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            <span className="text-lg font-bold">VG</span>
-                            <span className="text-xs opacity-70">Väl Godkänt</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => ({ ...s, includeG: true, includeVG: true }))}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1",
-                                settings.includeG && settings.includeVG
-                                    ? "bg-gradient-to-r from-green-500/20 to-purple-500/20 border-yellow-500 text-yellow-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            <span className="text-lg font-bold">G+VG</span>
-                            <span className="text-xs opacity-70">Mixad</span>
-                        </button>
-                    </div>
-                    <p className="text-xs text-zinc-500 mt-2">
-                        {settings.includeG && !settings.includeVG && "Fokus på grundläggande förståelse för G-nivå"}
-                        {!settings.includeG && settings.includeVG && "Avancerade frågor för högre betyg"}
-                        {settings.includeG && settings.includeVG && "Blandade frågor för fullständig tentaförberedelse"}
-                    </p>
-                </div>
-
-                {/* Question Source Selection - Multi-select */}
-                <div className="mb-6">
-                    <label className="block text-sm text-zinc-400 mb-3">Frågekälla (välj en eller flera)</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {/* Question Source Selection - Multi-select */}
+                    <div className="mb-6">
+                        <label className="flex items-center gap-2 text-sm font-medium text-zinc-300 mb-3">
+                            <BookOpen className="w-4 h-4 text-teal-400" />
+                            Frågekällor <span className="text-zinc-500 text-xs ml-1">(välj en eller flera)</span>
+                        </label>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <button
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('omtenta-2')
@@ -836,62 +933,112 @@ export default function TentaSimulatorPage() {
                     </p>
                 </div>
 
-                {/* Timer toggle */}
-                <div className="flex items-center justify-between py-3">
-                    <span className="text-zinc-400">Visa timer</span>
-                    <button
-                        onClick={() => setSettings(s => ({ ...s, showTimer: !s.showTimer }))}
-                        className={cn(
-                            "w-12 h-6 rounded-full transition-all",
-                            settings.showTimer ? "bg-purple-500" : "bg-zinc-700"
-                        )}
-                    >
-                        <div className={cn(
-                            "w-5 h-5 rounded-full bg-white transition-transform",
-                            settings.showTimer ? "translate-x-6" : "translate-x-0.5"
-                        )} />
-                    </button>
+                    {/* Timer toggle with better design */}
+                    <div className="flex items-center justify-between p-4 bg-zinc-800/20 rounded-xl border border-zinc-700/30">
+                        <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-zinc-400" />
+                            <span className="text-sm font-medium text-zinc-300">Visa timer</span>
+                        </div>
+                        <button
+                            onClick={() => setSettings(s => ({ ...s, showTimer: !s.showTimer }))}
+                            className={cn(
+                                "relative w-14 h-7 rounded-full transition-all duration-300",
+                                settings.showTimer
+                                    ? "bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30"
+                                    : "bg-zinc-700"
+                            )}
+                        >
+                            <motion.div
+                                className="absolute top-0.5 left-0.5 w-6 h-6 rounded-full bg-white shadow-lg flex items-center justify-center"
+                                animate={{ x: settings.showTimer ? 26 : 0 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                            >
+                                {settings.showTimer && <Clock className="w-3 h-3 text-purple-600" />}
+                            </motion.div>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
 
-            {/* Stats preview - Show available questions per level */}
-            <div className="bg-zinc-900/30 border border-zinc-800 rounded-xl p-4 mb-8">
-                <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="text-zinc-500">Tillgängliga frågor:</span>
-                    <span className="text-zinc-300">
+            {/* Stats preview with glassmorphism */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-gradient-to-br from-zinc-900/60 to-zinc-900/40 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-5 mb-6"
+            >
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <div className="p-2 rounded-lg bg-teal-500/20 border border-teal-500/20">
+                            <Sparkles className="w-4 h-4 text-teal-400" />
+                        </div>
+                        <span className="text-sm font-medium text-zinc-300">Tillgängliga frågor</span>
+                    </div>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
                         {allQuestions.filter(q =>
                             (settings.includeG && q.difficulty === 'G') ||
                             (settings.includeVG && q.difficulty === 'VG')
-                        ).length} st
+                        ).length}
                     </span>
                 </div>
-                <div className="flex gap-4 text-xs">
-                    <span className="text-green-400">
-                        G: {allQuestions.filter(q => q.difficulty === 'G').length}
-                    </span>
-                    <span className="text-purple-400">
-                        VG: {allQuestions.filter(q => q.difficulty === 'VG').length}
-                    </span>
-                    <span className="text-zinc-500 ml-auto">
-                        Källa: {settings.selectedSources.map(s => s === 'omtenta-2' ? '🎯' : s === 'handson' ? '🔧' : s === 'linux-tenta' ? '📝' : '💻').join(' ')}
-                    </span>
+                <div className="flex items-center gap-3 text-sm">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-green-500/10 border border-green-500/20 rounded-lg">
+                        <span className="text-green-400 font-semibold">G:</span>
+                        <span className="text-green-300">{allQuestions.filter(q => q.difficulty === 'G').length}</span>
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-2 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                        <span className="text-purple-400 font-semibold">VG:</span>
+                        <span className="text-purple-300">{allQuestions.filter(q => q.difficulty === 'VG').length}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 ml-auto px-3 py-2 bg-zinc-800/30 rounded-lg">
+                        <span className="text-xs text-zinc-500">Källor:</span>
+                        <span className="text-base">
+                            {settings.selectedSources.map(s => s === 'omtenta-2' ? '🎯' : s === 'handson' ? '🔧' : s === 'linux-tenta' ? '📝' : '💻').join(' ')}
+                        </span>
+                    </div>
                 </div>
-            </div>
+            </motion.div>
 
-            {/* Start button */}
-            <button
+            {/* Start button with epic design */}
+            <motion.button
                 onClick={startSimulator}
                 disabled={!settings.includeG && !settings.includeVG}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                whileHover={settings.includeG || settings.includeVG ? { scale: 1.02, y: -2 } : {}}
+                whileTap={settings.includeG || settings.includeVG ? { scale: 0.98 } : {}}
                 className={cn(
-                    "w-full py-4 rounded-xl font-semibold text-lg flex items-center justify-center gap-3 transition-all",
+                    "w-full py-5 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition-all relative overflow-hidden group",
                     settings.includeG || settings.includeVG
-                        ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
-                        : "bg-zinc-800 text-zinc-500 cursor-not-allowed"
+                        ? "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white shadow-2xl shadow-purple-500/40 hover:shadow-purple-500/60"
+                        : "bg-zinc-800/50 border border-zinc-700 text-zinc-500 cursor-not-allowed"
                 )}
             >
-                <Play className="w-5 h-5" />
-                Starta Tenta-Simulator
-            </button>
+                {settings.includeG || settings.includeVG && (
+                    <>
+                        <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                            animate={{ x: ['-200%', '200%'] }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        />
+                        <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-purple-400/0 via-pink-400/20 to-purple-400/0"
+                            animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                        />
+                    </>
+                )}
+                <Play className="w-6 h-6 relative z-10" fill="currentColor" />
+                <span className="relative z-10">Starta Tenta-Simulator</span>
+                <motion.div
+                    className="absolute right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                >
+                    <ChevronRight className="w-5 h-5" />
+                </motion.div>
+            </motion.button>
         </div>
     )
 

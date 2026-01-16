@@ -1,9 +1,14 @@
 "use client"
 
 /**
- * Spotify Live Player - ONE CLICK TO PLAY
+ * Spotify Live Player - Widget + Flyout
  *
- * Klicka widgeten → Musik spelas DIREKT i dina högtalare
+ * Features:
+ * - Shows currently playing track from Last.fm
+ * - Click widget → Flyout with Spotify embed player
+ * - Music plays directly in browser (no external links)
+ * - Auto-fetches Spotify embed URL
+ * - Continues polling even when music is playing
  */
 
 import * as React from "react"
@@ -17,7 +22,6 @@ import {
     Headphones,
     Loader2,
     Play,
-    Square,
     X
 } from "lucide-react"
 
@@ -36,14 +40,11 @@ interface SpotifyLivePlayerProps {
 export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
-    const [musicPlaying, setMusicPlaying] = useState(false) // Is music playing on website?
+    const [musicPlaying, setMusicPlaying] = useState(false) // Flyout open state
     const [embedUrl, setEmbedUrl] = useState<string | null>(null)
     const [embedLoading, setEmbedLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
     const iframeRef = React.useRef<HTMLIFrameElement>(null)
-
-    // SEPARATE state for flyout - won't change when widget updates!
-    const [flyoutEmbedUrl, setFlyoutEmbedUrl] = useState<string | null>(null)
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -104,10 +105,11 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
         }
     }, [track, embedUrl])
 
+    // Initial fetch and polling
     useEffect(() => {
         fetchNowPlaying()
-        // Poll every 15 seconds - balance between speed and stability
-        const interval = setInterval(fetchNowPlaying, 15000)
+        // Poll every 30 seconds (even when flyout is open)
+        const interval = setInterval(fetchNowPlaying, 30000)
         return () => clearInterval(interval)
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -118,24 +120,19 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
         }
     }, [track, embedUrl, embedLoading, fetchSpotifyEmbed])
 
-    // Handle widget click - PLAY MUSIC NOW
+    // Handle widget click - toggle flyout
     const handleWidgetClick = async () => {
         if (!track) return
 
         if (!musicPlaying) {
-            // START PLAYING
+            // Open flyout
             if (!embedUrl && !embedLoading) {
                 await fetchSpotifyEmbed()
             }
-            // Save current embed URL to flyout (won't change when widget updates)
-            if (embedUrl) {
-                setFlyoutEmbedUrl(embedUrl)
-            }
             setMusicPlaying(true)
         } else {
-            // STOP PLAYING
+            // Close flyout
             setMusicPlaying(false)
-            setFlyoutEmbedUrl(null)
         }
     }
 
@@ -143,13 +140,13 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (loading) {
         return (
             <div className={cn(
-                "flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-900/50 border border-zinc-800 h-10",
+                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
                 className
             )}>
-                <div className="w-8 h-8 rounded bg-zinc-800 animate-pulse" />
-                <div className="space-y-1">
-                    <div className="h-2.5 w-16 bg-zinc-800 rounded animate-pulse" />
-                    <div className="h-2 w-12 bg-zinc-800 rounded animate-pulse" />
+                <div className="w-8 h-8 rounded-md bg-zinc-800 animate-pulse" />
+                <div className="flex-1 space-y-1">
+                    <div className="h-3 w-20 bg-zinc-800 rounded animate-pulse" />
+                    <div className="h-2 w-14 bg-zinc-800 rounded animate-pulse" />
                 </div>
             </div>
         )
@@ -159,7 +156,7 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
     if (!track?.name) {
         return (
             <div className={cn(
-                "flex items-center gap-1.5 px-2 py-1 rounded-lg bg-zinc-900/50 border border-zinc-800 h-10",
+                "flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-900/50 border border-zinc-800",
                 className
             )}>
                 <Music className="w-4 h-4 text-zinc-500" />
@@ -170,14 +167,14 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
 
     return (
         <div className={cn("relative", className)}>
-            {/* WIDGET - Always visible, continues updating */}
+            {/* WIDGET - Always visible */}
             <motion.div
                 className={cn(
-                    "flex items-center gap-1.5 px-2 py-1 rounded-lg cursor-pointer",
+                    "flex items-center gap-2 px-2 py-1.5 rounded-xl cursor-pointer",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
                     "border border-green-500/20 hover:border-green-500/40",
                     "transition-all duration-200",
-                    "h-10",
+                    "h-[56px] w-[280px]",
                     musicPlaying && "border-green-500/60 shadow-lg shadow-green-500/20"
                 )}
                 onClick={handleWidgetClick}
@@ -190,14 +187,14 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                         <img
                             src={track.albumArt}
                             alt={track.album || 'Album'}
-                            className="w-8 h-8 rounded object-cover"
+                            className="w-12 h-12 rounded-md object-cover"
                         />
                     ) : (
-                        <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
-                            <Music className="w-4 h-4 text-zinc-500" />
+                        <div className="w-12 h-12 rounded-md bg-zinc-800 flex items-center justify-center">
+                            <Music className="w-5 h-5 text-zinc-500" />
                         </div>
                     )}
-                    {/* Spotify playing indicator */}
+                    {/* Live indicator */}
                     {track.isPlaying && (
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                     )}
@@ -238,35 +235,54 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 </div>
             </motion.div>
 
-            {/* SPOTIFY PLAYER - Flyout to the LEFT */}
+            {/* SPOTIFY PLAYER FLYOUT */}
             <AnimatePresence>
-                {musicPlaying && flyoutEmbedUrl && (
+                {musicPlaying && embedUrl && (
                     <motion.div
-                        initial={{ opacity: 0, x: 20, scale: 0.95 }}
+                        initial={{ opacity: 0, x: -20, scale: 0.95 }}
                         animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, x: 20, scale: 0.95 }}
+                        exit={{ opacity: 0, x: -20, scale: 0.95 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
                         className={cn(
-                            "absolute right-full mr-2 top-1/2 -translate-y-1/2 z-40",
-                            "rounded-lg overflow-hidden",
+                            "absolute top-0 left-full ml-3 z-50",
+                            "rounded-xl overflow-hidden",
                             "bg-zinc-900/95 backdrop-blur-xl",
                             "border border-zinc-800/50",
-                            "shadow-xl shadow-black/40",
-                            "h-[80px] w-[300px]"
+                            "shadow-2xl shadow-black/50",
+                            "w-[320px]"
                         )}
                     >
-                        {/* Spotify Embed - 80px compact mode */}
-                        <iframe
-                            ref={iframeRef}
-                            key={flyoutEmbedUrl}
-                            src={`${flyoutEmbedUrl}&autoplay=1`}
-                            width="100%"
-                            height="80"
-                            frameBorder="0"
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            loading="eager"
-                            style={{ borderRadius: '8px' }}
-                        />
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-800/50 bg-zinc-900/50">
+                            <div className="flex items-center gap-2">
+                                <Volume2 className="w-4 h-4 text-green-500 animate-pulse" />
+                                <span className="text-xs font-medium text-white">Spelar från Spotify</span>
+                            </div>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setMusicPlaying(false)
+                                }}
+                                className="p-1 rounded-lg hover:bg-zinc-800 transition-colors"
+                            >
+                                <X className="w-4 h-4 text-zinc-400" />
+                            </button>
+                        </div>
+
+                        {/* Spotify Embed */}
+                        <div className="p-2">
+                            <iframe
+                                ref={iframeRef}
+                                key={embedUrl}
+                                src={`${embedUrl}?autoplay=1`}
+                                width="100%"
+                                height="152"
+                                frameBorder="0"
+                                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                loading="eager"
+                                style={{ borderRadius: '8px' }}
+                            />
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -33,7 +33,7 @@ import {
     Clock
 } from "lucide-react"
 import { useSessionTimer } from "@/hooks/useSessionTimer"
-import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
+import { SpotifyLivePlayer } from "@/components/spotify/SpotifyLivePlayer"
 
 /* ============================================================================
    TYPES
@@ -505,7 +505,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 {/* Right side */}
                 <div className="flex items-center gap-3 shrink-0 ml-auto">
                     {/* Now Playing Widget - Same design as pulse meter, compact for topbar */}
-                    <NowPlayingWidget variant="mini" className="hidden xl:flex" />
+                    <SpotifyLivePlayer className="hidden xl:flex" />
 
                     {/* Session Timer - Only show when authenticated */}
                     {isAuthenticated && <SessionTimerDisplay />}
