@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
         return NextResponse.json({
             spotifyId: cached.spotifyId,
-            embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0`,
+            embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0&autoplay=1`,
             cached: true
         })
     }
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
 
         return NextResponse.json({
             spotifyId,
-            embedUrl: `https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0`,
+            embedUrl: `https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0&autoplay=1`,
             cached: false
         })
 

@@ -44,9 +44,23 @@ interface AuthProviderProps {
     children: ReactNode
 }
 
+// DEV BYPASS: Skip auth in development mode
+const DEV_BYPASS_AUTH = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true'
+
+// Mock user for dev bypass
+const DEV_USER: UserPublic = {
+    id: 'dev-user-12345' as unknown as `${string}-${string}-${string}-${string}-${string}`,
+    email: 'dev@localhost',
+    full_name: 'Dev User',
+    is_active: true,
+    is_admin: true,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<UserPublic | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState<UserPublic | null>(DEV_BYPASS_AUTH ? DEV_USER : null)
+    const [loading, setLoading] = useState(DEV_BYPASS_AUTH ? false : true)
     const [error, setError] = useState<string | null>(null)
     const pathname = usePathname()
 
@@ -60,6 +74,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     // Handle OAuth session from NextAuth
     useEffect(() => {
+        // Skip if DEV_BYPASS is enabled
+        if (DEV_BYPASS_AUTH) {
+            console.log('[Auth] DEV BYPASS ENABLED - skipping authentication')
+            return
+        }
+
         const handleOAuthSession = async () => {
             if (sessionStatus === "loading") return
 
