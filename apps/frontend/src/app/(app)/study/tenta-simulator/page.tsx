@@ -856,7 +856,7 @@ export default function TentaSimulatorPage() {
                             <BookOpen className="w-4 h-4 text-teal-400" />
                             Frågekällor <span className="text-zinc-500 text-xs ml-1">(välj en eller flera)</span>
                         </label>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                             <button
                                 onClick={() => setSettings(s => {
                                     const sources = s.selectedSources.includes('omtenta-2')
