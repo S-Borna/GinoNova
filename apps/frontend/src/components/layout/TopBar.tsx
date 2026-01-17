@@ -147,11 +147,6 @@ function UserDropdown() {
                         </Link>
                     </div>
 
-                    {/* Theme Toggle */}
-                    <div className="border-t border-neutral-100 dark:border-neutral-800">
-                        <ThemeToggle variant="menu" />
-                    </div>
-
                     {/* Logout */}
                     <div className="border-t border-neutral-100 dark:border-neutral-800 pt-1">
                         <button

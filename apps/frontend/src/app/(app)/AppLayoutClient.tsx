@@ -27,6 +27,7 @@ import { RightSidebar } from "@/components/modules/RightSidebar"
 import { CosmicLockedOverlay } from "@/components/ui/cosmic-locked-overlay"
 import { DallasAssistant } from "@/components/ai/DallasAssistant"
 import { PWAInstallPrompt } from "@/components/pwa"
+import { ScrollToTop } from "@/components/ui/ScrollToTop"
 import { useServiceWorker } from "@/hooks/useServiceWorker"
 
 /* ============================================================================
@@ -205,6 +206,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* PWA Install Prompt - Shows after delay for eligible users */}
             <PWAInstallPrompt />
+
+            {/* Scroll to Top - Mobile only, centered at top */}
+            <ScrollToTop />
         </div>
     )
 }

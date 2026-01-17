@@ -29,8 +29,20 @@ import CosmicIntro from "@/components/landing/CosmicIntro"
 import { ComparisonSection } from "@/components/landing/ComparisonSection"
 
 export default function LandingPage() {
+    const [isMobile, setIsMobile] = React.useState(false)
     const [introFading, setIntroFading] = React.useState(false)
     const [introGone, setIntroGone] = React.useState(false)
+
+    // Check if mobile on mount
+    React.useEffect(() => {
+        const mobile = window.innerWidth < 768
+        setIsMobile(mobile)
+        // On mobile: skip intro animation entirely, show landing immediately
+        if (mobile) {
+            setIntroFading(true)
+            setIntroGone(true)
+        }
+    }, [])
 
     const handleIntroComplete = React.useCallback(() => {
         // Intro starts fading - begin showing landing underneath
@@ -41,12 +53,12 @@ export default function LandingPage() {
 
     return (
         <>
-            {/* Landing page renders UNDERNEATH intro, fades in as intro fades out */}
+            {/* Landing page - on mobile: visible immediately, on desktop: fades in after intro */}
             <motion.div
                 className="relative min-h-screen bg-[#05050a] text-white overflow-x-hidden"
-                initial={{ opacity: 0 }}
+                initial={{ opacity: isMobile ? 1 : 0 }}
                 animate={{ opacity: introFading ? 1 : 0 }}
-                transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: isMobile ? 0 : 1.0, ease: [0.16, 1, 0.3, 1] }}
             >
                 <Navbar />
                 <main>
