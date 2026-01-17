@@ -251,11 +251,12 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                         )}
                     >
                         {/* Spotify Embed - Compact */}
+                        {/* KEY: iframe re-creates on each open = autoplay works */}
                         <iframe
-                            key={embedUrl}
-                            src={embedUrl}
+                            key={`${embedUrl}-${Date.now()}`}
+                            src={`${embedUrl}&autoplay=1`}
                             width="100%"
-                            height="80"
+                            height="152"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                             allowFullScreen
