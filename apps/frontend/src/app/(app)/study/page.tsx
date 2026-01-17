@@ -343,7 +343,7 @@ export default function StudyPage() {
                                         <span className="text-sm font-semibold text-white">Antal frågor</span>
                                     </div>
                                     <div className="grid grid-cols-4 gap-1.5">
-                                        {[100, 200, 300, 'Alla'].map(count => (
+                                        {[25, 50, 75, 100, 150, 200, 250, 'Alla'].map(count => (
                                             <motion.button
                                                 key={count}
                                                 onClick={() => setTentaCount(count === 'Alla' ? 999 : count as number)}
