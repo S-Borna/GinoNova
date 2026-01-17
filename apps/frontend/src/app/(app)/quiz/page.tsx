@@ -186,62 +186,37 @@ export default function QuizPage() {
           setAccessMessage("");
         }
 
-        // Handle modules - fetch ALL modules from content source (SkillsMaps)
+        // Handle modules - use quiz-specific modules endpoint
         if (modulesRes && modulesRes.ok) {
           const modulesData = await modulesRes.json();
           console.log("Modules data:", modulesData);
           setModules(modulesData.modules || []);
         } else {
-          // Try fetching from content source directly (all skillsmaps modules)
-          try {
-            const contentRes = await fetch(`${API_BASE_URL}/api/modules/full`, { headers });
-            if (contentRes.ok) {
-              const contentModules = await contentRes.json();
-              const formattedModules = contentModules.map((m: { slug: string; title?: string; name?: string; description?: string }) => ({
-                slug: m.slug,
-                title: m.title || m.name || m.slug,
-                description: m.description || ""
-              }));
-              console.log("Using content modules:", formattedModules.length);
-              setModules(formattedModules);
-            } else {
-              throw new Error("Content fetch failed");
-            }
-          } catch {
-            // Fallback to Camp DevOps modules only
-            console.log("Using fallback modules (Camp DevOps)");
-            setModules([
-              { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps - från grunden till produktion" },
-              { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder: Linux Filsystem, Rättigheter, Processhantering, Nätverk, SSH, Bash" },
-              { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar som tar dig från grunderna till avancerade Linux- och DevOps-koncept" }
-            ]);
-          }
+          // Fallback to hardcoded list (avoid expensive /api/modules/full call)
+          console.log("Using fallback modules");
+          setModules([
+            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps" },
+            { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder" },
+            { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar" },
+            { slug: "manpage-tenta", title: "📚 Manpage Tenta", description: "AI-genererade frågor från manpage-tenta" },
+            { slug: "omtenta-2", title: "🎯 Omtenta 2.0", description: "AI-genererade frågor från Omtenta 2.0" },
+            { slug: "handson", title: "🔧 Hands-On Labs", description: "AI-genererade frågor från labbar" },
+            { slug: "linux-commands", title: "💻 Linux Kommandon", description: "AI-genererade kommandofrågor" }
+          ]);
         }
       } catch (err) {
         console.error("Init error:", err);
-        // Fail gracefully - try content source first
+        // Fail gracefully with hardcoded list
         setHasAccess(true);
-        try {
-          const contentRes = await fetch(`${API_BASE_URL}/api/modules/full`);
-          if (contentRes.ok) {
-            const contentModules = await contentRes.json();
-            const formattedModules = contentModules.map((m: { slug: string; title?: string; name?: string; description?: string }) => ({
-              slug: m.slug,
-              title: m.title || m.name || m.slug,
-              description: m.description || ""
-            }));
-            setModules(formattedModules);
-          } else {
-            throw new Error("Fetch failed");
-          }
-        } catch {
-          // Ultimate fallback - Camp DevOps modules only
-          setModules([
-            { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps - från grunden till produktion" },
-            { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder för tentaförberedelse" },
-            { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar för Linux och DevOps" }
-          ]);
-        }
+        setModules([
+          { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps" },
+          { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder" },
+          { slug: "hands-on-lab", title: "Hands-On Lab", description: "Praktiska labbar" },
+          { slug: "manpage-tenta", title: "📚 Manpage Tenta", description: "AI-genererade frågor från manpage-tenta" },
+          { slug: "omtenta-2", title: "🎯 Omtenta 2.0", description: "AI-genererade frågor från Omtenta 2.0" },
+          { slug: "handson", title: "🔧 Hands-On Labs", description: "AI-genererade frågor från labbar" },
+          { slug: "linux-commands", title: "💻 Linux Kommandon", description: "AI-genererade kommandofrågor" }
+        ]);
         setError("Anslutningsfel. Använder lokal modullista.");
       }
     };
