@@ -363,11 +363,16 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     # These are the same sources used in Tenta Simulator, but AI generates NEW questions
     # based on the content/style instead of showing static questions
     
+    # Get project root (2 levels up from this file)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_root = os.path.dirname(os.path.dirname(current_dir))
+    project_root = os.path.dirname(os.path.dirname(backend_root))
+    
     STATIC_SOURCES = {
-        "manpage-tenta": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project/ManpageTentan.md",
+        "manpage-tenta": os.path.join(project_root, "ManpageTentan.md"),
         "linux-tenta": None,  # May not exist
-        "omtenta-2": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project/Omtenta",  # Directory
-        "handson": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project",  # Root for Handson files
+        "omtenta-2": os.path.join(project_root, "Omtenta"),  # Directory
+        "handson": project_root,  # Root for Handson files
         "linux-commands": None,  # Will use quiz file data instead
     }
     
