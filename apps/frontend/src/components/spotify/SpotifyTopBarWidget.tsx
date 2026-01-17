@@ -250,10 +250,10 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                             "z-50"
                         )}
                     >
-                        {/* Spotify Embed - Compact */}
+                        {/* Spotify Embed */}
                         <iframe
                             key={embedUrl}
-                            src={embedUrl}
+                            src={`${embedUrl}&autoplay=1`}
                             width="100%"
                             height="80"
                             frameBorder="0"
