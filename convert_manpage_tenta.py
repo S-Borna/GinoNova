@@ -355,20 +355,36 @@ def translate_to_english(text: str) -> str:
 
     return result
 
-def randomize_options(question: Dict) -> Dict:
-    """Randomiserar ordningen på svarsalternativen"""
+def randomize_options(question: Dict, target_idx: int = None) -> Dict:
+    """Randomiserar ordningen på svarsalternativen
+    Om target_idx ges, placera rätt svar där, annars randomisera"""
     options = question['options'].copy()
     correct_idx = question['correct_index']
-
-    # Skapa lista med index
-    indices = [0, 1, 2, 3]
-    random.shuffle(indices)
-
-    # Skapa nytt options-array enligt shufflad ordning
-    new_options = [options[i] for i in indices]
-
-    # Hitta var det korrekta svaret hamnade
-    new_correct_idx = indices.index(correct_idx)
+    
+    if target_idx is not None:
+        # Flytta rätt svar till target position
+        indices = [0, 1, 2, 3]
+        indices.remove(correct_idx)
+        random.shuffle(indices)
+        
+        # Skapa ny ordning där rätt svar är på target_idx
+        new_indices = []
+        idx_counter = 0
+        for i in range(4):
+            if i == target_idx:
+                new_indices.append(correct_idx)
+            else:
+                new_indices.append(indices[idx_counter])
+                idx_counter += 1
+        
+        new_options = [options[i] for i in new_indices]
+        new_correct_idx = target_idx
+    else:
+        # Slumpa helt
+        indices = [0, 1, 2, 3]
+        random.shuffle(indices)
+        new_options = [options[i] for i in indices]
+        new_correct_idx = indices.index(correct_idx)
 
     return {
         'question': question['question'],
@@ -438,9 +454,30 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
         'export const MANPAGE_TENTA_QUESTIONS: ManpageTentaQuestion[] = ['
     ]
 
+    # Skapa perfekt jämn fördelning av correctIndex
+    # 298 frågor: 298 % 4 = 2, så två får 75 och två får 74
+    all_questions = g_questions + vg_questions
+    total = len(all_questions)
+    
+    # Skapa exakt fördelning: varje index får floor(total/4) eller ceil(total/4)
+    base_count = total // 4  # 74
+    extra = total % 4  # 2
+    
+    target_distribution = []
+    for i in range(4):
+        count = base_count + (1 if i < extra else 0)
+        target_distribution.extend([i] * count)
+    
+    # Verifiera att vi har rätt antal
+    assert len(target_distribution) == total, f"Distribution length mismatch: {len(target_distribution)} != {total}"
+    
+    # Shuffla för att undvika sekventiellt mönster
+    random.shuffle(target_distribution)
+
     # G-frågor
     for idx, q in enumerate(g_questions, 1):
-        randomized = randomize_options(q)
+        target_idx = target_distribution[idx - 1]
+        randomized = randomize_options(q, target_idx)
         category = categorize_question(randomized['question'])
 
         lines.append('    {')
@@ -458,7 +495,8 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
 
     # VG-frågor
     for idx, q in enumerate(vg_questions, 1):
-        randomized = randomize_options(q)
+        target_idx = target_distribution[len(g_questions) + idx - 1]
+        randomized = randomize_options(q, target_idx)
         category = categorize_question(randomized['question'])
 
         lines.append('    {')
@@ -506,16 +544,19 @@ def main():
 
     # Statistik på rätta svar efter randomisering
     print("\n📊 Fördelning av korrekta svar (efter randomisering):")
-    all_q = g_questions + vg_questions
-    randomized_all = [randomize_options(q) for q in all_q]
-    dist = [0, 0, 0, 0]
-    for q in randomized_all:
-        dist[q['correct_index']] += 1
+    
+    # Läs faktisk fördelning från genererad fil
+    with open(output_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    import re
+    indices = re.findall(r'correctIndex:\s*(\d+)', content)
+    dist = [indices.count(str(i)) for i in range(4)]
 
-    print(f"   A: {dist[0]} ({dist[0]/len(randomized_all)*100:.1f}%)")
-    print(f"   B: {dist[1]} ({dist[1]/len(randomized_all)*100:.1f}%)")
-    print(f"   C: {dist[2]} ({dist[2]/len(randomized_all)*100:.1f}%)")
-    print(f"   D: {dist[3]} ({dist[3]/len(randomized_all)*100:.1f}%)")
+    print(f"   A: {dist[0]} ({dist[0]/len(indices)*100:.1f}%)")
+    print(f"   B: {dist[1]} ({dist[1]/len(indices)*100:.1f}%)")
+    print(f"   C: {dist[2]} ({dist[2]/len(indices)*100:.1f}%)")
+    print(f"   D: {dist[3]} ({dist[3]/len(indices)*100:.1f}%)")
 
 if __name__ == '__main__':
     main()

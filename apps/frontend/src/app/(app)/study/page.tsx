@@ -9,9 +9,13 @@
  * - Här väljer användaren inställningar (tid, frågor, källa)
  * - Klick på "Starta" skickar till /study/tenta-simulator med URL-params
  *
- * Vid ändringar av frågekällor (t.ex. nya quiz-moduler):
- * → Uppdatera DENNA FIL FÖRST (study/page.tsx)
- * → tenta-simulator/page.tsx används för själva quiz-körningen
+ * 🔴 NYA FRÅGEKÄLLOR - LÄGG TILL HÄR FÖRST! 🔴
+ * 1. Uppdatera tentaSource type (rad ~162)
+ * 2. Lägg till knapp under "Frågekällor" (rad ~460-520)
+ * 3. Lägg till beskrivning i texten under knapparna (rad ~521-526)
+ * 4. Därefter uppdatera även tenta-simulator/page.tsx för quiz-motorn
+ *
+ * FLÖDE: /study (denna fil) → välj källa → Starta → /study/tenta-simulator (quiz körs)
  */
 
 import * as React from "react"
@@ -159,7 +163,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2'>('omtenta-2')
+    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2' | 'manpage-tenta'>('omtenta-2')
     const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
     const [showNodeSelector, setShowNodeSelector] = useState(false)
 
@@ -516,12 +520,28 @@ export default function StudyPage() {
                                         <span className="text-[10px] font-semibold">Linux Tentan</span>
                                         <span className="text-[9px] opacity-60">20 frågor</span>
                                     </motion.button>
+                                    <motion.button
+                                        onClick={() => setTentaSource('manpage-tenta')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'manpage-tenta'
+                                                ? "bg-gradient-to-br from-cyan-500/40 to-blue-500/40 border border-cyan-400/50 text-cyan-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                        )}
+                                    >
+                                        <span className="text-lg">📚</span>
+                                        <span className="text-[10px] font-semibold">Manpage Tenta</span>
+                                        <span className="text-[9px] opacity-60">298 frågor</span>
+                                    </motion.button>
                                 </div>
                                 <p className="text-[10px] text-zinc-500 mt-2 text-center">
                                     {tentaSource === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
                                     {tentaSource === 'handson' && "🔧 Praktiska frågor"}
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
                                     {tentaSource === 'linux-tenta' && "📝 Original tentafrågor"}
+                                    {tentaSource === 'manpage-tenta' && "📚 Omfattande Linux/Unix kommandoreferens (243 G + 55 VG)"}
                                 </p>
                             </div>
 

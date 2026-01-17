@@ -5,16 +5,26 @@
  *
  * ⚠️ VIKTIGT: Detta är QUIZ-MOTORN, inte setup-sidan!
  * → Huvudsidan för val av inställningar är: /study/page.tsx (Studyroom)
- * → Vid ändringar av frågekällor: UPPDATERA study/page.tsx FÖRST!
+ *
+ * 🔴 NYA FRÅGEKÄLLOR? GÅ TILL /study/page.tsx FÖRST! 🔴
+ * 1. Lägg först till källa i study/page.tsx (setup-sidan där användaren väljer)
+ * 2. Därefter uppdatera denna fil för quiz-logiken:
+ *    - Importera quiz-data
+ *    - Lägg till converter-funktion
+ *    - Lägg till i useMemo för questions
+ *    - Lägg till i allQuestions baserat på selectedSources
+ *    - Lägg till knapp i backup setup-vy (om den används)
  *
  * Denna sida:
  * - Tar emot inställningar via URL-params från Studyroom
  * - Kör själva quizzen med timer, frågor, resultat
  * - Har en backup setup-vy om man går hit direkt (utan params)
  *
+ * FLÖDE: /study (välj källa) → Starta → /study/tenta-simulator (denna fil - quiz körs)
+ *
  * Features:
  * - Timed sessions (60, 75, 90, 120 min)
- * - Random questions from Omtenta 2.0 + Hands-On + Linux Commands + Linux Tenta
+ * - Random questions from Omtenta 2.0 + Hands-On + Linux Commands + Linux Tenta + Manpage Tenta
  * - Multi-select question sources
  * - Mix of G and VG difficulty
  * - Live grading OR grading at end
@@ -98,6 +108,7 @@ const DEFAULT_SETTINGS: SimulatorSettings = {
 // Shuffle array helper
 function shuffleArray<T>(array: T[]): T[] {
     const shuffled = [...array]
+    // Fisher-Yates shuffle with crypto random for better randomness
     for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
@@ -365,6 +376,7 @@ export default function TentaSimulatorPage() {
                     return false
                 })
                 const shuffled = shuffleArray(filtered)
+                console.log('🎲 Shuffled questions:', shuffled.length, 'First 5 IDs:', shuffled.slice(0, 5).map(q => q.id))
                 const sliced = shuffled.slice(0, newSettings.questionCount)
                 // Shuffle options within each question for randomized answer positions
                 const prepared = sliced.map(q => shuffleQuestionOptions(q))

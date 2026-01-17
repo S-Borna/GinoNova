@@ -177,10 +177,12 @@ async def get_available_modules(
 ):
     """Get list of modules available for quiz generation.
 
-    Returns the same modules that are shown in Camp DevOps:
-    - Linux 24/7
-    - Linux Tentaplugg
-    - Hands-On Lab
+    Returns:
+    - Camp DevOps modules (Linux 24/7, Linux Tentaplugg, Hands-On Lab)
+    - Static question sources (Manpage Tenta, Omtenta 2.0, etc.)
+    
+    AI Quiz generates NEW questions based on the content/style of these sources,
+    unlike Tenta Simulator which shows the actual static questions.
     """
     # Get Camp DevOps modules dynamically from content source
     from src.db.seeds.content import get_camp_devops_modules
@@ -195,5 +197,33 @@ async def get_available_modules(
         }
         for m in camp_modules
     ]
+    
+    # Add static question sources (same as Tenta Simulator)
+    # AI generates NEW questions based on these, not showing the static ones
+    static_sources = [
+        {
+            "slug": "manpage-tenta",
+            "title": "📚 Manpage Tenta",
+            "description": "AI-genererade frågor baserat på Linux manpage-tenta (298 frågor som källa)"
+        },
+        {
+            "slug": "omtenta-2",
+            "title": "🎯 Omtenta 2.0",
+            "description": "AI-genererade frågor baserat på Omtenta 2.0 innehåll"
+        },
+        {
+            "slug": "handson",
+            "title": "🔧 Hands-On Labs",
+            "description": "AI-genererade frågor baserat på praktiska labbövningar"
+        },
+        {
+            "slug": "linux-commands",
+            "title": "💻 Linux Kommandon",
+            "description": "AI-genererade frågor baserat på Linux kommandoreferens"
+        },
+    ]
+    
+    # Combine and return
+    all_sources = available_modules + static_sources
 
-    return {"modules": available_modules}
+    return {"modules": all_sources}

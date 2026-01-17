@@ -33,12 +33,16 @@ def _get_client():
             # Check OPENAI_KEY first (Railway config), then OPENAI_API_KEY
             api_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY")
             if not api_key:
-                logger.warning("OpenAI API key not configured (checked OPENAI_KEY and OPENAI_API_KEY)")
+                logger.error("❌ OpenAI API key not configured (checked OPENAI_KEY and OPENAI_API_KEY)")
                 return None
-            _openai_client = OpenAI(api_key=api_key)
-            logger.info(f"OpenAI client initialized with key from: {'OPENAI_KEY' if os.getenv('OPENAI_KEY') else 'OPENAI_API_KEY'}")
+            try:
+                _openai_client = OpenAI(api_key=api_key, timeout=30.0)  # 30 second timeout
+                logger.info(f"✅ OpenAI client initialized with key from: {'OPENAI_KEY' if os.getenv('OPENAI_KEY') else 'OPENAI_API_KEY'}")
+            except Exception as e:
+                logger.error(f"❌ Failed to initialize OpenAI client: {e}")
+                return None
         except ImportError:
-            logger.error("OpenAI package not installed")
+            logger.error("❌ OpenAI package not installed - run: pip install openai")
             return None
     return _openai_client
 
@@ -167,18 +171,35 @@ VIKTIGT:
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
 
     # Add unique variation instruction when generating fresh (not cached) - SWEDISH
-    variation_seed = ""
-    if not use_cache:
-        # Generate random seed for variation
-        random_seed = random.randint(1000, 9999)
-        unique_id = str(uuid.uuid4())[:8]
-        variation_seed = f"""
+    # ALWAYS add variation seed to ensure unique questions every time
+    # Generate timestamp-based seed for maximum uniqueness
+    import time
+    timestamp = int(time.time() * 1000)  # millisecond precision
+    random_seed = random.randint(1000, 9999)
+    unique_id = str(uuid.uuid4())[:8]
+    
+    variation_seed = f"""
 
-VIKTIGT: Generera HELT NYA och UNIKA frågor för denna session.
-Sessions-ID: {unique_id}-{random_seed}
-Upprepa INTE frågor från tidigare genereringar.
-Välj OLIKA koncept och scenarion än du normalt skulle välja.
-Var kreativ och utforska mindre uppenbara aspekter av innehållet.
+🔥 KRITISKT: Generera HELT NYA och UNIKA frågor för denna session!
+
+Session Identifiers:
+- Unique ID: {unique_id}
+- Random Seed: {random_seed}
+- Timestamp: {timestamp}
+
+Instruktioner för UNIKA frågor:
+1. UPPREPA ALDRIG frågor från tidigare sessions
+2. Välj OLIKA koncept än du normalt skulle välja
+3. Utforska OVANLIGA aspekter av innehållet
+4. Använd VARIERANDE scenarion och exempel
+5. Var KREATIV och UNDVIK uppenbara frågor
+6. Fokusera på PRAKTISKA edge cases och verkliga situationer
+
+Om du har genererat frågor för denna modul tidigare:
+- Välj HELT ANDRA topics från innehållet
+- Använd OLIKA kommandon och verktyg
+- Skapa NYA scenarion som du inte använt förut
+
 Skriv ALLT på SVENSKA!"""
 
     # Determine difficulty-specific instructions - SWEDISH
@@ -322,19 +343,86 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
 def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     """
     Get module content suitable for quiz generation.
-    Retrieves ACTUAL node content from the module's tasks.
+    Retrieves ACTUAL node content from the module's tasks OR static question sources.
 
     Args:
-        module_slug: Module slug to get content for
+        module_slug: Module slug to get content for OR question source slug
+                    (e.g., "linux-247", "manpage-tenta", "omtenta-2", "handson", etc.)
 
     Returns:
-        Combined content string from all nodes or None
+        Combined content string from all nodes/source or None
     """
-    from src.db.seeds.content import get_all_modules
-    ALL_MODULES = get_all_modules()
-
+    import os
+    
     # Normalize slug for matching
     normalized_slug = module_slug.lower().strip()
+    
+    # ==============================================================================
+    # STATIC QUESTION SOURCES — For AI to generate similar questions
+    # ==============================================================================
+    # These are the same sources used in Tenta Simulator, but AI generates NEW questions
+    # based on the content/style instead of showing static questions
+    
+    STATIC_SOURCES = {
+        "manpage-tenta": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project/ManpageTentan.md",
+        "linux-tenta": None,  # May not exist
+        "omtenta-2": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project/Omtenta",  # Directory
+        "handson": "/Users/mrebadi/Desktop/DevOps/SaaS-Project/saas-project",  # Root for Handson files
+        "linux-commands": None,  # Will use quiz file data instead
+    }
+    
+    # Check if this is a static source
+    if normalized_slug in STATIC_SOURCES:
+        source_path = STATIC_SOURCES[normalized_slug]
+        
+        if source_path and os.path.exists(source_path):
+            try:
+                if os.path.isfile(source_path):
+                    # Read single markdown file
+                    with open(source_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    logger.info(f"✅ Loaded static source: {normalized_slug} ({len(content)} chars)")
+                    return content[:12000]  # Limit for token budget
+                    
+                elif os.path.isdir(source_path):
+                    # Read all markdown files from directory
+                    content_parts = []
+                    
+                    # Special handling for handson - read Handson*.md files from root
+                    if normalized_slug == "handson":
+                        for filename in os.listdir(source_path):
+                            if filename.startswith('Handson') and filename.endswith('.md'):
+                                filepath = os.path.join(source_path, filename)
+                                with open(filepath, 'r', encoding='utf-8') as f:
+                                    content_parts.append(f"# {filename}\n{f.read()}")
+                    else:
+                        # For omtenta and others, read all .md files in directory
+                        for filename in os.listdir(source_path):
+                            if filename.endswith('.md'):
+                                filepath = os.path.join(source_path, filename)
+                                with open(filepath, 'r', encoding='utf-8') as f:
+                                    content_parts.append(f"# {filename}\n{f.read()}")
+                    
+                    if content_parts:
+                        combined = "\n\n".join(content_parts)
+                        logger.info(f"✅ Loaded static source: {normalized_slug} ({len(combined)} chars from {len(content_parts)} files)")
+                        return combined[:12000]
+                    else:
+                        logger.warning(f"⚠️  No content found for {normalized_slug}")
+                    
+            except Exception as e:
+                logger.error(f"❌ Failed to load static source {normalized_slug}: {e}")
+        
+        # Fallback: use quiz data file content for linux-commands
+        if normalized_slug == "linux-commands":
+            logger.info(f"ℹ️  Using quiz data fallback for {normalized_slug}")
+            return "# Linux Commands Reference\nVanliga Linux-kommandon för terminal och systemadministration."
+    
+    # ==============================================================================
+    # REGULAR MODULES — From content source
+    # ==============================================================================
+    from src.db.seeds.content import get_all_modules
+    ALL_MODULES = get_all_modules()
 
     # Find the module by slug (with multiple matching strategies)
     module_data = None
