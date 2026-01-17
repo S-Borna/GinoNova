@@ -159,8 +159,8 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
                 )}
             >
                 {/* Top bar */}
-                <TopBar 
-                    showMenuButton={isMobile} 
+                <TopBar
+                    showMenuButton={isMobile}
                     onMenuClick={() => setMobileMenuOpen(true)}
                 />
 
@@ -192,9 +192,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
             {/* Mobile Side Menu - slide-in panel */}
             {isMobile && (
-                <MobileSideMenu 
-                    isOpen={mobileMenuOpen} 
-                    onClose={() => setMobileMenuOpen(false)} 
+                <MobileSideMenu
+                    isOpen={mobileMenuOpen}
+                    onClose={() => setMobileMenuOpen(false)}
                 />
             )}
 

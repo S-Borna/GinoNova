@@ -15,7 +15,7 @@ export function ScrollToTop() {
 
     React.useEffect(() => {
         setIsMounted(true)
-        
+
         // Check scroll position
         const handleScroll = () => {
             setIsVisible(window.scrollY > 400)
