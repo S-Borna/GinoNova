@@ -750,21 +750,21 @@ export default function TentaSimulatorPage() {
                                 <Target className="w-4 h-4 text-blue-400" />
                                 Antal frågor
                             </label>
-                            <div className="grid grid-cols-2 gap-2">
-                                {[10, 25, 50, 100].map(count => (
+                            <div className="grid grid-cols-4 gap-2">
+                                {[25, 50, 75, 100, 150, 200, 250, 'Alla'].map(count => (
                                     <motion.button
                                         key={count}
-                                        onClick={() => setSettings(s => ({ ...s, questionCount: count }))}
+                                        onClick={() => setSettings(s => ({ ...s, questionCount: count === 'Alla' ? 9999 : count as number }))}
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         className={cn(
-                                            "py-3 px-4 rounded-xl border transition-all font-medium relative overflow-hidden",
-                                            settings.questionCount === count
+                                            "py-2 px-2 rounded-xl border transition-all font-medium relative overflow-hidden text-sm",
+                                            (count === 'Alla' ? settings.questionCount === 9999 : settings.questionCount === count)
                                                 ? "bg-gradient-to-br from-blue-500/30 to-cyan-500/30 border-blue-400/50 text-blue-200 shadow-lg shadow-blue-500/20"
                                                 : "bg-zinc-800/30 border-zinc-700/50 text-zinc-400 hover:border-zinc-600 hover:bg-zinc-800/50"
                                         )}
                                     >
-                                        {settings.questionCount === count && (
+                                        {(count === 'Alla' ? settings.questionCount === 9999 : settings.questionCount === count) && (
                                             <motion.div
                                                 layoutId="count-active"
                                                 className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-cyan-500/10"
