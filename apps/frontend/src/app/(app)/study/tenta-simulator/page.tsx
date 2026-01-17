@@ -41,6 +41,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.co
 import { HANDSON_MEGA_QUIZ, type MegaQuizQuestion } from "@/data/handson-mega-quiz"
 import { ALL_LINUX_COMMAND_QUESTIONS, type LinuxCommandQuestion } from "@/data/linux-commands-quiz"
 import { ALL_LINUX_TENTA_QUESTIONS, type LinuxTentaQuestion } from "@/data/linux-tenta-quiz"
+import { ALL_MANPAGE_TENTA_QUESTIONS, type ManpageTentaQuestion } from "@/data/manpage-tenta-quiz"
 // OMTENTA 2.0 - Nya frågor från Nod-filer
 import { ALL_OMTENTA_2_QUESTIONS, type Omtenta2Question, type Omtenta2Topic, OMTENTA2_TOPICS } from "@/data/omtenta-2.0-quiz"
 
@@ -67,7 +68,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[] // Multi-select question sources
+    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[] // Multi-select question sources
     selectedNodes: Omtenta2Topic[] // For Omtenta 2.0 node filtering
 }
 
@@ -183,6 +184,22 @@ function convertLinuxTentaQuestion(q: LinuxTentaQuestion): SimulatorQuestion {
     }
 }
 
+// Convert Manpage Tenta question to SimulatorQuestion
+function convertManpageTentaQuestion(q: ManpageTentaQuestion): SimulatorQuestion {
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        category: q.category,
+        source: 'linux-tenta', // Same source as linux-tenta for compatibility
+        isMultiSelect: false
+    }
+}
+
 // Convert Omtenta 2.0 question to SimulatorQuestion (FULL multi-select support)
 function convertOmtenta2Question(q: Omtenta2Question): SimulatorQuestion {
     const isMulti = q.correctIndices.length > 1
@@ -239,6 +256,11 @@ export default function TentaSimulatorPage() {
         return ALL_LINUX_TENTA_QUESTIONS.map(convertLinuxTentaQuestion)
     }, [])
 
+    // Get Manpage Tenta questions (298 comprehensive Linux command questions)
+    const manpageTentaQuestions = useMemo(() => {
+        return ALL_MANPAGE_TENTA_QUESTIONS.map(convertManpageTentaQuestion)
+    }, [])
+
     // Get Omtenta 2.0 questions (800+ questions from 10 Nod-modules, WITH multi-select support)
     const omtenta2Questions = useMemo(() => {
         return ALL_OMTENTA_2_QUESTIONS.map(convertOmtenta2Question)
@@ -256,6 +278,9 @@ export default function TentaSimulatorPage() {
         if (settings.selectedSources.includes('linux-tenta')) {
             questions.push(...linuxTentaQuestions)
         }
+        if (settings.selectedSources.includes('manpage-tenta')) {
+            questions.push(...manpageTentaQuestions)
+        }
         if (settings.selectedSources.includes('omtenta-2')) {
             // Filter by selected nodes
             const filtered = omtenta2Questions.filter(q => 
@@ -264,7 +289,7 @@ export default function TentaSimulatorPage() {
             questions.push(...filtered)
         }
         return questions
-    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions, settings.selectedSources, settings.selectedNodes])
+    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, manpageTentaQuestions, omtenta2Questions, settings.selectedSources, settings.selectedNodes])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -290,10 +315,10 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param
-            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[] = ['omtenta-2']
+            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[] = ['omtenta-2']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[]
-                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'omtenta-2'].includes(s))
+                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[]
+                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'manpage-tenta', 'omtenta-2'].includes(s))
                 if (selectedSources.length === 0) selectedSources = ['omtenta-2']
             }
 
@@ -323,6 +348,7 @@ export default function TentaSimulatorPage() {
             if (selectedSources.includes('handson')) sourceQuestions.push(...handsonQuestions)
             if (selectedSources.includes('linux-commands')) sourceQuestions.push(...linuxCommandsQuestions)
             if (selectedSources.includes('linux-tenta')) sourceQuestions.push(...linuxTentaQuestions)
+            if (selectedSources.includes('manpage-tenta')) sourceQuestions.push(...manpageTentaQuestions)
             if (selectedSources.includes('omtenta-2')) {
                 // Filter by selected nodes
                 const filtered = omtenta2Questions.filter(q => 
@@ -835,7 +861,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('omtenta-2')
                                     ? s.selectedSources.filter(src => src !== 'omtenta-2')
-                                    : [...s.selectedSources, 'omtenta-2'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                    : [...s.selectedSources, 'omtenta-2'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['omtenta-2'] }
                             })}
                             className={cn(
@@ -858,7 +884,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('handson')
                                     ? s.selectedSources.filter(src => src !== 'handson')
-                                    : [...s.selectedSources, 'handson'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                    : [...s.selectedSources, 'handson'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
                             })}
                             className={cn(
@@ -881,7 +907,7 @@ export default function TentaSimulatorPage() {
                             onClick={() => setSettings(s => {
                                 const sources = s.selectedSources.includes('linux-commands')
                                     ? s.selectedSources.filter(src => src !== 'linux-commands')
-                                    : [...s.selectedSources, 'linux-commands'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                    : [...s.selectedSources, 'linux-commands'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
                                 return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
                             })}
                             className={cn(
@@ -922,6 +948,29 @@ export default function TentaSimulatorPage() {
                             <span className="text-lg">📝</span>
                             <span className="text-sm font-medium">Linux Tentan</span>
                             <span className="text-xs opacity-70">{linuxTentaQuestions.length} frågor</span>
+                        </button>
+                        <button
+                            onClick={() => setSettings(s => {
+                                const sources = s.selectedSources.includes('manpage-tenta')
+                                    ? s.selectedSources.filter(src => src !== 'manpage-tenta')
+                                    : [...s.selectedSources, 'manpage-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
+                                return { ...s, selectedSources: sources.length > 0 ? sources : ['manpage-tenta'] }
+                            })}
+                            className={cn(
+                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                settings.selectedSources.includes('manpage-tenta')
+                                    ? "bg-cyan-500/20 border-cyan-500 text-cyan-300"
+                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                            )}
+                        >
+                            {settings.selectedSources.includes('manpage-tenta') && (
+                                <div className="absolute top-2 right-2 w-4 h-4 bg-cyan-500 rounded-full flex items-center justify-center">
+                                    <CheckCircle className="w-3 h-3 text-white" />
+                                </div>
+                            )}
+                            <span className="text-lg">📚</span>
+                            <span className="text-sm font-medium">Manpage Tenta</span>
+                            <span className="text-xs opacity-70">{manpageTentaQuestions.length} frågor</span>
                         </button>
                     </div>
                     <p className="text-xs text-zinc-500 mt-2">
