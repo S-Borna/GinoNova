@@ -283,7 +283,7 @@ export default function TentaSimulatorPage() {
         }
         if (settings.selectedSources.includes('omtenta-2')) {
             // Filter by selected nodes
-            const filtered = omtenta2Questions.filter(q => 
+            const filtered = omtenta2Questions.filter(q =>
                 !q.nodeTopic || settings.selectedNodes.includes(q.nodeTopic)
             )
             questions.push(...filtered)
@@ -351,7 +351,7 @@ export default function TentaSimulatorPage() {
             if (selectedSources.includes('manpage-tenta')) sourceQuestions.push(...manpageTentaQuestions)
             if (selectedSources.includes('omtenta-2')) {
                 // Filter by selected nodes
-                const filtered = omtenta2Questions.filter(q => 
+                const filtered = omtenta2Questions.filter(q =>
                     !q.nodeTopic || selectedNodes.includes(q.nodeTopic)
                 )
                 sourceQuestions.push(...filtered)
@@ -857,130 +857,130 @@ export default function TentaSimulatorPage() {
                             Frågekällor <span className="text-zinc-500 text-xs ml-1">(välj en eller flera)</span>
                         </label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <button
-                            onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('omtenta-2')
-                                    ? s.selectedSources.filter(src => src !== 'omtenta-2')
-                                    : [...s.selectedSources, 'omtenta-2'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['omtenta-2'] }
-                            })}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('omtenta-2')
-                                    ? "bg-teal-500/20 border-teal-500 text-teal-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            {settings.selectedSources.includes('omtenta-2') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-teal-500 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-3 h-3 text-white" />
-                                </div>
-                            )}
-                            <span className="text-lg">🎯</span>
-                            <span className="text-sm font-medium">Omtenta 2.0</span>
-                            <span className="text-xs opacity-70">{omtenta2Questions.length} frågor</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('handson')
-                                    ? s.selectedSources.filter(src => src !== 'handson')
-                                    : [...s.selectedSources, 'handson'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
-                            })}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('handson')
-                                    ? "bg-emerald-500/20 border-emerald-500 text-emerald-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            {settings.selectedSources.includes('handson') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-3 h-3 text-white" />
-                                </div>
-                            )}
-                            <span className="text-lg">🔧</span>
-                            <span className="text-sm font-medium">Hands-On</span>
-                            <span className="text-xs opacity-70">{handsonQuestions.length} frågor</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('linux-commands')
-                                    ? s.selectedSources.filter(src => src !== 'linux-commands')
-                                    : [...s.selectedSources, 'linux-commands'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
-                            })}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('linux-commands')
-                                    ? "bg-orange-500/20 border-orange-500 text-orange-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            {settings.selectedSources.includes('linux-commands') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-3 h-3 text-white" />
-                                </div>
-                            )}
-                            <span className="text-lg">💻</span>
-                            <span className="text-sm font-medium">Linux Kommandon</span>
-                            <span className="text-xs opacity-70">{linuxCommandsQuestions.length} frågor</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('linux-tenta')
-                                    ? s.selectedSources.filter(src => src !== 'linux-tenta')
-                                    : [...s.selectedSources, 'linux-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-tenta'] }
-                            })}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('linux-tenta')
-                                    ? "bg-red-500/20 border-red-500 text-red-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            {settings.selectedSources.includes('linux-tenta') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-3 h-3 text-white" />
-                                </div>
-                            )}
-                            <span className="text-lg">📝</span>
-                            <span className="text-sm font-medium">Linux Tentan</span>
-                            <span className="text-xs opacity-70">{linuxTentaQuestions.length} frågor</span>
-                        </button>
-                        <button
-                            onClick={() => setSettings(s => {
-                                const sources = s.selectedSources.includes('manpage-tenta')
-                                    ? s.selectedSources.filter(src => src !== 'manpage-tenta')
-                                    : [...s.selectedSources, 'manpage-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
-                                return { ...s, selectedSources: sources.length > 0 ? sources : ['manpage-tenta'] }
-                            })}
-                            className={cn(
-                                "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
-                                settings.selectedSources.includes('manpage-tenta')
-                                    ? "bg-cyan-500/20 border-cyan-500 text-cyan-300"
-                                    : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
-                            )}
-                        >
-                            {settings.selectedSources.includes('manpage-tenta') && (
-                                <div className="absolute top-2 right-2 w-4 h-4 bg-cyan-500 rounded-full flex items-center justify-center">
-                                    <CheckCircle className="w-3 h-3 text-white" />
-                                </div>
-                            )}
-                            <span className="text-lg">📚</span>
-                            <span className="text-sm font-medium">Manpage Tenta</span>
-                            <span className="text-xs opacity-70">{manpageTentaQuestions.length} frågor</span>
-                        </button>
+                            <button
+                                onClick={() => setSettings(s => {
+                                    const sources = s.selectedSources.includes('omtenta-2')
+                                        ? s.selectedSources.filter(src => src !== 'omtenta-2')
+                                        : [...s.selectedSources, 'omtenta-2'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
+                                    return { ...s, selectedSources: sources.length > 0 ? sources : ['omtenta-2'] }
+                                })}
+                                className={cn(
+                                    "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                    settings.selectedSources.includes('omtenta-2')
+                                        ? "bg-teal-500/20 border-teal-500 text-teal-300"
+                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                                )}
+                            >
+                                {settings.selectedSources.includes('omtenta-2') && (
+                                    <div className="absolute top-2 right-2 w-4 h-4 bg-teal-500 rounded-full flex items-center justify-center">
+                                        <CheckCircle className="w-3 h-3 text-white" />
+                                    </div>
+                                )}
+                                <span className="text-lg">🎯</span>
+                                <span className="text-sm font-medium">Omtenta 2.0</span>
+                                <span className="text-xs opacity-70">{omtenta2Questions.length} frågor</span>
+                            </button>
+                            <button
+                                onClick={() => setSettings(s => {
+                                    const sources = s.selectedSources.includes('handson')
+                                        ? s.selectedSources.filter(src => src !== 'handson')
+                                        : [...s.selectedSources, 'handson'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
+                                    return { ...s, selectedSources: sources.length > 0 ? sources : ['handson'] }
+                                })}
+                                className={cn(
+                                    "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                    settings.selectedSources.includes('handson')
+                                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-300"
+                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                                )}
+                            >
+                                {settings.selectedSources.includes('handson') && (
+                                    <div className="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center">
+                                        <CheckCircle className="w-3 h-3 text-white" />
+                                    </div>
+                                )}
+                                <span className="text-lg">🔧</span>
+                                <span className="text-sm font-medium">Hands-On</span>
+                                <span className="text-xs opacity-70">{handsonQuestions.length} frågor</span>
+                            </button>
+                            <button
+                                onClick={() => setSettings(s => {
+                                    const sources = s.selectedSources.includes('linux-commands')
+                                        ? s.selectedSources.filter(src => src !== 'linux-commands')
+                                        : [...s.selectedSources, 'linux-commands'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
+                                    return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-commands'] }
+                                })}
+                                className={cn(
+                                    "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                    settings.selectedSources.includes('linux-commands')
+                                        ? "bg-orange-500/20 border-orange-500 text-orange-300"
+                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                                )}
+                            >
+                                {settings.selectedSources.includes('linux-commands') && (
+                                    <div className="absolute top-2 right-2 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <CheckCircle className="w-3 h-3 text-white" />
+                                    </div>
+                                )}
+                                <span className="text-lg">💻</span>
+                                <span className="text-sm font-medium">Linux Kommandon</span>
+                                <span className="text-xs opacity-70">{linuxCommandsQuestions.length} frågor</span>
+                            </button>
+                            <button
+                                onClick={() => setSettings(s => {
+                                    const sources = s.selectedSources.includes('linux-tenta')
+                                        ? s.selectedSources.filter(src => src !== 'linux-tenta')
+                                        : [...s.selectedSources, 'linux-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta')[]
+                                    return { ...s, selectedSources: sources.length > 0 ? sources : ['linux-tenta'] }
+                                })}
+                                className={cn(
+                                    "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                    settings.selectedSources.includes('linux-tenta')
+                                        ? "bg-red-500/20 border-red-500 text-red-300"
+                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                                )}
+                            >
+                                {settings.selectedSources.includes('linux-tenta') && (
+                                    <div className="absolute top-2 right-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                        <CheckCircle className="w-3 h-3 text-white" />
+                                    </div>
+                                )}
+                                <span className="text-lg">📝</span>
+                                <span className="text-sm font-medium">Linux Tentan</span>
+                                <span className="text-xs opacity-70">{linuxTentaQuestions.length} frågor</span>
+                            </button>
+                            <button
+                                onClick={() => setSettings(s => {
+                                    const sources = s.selectedSources.includes('manpage-tenta')
+                                        ? s.selectedSources.filter(src => src !== 'manpage-tenta')
+                                        : [...s.selectedSources, 'manpage-tenta'] as ('omtenta-2' | 'handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta')[]
+                                    return { ...s, selectedSources: sources.length > 0 ? sources : ['manpage-tenta'] }
+                                })}
+                                className={cn(
+                                    "py-3 px-4 rounded-xl border transition-all flex flex-col items-center gap-1 relative",
+                                    settings.selectedSources.includes('manpage-tenta')
+                                        ? "bg-cyan-500/20 border-cyan-500 text-cyan-300"
+                                        : "bg-zinc-800/50 border-zinc-700 text-zinc-500 hover:border-zinc-600"
+                                )}
+                            >
+                                {settings.selectedSources.includes('manpage-tenta') && (
+                                    <div className="absolute top-2 right-2 w-4 h-4 bg-cyan-500 rounded-full flex items-center justify-center">
+                                        <CheckCircle className="w-3 h-3 text-white" />
+                                    </div>
+                                )}
+                                <span className="text-lg">📚</span>
+                                <span className="text-sm font-medium">Manpage Tenta</span>
+                                <span className="text-xs opacity-70">{manpageTentaQuestions.length} frågor</span>
+                            </button>
+                        </div>
+                        <p className="text-xs text-zinc-500 mt-2">
+                            {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
+                            {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "🔧 Praktiska frågor från Hands-On modulen"}
+                            {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "💻 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
+                            {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-tenta' && "📝 Original Linux-tentafrågor"}
+                            {settings.selectedSources.length > 1 && `Kombinerat: ${settings.selectedSources.length} källor valda (${allQuestions.length} frågor)`}
+                        </p>
                     </div>
-                    <p className="text-xs text-zinc-500 mt-2">
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'handson' && "🔧 Praktiska frågor från Hands-On modulen"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-commands' && "💻 Terminal-kommandon: cd, ls, grep, docker, LVM & mer"}
-                        {settings.selectedSources.length === 1 && settings.selectedSources[0] === 'linux-tenta' && "📝 Original Linux-tentafrågor"}
-                        {settings.selectedSources.length > 1 && `Kombinerat: ${settings.selectedSources.length} källor valda (${allQuestions.length} frågor)`}
-                    </p>
-                </div>
 
                     {/* Timer toggle with better design */}
                     <div className="flex items-center justify-between p-4 bg-zinc-800/20 rounded-xl border border-zinc-700/30">

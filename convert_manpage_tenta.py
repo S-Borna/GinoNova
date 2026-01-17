@@ -14,21 +14,21 @@ def parse_questions(filepath: str) -> Tuple[List[Dict], List[Dict]]:
     """Läser och parsar alla frågor från markdown-filen"""
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     # Split på VG-markering
     parts = content.split('### VG FRÅGOR FÖLJER NEDAN')
     g_section = parts[0]
     vg_section = parts[1] if len(parts) > 1 else ""
-    
+
     def extract_questions(text: str) -> List[Dict]:
         questions = []
         # Split text into lines for manual parsing
         lines = text.split('\n')
-        
+
         i = 0
         while i < len(lines):
             line = lines[i].strip()
-            
+
             # Hitta fråga (slutar med ? ELLER slutar med :)
             # Men måste vara rimlig längd och inte börja med A/B/C/D
             is_question = False
@@ -43,18 +43,18 @@ def parse_questions(filepath: str) -> Tuple[List[Dict], List[Dict]]:
                         j += 1
                     if j < len(lines) and lines[j].strip().startswith('A.'):
                         is_question = True
-            
+
             if is_question:
                 question_text = line
-                
+
                 # Försök läsa de 4 alternativen
                 options = []
                 j = i + 1
-                
+
                 # Hoppa över tomma rader
                 while j < len(lines) and not lines[j].strip():
                     j += 1
-                
+
                 # Läs A, B, C, D
                 for expected_prefix in ['A.', 'B.', 'C.', 'D.']:
                     if j >= len(lines):
@@ -65,13 +65,13 @@ def parse_questions(filepath: str) -> Tuple[List[Dict], List[Dict]]:
                         j += 1
                     else:
                         break
-                
+
                 # Om vi har alla 4 alternativ, leta efter rätt svar
                 if len(options) == 4:
                     # Hoppa över tomma rader
                     while j < len(lines) and not lines[j].strip():
                         j += 1
-                    
+
                     if j < len(lines):
                         answer_line = lines[j].strip()
                         # Matcha "Rätt:" eller "Rätt svar:"
@@ -79,31 +79,31 @@ def parse_questions(filepath: str) -> Tuple[List[Dict], List[Dict]]:
                         if match:
                             correct_letter = match.group(1)
                             correct_idx = ord(correct_letter) - ord('A')
-                            
+
                             # Översätt fråga och alternativ till engelska
                             translated_question = translate_to_english(question_text)
                             translated_options = [translate_to_english(opt) for opt in options]
-                            
+
                             questions.append({
                                 'question': translated_question,
                                 'options': translated_options,
                                 'correct_index': correct_idx
                             })
-                            
+
                             i = j
-            
+
             i += 1
-        
+
         return questions
-    
+
     g_questions = extract_questions(g_section)
     vg_questions = extract_questions(vg_section)
-    
+
     return g_questions, vg_questions
 
 def is_swedish(text: str) -> bool:
     """Detekterar om texten är på svenska"""
-    swedish_words = ['Vad', 'Vilket', 'Varför', 'Hur', 'När', 'Var', 'Vilken', 
+    swedish_words = ['Vad', 'Vilket', 'Varför', 'Hur', 'När', 'Var', 'Vilken',
                      'används', 'innebär', 'gör', 'visar', 'betyder', 'är',
                      'kommando', 'frågor', 'svar', 'till', 'på', 'för']
     return any(word in text for word in swedish_words)
@@ -112,7 +112,7 @@ def translate_to_english(text: str) -> str:
     """Översätter svenska text till engelska, bevarar tekniska termer exakt"""
     if not is_swedish(text):
         return text
-    
+
     # Dictionary för översättningar - bevarar kommandoord och tekniska termer
     translations = {
         # Frågeord
@@ -132,7 +132,7 @@ def translate_to_english(text: str) -> str:
         'Hur ': 'How ',
         'Var körs ': 'Where do ',
         'Var ': 'Where ',
-        
+
         # Verb och fraser
         ' för nya filer': ' mean for new files',
         ' på en fil': ' on a file',
@@ -146,7 +146,7 @@ def translate_to_english(text: str) -> str:
         ' och dess hemkatalog': ' and their home directory',
         ' till?': ' used for?',
         ' en bind mount': ' a bind mount',
-        
+
         # Specifika fraser
         'främst?': 'primarily?',
         'bäst beskriven som:': 'best described as:',
@@ -169,7 +169,7 @@ def translate_to_english(text: str) -> str:
         'visar hur mycket diskutrymme som används per katalog?': 'shows how much disk space is used per directory?',
         ' skiljer en bind mount från en named volume?': ' distinguishes a bind mount from a named volume?',
         ' används för nätverksisolering?': ' is used for network isolation?',
-        
+
         # Svar alternativen
         'Virtuell maskin': 'Virtual machine',
         'Containerplattform': 'Container platform',
@@ -283,13 +283,13 @@ def translate_to_english(text: str) -> str:
         'Svårare spårbarhet och högre risk': 'Harder traceability and higher risk',
         'saknar lösenord': 'lacks password',
         'kan inte använda sudo': 'cannot use sudo',
-        
+
         # Långa meningar
-        'Du kör cmd > out.txt men ser fortfarande text i terminalen. Varför?': 
+        'Du kör cmd > out.txt men ser fortfarande text i terminalen. Varför?':
             'You run cmd > out.txt but still see text in terminal. Why?',
         'En container fungerar lokalt men kan inte nås från hosten.\\nVilken är den troligaste orsaken?':
             'A container works locally but cannot be reached from host.\\nWhat is the most likely cause?',
-        'En container fungerar lokalt men kan inte nås från hosten.': 
+        'En container fungerar lokalt men kan inte nås från hosten.':
             'A container works locally but cannot be reached from host.',
         'Vilken är den troligaste orsaken?': 'What is the most likely cause?',
         'Två containrar försöker kommunicera via localhost men misslyckas. Varför?':
@@ -312,7 +312,7 @@ def translate_to_english(text: str) -> str:
             'What happens when main process in container exits?',
         'Du kan lista en katalog men inte gå in i den. Vad saknas?':
             'You can list a directory but not enter it. What is missing?',
-        
+
         # Tekniska termer
         'rättighet': 'permission',
         'rättigheter': 'permissions',
@@ -320,7 +320,7 @@ def translate_to_english(text: str) -> str:
         'användare': 'user',
         'katalog': 'directory',
         'miljövariabeln': 'environment variable',
-        
+
         # Container-relaterade
         'Allt sparas': 'Everything is saved',
         'Writable layer försvinner': 'Writable layer disappears',
@@ -331,7 +331,7 @@ def translate_to_english(text: str) -> str:
         'Docker blockerar TCP': 'Docker blocks TCP',
         'DNS saknas': 'DNS missing',
         'nginx kräver port mapping': 'nginx requires port mapping',
-        
+
         # Permissions
         'Vad innebär rättigheten chmod 640 file?': 'What does permission chmod 640 file mean?',
         'Vad innebär execute-rättighet på en katalog?': 'What does execute permission on directory mean?',
@@ -339,7 +339,7 @@ def translate_to_english(text: str) -> str:
             'Which permission controls creation and deletion of files in directory?',
         'Vad innebär umask 022 för nya filer?': 'What does umask 022 mean for new files?',
         'Vad innebär load average?': 'What does load average mean?',
-        
+
         # Misc
         'Vad är syftet med miljövariabeln $PATH?': 'What is the purpose of environment variable $PATH?',
         'Vilket Docker-objekt används för nätverksisolering?': 'Which Docker object is used for network isolation?',
@@ -347,29 +347,29 @@ def translate_to_english(text: str) -> str:
         'Var körs Docker-containrar?': 'Where do Docker containers run?',
         'Docker-containrar?': 'Docker containers?',
     }
-    
+
     result = text
     # Sort by length (longest first) to avoid partial replacements
     for sv, en in sorted(translations.items(), key=lambda x: len(x[0]), reverse=True):
         result = result.replace(sv, en)
-    
+
     return result
 
 def randomize_options(question: Dict) -> Dict:
     """Randomiserar ordningen på svarsalternativen"""
     options = question['options'].copy()
     correct_idx = question['correct_index']
-    
+
     # Skapa lista med index
     indices = [0, 1, 2, 3]
     random.shuffle(indices)
-    
+
     # Skapa nytt options-array enligt shufflad ordning
     new_options = [options[i] for i in indices]
-    
+
     # Hitta var det korrekta svaret hamnade
     new_correct_idx = indices.index(correct_idx)
-    
+
     return {
         'question': question['question'],
         'options': new_options,
@@ -379,7 +379,7 @@ def randomize_options(question: Dict) -> Dict:
 def categorize_question(question_text: str) -> str:
     """Försöker kategorisera frågan baserat på innehåll"""
     text_lower = question_text.lower()
-    
+
     if 'docker' in text_lower or 'container' in text_lower or 'image' in text_lower:
         return 'Docker & Containers'
     elif 'chmod' in text_lower or 'permission' in text_lower or 'chown' in text_lower:
@@ -414,7 +414,7 @@ def escape_typescript_string(s: str) -> str:
 
 def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], output_file: str):
     """Genererar TypeScript-fil"""
-    
+
     lines = [
         '/**',
         ' * MANPAGE TENTAN - Omfattande Linux/Unix kommandoreferens quiz',
@@ -437,12 +437,12 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
         '',
         'export const MANPAGE_TENTA_QUESTIONS: ManpageTentaQuestion[] = ['
     ]
-    
+
     # G-frågor
     for idx, q in enumerate(g_questions, 1):
         randomized = randomize_options(q)
         category = categorize_question(randomized['question'])
-        
+
         lines.append('    {')
         lines.append(f"        id: 'manpage-g{idx}',")
         lines.append(f"        question: '{escape_typescript_string(randomized['question'])}',")
@@ -455,12 +455,12 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
         lines.append(f"        difficulty: 'G',")
         lines.append(f"        category: '{category}'")
         lines.append('    },')
-    
+
     # VG-frågor
     for idx, q in enumerate(vg_questions, 1):
         randomized = randomize_options(q)
         category = categorize_question(randomized['question'])
-        
+
         lines.append('    {')
         lines.append(f"        id: 'manpage-vg{idx}',")
         lines.append(f"        question: '{escape_typescript_string(randomized['question'])}',")
@@ -473,13 +473,13 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
         lines.append(f"        difficulty: 'VG',")
         lines.append(f"        category: '{category}'")
         lines.append('    }' if idx == len(vg_questions) else '    },')
-    
+
     lines.append(']')
     lines.append('')
     lines.append('// Export för enkel import i tentasimulator')
     lines.append('export const ALL_MANPAGE_TENTA_QUESTIONS = MANPAGE_TENTA_QUESTIONS')
     lines.append('')
-    
+
     # Skriv till fil
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
@@ -487,23 +487,23 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
 def main():
     print("🔄 Läser ManpageTentan.md...")
     g_questions, vg_questions = parse_questions('ManpageTentan.md')
-    
+
     print(f"✅ Extraherade {len(g_questions)} G-frågor")
     print(f"✅ Extraherade {len(vg_questions)} VG-frågor")
     print(f"📊 Totalt: {len(g_questions) + len(vg_questions)} frågor")
-    
+
     if len(g_questions) != 210:
         print(f"⚠️  VARNING: Förväntat 210 G-frågor, hittade {len(g_questions)}")
     if len(vg_questions) != 55:
         print(f"⚠️  VARNING: Förväntat 55 VG-frågor, hittade {len(vg_questions)}")
-    
+
     print("\n🎲 Randomiserar svarsalternativ...")
     output_file = 'apps/frontend/src/data/manpage-tenta-quiz.ts'
     generate_typescript(g_questions, vg_questions, output_file)
-    
+
     print(f"✅ Skapade {output_file}")
     print("🎉 Klart!")
-    
+
     # Statistik på rätta svar efter randomisering
     print("\n📊 Fördelning av korrekta svar (efter randomisering):")
     all_q = g_questions + vg_questions
@@ -511,7 +511,7 @@ def main():
     dist = [0, 0, 0, 0]
     for q in randomized_all:
         dist[q['correct_index']] += 1
-    
+
     print(f"   A: {dist[0]} ({dist[0]/len(randomized_all)*100:.1f}%)")
     print(f"   B: {dist[1]} ({dist[1]/len(randomized_all)*100:.1f}%)")
     print(f"   C: {dist[2]} ({dist[2]/len(randomized_all)*100:.1f}%)")
