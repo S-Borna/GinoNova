@@ -8,10 +8,10 @@ import json
 
 def generate_explanation(question: str, correct_option: str, all_options: list) -> str:
     """Genererar en förklaring baserat på frågan och rätt svar"""
-    
+
     # Extrahera nyckelord från frågan
     q_lower = question.lower()
-    
+
     # Pipes & Redirection
     if '|' in question or 'pipe' in q_lower:
         return f"{correct_option} - The pipe operator (|) sends stdout of one command as stdin to another command."
@@ -25,7 +25,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - File descriptor 0 is stdin (standard input)."
     if 'stdout' in q_lower and 'file descriptor' in q_lower:
         return f"{correct_option} - File descriptor 1 is stdout (standard output)."
-    
+
     # Variables & Shell
     if '$?' in question:
         return f"{correct_option} - $? contains the exit status of the last executed command (0 = success, non-zero = error)."
@@ -37,7 +37,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - Double quotes allow variable expansion while preventing word splitting."
     if '*' in question and 'represent' in q_lower:
         return f"{correct_option} - The * wildcard matches zero or more characters in filenames."
-    
+
     # File commands
     if 'cat' in q_lower or 'print' in q_lower:
         return f"{correct_option} - cat concatenates and prints file contents to stdout."
@@ -63,7 +63,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - sed is a stream editor for text transformations using patterns and commands."
     if 'awk' in q_lower:
         return f"{correct_option} - awk is a text processing tool that operates on fields and records."
-    
+
     # Permissions
     if 'chmod' in q_lower:
         return f"{correct_option} - chmod changes file permissions. Use numeric (755) or symbolic (u+x) notation."
@@ -77,7 +77,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - SUID (4xxx) makes executable run with file owner's privileges instead of user's."
     if 'sticky' in q_lower:
         return f"{correct_option} - Sticky bit (1xxx) on directories restricts deletion: only owner can delete their files."
-    
+
     # Processes
     if 'ps' in q_lower and not 'grep' in q_lower:
         return f"{correct_option} - ps shows process information. Use ps aux for all processes with details."
@@ -93,7 +93,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - Append & to run a command in the background, returning shell control immediately."
     if 'exit code' in q_lower or 'exit status' in q_lower:
         return f"{correct_option} - Exit code 0 means success, non-zero indicates an error or failure."
-    
+
     # Find & Locate
     if 'find' in q_lower:
         return f"{correct_option} - find searches filesystem recursively with powerful filtering options like -name, -type, -size."
@@ -101,7 +101,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - locate searches a pre-built database for fast filename lookup. Update with updatedb."
     if 'which' in q_lower:
         return f"{correct_option} - which shows the full path of executables in PATH."
-    
+
     # Networking
     if 'ping' in q_lower:
         return f"{correct_option} - ping tests network connectivity by sending ICMP echo requests."
@@ -115,7 +115,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - SSH provides secure encrypted remote shell access and file transfers."
     if 'scp' in q_lower:
         return f"{correct_option} - scp securely copies files between hosts over SSH."
-    
+
     # Disk & Storage
     if 'df' in q_lower:
         return f"{correct_option} - df shows disk space usage for mounted filesystems. Use -h for human-readable format."
@@ -129,7 +129,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - lsblk lists block devices (disks, partitions) and their mount points."
     if 'fdisk' in q_lower:
         return f"{correct_option} - fdisk is a partition table manipulator for creating/modifying disk partitions."
-    
+
     # Package Management
     if 'apt install' in q_lower or 'apt-get install' in q_lower:
         return f"{correct_option} - apt install downloads and installs packages and their dependencies on Debian/Ubuntu."
@@ -139,7 +139,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - apt upgrade installs available updates for installed packages."
     if 'yum' in q_lower or 'dnf' in q_lower:
         return f"{correct_option} - yum/dnf are package managers for Red Hat-based distributions (RHEL, CentOS, Fedora)."
-    
+
     # Docker
     if 'docker run' in q_lower:
         return f"{correct_option} - docker run creates and starts a new container from an image."
@@ -163,7 +163,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - Bind mounts map a host path directly into the container, useful for development."
     if 'port' in q_lower and ('-p' in question or 'publish' in q_lower):
         return f"{correct_option} - -p maps container ports to host ports, making services accessible externally."
-    
+
     # Archives
     if 'tar' in q_lower:
         return f"{correct_option} - tar creates/extracts archives. Common: tar -czf (create gzip), tar -xzf (extract gzip)."
@@ -171,7 +171,7 @@ def generate_explanation(question: str, correct_option: str, all_options: list) 
         return f"{correct_option} - gzip compresses files, gunzip decompresses them. Use -k to keep originals."
     if 'zip' in q_lower or 'unzip' in q_lower:
         return f"{correct_option} - zip creates compressed archives, unzip extracts them."
-    
+
     # Generic fallback med mer kontext
     return f"{correct_option} is correct. This is a fundamental Linux/Unix concept covered in system administration and DevOps."
 
@@ -201,7 +201,7 @@ def translate_question(text: str) -> str:
         'Vilken fil innehåller användarnamn och UID på Linux?': 'Which file contains usernames and UIDs on Linux?',
         'Kommandot chmod 755 script.sh gör vad?': 'What does command chmod 755 script.sh do?',
         'Du vill ge användaren dave rättighet att köra sudo apt update utan lösenord.': 'You want to give user dave permission to run sudo apt update without password.',
-        
+
         # Individuella ord (kortare fraser sist)
         'fungerar inte': 'doesn\'t work',
         'kan inte fångas': 'cannot be caught',
@@ -239,34 +239,34 @@ def translate_question(text: str) -> str:
         'En': 'A',
         'ett': 'a',
     }
-    
+
     result = text
     # Sortera translations efter längd (längst först) för att undvika partial replacements
     for swedish, english in sorted(translations.items(), key=lambda x: len(x[0]), reverse=True):
         result = result.replace(swedish, english)
-    
+
     return result
 
 
 def fix_quiz_file(input_file: str, output_file: str):
     """Läser quiz-filen, fixar explanations (skippar översättning since frågorna redan är på engelska)"""
-    
+
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-    
+
     new_lines = []
     i = 0
-    
+
     while i < len(lines):
         line = lines[i]
-        
+
         # Om vi hittar en explanation-rad
         if 'explanation:' in line:
             # Gå bakåt för att hitta question, options, och correctIndex
             question = ""
             options = []
             correct_idx = -1
-            
+
             # Läs bakåt för att samla kontext
             for j in range(i-1, max(0, i-15), -1):
                 if 'question:' in lines[j]:
@@ -283,10 +283,10 @@ def fix_quiz_file(input_file: str, output_file: str):
                         opt = opt_match.group(1)
                         if opt not in ['G', 'VG'] and len(opt) > 3:
                             options.append(opt)
-           
+
             # Omvänd ordning på options (de lästes bakåt)
             options = options[::-1][:4]
-            
+
             if question and len(options) == 4 and correct_idx >= 0 and correct_idx < 4:
                 correct_option = options[correct_idx]
                 new_explanation = generate_explanation(question, correct_option, options)
@@ -301,13 +301,13 @@ def fix_quiz_file(input_file: str, output_file: str):
                 new_lines.append(line)
         else:
             new_lines.append(line)
-        
+
         i += 1
-    
+
     # Skriv till output
     with open(output_file, 'w', encoding='utf-8') as f:
         f.writelines(new_lines)
-    
+
     print(f"✓ Fixed {len([l for l in new_lines if 'explanation:' in l])} explanations")
 
 

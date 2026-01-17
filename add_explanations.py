@@ -11,9 +11,9 @@ def escape_quotes(text: str) -> str:
 
 def generate_explanation(question: str, correct_option: str) -> str:
     """Genererar explanation baserat på frågan och rätt svar"""
-    
+
     q_lower = question.lower()
-    
+
     # Pipes & Redirection
     if '|' in question or 'pipe' in q_lower:
         return "The pipe operator (|) sends stdout of one command as stdin to another command, enabling command chaining."
@@ -27,7 +27,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "File descriptor 0 is stdin (standard input), used for reading input data."
     if 'file descriptor' in q_lower and 'stdout' in q_lower:
         return "File descriptor 1 is stdout (standard output), used for normal program output."
-    
+
     # Variables & Shell
     if '$?' in question:
         return "$? contains the exit status of the last executed command. 0 means success, non-zero indicates an error."
@@ -39,7 +39,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return 'Double quotes allow variable expansion ($VAR) while preventing word splitting and glob expansion.'
     if '*' in question and ('represent' in q_lower or 'match' in q_lower):
         return "The * wildcard matches zero or more characters in filenames for glob patterns."
-    
+
     # File viewing/manipulation
     if 'cat' in correct_option.lower() and 'print' in q_lower:
         return "cat reads files and prints their contents to stdout, useful for viewing or piping."
@@ -69,7 +69,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "awk processes text field-by-field. Great for column extraction and calculations (e.g., awk '{print $1}')."
     if 'tee' in correct_option.lower():
         return "tee reads stdin and writes to both stdout and files simultaneously, useful in pipelines."
-    
+
     # Permissions
     if 'chmod' in correct_option.lower():
         return "chmod changes file permissions using numeric (644, 755) or symbolic (u+x, go-w) notation."
@@ -83,7 +83,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "SUID (4xxx permissions) makes executables run with the file owner's privileges instead of the executing user's."
     if 'sticky' in q_lower:
         return "Sticky bit (1xxx) on directories restricts deletion: only file owners can delete their own files (used in /tmp)."
-    
+
     # Processes
     if 'ps' in correct_option.lower():
         return "ps shows process information. Use ps aux for all processes with detailed info, ps -ef for full listing."
@@ -105,7 +105,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         if '0' in correct_option:
             return "Exit code 0 indicates success. Non-zero values (1-255) indicate errors or failures."
         return f"Exit codes indicate command status. 0 = success, non-zero = failure. Check with $? or in if statements."
-    
+
     # Find & Locate
     if 'find' in correct_option.lower():
         return "find searches the filesystem recursively with powerful filters: -name, -type, -size, -mtime, -exec for actions."
@@ -113,7 +113,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "locate searches a pre-built database (updated by updatedb) for fast filename lookup. Faster than find but not real-time."
     if 'which' in correct_option.lower():
         return "which shows the full path of executables found in $PATH. Use to verify which version of a command will run."
-    
+
     # Networking
     if 'ping' in correct_option.lower():
         return "ping tests network connectivity by sending ICMP echo requests. Useful for troubleshooting connectivity issues."
@@ -127,7 +127,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "SSH provides secure, encrypted remote shell access and file transfers. Uses public key authentication."
     if 'scp' in correct_option.lower():
         return "scp securely copies files between hosts over SSH. Syntax: scp source user@host:destination"
-    
+
     # Disk & Storage
     if 'df' in correct_option.lower():
         return "df shows disk space usage for mounted filesystems. Use -h for human-readable sizes, -i for inodes."
@@ -141,7 +141,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "lsblk lists block devices (disks, partitions) in a tree format, showing mount points and sizes."
     if 'fdisk' in correct_option.lower():
         return "fdisk is a partition editor for creating, deleting, and modifying disk partitions. Use -l to list."
-    
+
     # Package Management
     if 'apt install' in correct_option.lower():
         return "apt install downloads and installs packages with dependencies on Debian/Ubuntu systems."
@@ -151,7 +151,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "apt upgrade installs available updates for installed packages. Use after apt update."
     if 'yum' in correct_option.lower() or 'dnf' in correct_option.lower():
         return "yum/dnf are package managers for Red Hat-based distros (RHEL, CentOS, Fedora). dnf is newer."
-    
+
     # Docker
     if 'docker run' in correct_option.lower():
         return "docker run creates and starts a container from an image. Common flags: -d (detached), -p (ports), -v (volumes)."
@@ -185,7 +185,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         if 'exit' in correct_option.lower() or 'main process' in correct_option.lower():
             return "Containers stop when their main process (PID 1) exits. Ensure your application runs in foreground."
         return "Containers run as long as their main process (PID 1) is active. When it exits, container stops."
-    
+
     # Archives
     if 'tar' in correct_option.lower():
         if 'create' in q_lower:
@@ -197,7 +197,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "gzip compresses files efficiently. Use gunzip to decompress. Add -k to keep original files."
     if 'zip' in correct_option.lower():
         return "zip creates compressed archives (Windows-compatible). unzip extracts them. Use -r for recursive directory compression."
-    
+
     # System Info
     if 'uname' in correct_option.lower():
         return "uname displays system information. Use -a for all info, -r for kernel version, -m for machine architecture."
@@ -205,7 +205,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "hostname shows or sets the system's hostname. Use -f for FQDN (fully qualified domain name)."
     if 'uptime' in correct_option.lower():
         return "uptime shows how long the system has been running, user count, and load averages."
-    
+
     # Users & Groups
     if '/etc/passwd' in correct_option.lower() or 'passwd' in correct_option.lower():
         return "/etc/passwd contains user account info: username, UID, GID, home directory, shell. Passwords are in /etc/shadow."
@@ -215,7 +215,7 @@ def generate_explanation(question: str, correct_option: str) -> str:
         return "usermod modifies user accounts. Use -aG to add groups, -s to change shell, -L to lock account."
     if 'sudo' in correct_option.lower():
         return "sudo executes commands with superuser privileges. Configured in /etc/sudoers (edit with visudo)."
-    
+
     # Generic fallback med kontext
     return f"{correct_option} - This is a fundamental Linux/Unix concept for system administration and DevOps."
 
@@ -231,13 +231,13 @@ fixed_count = 0
 
 while i < len(lines):
     line = lines[i]
-    
+
     if 'explanation:' in line:
         # Samla kontext från föregående rader
         question = ""
         options = []
         correct_idx = -1
-        
+
         for j in range(i-1, max(0, i-20), -1):
             if 'question:' in lines[j]:
                 match = re.search(r"question:\s*['\"]([^'\"]+)['\"]", lines[j])
@@ -254,10 +254,10 @@ while i < len(lines):
                     opt = opt_match.group(1)
                     if opt not in ['G', 'VG', 'Pipes & Redirection', 'Files', 'Permissions', 'Processes', 'Networking']:
                         options.append(opt)
-        
+
         # options är i omvänd ordning
         options = options[::-1][:4]
-        
+
         if question and len(options) == 4 and 0 <= correct_idx < 4:
             correct_option = options[correct_idx]
             new_explanation = escape_quotes(generate_explanation(question, correct_option))
@@ -272,7 +272,7 @@ while i < len(lines):
             new_lines.append(line)
     else:
         new_lines.append(line)
-    
+
     i += 1
 
 # Skriv tillbaka

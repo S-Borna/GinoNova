@@ -253,11 +253,12 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                         {/* Spotify Embed - Compact */}
                         <iframe
                             key={embedUrl}
-                            src={`${embedUrl}?theme=0`}
+                            src={embedUrl}
                             width="100%"
                             height="80"
                             frameBorder="0"
                             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                            allowFullScreen
                             loading="eager"
                             className="rounded-xl"
                         />

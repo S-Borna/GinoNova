@@ -180,7 +180,7 @@ async def get_available_modules(
     Returns:
     - Camp DevOps modules (Linux 24/7, Linux Tentaplugg, Hands-On Lab)
     - Static question sources (Manpage Tenta, Omtenta 2.0, etc.)
-    
+
     AI Quiz generates NEW questions based on the content/style of these sources,
     unlike Tenta Simulator which shows the actual static questions.
     """
@@ -197,7 +197,7 @@ async def get_available_modules(
         }
         for m in camp_modules
     ]
-    
+
     # Add static question sources (same as Tenta Simulator)
     # AI generates NEW questions based on these, not showing the static ones
     static_sources = [
@@ -222,7 +222,7 @@ async def get_available_modules(
             "description": "AI-genererade frågor baserat på Linux kommandoreferens"
         },
     ]
-    
+
     # Combine and return
     all_sources = available_modules + static_sources
 

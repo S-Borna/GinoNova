@@ -360,13 +360,13 @@ def randomize_options(question: Dict, target_idx: int = None) -> Dict:
     Om target_idx ges, placera rätt svar där, annars randomisera"""
     options = question['options'].copy()
     correct_idx = question['correct_index']
-    
+
     if target_idx is not None:
         # Flytta rätt svar till target position
         indices = [0, 1, 2, 3]
         indices.remove(correct_idx)
         random.shuffle(indices)
-        
+
         # Skapa ny ordning där rätt svar är på target_idx
         new_indices = []
         idx_counter = 0
@@ -376,7 +376,7 @@ def randomize_options(question: Dict, target_idx: int = None) -> Dict:
             else:
                 new_indices.append(indices[idx_counter])
                 idx_counter += 1
-        
+
         new_options = [options[i] for i in new_indices]
         new_correct_idx = target_idx
     else:
@@ -458,19 +458,19 @@ def generate_typescript(g_questions: List[Dict], vg_questions: List[Dict], outpu
     # 298 frågor: 298 % 4 = 2, så två får 75 och två får 74
     all_questions = g_questions + vg_questions
     total = len(all_questions)
-    
+
     # Skapa exakt fördelning: varje index får floor(total/4) eller ceil(total/4)
     base_count = total // 4  # 74
     extra = total % 4  # 2
-    
+
     target_distribution = []
     for i in range(4):
         count = base_count + (1 if i < extra else 0)
         target_distribution.extend([i] * count)
-    
+
     # Verifiera att vi har rätt antal
     assert len(target_distribution) == total, f"Distribution length mismatch: {len(target_distribution)} != {total}"
-    
+
     # Shuffla för att undvika sekventiellt mönster
     random.shuffle(target_distribution)
 
@@ -544,11 +544,11 @@ def main():
 
     # Statistik på rätta svar efter randomisering
     print("\n📊 Fördelning av korrekta svar (efter randomisering):")
-    
+
     # Läs faktisk fördelning från genererad fil
     with open(output_file, 'r', encoding='utf-8') as f:
         content = f.read()
-    
+
     import re
     indices = re.findall(r'correctIndex:\s*(\d+)', content)
     dist = [indices.count(str(i)) for i in range(4)]

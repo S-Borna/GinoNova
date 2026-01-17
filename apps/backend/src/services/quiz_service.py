@@ -177,7 +177,7 @@ VIKTIGT:
     timestamp = int(time.time() * 1000)  # millisecond precision
     random_seed = random.randint(1000, 9999)
     unique_id = str(uuid.uuid4())[:8]
-    
+
     variation_seed = f"""
 
 🔥 KRITISKT: Generera HELT NYA och UNIKA frågor för denna session!
@@ -353,21 +353,21 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
         Combined content string from all nodes/source or None
     """
     import os
-    
+
     # Normalize slug for matching
     normalized_slug = module_slug.lower().strip()
-    
+
     # ==============================================================================
     # STATIC QUESTION SOURCES — For AI to generate similar questions
     # ==============================================================================
     # These are the same sources used in Tenta Simulator, but AI generates NEW questions
     # based on the content/style instead of showing static questions
-    
+
     # Get project root (2 levels up from this file)
     current_dir = os.path.dirname(os.path.abspath(__file__))
     backend_root = os.path.dirname(os.path.dirname(current_dir))
     project_root = os.path.dirname(os.path.dirname(backend_root))
-    
+
     STATIC_SOURCES = {
         "manpage-tenta": os.path.join(project_root, "ManpageTentan.md"),
         "linux-tenta": None,  # May not exist
@@ -375,11 +375,11 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
         "handson": project_root,  # Root for Handson files
         "linux-commands": None,  # Will use quiz file data instead
     }
-    
+
     # Check if this is a static source
     if normalized_slug in STATIC_SOURCES:
         source_path = STATIC_SOURCES[normalized_slug]
-        
+
         if source_path and os.path.exists(source_path):
             try:
                 if os.path.isfile(source_path):
@@ -388,11 +388,11 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
                         content = f.read()
                     logger.info(f"✅ Loaded static source: {normalized_slug} ({len(content)} chars)")
                     return content[:12000]  # Limit for token budget
-                    
+
                 elif os.path.isdir(source_path):
                     # Read all markdown files from directory
                     content_parts = []
-                    
+
                     # Special handling for handson - read Handson*.md files from root
                     if normalized_slug == "handson":
                         for filename in os.listdir(source_path):
@@ -407,22 +407,22 @@ def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
                                 filepath = os.path.join(source_path, filename)
                                 with open(filepath, 'r', encoding='utf-8') as f:
                                     content_parts.append(f"# {filename}\n{f.read()}")
-                    
+
                     if content_parts:
                         combined = "\n\n".join(content_parts)
                         logger.info(f"✅ Loaded static source: {normalized_slug} ({len(combined)} chars from {len(content_parts)} files)")
                         return combined[:12000]
                     else:
                         logger.warning(f"⚠️  No content found for {normalized_slug}")
-                    
+
             except Exception as e:
                 logger.error(f"❌ Failed to load static source {normalized_slug}: {e}")
-        
+
         # Fallback: use quiz data file content for linux-commands
         if normalized_slug == "linux-commands":
             logger.info(f"ℹ️  Using quiz data fallback for {normalized_slug}")
             return "# Linux Commands Reference\nVanliga Linux-kommandon för terminal och systemadministration."
-    
+
     # ==============================================================================
     # REGULAR MODULES — From content source
     # ==============================================================================
