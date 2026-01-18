@@ -432,7 +432,7 @@ The module content below is your ONLY source of truth. You MUST:
 - Adding your own "common knowledge" that isn't in the provided text
 
 DIFFICULTY LEVEL: {difficulty_label.upper()}
-Apply this difficulty to the content topics - don't change WHAT you ask about, 
+Apply this difficulty to the content topics - don't change WHAT you ask about,
 change HOW COMPLEX the questions are about those same topics.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

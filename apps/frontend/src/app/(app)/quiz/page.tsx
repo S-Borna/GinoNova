@@ -33,6 +33,9 @@ import {
   Trophy,
   Clock,
   Play,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -125,6 +128,14 @@ interface QuizState {
   flipped: boolean[];
 }
 
+// Result data for each question
+interface QuestionResult {
+  question: MCQQuestion;
+  userAnswer: string | null;
+  isCorrect: boolean;
+  questionIndex: number;
+}
+
 export default function QuizPage() {
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [accessMessage, setAccessMessage] = useState("");
@@ -136,6 +147,12 @@ export default function QuizPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [quiz, setQuiz] = useState<QuizState | null>(null);
+
+  // State for question review and "more like this" feature
+  const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
+  const [generatingSimilar, setGeneratingSimilar] = useState<number | null>(null);
+  const [similarQuestions, setSimilarQuestions] = useState<{ [key: number]: MCQQuestion[] }>({});
+  const [similarQuizActive, setSimilarQuizActive] = useState<{ questionIndex: number, currentIdx: number, answers: (string | null)[], score: number } | null>(null);
 
   // Check access on mount
   useEffect(() => {
@@ -401,6 +418,110 @@ export default function QuizPage() {
   const resetQuiz = () => {
     setQuiz(null);
     setSelectedModule("");
+    setSimilarQuestions({});
+    setSimilarQuizActive(null);
+    setExpandedQuestion(null);
+  };
+
+  // Generate similar questions based on a specific question
+  const generateSimilarQuestions = async (questionIndex: number) => {
+    if (!quiz || quizType !== "mcq") return;
+
+    const originalQuestion = quiz.questions[questionIndex] as MCQQuestion;
+    setGeneratingSimilar(questionIndex);
+
+    try {
+      const token = getToken();
+      const devBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+
+      if (!token && !devBypass) {
+        throw new Error("Du måste vara inloggad");
+      }
+
+      // Create a focused prompt based on the original question
+      const focusArea = `Generate 5 questions similar to this one: "${originalQuestion.question}".
+Focus on the same topic and concept. The questions should test similar knowledge but be different enough to provide practice.`;
+
+      const res = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: JSON.stringify({
+          module_slug: selectedModule,
+          quiz_type: "mcq",
+          count: 5,
+          difficulty,
+          focus_area: focusArea,
+          force_new: true,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Kunde inte generera fler frågor");
+      }
+
+      const data = await res.json();
+
+      if (data.questions && data.questions.length > 0) {
+        setSimilarQuestions(prev => ({
+          ...prev,
+          [questionIndex]: data.questions
+        }));
+        // Start mini-quiz with these questions
+        setSimilarQuizActive({
+          questionIndex,
+          currentIdx: 0,
+          answers: new Array(data.questions.length).fill(null),
+          score: 0
+        });
+      }
+    } catch (err) {
+      console.error("Error generating similar questions:", err);
+      setError(err instanceof Error ? err.message : "Kunde inte generera liknande frågor");
+    } finally {
+      setGeneratingSimilar(null);
+    }
+  };
+
+  // Handle answer for similar questions mini-quiz
+  const handleSimilarAnswer = (answer: string) => {
+    if (!similarQuizActive || !similarQuestions[similarQuizActive.questionIndex]) return;
+
+    const questions = similarQuestions[similarQuizActive.questionIndex];
+    const currentQuestion = questions[similarQuizActive.currentIdx];
+    const isCorrect = answer === currentQuestion.correct;
+
+    const newAnswers = [...similarQuizActive.answers];
+    newAnswers[similarQuizActive.currentIdx] = answer;
+
+    setSimilarQuizActive({
+      ...similarQuizActive,
+      answers: newAnswers,
+      score: isCorrect ? similarQuizActive.score + 1 : similarQuizActive.score
+    });
+  };
+
+  // Next question in similar quiz
+  const nextSimilarQuestion = () => {
+    if (!similarQuizActive || !similarQuestions[similarQuizActive.questionIndex]) return;
+
+    const questions = similarQuestions[similarQuizActive.questionIndex];
+    if (similarQuizActive.currentIdx < questions.length - 1) {
+      setSimilarQuizActive({
+        ...similarQuizActive,
+        currentIdx: similarQuizActive.currentIdx + 1
+      });
+    } else {
+      // Finished similar quiz - show results inline
+      // Keep similarQuizActive to show final score, user can click to close
+    }
+  };
+
+  // Close similar quiz
+  const closeSimilarQuiz = () => {
+    setSimilarQuizActive(null);
   };
 
   // No access view - DOE25 Premium styled
@@ -531,9 +652,19 @@ export default function QuizPage() {
     );
   }
 
-  // Quiz results view - DOE25 Premium celebration
+  // Quiz results view - DOE25 Premium celebration with question review
   if (quiz?.showResult) {
     const percentage = Math.round((quiz.score / quiz.questions.length) * 100);
+
+    // Build results data for MCQ questions
+    const questionResults: QuestionResult[] = quizType === "mcq"
+      ? quiz.questions.map((q, idx) => ({
+        question: q as MCQQuestion,
+        userAnswer: quiz.answers[idx],
+        isCorrect: quiz.answers[idx] === (q as MCQQuestion).correct,
+        questionIndex: idx
+      }))
+      : [];
 
     return (
       <div className="min-h-screen bg-[#05050a] relative">
@@ -547,7 +678,7 @@ export default function QuizPage() {
               "relative overflow-hidden rounded-3xl",
               "bg-gradient-to-br from-emerald-500/10 via-purple-500/10 to-cyan-500/10",
               "border border-emerald-500/20",
-              "p-8 md:p-12"
+              "p-8 md:p-12 mb-8"
             )}
           >
             {/* Background Glow */}
@@ -576,16 +707,16 @@ export default function QuizPage() {
 
               <div className="flex items-center justify-center gap-3 mb-4">
                 <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                  Quiz Klar!
+                  Quiz Complete!
                 </span>
               </div>
 
               <h1 className="text-3xl md:text-5xl font-black text-white mb-4">
-                Bra jobbat!
+                Well Done!
               </h1>
 
               <p className="text-lg text-zinc-300 mb-6">
-                Du fick {quiz.score} av {quiz.questions.length} rätt
+                You got {quiz.score} out of {quiz.questions.length} correct
               </p>
 
               <motion.div
@@ -600,25 +731,25 @@ export default function QuizPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <StatCard
                   icon={<CheckCircle2 className="w-6 h-6 text-white" />}
-                  label="Rätt svar"
+                  label="Correct"
                   value={quiz.score}
                   color="from-emerald-500 to-green-500"
                 />
                 <StatCard
                   icon={<XCircle className="w-6 h-6 text-white" />}
-                  label="Fel svar"
+                  label="Incorrect"
                   value={quiz.questions.length - quiz.score}
                   color="from-red-500 to-orange-500"
                 />
                 <StatCard
                   icon={<Target className="w-6 h-6 text-white" />}
-                  label="Totalt"
+                  label="Total"
                   value={quiz.questions.length}
                   color="from-purple-500 to-pink-500"
                 />
                 <StatCard
                   icon={<Trophy className="w-6 h-6 text-white" />}
-                  label="Procent"
+                  label="Score"
                   value={`${percentage}%`}
                   color="from-amber-500 to-yellow-500"
                 />
@@ -647,11 +778,273 @@ export default function QuizPage() {
                   )}
                 >
                   <RotateCcw className="w-5 h-5 mr-2" />
-                  Nytt Quiz
+                  New Quiz
                 </Button>
               </motion.div>
             </div>
           </motion.div>
+
+          {/* Question Review Section - MCQ only */}
+          {quizType === "mcq" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className={cn(
+                "relative overflow-hidden rounded-3xl",
+                "bg-gradient-to-br from-zinc-900/50 to-zinc-800/30",
+                "border border-zinc-700/50",
+                "p-6 md:p-8"
+              )}
+            >
+              <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+                <BookOpen className="w-6 h-6 text-purple-400" />
+                Question Review
+              </h2>
+              <p className="text-zinc-400 mb-6">
+                Review your answers. Want to practice more on a specific topic? Click &quot;More like this!&quot;
+              </p>
+
+              <div className="space-y-4">
+                {questionResults.map((result, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05 }}
+                    className={cn(
+                      "rounded-xl border overflow-hidden",
+                      result.isCorrect
+                        ? "border-emerald-500/30 bg-emerald-500/5"
+                        : "border-red-500/30 bg-red-500/5"
+                    )}
+                  >
+                    {/* Question Header - Always visible */}
+                    <div
+                      className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
+                      onClick={() => setExpandedQuestion(expandedQuestion === idx ? null : idx)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className={cn(
+                          "flex-shrink-0 mt-0.5",
+                          result.isCorrect ? "text-emerald-400" : "text-red-400"
+                        )}>
+                          {result.isCorrect ? (
+                            <CheckCircle2 className="w-5 h-5" />
+                          ) : (
+                            <XCircle className="w-5 h-5" />
+                          )}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium">
+                            {idx + 1}. {result.question.question}
+                          </p>
+                          <p className="text-zinc-400 text-sm mt-1">
+                            Your answer: <span className={result.isCorrect ? "text-emerald-400" : "text-red-400"}>
+                              {result.userAnswer || "Not answered"}
+                            </span>
+                            {!result.isCorrect && (
+                              <span className="ml-2">
+                                • Correct: <span className="text-emerald-400">{result.question.correct}</span>
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0">
+                          {expandedQuestion === idx ? (
+                            <ChevronUp className="w-5 h-5 text-zinc-400" />
+                          ) : (
+                            <ChevronDown className="w-5 h-5 text-zinc-400" />
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    <AnimatePresence>
+                      {expandedQuestion === idx && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="border-t border-zinc-700/50"
+                        >
+                          <div className="p-4 space-y-4">
+                            {/* All Options */}
+                            <div className="space-y-2">
+                              {result.question.options.map((opt, optIdx) => {
+                                const letter = opt.charAt(0);
+                                const isCorrect = letter === result.question.correct;
+                                const isUserAnswer = letter === result.userAnswer;
+
+                                return (
+                                  <div
+                                    key={optIdx}
+                                    className={cn(
+                                      "p-3 rounded-lg text-sm",
+                                      isCorrect
+                                        ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300"
+                                        : isUserAnswer && !result.isCorrect
+                                          ? "bg-red-500/20 border border-red-500/30 text-red-300"
+                                          : "bg-zinc-800/50 border border-zinc-700/30 text-zinc-400"
+                                    )}
+                                  >
+                                    {opt}
+                                    {isCorrect && <span className="ml-2">✓</span>}
+                                    {isUserAnswer && !isCorrect && <span className="ml-2">✗</span>}
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            {/* Explanation */}
+                            <div className="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/30">
+                              <p className="text-sm text-zinc-300">
+                                <strong className="text-purple-400">Explanation:</strong> {result.question.explanation}
+                              </p>
+                            </div>
+
+                            {/* More Like This Button */}
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                              <Button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  generateSimilarQuestions(idx);
+                                }}
+                                disabled={generatingSimilar === idx}
+                                className={cn(
+                                  "w-full py-3 rounded-xl font-semibold",
+                                  "bg-gradient-to-r from-purple-600 to-pink-600",
+                                  "hover:from-purple-500 hover:to-pink-500",
+                                  "shadow-lg shadow-purple-500/20",
+                                  "disabled:opacity-50"
+                                )}
+                              >
+                                {generatingSimilar === idx ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    Generating...
+                                  </>
+                                ) : (
+                                  <>
+                                    <RefreshCw className="w-4 h-4 mr-2" />
+                                    More questions like this!
+                                  </>
+                                )}
+                              </Button>
+                            </motion.div>
+
+                            {/* Similar Questions Mini-Quiz */}
+                            {similarQuizActive && similarQuizActive.questionIndex === idx && similarQuestions[idx] && (
+                              <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mt-4 p-4 rounded-xl bg-purple-500/10 border border-purple-500/30"
+                              >
+                                <div className="flex items-center justify-between mb-4">
+                                  <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                                    <Sparkles className="w-5 h-5 text-purple-400" />
+                                    Practice Questions
+                                  </h4>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={closeSimilarQuiz}
+                                    className="text-zinc-400 hover:text-white"
+                                  >
+                                    Close
+                                  </Button>
+                                </div>
+
+                                {similarQuizActive.currentIdx < similarQuestions[idx].length ? (
+                                  <>
+                                    <p className="text-zinc-400 text-sm mb-3">
+                                      Question {similarQuizActive.currentIdx + 1} of {similarQuestions[idx].length}
+                                    </p>
+                                    <p className="text-white font-medium mb-4">
+                                      {similarQuestions[idx][similarQuizActive.currentIdx].question}
+                                    </p>
+                                    <div className="space-y-2">
+                                      {similarQuestions[idx][similarQuizActive.currentIdx].options.map((opt, optIdx) => {
+                                        const letter = opt.charAt(0);
+                                        const isSelected = similarQuizActive.answers[similarQuizActive.currentIdx] === letter;
+                                        const showResult = similarQuizActive.answers[similarQuizActive.currentIdx] !== null;
+                                        const isCorrect = letter === similarQuestions[idx][similarQuizActive.currentIdx].correct;
+
+                                        return (
+                                          <motion.button
+                                            key={optIdx}
+                                            whileHover={!showResult ? { scale: 1.01 } : {}}
+                                            onClick={() => !showResult && handleSimilarAnswer(letter)}
+                                            disabled={showResult}
+                                            className={cn(
+                                              "w-full p-3 rounded-lg text-left text-sm transition-all",
+                                              showResult
+                                                ? isCorrect
+                                                  ? "bg-emerald-500/20 border-emerald-500/50"
+                                                  : isSelected
+                                                    ? "bg-red-500/20 border-red-500/50"
+                                                    : "bg-zinc-800/30 border-zinc-700/30"
+                                                : isSelected
+                                                  ? "bg-purple-500/20 border-purple-500/50"
+                                                  : "bg-zinc-800/50 border-zinc-700/30 hover:bg-zinc-700/50",
+                                              "border"
+                                            )}
+                                          >
+                                            <span className="text-white">{opt}</span>
+                                          </motion.button>
+                                        );
+                                      })}
+                                    </div>
+
+                                    {similarQuizActive.answers[similarQuizActive.currentIdx] !== null && (
+                                      <div className="mt-4">
+                                        <div className="p-3 bg-zinc-800/50 rounded-lg mb-3">
+                                          <p className="text-sm text-zinc-300">
+                                            <strong className="text-purple-400">Explanation:</strong>{" "}
+                                            {similarQuestions[idx][similarQuizActive.currentIdx].explanation}
+                                          </p>
+                                        </div>
+                                        <Button
+                                          onClick={nextSimilarQuestion}
+                                          className="w-full bg-purple-600 hover:bg-purple-500"
+                                        >
+                                          {similarQuizActive.currentIdx < similarQuestions[idx].length - 1
+                                            ? "Next Question"
+                                            : "See Results"}
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="text-center py-4">
+                                    <Trophy className="w-12 h-12 text-amber-400 mx-auto mb-3" />
+                                    <p className="text-white font-semibold text-lg">
+                                      Practice Complete!
+                                    </p>
+                                    <p className="text-zinc-400">
+                                      You got {similarQuizActive.score} out of {similarQuestions[idx].length} correct
+                                    </p>
+                                    <Button
+                                      onClick={closeSimilarQuiz}
+                                      className="mt-4 bg-purple-600 hover:bg-purple-500"
+                                    >
+                                      Done
+                                    </Button>
+                                  </div>
+                                )}
+                              </motion.div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     );
