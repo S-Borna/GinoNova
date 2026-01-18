@@ -3,7 +3,6 @@ Quiz API Routes - AI-powered quiz generation endpoints
 Only accessible by specific users (premium feature).
 """
 from fastapi import APIRouter, HTTPException, status, Depends
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import Literal, Optional, List
 from datetime import datetime
@@ -159,8 +158,7 @@ async def generate_quiz(
             detail="Quiz generation failed. Check OpenAI API key and service availability."
         )
 
-    # Return with Connection: close header to prevent connection blocking
-    response_data = QuizResponse(
+    return QuizResponse(
         questions=result.get("questions", []),
         metadata=QuizMetadata(
             module=module_title,
@@ -170,14 +168,6 @@ async def generate_quiz(
             generated_at=datetime.utcnow().isoformat(),
             focus_area=request.focus_area
         )
-    )
-
-    return JSONResponse(
-        content=response_data.model_dump(),
-        headers={
-            "Connection": "close",
-            "Cache-Control": "no-store, no-cache, must-revalidate"
-        }
     )
 
 
