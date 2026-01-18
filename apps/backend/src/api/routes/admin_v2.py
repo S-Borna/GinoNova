@@ -82,10 +82,10 @@ def add_activity_log(
     import uuid
     from src.db.database import SessionLocal
     from src.db.models import ActivityLog
-    
+
     entry_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
-    
+
     # Try to save to database first (multi-worker safe)
     try:
         db = SessionLocal()
@@ -96,7 +96,7 @@ def add_activity_log(
                 user_uuid = uuid.UUID(user_id)
             except (ValueError, AttributeError):
                 pass
-            
+
             activity = ActivityLog(
                 id=uuid.UUID(entry_id),
                 type=activity_type,
@@ -148,7 +148,7 @@ def get_activity_log(limit: int = 50) -> List[dict]:
     """Get the most recent activity log entries from database"""
     from src.db.database import SessionLocal
     from src.db.models import ActivityLog
-    
+
     try:
         db = SessionLocal()
         try:
@@ -460,20 +460,20 @@ async def get_activity_flash(
         # Ensure timezone awareness
         if since.tzinfo is None:
             since = since.replace(tzinfo=timezone.utc)
-        
+
         events = []
         for e in entries:
             if e.get("type") not in flash_types:
                 continue
-            
+
             entry_time = e.get("timestamp")
             if entry_time is None:
                 continue
-                
+
             # Ensure entry_time has timezone
             if entry_time.tzinfo is None:
                 entry_time = entry_time.replace(tzinfo=timezone.utc)
-            
+
             if entry_time > since:
                 events.append(e)
     else:
@@ -838,7 +838,7 @@ async def update_user_activity(
     """
     user_id = str(current_user.id)
     now = datetime.now(timezone.utc)
-    
+
     # Update in-memory tracker
     with _live_activity_lock:
         _live_user_activity[user_id] = {
@@ -847,13 +847,13 @@ async def update_user_activity(
             "pathname": activity.pathname,
             "updated_at": now
         }
-    
+
     # Update user's last_activity_at in database
     user = db.query(User).filter(User.id == current_user.id).first()
     if user:
         user.last_activity_at = now
         db.commit()
-    
+
     # Add to activity log for detailed tracking
     add_activity_log(
         activity_type=activity.current_action,
@@ -862,7 +862,7 @@ async def update_user_activity(
         user_name=current_user.full_name,
         details=activity.current_page
     )
-    
+
     return {"ok": True}
 
 
@@ -899,7 +899,7 @@ async def get_live_user_activity(
         # Get real-time activity from in-memory tracker
         with _live_activity_lock:
             live_activity = _live_user_activity.get(user_id, {})
-        
+
         current_page = live_activity.get("page", "Dashboard")
         current_action = live_activity.get("action", "browsing")
 

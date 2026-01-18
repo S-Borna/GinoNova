@@ -37,7 +37,7 @@ const getDismissedIds = (): Set<string> => {
             localStorage.setItem("dismissed_broadcasts", JSON.stringify(Object.fromEntries(valid)))
             return new Set(valid.map(([id]) => id))
         }
-    } catch {}
+    } catch { }
     return new Set()
 }
 
@@ -49,7 +49,7 @@ const saveDismissedId = (id: string) => {
         const parsed = stored ? JSON.parse(stored) : {}
         parsed[id] = Date.now()
         localStorage.setItem("dismissed_broadcasts", JSON.stringify(parsed))
-    } catch {}
+    } catch { }
 }
 
 export function UserBroadcast({ className }: UserBroadcastProps) {
@@ -63,7 +63,7 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
     const fetchMessages = useCallback(async () => {
         if (!user) return
         if (fetchingRef.current) return // Prevent concurrent fetches
-        
+
         fetchingRef.current = true
 
         try {
@@ -80,12 +80,12 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
             if (response.ok) {
                 const data = await response.json()
                 const allMessages = data.messages || []
-                
+
                 // Filter out locally dismissed messages
                 const newMessages = allMessages.filter(
                     (m: BroadcastMessage) => !dismissedIdsRef.current.has(m.id)
                 )
-                
+
                 // Only update if message IDs changed (prevents flashing)
                 setMessages(prev => {
                     const prevIds = prev.map(m => m.id).sort().join(",")
@@ -115,15 +115,15 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
         // Immediately save to localStorage so it won't come back
         saveDismissedId(messageId)
         dismissedIdsRef.current.add(messageId)
-        
+
         // Remove from local state immediately
         setMessages(prev => prev.filter(m => m.id !== messageId))
-        
+
         // Reset index if needed
         if (currentIndex >= messages.length - 1) {
             setCurrentIndex(Math.max(0, messages.length - 2))
         }
-        
+
         // Also notify backend (fire and forget)
         try {
             const token = localStorage.getItem("auth_token")

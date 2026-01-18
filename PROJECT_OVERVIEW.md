@@ -3,7 +3,7 @@
 > **Senast uppdaterad:** 2026-01-18
 > **Version:** v2.5.0
 > **Status:** Production
-> **URL:** https://ginonova.com | https://api.ginonova.com
+> **URL:** <https://ginonova.com> | <https://api.ginonova.com>
 
 ---
 
@@ -28,6 +28,7 @@
 **GinoNova** är en interaktiv e-learningplattform för DevOps, Linux och systemadministration.
 
 ### Huvudfunktioner
+
 - **Camp DevOps** - Strukturerade utbildningsmoduler med uppgifter och labs
 - **Tenta Simulator** - Realistisk tentaövning med 770+ frågor från DOE25, Omtenta 2.0, Manpage-tenta
 - **AI Quiz** - Dynamiskt genererade frågor via OpenAI baserat på modulinnehåll
@@ -42,6 +43,7 @@
 ## 🛠 Tech Stack
 
 ### Frontend
+
 ```
 Framework:     Next.js 16.1.0 (App Router)
 Language:      TypeScript
@@ -53,6 +55,7 @@ Auth:          NextAuth v4 (Google, GitHub, Discord)
 ```
 
 ### Backend
+
 ```
 Framework:     FastAPI 0.111
 Language:      Python 3.11
@@ -64,6 +67,7 @@ Workers:       4 Uvicorn workers på Railway
 ```
 
 ### Infrastructure
+
 ```
 Frontend:      Netlify
 Backend:       Railway.app (4 workers)
@@ -407,6 +411,7 @@ git push origin main        # Triggar Railway build
 ```
 
 **Efter schema-ändringar:**
+
 ```bash
 # SSH till Railway eller kör lokalt mot prod-DB
 alembic upgrade head

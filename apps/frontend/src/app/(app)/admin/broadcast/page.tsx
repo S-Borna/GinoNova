@@ -58,7 +58,7 @@ export default function BroadcastPage() {
     const [loading, setLoading] = useState(true)
     const [success, setSuccess] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
-    
+
     // User targeting
     const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
     const [targetMode, setTargetMode] = useState<"all" | "selected">("all")
@@ -85,8 +85,8 @@ export default function BroadcastPage() {
 
     // Toggle user selection
     const toggleUserSelection = (userId: string) => {
-        setSelectedUsers(prev => 
-            prev.includes(userId) 
+        setSelectedUsers(prev =>
+            prev.includes(userId)
                 ? prev.filter(id => id !== userId)
                 : [...prev, userId]
         )
@@ -121,7 +121,7 @@ export default function BroadcastPage() {
     useEffect(() => {
         fetchBroadcasts()
         fetchOnlineUsers()
-        
+
         // Refresh online users every 30 seconds
         const interval = setInterval(fetchOnlineUsers, 5000)
         return () => clearInterval(interval)
@@ -162,8 +162,8 @@ export default function BroadcastPage() {
             })
 
             if (res.ok) {
-                const targetText = targetMode === "selected" 
-                    ? `to ${selectedUsers.length} user(s)` 
+                const targetText = targetMode === "selected"
+                    ? `to ${selectedUsers.length} user(s)`
                     : "to all users"
                 setSuccess(`Broadcast sent ${targetText}!`)
                 setMessage("")

@@ -45,7 +45,7 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
 
             // Use a timestamp from 30 seconds ago to catch any recent events
             const sinceTime = new Date(Date.now() - 30000)
-            
+
             const response = await fetch(`${API_BASE_URL}/api/admin/v2/activity-flash?since=${sinceTime.toISOString()}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -67,7 +67,7 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
                     if (newEvents.length > 0) {
                         // Mark these events as seen
                         newEvents.forEach((e: ActivityEvent) => seenEventsRef.current.add(e.id))
-                        
+
                         // Keep only last 100 seen events to prevent memory leak
                         if (seenEventsRef.current.size > 100) {
                             const arr = Array.from(seenEventsRef.current)
