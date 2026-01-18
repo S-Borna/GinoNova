@@ -141,12 +141,30 @@ export default function QuizPage() {
   useEffect(() => {
     const init = async () => {
       const token = getToken();
-      console.log("Quiz init - token:", token ? "EXISTS" : "NULL");
+      const devBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+      console.log("Quiz init - token:", token ? "EXISTS" : "NULL", "devBypass:", devBypass);
 
-      if (!token) {
-        console.log("No token, skipping API calls");
+      if (!token && !devBypass) {
+        console.log("No token and no dev bypass, skipping API calls");
         setHasAccess(false);
         setAccessMessage("Vänligen logga in för att använda AI Quiz");
+        return;
+      }
+
+      // Dev bypass - allow access without token
+      if (devBypass && !token) {
+        console.log("Dev bypass enabled - granting access");
+        setHasAccess(true);
+        setAccessMessage("");
+        setModules([
+          { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps" },
+          { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder" },
+          { slug: "hands-on-lab", title: "🔧 Hands-On Lab", description: "Praktiska labbar" },
+          { slug: "manpage-tenta", title: "📚 Manpage Tenta", description: "Linux manpage-frågor" },
+          { slug: "omtenta-2", title: "🎯 Omtenta 2.0", description: "Omtenta-frågor" },
+          { slug: "handson", title: "🛠️ Hands-On Labs", description: "Labbövningar" },
+          { slug: "linux-commands", title: "💻 Linux Kommandon", description: "Kommandoreferens" }
+        ]);
         return;
       }
 
@@ -237,31 +255,37 @@ export default function QuizPage() {
     setLoading(true);
     setError(null);
 
+    // AbortController för att kunna avbryta och inte blockera
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
     try {
       const token = getToken();
-      console.log("Token present:", !!token, token ? `${token.substring(0, 20)}...` : "null");
+      const devBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
 
-      if (!token) {
+      if (!token && !devBypass) {
         throw new Error("Du måste vara inloggad för att generera quiz");
       }
 
       console.log("Generating quiz:", { selectedModule, quizType, questionCount, difficulty });
-      console.log("API URL:", `${API_BASE_URL}/api/quiz/generate`);
 
       const res = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          ...(token && { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           module_slug: selectedModule,
           quiz_type: quizType,
           count: questionCount,
           difficulty,
-          force_new: true,  // Always generate fresh questions
+          force_new: true,
         }),
+        signal: controller.signal,  // Gör request avbrytbar
       });
+
+      clearTimeout(timeoutId);  // Rensa timeout efter lyckad request
 
       console.log("Generate response status:", res.status);
 
@@ -315,8 +339,13 @@ export default function QuizPage() {
         flipped: new Array(data.questions.length).fill(false),
       });
     } catch (err) {
+      clearTimeout(timeoutId);  // Rensa timeout vid fel också
       console.error("Quiz generation error:", err);
-      setError(err instanceof Error ? err.message : "Ett fel uppstod vid generering av quiz");
+      if (err instanceof Error && err.name === 'AbortError') {
+        setError("Generering tog för lång tid. Försök igen.");
+      } else {
+        setError(err instanceof Error ? err.message : "Ett fel uppstod vid generering av quiz");
+      }
     } finally {
       setLoading(false);
     }

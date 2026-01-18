@@ -47,6 +47,55 @@ def _get_client():
     return _openai_client
 
 
+def _randomize_mcq_options(questions: List[dict]) -> List[dict]:
+    """
+    Randomisera svarsalternativens position för MCQ-frågor.
+    Säkerställer att rätt svar inte alltid är på samma position.
+    """
+    letters = ['A', 'B', 'C', 'D']
+
+    for q in questions:
+        if 'options' not in q or 'correct' not in q:
+            continue
+
+        options = q['options']
+        if len(options) != 4:
+            continue
+
+        # Hitta index för rätt svar
+        correct_letter = q['correct'].strip().upper()
+        if correct_letter not in letters:
+            continue
+        correct_idx = letters.index(correct_letter)
+
+        # Ta bort bokstavsprefixet från options (om det finns)
+        clean_options = []
+        for opt in options:
+            # Ta bort "A) ", "B) ", etc.
+            if len(opt) > 3 and opt[0] in letters and opt[1] == ')':
+                clean_options.append(opt[3:].strip())
+            elif len(opt) > 2 and opt[0] in letters and opt[1] == '.':
+                clean_options.append(opt[2:].strip())
+            else:
+                clean_options.append(opt)
+
+        # Spara rätt svar
+        correct_answer = clean_options[correct_idx]
+
+        # Slumpa ordningen
+        random.shuffle(clean_options)
+
+        # Hitta nya positionen för rätt svar
+        new_correct_idx = clean_options.index(correct_answer)
+        new_correct_letter = letters[new_correct_idx]
+
+        # Uppdatera med nya bokstavsprefixer
+        q['options'] = [f"{letters[i]}) {clean_options[i]}" for i in range(4)]
+        q['correct'] = new_correct_letter
+
+    return questions
+
+
 def _generate_cache_key(
     module_title: str,
     content: str,
@@ -148,6 +197,20 @@ VIKTIGT: Allt innehåll ska vara på SVENSKA!"""
   ]
 }
 
+KRITISKT FÖR SVARSFÖRDELNING:
+- Fördela det korrekta svaret JÄMNT över A, B, C, D
+- Om du genererar 20 frågor ska ca 5 ha A rätt, 5 ha B rätt, 5 ha C rätt, 5 ha D rätt
+- ALDRIG ha mer än 30% av svaren på samma bokstav
+- Variera aktivt var det korrekta svaret placeras
+
+⚠️ KRITISKT FÖR SVARSLÄNGD - UNDVIK ATT AVSLÖJA RÄTT SVAR:
+- ALLA fyra svarsalternativ MÅSTE vara UNGEFÄR LIKA LÅNGA (max 20% skillnad)
+- Det korrekta svaret får INTE vara mer detaljerat eller längre än de felaktiga
+- Om rätt svar är kort (t.ex. "docker ps"), gör felaktiga svar lika korta
+- Om rätt svar behöver vara långt, gör ALLA alternativ lika långa och detaljerade
+- Felaktiga svar ska vara LIKA ÖVERTYGANDE formulerade som det korrekta
+- Undvik att bara det korrekta svaret har exempel eller detaljer
+
 Exempel på BRA flervalsfråga:
 {
   "question": "Du ska deploya en Python-app med dependencies. Vilken Dockerfile-lagerordning är MEST effektiv?",
@@ -158,15 +221,14 @@ Exempel på BRA flervalsfråga:
     "D) COPY requirements.txt requirements.txt && COPY . . && RUN pip install"
   ],
   "correct": "B",
-  "explanation": "Genom att kopiera requirements.txt först kan Docker cacha pip install-lagret. Om endast kod ändras återanvänder Docker det cachade pip install-lagret, vilket gör ombyggnader snabbare."
+  "explanation": "Genom att kopiera requirements.txt först kan Docker cacha pip install-lagret."
 }
 
 VIKTIGT:
-- Det korrekta svaret ska slumpmässigt fördelas över A, B, C, D - gör INTE alltid A till rätt svar
-- Variera positionen för det korrekta svaret för varje fråga
+- Generera EXAKT det antal frågor som efterfrågas - inte färre!
+- Fördela korrekta svar JÄMNT (25% A, 25% B, 25% C, 25% D)
 - Gör felaktiga svar rimliga men tydligt felaktiga
-- Fokusera på praktiska DevOps-scenarion, inte bara definitioner
-- ALLT innehåll (frågor, svar, förklaringar) ska vara på SVENSKA!"""
+- ALLT innehåll ska vara på SVENSKA!"""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
 
@@ -255,7 +317,7 @@ VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hin
 Baserat på detta modulinnehåll:
 {content_preview}
 
-Generera exakt {count} UNIKA och OLIKA {quiz_type} frågor.{focus_text}{variation_seed}
+⚠️ KRITISKT: Generera EXAKT {count} frågor - inte färre, inte fler!
 
 {format_instruction}
 
@@ -263,24 +325,27 @@ Kvalitetsriktlinjer:
 - Varje fråga ska testa ett specifikt, viktigt koncept från innehållet
 - Felaktiga svar ska vara rimliga men tydligt felaktiga (inga lurigfrågor)
 - Förklaringar ska vara pedagogiska och hjälpa studenter förstå konceptet
-- För flerval: Fördela korrekta svar jämnt över A, B, C, D positioner
+- För flerval: Svarsalternativen randomiseras efteråt, fokusera på kvalitet
 - För flashcards: Framsidan ska vara specifik, baksidan ska vara heltäckande men koncis
 - Undvik frågor som kan besvaras utan att läsa innehållet
 - Prioritera frågor om praktisk tillämpning över ren memorering
+- ⚠️ ALLA svarsalternativ ska vara LIKA LÅNGA - rätt svar får INTE sticka ut genom längd/detaljer
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA!
+VIKTIGT:
+1. Generera EXAKT {count} frågor (detta är ett KRAV)
+2. ALLT innehåll på SVENSKA!
+{focus_text}{variation_seed}
 
-Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före eller efter."""
+Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text."""
 
     try:
         # Higher temperature when not caching (force_new mode) for more variation
-        # Lower temperature when caching for consistency
-        temperature = 0.95 if not use_cache else 0.75  # More creative when generating fresh
+        temperature = 0.85 if not use_cache else 0.75
 
-        # Scale max_tokens based on question count
-        # MCQ: ~150 tokens per question, Flashcard: ~80 tokens per question
-        base_tokens = 200 if quiz_type == "mcq" else 120
-        max_tokens = min(count * base_tokens + 500, 16000)  # Cap at 16k
+        # Scale max_tokens based on question count - INCREASED for more questions
+        # MCQ: ~250 tokens per question, Flashcard: ~150 tokens per question
+        base_tokens = 300 if quiz_type == "mcq" else 180
+        max_tokens = min(count * base_tokens + 1000, 16000)  # Cap at 16k
 
         logger.info(f"🎲 Generating {count} questions with temperature={temperature}, max_tokens={max_tokens}")
 
@@ -306,6 +371,11 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
             result_text = result_text[:-3]
 
         result = json.loads(result_text.strip())
+
+        # POST-PROCESSING: Randomisera svarsalternativ för MCQ
+        if quiz_type == "mcq" and "questions" in result:
+            result["questions"] = _randomize_mcq_options(result["questions"])
+            logger.info(f"🔀 Randomized answer positions for {len(result['questions'])} questions")
 
         # Log AI usage for cost tracking
         try:
