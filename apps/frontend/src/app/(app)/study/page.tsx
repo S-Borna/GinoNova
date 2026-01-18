@@ -53,6 +53,9 @@ import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 // OMTENTA 2.0 - Nytt innehåll från Nod-filer
 import { OMTENTA2_TOPICS, OMTENTA2_TOPIC_INFO, ALL_OMTENTA_2_QUESTIONS } from "@/data/omtenta-2.0-quiz"
 import { ALL_OMTENTA_2_FLASHCARDS } from "@/data/omtenta-2.0-flashcards"
+// YouTube Tutorials
+import { TutorialSection } from "@/components/tutorials"
+import { getTutorialsForQuery, TUTORIALS } from "@/data/tutorials"
 
 /* ============================================================================
    TYPES
@@ -1279,6 +1282,39 @@ export default function StudyPage() {
                             <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
+                </motion.div>
+
+                {/* Recommended Tutorials */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-12"
+                >
+                    {(() => {
+                        // Get tutorials based on selected source
+                        const sourceKeywords: Record<string, string[]> = {
+                            'handson': ['linux', 'docker', 'ssh', 'bash'],
+                            'linux': ['linux', 'bash', 'permissions', 'filesystem'],
+                            'linux-tenta': ['linux', 'bash', 'networking'],
+                            'omtenta-2': ['linux', 'docker', 'networking', 'bash'],
+                            'manpage-tenta': ['linux', 'bash']
+                        }
+                        const keywords = sourceKeywords[tentaSource] || ['linux', 'devops']
+                        const relevantTutorials = TUTORIALS.filter(t =>
+                            keywords.some(kw => t.topics.some(topic => topic.includes(kw)))
+                        ).slice(0, 6)
+                        
+                        return (
+                            <TutorialSection
+                                title="📺 Plugga med video"
+                                subtitle="Rekommenderade tutorials för dina valda ämnen"
+                                tutorials={relevantTutorials}
+                                maxItems={3}
+                                showViewAll={true}
+                            />
+                        )
+                    })()}
                 </motion.div>
             </div>
         </div>

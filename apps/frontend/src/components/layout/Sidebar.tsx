@@ -43,6 +43,7 @@ import {
     Trophy,
     Users,
     BarChart3,
+    Youtube,
     type LucideIcon
 } from "lucide-react"
 
@@ -125,6 +126,13 @@ const mainNavItems: NavItem[] = [
         icon: Zap,
         gradient: "from-yellow-400 to-amber-500",
         glowColor: "rgba(250, 204, 21, 0.5)"
+    },
+    {
+        label: "Tutorials",
+        href: "/tutorials",
+        icon: Youtube,
+        gradient: "from-red-500 to-rose-600",
+        glowColor: "rgba(239, 68, 68, 0.5)"
     },
     {
         label: "Code Playground",

@@ -24,6 +24,8 @@ import { cn } from "@/lib/utils"
 import { CosmicAurora } from "@/components/ui/cosmic-aurora"
 import { TentaCountdown } from "@/components/ui/tenta-countdown"
 import { saveLastActivity } from "@/components/dashboard/ContinueLearning"
+import { TutorialSection } from "@/components/tutorials"
+import { findTutorialsByModule, TUTORIALS } from "@/data/tutorials"
 import {
     ArrowLeft,
     CheckCircle2,
@@ -668,6 +670,39 @@ export function SharedModulePage({
                         </p>
                     </motion.div>
                 )}
+
+                {/* Recommended Tutorials */}
+                {(() => {
+                    // Find tutorials relevant to this module
+                    const moduleTutorials = findTutorialsByModule(slug)
+                    // Also try with common keywords based on module name
+                    const keywords = moduleName.toLowerCase().split(/\s+/)
+                    const keywordTutorials = TUTORIALS.filter(t => 
+                        keywords.some(kw => 
+                            t.topics.some(topic => topic.includes(kw) || kw.includes(topic))
+                        )
+                    )
+                    const allTutorials = [...new Map([...moduleTutorials, ...keywordTutorials].map(t => [t.id, t])).values()]
+                    
+                    if (allTutorials.length === 0) return null
+                    
+                    return (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="mt-12"
+                        >
+                            <TutorialSection
+                                title="📺 Rekommenderade Videos"
+                                subtitle={`Kvalitets-tutorials för ${moduleName}`}
+                                tutorials={allTutorials}
+                                maxItems={3}
+                                showViewAll={true}
+                            />
+                        </motion.div>
+                    )
+                })()}
             </div>
         </div>
     )

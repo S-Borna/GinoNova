@@ -77,6 +77,83 @@ Vanliga dokumentationskällor:
 
 Använd din kunskap för att länka till RÄTT sida/sektion baserat på frågan.
 
+=== YOUTUBE TUTORIALS (KVALITETSKÄLLOR) ===
+När frågan rör ett ämne där visuell förklaring hjälper, REKOMMENDERA en relevant YouTube-tutorial!
+Använd ENDAST dessa betrodda creators:
+
+TIER 1 - GULDSTANDARD:
+- NetworkChuck: Linux, Networking, Docker, Kubernetes, Security
+- TechWorld with Nana: DevOps, Docker, Kubernetes, CI/CD, Terraform  
+- Learn Linux TV: Linux, Ubuntu, Server Admin, Bash, Systemd
+- freeCodeCamp: Linux, Docker, Git, Python, DevOps (längre kurser)
+
+TIER 2 - BRA KOMPLEMENT:
+- Chris Titus Tech: Praktiska Linux-tips, Desktop, Automation
+- The Linux Experiment: Linux news + tutorials
+- Fireship: Docker, Kubernetes, Cloud, snabba 100sec-videos
+- tutoriaLinux: Linux, Sysadmin, Bash, Automation
+
+TIER 3 - OFFICIELLA:
+- Docker (officiell): Container-basics
+- Red Hat: Ansible, RHEL, Enterprise
+- The Linux Foundation: Kernel, Certifieringar
+
+CURERADE TUTORIALS (ANVÄND DIREKT):
+Linux Basics:
+- 📺 [Linux for Hackers - Full Course](https://youtube.com/watch?v=VbEx7B_PTOE) - NetworkChuck (3h)
+- 📺 [Linux Directories in 100 Seconds](https://youtube.com/watch?v=42iQKuQodW4) - Fireship (2min)
+- 📺 [Linux Starter Pack](https://youtube.com/watch?v=mdyCTThABHw) - Chris Titus Tech (18min)
+
+Filrättigheter:
+- 📺 [Linux File Permissions in 5 Minutes](https://youtube.com/watch?v=D-VqgvBMV7g) - tutoriaLinux
+- 📺 [chmod, chown, chgrp Explained](https://youtube.com/watch?v=ngJG6Ix5FR4) - Learn Linux TV
+
+Docker:
+- 📺 [Docker Tutorial for Beginners](https://youtube.com/watch?v=3c-iBn73dDE) - TechWorld with Nana (3h)
+- 📺 [Docker in 100 Seconds](https://youtube.com/watch?v=Gjnup-PuquQ) - Fireship (2min)
+- 📺 [Docker Containers 101](https://youtube.com/watch?v=eGz9DS-aIeY) - NetworkChuck (23min)
+
+Kubernetes:
+- 📺 [Kubernetes for Beginners](https://youtube.com/watch?v=X48VuDVv0do) - TechWorld with Nana (4h)
+- 📺 [Kubernetes in 100 Seconds](https://youtube.com/watch?v=PziYflu8cB8) - Fireship
+
+CI/CD:
+- 📺 [CI/CD in 100 Seconds](https://youtube.com/watch?v=scEDHsr3APg) - Fireship
+- 📺 [GitHub Actions Tutorial](https://youtube.com/watch?v=R8_veQiYBjI) - TechWorld with Nana
+
+Git:
+- 📺 [Git & GitHub Crash Course](https://youtube.com/watch?v=RGOj5yH7evk) - freeCodeCamp (1h)
+- 📺 [Git in 100 Seconds](https://youtube.com/watch?v=hwP7WQkmECE) - Fireship
+
+Bash:
+- 📺 [Bash Scripting Tutorial](https://youtube.com/watch?v=tK9Oc6AEnR4) - freeCodeCamp (2h)
+- 📺 [Bash in 100 Seconds](https://youtube.com/watch?v=I4EWvMFj37g) - Fireship
+
+Networking:
+- 📺 [Subnetting Made Easy](https://youtube.com/watch?v=ecCuyq-Wprc) - NetworkChuck
+- 📺 [Networking Course](https://youtube.com/watch?v=qiQR5rTSshw) - freeCodeCamp
+
+SSH:
+- 📺 [How SSH Works](https://youtube.com/watch?v=5JvLV2-ngCI) - tutoriaLinux
+- 📺 [SSH Crash Course](https://youtube.com/watch?v=hQWRp-FdTpc) - Traversy Media
+
+Terraform:
+- 📺 [Terraform Course](https://youtube.com/watch?v=SLB_c_ayRMo) - freeCodeCamp (2h)
+- 📺 [Terraform in 100 Seconds](https://youtube.com/watch?v=tomUWcQ0P3k) - Fireship
+
+Ansible:
+- 📺 [Ansible Full Course](https://youtube.com/watch?v=9Ua2b06oAr4) - TechWorld with Nana
+
+Systemd:
+- 📺 [Understanding Systemd](https://youtube.com/watch?v=N1vgvhiyq0E) - Learn Linux TV
+
+FORMAT FÖR TUTORIAL-REKOMMENDATION:
+📺 **Rekommenderad video:** [Titel](URL) - Creator (längd)
+
+Lägg tutorial-länken EFTER dokumentationslänken och ditt textsvar.
+Rekommendera ENDAST om det är relevant och hjälper förståelsen!
+Välj korta videos (100 Seconds) för snabba frågor, längre kurser för djupare lärande.
+
 === GINONOVA NAVIGATION ===
 - Dashboard: /dashboard
 - Camp DevOps: /modules
@@ -99,6 +176,8 @@ Svar:
 📖 [Docker Run Reference](https://docs.docker.com/engine/reference/run/)
 
 `docker run -d -p 8080:80 --name myapp nginx` startar en nginx-container i bakgrunden (-d), mappar port 8080 till 80, och namnger den 'myapp'.
+
+📺 **Lär dig mer:** [Docker Containers 101](https://youtube.com/watch?v=eGz9DS-aIeY) - NetworkChuck visar praktiskt hur det funkar.
 """
 
 @router.post("/chat", response_model=ChatResponse)

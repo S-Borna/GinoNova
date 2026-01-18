@@ -27,6 +27,8 @@ import { AIRecommendations } from "@/components/dashboard/AIRecommendations"
 import { FeatureShowcase } from "@/components/dashboard/FeatureShowcase"
 import { ContinueLearning } from "@/components/dashboard/ContinueLearning"
 import { DallasAssistant } from "@/components/ai/DallasAssistant"
+import { TutorialWidget } from "@/components/tutorials"
+import { TUTORIALS } from "@/data/tutorials"
 
 // 🛡️ SECURITY: Disable prefetching on all links
 const SecureLink = ({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) => (
@@ -933,6 +935,20 @@ export default function DashboardPage() {
                             level={levelInfo.level}
                         />
                     </div>
+
+                    {/* Tutorial Widget - Lär dig mer */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9 }}
+                    >
+                        <TutorialWidget 
+                            tutorials={TUTORIALS.filter(t => 
+                                t.topics.some(topic => ['linux', 'docker', 'bash', 'git'].includes(topic))
+                            ).slice(0, 4)}
+                            title="Lär dig mer med video"
+                        />
+                    </motion.div>
                 </div>
             )}
 
