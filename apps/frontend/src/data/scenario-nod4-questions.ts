@@ -108,9 +108,9 @@ export const SCENARIO_NOD4_QUESTIONS: Omtenta2Question[] = [
     {
         id: 'nod4-s10',
         question: 'Du behöver öppna port 80 i Ubuntu-brandväggen. Vilket kommando?',
-        options: ['firewall-cmd --add-port=80/tcp', 'ufw allow 80/tcp', 'iptables -A INPUT -p tcp --dport 80', 'Alla kan funka beroende på distro'],
-        correctIndices: [3],
-        explanation: 'ufw (Ubuntu), firewall-cmd (RHEL/Fedora), iptables (low-level). Alla hanterar brandvägg.',
+        options: ['ufw allow 80/tcp', 'iptables -A INPUT -p tcp --dport 80', 'firewall-cmd --add-port=80/tcp', 'Alla kan funka beroende på distro'],
+        correctIndices: [0],
+        explanation: 'ufw (Uncomplicated Firewall) är Ubuntu/Debians standard-brandvägg. "ufw allow 80/tcp" öppnar port 80 för TCP-trafik. firewall-cmd används på RHEL/Fedora, iptables är low-level.',
         difficulty: 'G',
         category: 'Brandvägg',
         topic: 'nod4-natverk',

@@ -2,7 +2,7 @@
  * YouTube Tutorial Database - COMPREHENSIVE EDITION
  * ==================================================
  * 100+ tutorials från 25+ creators - täcker ALLA ämnen på plattformen.
- * 
+ *
  * Creators: Mosh, NetworkChuck, Nana, freeCodeCamp, Traversy, Corey Schafer,
  * David Bombal, Jeff Geerling, Chris Titus, Fireship, Learn Linux TV, m.fl.
  */
@@ -41,7 +41,7 @@ export const TRUSTED_CREATORS: TutorialCreator[] = [
     { name: "Traversy Media", channel: "UC29ju8bIPH5as8OGnQzwJyA", specialty: ["linux", "docker", "crash-courses"], trusted: true },
     { name: "Corey Schafer", channel: "UCCezIgC97PvUuR4_gbFUs5g", specialty: ["python", "git", "linux"], trusted: true },
     { name: "Learn Linux TV", channel: "UCxQKHvKbmSzGMvUrVtJYnUA", specialty: ["linux", "bash", "systemd", "lvm"], trusted: true },
-    
+
     // TIER 2: EXPERTER
     { name: "David Bombal", channel: "UCP7WmQ_U4GB3K51Od9QvM0w", specialty: ["networking", "ccna", "python", "security"], trusted: true },
     { name: "Jeff Geerling", channel: "UCR-DXc1voovS8nhAvccRZhg", specialty: ["ansible", "kubernetes", "raspberry-pi"], trusted: true },
@@ -56,7 +56,7 @@ export const TRUSTED_CREATORS: TutorialCreator[] = [
     { name: "Luke Smith", channel: "UC2eYFnH61tmytImy1mTYvhA", specialty: ["linux", "bash", "vim"], trusted: true },
     { name: "ThePrimeagen", channel: "UC8ENHE5xdFSwx71u3fDH5Xw", specialty: ["vim", "linux", "programming"], trusted: true },
     { name: "ByteByteGo", channel: "UCZgt6AzoyjslHTC9dz0UoTw", specialty: ["system-design", "architecture"], trusted: true },
-    
+
     // TIER 3: OFFICIELLA
     { name: "The Linux Foundation", channel: "UCfX55Sx5hEFjoC3cNs6mCUQ", specialty: ["linux", "certifications"], trusted: true },
     { name: "Red Hat", channel: "UCPZwEbsiWzMTi9sLEE9xOxg", specialty: ["rhel", "ansible", "openshift"], trusted: true },

@@ -343,88 +343,229 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text före ell
 def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
     """
     Get module content suitable for quiz generation.
-    Retrieves ACTUAL node content from the module's tasks OR static question sources.
-
-    Args:
-        module_slug: Module slug to get content for OR question source slug
-                    (e.g., "linux-247", "manpage-tenta", "omtenta-2", "handson", etc.)
-
-    Returns:
-        Combined content string from all nodes/source or None
     """
-    import os
-
     # Normalize slug for matching
     normalized_slug = module_slug.lower().strip()
+    logger.info(f"🔍 get_module_content_for_quiz: '{normalized_slug}'")
 
     # ==============================================================================
-    # STATIC QUESTION SOURCES — For AI to generate similar questions
+    # FRÅGEKÄLLOR — Inbyggd content (fungerar på produktion)
     # ==============================================================================
-    # These are the same sources used in Tenta Simulator, but AI generates NEW questions
-    # based on the content/style instead of showing static questions
+    QUESTION_SOURCES = {
+        "manpage-tenta": """# Manpage Tenta - Linux/Unix Kommandoreferens
+Omfattande quiz om Linux-kommandon och systemadministration.
 
-    # Get project root (2 levels up from this file)
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    backend_root = os.path.dirname(os.path.dirname(current_dir))
-    project_root = os.path.dirname(os.path.dirname(backend_root))
+## Pipes & Redirection
+- | (pipe): Skickar output från ett kommando som input till nästa
+- > : Skriver över fil med output
+- >> : Lägger till output i slutet av fil
+- < : Tar input från fil
+- 2> : Redirectar stderr
+- 2>&1 : Kombinerar stderr med stdout
 
-    STATIC_SOURCES = {
-        "manpage-tenta": os.path.join(project_root, "ManpageTentan.md"),
-        "linux-tenta": None,  # May not exist
-        "omtenta-2": os.path.join(project_root, "Omtenta"),  # Directory
-        "handson": project_root,  # Root for Handson files
-        "linux-commands": None,  # Will use quiz file data instead
+## Filhantering
+- ls: Lista filer (-l för detaljer, -a för dolda)
+- cp: Kopiera filer (-r för mappar)
+- mv: Flytta/byt namn
+- rm: Ta bort (-r för mappar, -f för force)
+- mkdir: Skapa mapp (-p för nested)
+- touch: Skapa tom fil eller uppdatera timestamp
+- cat, less, head, tail: Visa filinnehåll
+- find: Sök filer (-name, -type, -exec)
+- grep: Sök i text (-r rekursivt, -i case-insensitive)
+
+## Permissions
+- chmod: Ändra rättigheter (755, 644, u+x)
+- chown: Ändra ägare (user:group)
+- chgrp: Ändra grupp
+- rwx = read(4), write(2), execute(1)
+
+## Processer
+- ps: Visa processer (aux för alla)
+- top/htop: Realtidsövervakning
+- kill: Avsluta process (-9 för force)
+- bg/fg: Bakgrund/förgrund
+- nohup: Kör även efter logout
+- & : Kör i bakgrunden
+
+## Nätverk
+- ip addr / ifconfig: Visa nätverkskonfiguration
+- ping: Testa anslutning
+- netstat / ss: Visa anslutningar
+- curl/wget: Hämta från URL
+- ssh: Säker fjärranslutning
+- scp: Säker filkopiering
+
+## Systemd
+- systemctl start/stop/restart/status
+- journalctl: Visa loggar
+- enable/disable: Autostart vid boot
+
+## Pakethantering
+- apt update/upgrade/install (Debian/Ubuntu)
+- yum/dnf install (RHEL/Fedora)
+- pacman -S (Arch)
+""",
+
+        "omtenta-2": """# Omtenta 2.0 - DevOps & Linux
+Examensfrågor för Linux och DevOps-kursen.
+
+## Filsystem & Struktur
+- /etc: Konfigurationsfiler
+- /var: Variabel data (loggar, databaser)
+- /home: Användarkataloger
+- /tmp: Temporära filer
+- /usr: Användarprogram
+- /bin, /sbin: Systemkommandon
+- Inodes, filsystem (ext4, xfs), mount
+
+## Användarhantering
+- useradd, usermod, userdel
+- groupadd, groupmod
+- passwd: Ändra lösenord
+- /etc/passwd, /etc/shadow, /etc/group
+- sudo, su: Privilegier
+
+## Nätverk & Subnetting
+- IP-adresser, subnätmasker
+- CIDR-notation (/24 = 255.255.255.0)
+- Gateway, DNS
+- Portar (22=SSH, 80=HTTP, 443=HTTPS)
+- TCP vs UDP
+
+## Brandvägg
+- ufw (Ubuntu): allow, deny, status
+- firewalld (RHEL): --add-port, --add-service
+- iptables: INPUT, OUTPUT, FORWARD
+
+## SSH
+- ssh-keygen: Skapa nycklar
+- ssh-copy-id: Kopiera publik nyckel
+- ~/.ssh/authorized_keys
+- ~/.ssh/config: Alias
+
+## Docker
+- docker run, build, pull, push
+- docker ps, images, logs
+- Dockerfile: FROM, RUN, COPY, CMD
+- docker-compose up/down
+- Volumes, networks
+
+## Scripting
+- Variabler: VAR=value, $VAR
+- if/else, for, while
+- Funktioner
+- Exit codes: $?
+- Arguments: $1, $2, $@, $#
+""",
+
+        "handson": """# Hands-On Labs - Praktiska Övningar
+
+## Lab 1: Onboarding
+- Grundläggande terminalnavigation
+- Filhantering med ls, cd, pwd, mkdir
+- Skapa och redigera filer
+- Bash-grunderna
+
+## Lab 2: Användarhantering
+- Skapa användare med useradd
+- Hantera grupper
+- Konfigurera sudo-rättigheter
+- /etc/passwd och /etc/shadow
+
+## Lab 3: SSH & Säkerhet
+- Generera SSH-nycklar
+- Konfigurera SSH-server
+- Publik nyckelautentisering
+- SSH config och alias
+
+## Lab 4: Brandvägg
+- UFW-konfiguration på Ubuntu
+- Öppna/stänga portar
+- Tillåta specifika IP-adresser
+- Logga brandväggshändelser
+
+## Lab 5: Pakethantering
+- apt update && apt upgrade
+- Installera och ta bort paket
+- Hantera repositories
+- dpkg för .deb-filer
+
+## Lab 6: Subnetting
+- Beräkna subnät
+- CIDR-notation
+- Network/broadcast-adresser
+- Antal hosts per subnät
+
+## Lab 7: Docker
+- Installera Docker
+- Köra containers
+- Bygga images med Dockerfile
+- Docker Compose för multi-container
+""",
+
+        "linux-commands": """# Linux Kommandon - Referens
+
+## Navigering
+- pwd: Visa aktuell katalog
+- cd: Byt katalog (cd -, cd ~, cd ..)
+- ls: Lista innehåll (-la för allt)
+
+## Filoperationer
+- cat: Visa innehåll
+- less/more: Bläddra i filer
+- head/tail: Visa början/slut (-n antal, -f följ)
+- cp: Kopiera (-r rekursivt)
+- mv: Flytta/byt namn
+- rm: Ta bort (-rf för mappar)
+- mkdir: Skapa mapp (-p för nested)
+
+## Sökning
+- find: Sök filer (-name, -type f/d, -exec)
+- grep: Sök text (-r, -i, -v, -n)
+- locate: Snabbsökning (kräver updatedb)
+- which/whereis: Hitta kommandon
+
+## Textbearbetning
+- sed: Stream editor (s/old/new/g)
+- awk: Kolumnbearbetning
+- cut: Klipp ut delar (-d delimiter, -f fält)
+- sort: Sortera (-n numeriskt, -r omvänt)
+- uniq: Ta bort dubbletter (-c räkna)
+- wc: Räkna (-l rader, -w ord, -c tecken)
+
+## System
+- uname -a: Systeminfo
+- df -h: Diskutrymme
+- du -sh: Mappstorlek
+- free -h: Minnesanvändning
+- uptime: Drifttid
+- whoami: Aktuell användare
+- id: Användar-/grupp-ID
+
+## Processer
+- ps aux: Alla processer
+- top/htop: Realtid
+- kill PID: Avsluta
+- killall name: Avsluta alla med namn
+- jobs, bg, fg: Jobbkontroll
+
+## Arkiv
+- tar -czvf: Skapa .tar.gz
+- tar -xzvf: Extrahera .tar.gz
+- zip/unzip: ZIP-filer
+- gzip/gunzip: Komprimera
+"""
     }
 
-    # Check if this is a static source
-    if normalized_slug in STATIC_SOURCES:
-        source_path = STATIC_SOURCES[normalized_slug]
-
-        if source_path and os.path.exists(source_path):
-            try:
-                if os.path.isfile(source_path):
-                    # Read single markdown file
-                    with open(source_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-                    logger.info(f"✅ Loaded static source: {normalized_slug} ({len(content)} chars)")
-                    return content[:12000]  # Limit for token budget
-
-                elif os.path.isdir(source_path):
-                    # Read all markdown files from directory
-                    content_parts = []
-
-                    # Special handling for handson - read Handson*.md files from root
-                    if normalized_slug == "handson":
-                        for filename in os.listdir(source_path):
-                            if filename.startswith('Handson') and filename.endswith('.md'):
-                                filepath = os.path.join(source_path, filename)
-                                with open(filepath, 'r', encoding='utf-8') as f:
-                                    content_parts.append(f"# {filename}\n{f.read()}")
-                    else:
-                        # For omtenta and others, read all .md files in directory
-                        for filename in os.listdir(source_path):
-                            if filename.endswith('.md'):
-                                filepath = os.path.join(source_path, filename)
-                                with open(filepath, 'r', encoding='utf-8') as f:
-                                    content_parts.append(f"# {filename}\n{f.read()}")
-
-                    if content_parts:
-                        combined = "\n\n".join(content_parts)
-                        logger.info(f"✅ Loaded static source: {normalized_slug} ({len(combined)} chars from {len(content_parts)} files)")
-                        return combined[:12000]
-                    else:
-                        logger.warning(f"⚠️  No content found for {normalized_slug}")
-
-            except Exception as e:
-                logger.error(f"❌ Failed to load static source {normalized_slug}: {e}")
-
-        # Fallback: use quiz data file content for linux-commands
-        if normalized_slug == "linux-commands":
-            logger.info(f"ℹ️  Using quiz data fallback for {normalized_slug}")
-            return "# Linux Commands Reference\nVanliga Linux-kommandon för terminal och systemadministration."
+    # Kolla om det är en frågekälla
+    if normalized_slug in QUESTION_SOURCES:
+        content = QUESTION_SOURCES[normalized_slug]
+        logger.info(f"✅ Loaded question source: {normalized_slug} ({len(content)} chars)")
+        return content
 
     # ==============================================================================
-    # REGULAR MODULES — From content source
+    # MODULER — Från content source
     # ==============================================================================
     from src.db.seeds.content import get_all_modules
     ALL_MODULES = get_all_modules()
