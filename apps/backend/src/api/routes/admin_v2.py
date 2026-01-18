@@ -156,7 +156,8 @@ def get_activity_log(limit: int = 50) -> List[dict]:
             return [
                 {
                     "id": str(a.id),
-                    "timestamp": a.created_at,
+                    # Ensure timestamp has timezone info for proper comparison
+                    "timestamp": a.created_at.replace(tzinfo=timezone.utc) if a.created_at and a.created_at.tzinfo is None else a.created_at,
                     "type": a.type,
                     "user_id": str(a.user_id) if a.user_id else None,
                     "user_email": a.user_email,
@@ -449,7 +450,7 @@ async def get_activity_flash(
     Get recent activity events for TopBar flash notifications.
     Includes: login, logout, inactive, registration, exam_completed, ai_quiz
     """
-    entries = get_activity_log(20)  # Only recent 20
+    entries = get_activity_log(50)  # Get more entries to filter from
 
     # Filter for relevant activity types
     flash_types = {"login", "logout", "inactive", "registration", "exam_completed", "ai_quiz"}
@@ -459,16 +460,27 @@ async def get_activity_flash(
         # Ensure timezone awareness
         if since.tzinfo is None:
             since = since.replace(tzinfo=timezone.utc)
-        events = [
-            e for e in entries
-            if e.get("type") in flash_types
-            and e.get("timestamp", datetime.min.replace(tzinfo=timezone.utc)) > since
-        ]
+        
+        events = []
+        for e in entries:
+            if e.get("type") not in flash_types:
+                continue
+            
+            entry_time = e.get("timestamp")
+            if entry_time is None:
+                continue
+                
+            # Ensure entry_time has timezone
+            if entry_time.tzinfo is None:
+                entry_time = entry_time.replace(tzinfo=timezone.utc)
+            
+            if entry_time > since:
+                events.append(e)
     else:
         events = [e for e in entries if e.get("type") in flash_types]
 
     return {
-        "events": events[:5],  # Max 5 events at once
+        "events": events[:10],  # Max 10 events at once
         "total": len(events)
     }
 

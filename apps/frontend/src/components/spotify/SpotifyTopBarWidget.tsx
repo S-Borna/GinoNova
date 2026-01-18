@@ -12,7 +12,7 @@
 
 import * as React from "react"
 import { useState, useEffect, useCallback, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     Music,
@@ -233,38 +233,47 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
             </motion.button>
 
             {/* FLYOUT - Opens to the LEFT of widget */}
-            <AnimatePresence>
-                {isOpen && embedUrl && (
-                    <motion.div
-                        initial={{ opacity: 0, x: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, x: 0, scale: 1 }}
-                        exit={{ opacity: 0, x: 10, scale: 0.95 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                        className={cn(
-                            "absolute right-full top-1/2 -translate-y-1/2 mr-2",
-                            "w-[300px]",
-                            "rounded-xl overflow-hidden",
-                            "bg-zinc-900/95 backdrop-blur-xl",
-                            "border border-green-500/30",
-                            "shadow-2xl shadow-green-500/10",
-                            "z-50"
-                        )}
-                    >
-                        {/* Spotify Embed */}
-                        <iframe
-                            key={embedUrl}
-                            src={`${embedUrl}&autoplay=1`}
-                            width="100%"
-                            height="80"
-                            frameBorder="0"
-                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                            allowFullScreen
-                            loading="eager"
-                            className="rounded-xl"
-                        />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* 
+             * IMPORTANT: We use CSS visibility instead of conditional rendering
+             * to prevent the Spotify iframe from unmounting and stopping playback
+             * when the flyout is closed or user navigates/clicks elsewhere
+             */}
+            {embedUrl && (
+                <motion.div
+                    initial={{ opacity: 0, x: 10, scale: 0.95 }}
+                    animate={{ 
+                        opacity: isOpen ? 1 : 0, 
+                        x: isOpen ? 0 : 10, 
+                        scale: isOpen ? 1 : 0.95,
+                        pointerEvents: isOpen ? "auto" : "none"
+                    }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className={cn(
+                        "absolute right-full top-1/2 -translate-y-1/2 mr-2",
+                        "w-[300px]",
+                        "rounded-xl overflow-hidden",
+                        "bg-zinc-900/95 backdrop-blur-xl",
+                        "border border-green-500/30",
+                        "shadow-2xl shadow-green-500/10",
+                        "z-50",
+                        !isOpen && "invisible"
+                    )}
+                    style={{ visibility: isOpen ? "visible" : "hidden" }}
+                >
+                    {/* Spotify Embed - stays mounted to keep playing */}
+                    <iframe
+                        key={embedUrl}
+                        src={`${embedUrl}&autoplay=1`}
+                        width="100%"
+                        height="80"
+                        frameBorder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        loading="eager"
+                        className="rounded-xl"
+                    />
+                </motion.div>
+            )}
         </motion.div>
     )
 }
