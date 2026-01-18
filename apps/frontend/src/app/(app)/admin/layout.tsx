@@ -16,7 +16,8 @@ import {
     ChevronLeft,
     Shield,
     Menu,
-    X
+    X,
+    Activity
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
@@ -24,6 +25,7 @@ import { useAuth } from "@/components/auth/AuthProvider"
 const navItems = [
     { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
     { href: "/admin/users", icon: Users, label: "Users" },
+    { href: "/admin/users/live", icon: Activity, label: "Live Activity" },
     { href: "/admin/analytics", icon: BarChart3, label: "Analytics" },
     { href: "/admin/ai-usage", icon: Bot, label: "AI Usage" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },

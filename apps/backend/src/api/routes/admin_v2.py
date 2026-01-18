@@ -252,6 +252,11 @@ def get_user_status(last_activity: Optional[datetime], last_login: Optional[date
     """
     Calculate user status based on last_activity_at (most recent activity)
     This tracks actual usage, not just login time
+    
+    Stricter timing to accurately reflect real activity:
+    - Online: Activity within last 2 minutes (actively using the site)
+    - Away: Activity within 2-10 minutes (recently active, might return)
+    - Offline: No activity for 10+ minutes
     """
     # Prefer last_activity_at as it updates on every API call (more accurate)
     check_time = last_activity if last_activity else last_login
@@ -266,9 +271,9 @@ def get_user_status(last_activity: Optional[datetime], last_login: Optional[date
 
     diff = (now - check_time).total_seconds()
 
-    if diff < 600:  # 10 minutes - online (was 5 min, too short)
+    if diff < 120:  # 2 minutes - online (actively using)
         return "online"
-    elif diff < 1800:  # 30 minutes - away (was 1 hour)
+    elif diff < 600:  # 10 minutes - away (recently active)
         return "away"
     else:
         return "offline"
@@ -329,6 +334,96 @@ async def get_admin_activity_log(
     return {
         "activities": entries,
         "total": len(entries)
+    }
+
+
+@router.get("/activity-flash")
+async def get_activity_flash(
+    since: Optional[datetime] = None,
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Get recent login/logout/inactive events for TopBar flash notifications.
+    Only returns events since the given timestamp (for polling efficiency).
+    """
+    entries = get_activity_log(20)  # Only recent 20
+    
+    # Filter for login/logout/inactive types
+    flash_types = {"login", "logout", "inactive", "registration"}
+    
+    # Filter by timestamp if provided
+    if since:
+        # Ensure timezone awareness
+        if since.tzinfo is None:
+            since = since.replace(tzinfo=timezone.utc)
+        events = [
+            e for e in entries 
+            if e.get("type") in flash_types 
+            and e.get("timestamp", datetime.min.replace(tzinfo=timezone.utc)) > since
+        ]
+    else:
+        events = [e for e in entries if e.get("type") in flash_types]
+    
+    return {
+        "events": events[:5],  # Max 5 events at once
+        "total": len(events)
+    }
+
+
+@router.get("/users/live-activity")
+async def get_live_user_activity(
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Get live user activity - shows recently active users and their current page/action.
+    Only shows users active in the last 10 minutes.
+    """
+    now = datetime.now(timezone.utc)
+    ten_minutes_ago = now - timedelta(minutes=10)
+    
+    # Get users with recent activity
+    active_users = db.query(User).filter(
+        User.last_activity_at.isnot(None),
+        User.last_activity_at > ten_minutes_ago,
+        User.is_active == True
+    ).order_by(User.last_activity_at.desc()).limit(50).all()
+    
+    # Get activity log entries for context
+    activity_log = get_activity_log(50)
+    
+    # Build response with user activity context
+    result = []
+    for user in active_users:
+        last_activity = user.last_activity_at
+        if last_activity and last_activity.tzinfo is None:
+            last_activity = last_activity.replace(tzinfo=timezone.utc)
+        
+        # Find most recent activity for this user from log
+        user_activities = [
+            a for a in activity_log 
+            if a.get("user_id") == str(user.id)
+        ]
+        last_action = user_activities[0] if user_activities else None
+        
+        seconds_ago = (now - last_activity).total_seconds() if last_activity else 9999
+        
+        result.append({
+            "id": str(user.id),
+            "email": user.email,
+            "full_name": user.full_name,
+            "avatar_url": getattr(user, 'avatar_url', None),
+            "status": "online" if seconds_ago < 120 else "away",
+            "last_activity_at": last_activity.isoformat() if last_activity else None,
+            "seconds_ago": int(seconds_ago),
+            "current_action": last_action.get("type") if last_action else "browsing",
+            "current_page": last_action.get("details") if last_action else None,
+        })
+    
+    return {
+        "users": result,
+        "total": len(result),
+        "timestamp": now.isoformat()
     }
 
 
