@@ -146,7 +146,7 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
         const interval = setInterval(() => {
             fetchMessages()
             sendHeartbeat()
-        }, 10000)
+        }, 3000)
 
         return () => clearInterval(interval)
     }, [isAdmin, fetchMessages, sendHeartbeat])

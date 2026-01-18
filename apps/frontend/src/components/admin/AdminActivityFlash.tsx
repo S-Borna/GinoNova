@@ -81,7 +81,7 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
         // Initial check
         checkActivity()
 
-        const interval = setInterval(checkActivity, 10000)
+        const interval = setInterval(checkActivity, 3000)
         return () => clearInterval(interval)
     }, [isAdmin, checkActivity])
 

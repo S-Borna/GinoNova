@@ -71,7 +71,7 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
         if (!user) return
 
         fetchMessages()
-        const interval = setInterval(fetchMessages, 30000)
+        const interval = setInterval(fetchMessages, 3000)
         return () => clearInterval(interval)
     }, [user, fetchMessages])
 

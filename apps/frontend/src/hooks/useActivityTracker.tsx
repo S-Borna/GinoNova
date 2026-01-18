@@ -128,7 +128,7 @@ export function useActivityTracker() {
         // Also send heartbeat every 30 seconds to keep "online" status
         intervalRef.current = setInterval(() => {
             sendActivity(pathname, true) // Force send for heartbeat
-        }, 30000)
+        }, 10000)
         
         return () => {
             if (intervalRef.current) {

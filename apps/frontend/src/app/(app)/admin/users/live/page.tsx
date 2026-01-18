@@ -298,7 +298,7 @@ export default function LiveActivityPage() {
         const heartbeatInterval = setInterval(() => {
             sendHeartbeat()
             fetchMessages()
-        }, 30000)
+        }, 10000)
         return () => clearInterval(heartbeatInterval)
     }, [sendHeartbeat, fetchMessages])
 

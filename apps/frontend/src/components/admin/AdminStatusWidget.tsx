@@ -65,7 +65,7 @@ export function AdminStatusWidget({ className }: AdminStatusWidgetProps) {
     // Poll admin status every 30 seconds
     useEffect(() => {
         checkAdminStatus()
-        const interval = setInterval(checkAdminStatus, 30000)
+        const interval = setInterval(checkAdminStatus, 5000)
         return () => clearInterval(interval)
     }, [checkAdminStatus])
 
