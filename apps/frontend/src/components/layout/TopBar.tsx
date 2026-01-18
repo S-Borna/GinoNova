@@ -573,9 +573,10 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Center - Spotify Widget + Broadcasts + Admin Flash (hidden on mobile) */}
-                <div className="hidden sm:flex items-center justify-center gap-3 flex-shrink-0">
+                <div className="hidden sm:flex items-center justify-center gap-4 flex-shrink-0">
                     {isAuthenticated && <SpotifyTopBarWidget />}
-                    {isAuthenticated && <UserBroadcast />}
+                    {/* Broadcast in center - with margin to separate from Spotify */}
+                    {isAuthenticated && <div className="mx-2"><UserBroadcast /></div>}
                     {isAuthenticated && <AdminActivityFlash />}
                 </div>
 

@@ -5,7 +5,7 @@
  * Shows in TopBar, must be manually dismissed by user
  */
 
-import { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { X, Info, AlertTriangle, CheckCircle, AlertCircle, Megaphone } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
@@ -27,10 +27,14 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
     const { user } = useAuth()
     const [messages, setMessages] = useState<BroadcastMessage[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
+    const fetchingRef = React.useRef(false)
 
-    // Fetch messages
+    // Fetch messages - with deduplication to prevent "glapping"
     const fetchMessages = useCallback(async () => {
         if (!user) return
+        if (fetchingRef.current) return // Prevent concurrent fetches
+        
+        fetchingRef.current = true
 
         try {
             const token = localStorage.getItem("auth_token")
@@ -45,10 +49,20 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
 
             if (response.ok) {
                 const data = await response.json()
-                setMessages(data.messages || [])
+                const newMessages = data.messages || []
+                
+                // Only update if message IDs changed (prevents flashing)
+                setMessages(prev => {
+                    const prevIds = prev.map(m => m.id).sort().join(",")
+                    const newIds = newMessages.map((m: BroadcastMessage) => m.id).sort().join(",")
+                    if (prevIds === newIds) return prev
+                    return newMessages
+                })
             }
         } catch (error) {
             // Silent fail
+        } finally {
+            fetchingRef.current = false
         }
     }, [user])
 

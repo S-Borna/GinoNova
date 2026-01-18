@@ -29,6 +29,7 @@ import { DallasAssistant } from "@/components/ai/DallasAssistant"
 import { PWAInstallPrompt } from "@/components/pwa"
 import { ScrollToTop } from "@/components/ui/ScrollToTop"
 import { useServiceWorker } from "@/hooks/useServiceWorker"
+import { useActivityTracker } from "@/hooks/useActivityTracker"
 
 /* ============================================================================
    HOOKS
@@ -107,6 +108,9 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
 
     // PWA Service Worker
     useServiceWorker()
+
+    // Track user activity for Live Activity admin feature
+    useActivityTracker()
 
     // Mobile side menu state
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)

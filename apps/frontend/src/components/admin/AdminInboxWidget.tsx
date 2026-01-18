@@ -5,7 +5,7 @@
  * Only visible to admin users
  */
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
     Inbox, 
@@ -43,13 +43,17 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
     const [unreadCount, setUnreadCount] = useState(0)
     const [showDropdown, setShowDropdown] = useState(false)
     const [loading, setLoading] = useState(false)
+    const fetchingRef = useRef(false)
 
     // Only show for admin
     const isAdmin = user?.is_admin || user?.email?.toLowerCase() === "said.ebadi@hotmail.com"
 
-    // Fetch messages
+    // Fetch messages - with deduplication to prevent flashing
     const fetchMessages = useCallback(async () => {
         if (!isAdmin) return
+        if (fetchingRef.current) return // Prevent concurrent fetches
+        
+        fetchingRef.current = true
 
         try {
             const token = localStorage.getItem("auth_token")
@@ -64,11 +68,22 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
 
             if (response.ok) {
                 const data = await response.json()
-                setMessages(data.messages || [])
-                setUnreadCount(data.unread || 0)
+                const newMessages = data.messages || []
+                const newUnread = data.unread || 0
+                
+                // Only update messages if IDs changed (prevents flashing)
+                setMessages(prev => {
+                    const prevIds = prev.map(m => m.id).sort().join(",")
+                    const newIds = newMessages.map((m: UserMessage) => m.id).sort().join(",")
+                    if (prevIds === newIds) return prev
+                    return newMessages
+                })
+                setUnreadCount(newUnread)
             }
         } catch {
             // Silent fail
+        } finally {
+            fetchingRef.current = false
         }
     }, [isAdmin])
 
@@ -121,7 +136,7 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
         }
     }, [isAdmin])
 
-    // Poll for new messages every 30 seconds + send heartbeat
+    // Poll for new messages every 10 seconds + send heartbeat
     useEffect(() => {
         if (!isAdmin) return
 
@@ -131,7 +146,7 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
         const interval = setInterval(() => {
             fetchMessages()
             sendHeartbeat()
-        }, 30000)
+        }, 10000)
 
         return () => clearInterval(interval)
     }, [isAdmin, fetchMessages, sendHeartbeat])

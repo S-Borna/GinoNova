@@ -45,6 +45,10 @@ ADMIN_ONLINE_THRESHOLD_SECONDS = 60  # Admin considered online if heartbeat with
 _user_messages: deque = deque(maxlen=50)
 _user_messages_lock = threading.Lock()
 
+# Live user activity tracking - stores current page/action per user
+_live_user_activity: dict = {}  # {user_id: {"page": str, "action": str, "updated_at": datetime}}
+_live_activity_lock = threading.Lock()
+
 
 class ActivityLogEntry(BaseModel):
     id: str
@@ -725,6 +729,56 @@ async def delete_user_message(
     raise HTTPException(status_code=404, detail="Message not found")
 
 
+# =============================================================================
+# USER ACTIVITY TRACKING - Users report their current page/action
+# =============================================================================
+
+class UserActivityUpdate(BaseModel):
+    current_page: str
+    current_action: str
+    pathname: Optional[str] = None
+
+
+@router.post("/users/activity")
+async def update_user_activity(
+    activity: UserActivityUpdate,
+    db: Session = Depends(get_db),
+    current_user: UserPublic = Depends(get_current_user)
+):
+    """
+    Users call this to report their current page/action.
+    This updates both the in-memory tracker and the user's last_activity_at.
+    """
+    user_id = str(current_user.id)
+    now = datetime.now(timezone.utc)
+    
+    # Update in-memory tracker
+    with _live_activity_lock:
+        _live_user_activity[user_id] = {
+            "page": activity.current_page,
+            "action": activity.current_action,
+            "pathname": activity.pathname,
+            "updated_at": now
+        }
+    
+    # Update user's last_activity_at in database
+    user = db.query(User).filter(User.id == current_user.id).first()
+    if user:
+        user.last_activity_at = now
+        db.commit()
+    
+    # Add to activity log for detailed tracking
+    add_activity_log(
+        activity_type=activity.current_action,
+        user_id=user_id,
+        user_email=current_user.email,
+        user_name=current_user.full_name,
+        details=activity.current_page
+    )
+    
+    return {"ok": True}
+
+
 @router.get("/users/live-activity")
 async def get_live_user_activity(
     db: Session = Depends(get_db),
@@ -733,6 +787,7 @@ async def get_live_user_activity(
     """
     Get live user activity - shows recently active users and their current page/action.
     Only shows users active in the last 10 minutes.
+    Uses the in-memory tracker for real-time page info.
     """
     now = datetime.now(timezone.utc)
     ten_minutes_ago = now - timedelta(minutes=10)
@@ -744,9 +799,6 @@ async def get_live_user_activity(
         User.is_active == True
     ).order_by(User.last_activity_at.desc()).limit(50).all()
 
-    # Get activity log entries for context
-    activity_log = get_activity_log(50)
-
     # Build response with user activity context
     result = []
     for user in active_users:
@@ -754,25 +806,26 @@ async def get_live_user_activity(
         if last_activity and last_activity.tzinfo is None:
             last_activity = last_activity.replace(tzinfo=timezone.utc)
 
-        # Find most recent activity for this user from log
-        user_activities = [
-            a for a in activity_log
-            if a.get("user_id") == str(user.id)
-        ]
-        last_action = user_activities[0] if user_activities else None
-
+        user_id = str(user.id)
         seconds_ago = (now - last_activity).total_seconds() if last_activity else 9999
 
+        # Get real-time activity from in-memory tracker
+        with _live_activity_lock:
+            live_activity = _live_user_activity.get(user_id, {})
+        
+        current_page = live_activity.get("page", "Dashboard")
+        current_action = live_activity.get("action", "browsing")
+
         result.append({
-            "id": str(user.id),
+            "id": user_id,
             "email": user.email,
             "full_name": user.full_name,
             "avatar_url": getattr(user, 'avatar_url', None),
             "status": "online" if seconds_ago < 120 else "away",
             "last_activity_at": last_activity.isoformat() if last_activity else None,
             "seconds_ago": int(seconds_ago),
-            "current_action": last_action.get("type") if last_action else "browsing",
-            "current_page": last_action.get("details") if last_action else None,
+            "current_action": current_action,
+            "current_page": current_page,
         })
 
     return {
