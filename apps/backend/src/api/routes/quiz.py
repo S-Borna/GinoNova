@@ -160,12 +160,23 @@ async def generate_quiz(
     # Log AI Quiz completion for admin dashboard
     try:
         from .admin_v2 import add_activity_log
+        
+        # Get user display name
+        user_name = getattr(current_user, 'full_name', None) or current_user.email.split('@')[0]
+        
+        # Format difficulty nicely
+        difficulty_display = {
+            'easy': 'Lätt',
+            'medium': 'Medium', 
+            'hard': 'Svår'
+        }.get(request.difficulty, request.difficulty)
+        
         add_activity_log(
             activity_type="ai_quiz",
             user_id=str(current_user.id),
             user_email=current_user.email,
-            user_name=getattr(current_user, 'full_name', None),
-            details=f"AI Quiz: {len(questions)} {request.quiz_type} ({request.difficulty}) - {module_title}"
+            user_name=user_name,
+            details=f"{user_name} • AI Quiz • {len(questions)} frågor • {module_title}"
         )
     except Exception as e:
         logger.debug(f"[ActivityLog] Failed to log AI quiz: {e}")

@@ -137,13 +137,27 @@ async def submit_exam_result(
     # Log exam completion for admin dashboard
     try:
         from .admin_v2 import add_activity_log
-        sources_str = ", ".join(data.sources) if data.sources else "unknown"
+        
+        # Map source IDs to friendly names
+        source_names = {
+            'omtenta-2': 'Omtenta 2.0',
+            'handson': 'Hands-On Labs',
+            'linux-commands': 'Linux Commands',
+            'linux-tenta': 'Linux Tenta',
+            'manpage-tenta': 'Manpage Tenta'
+        }
+        sources_display = [source_names.get(s, s) for s in (data.sources or [])]
+        sources_str = ", ".join(sources_display) if sources_display else "Tenta"
+        
+        # Get user display name
+        user_name = getattr(current_user, 'full_name', None) or current_user.email.split('@')[0]
+        
         add_activity_log(
             activity_type="exam_completed",
             user_id=str(current_user.id),
             user_email=current_user.email,
-            user_name=getattr(current_user, 'full_name', None),
-            details=f"Score: {data.score_percent}% ({data.correct_answers}/{data.question_count}) - Sources: {sources_str}"
+            user_name=user_name,
+            details=f"{user_name} • {data.score_percent}% ({data.correct_answers}/{data.question_count}) • {sources_str}"
         )
     except Exception as e:
         print(f"[ActivityLog] Failed to log exam completion: {e}")
