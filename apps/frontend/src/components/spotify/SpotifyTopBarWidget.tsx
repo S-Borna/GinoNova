@@ -5,20 +5,18 @@
  *
  * Features:
  * - Compact widget showing currently playing track
- * - Click → Flyout expands LEFT (not down)
- * - Spotify embed player in flyout
- * - All controls visible without scroll
+ * - Click Play → Opens Spotify in new tab for full playback
+ * - No 30-second limit since it opens native Spotify
  */
 
 import * as React from "react"
-import { useState, useEffect, useCallback, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import {
     Music,
     Loader2,
-    Play,
-    X
+    ExternalLink
 } from "lucide-react"
 
 interface Track {
@@ -36,22 +34,9 @@ interface SpotifyTopBarWidgetProps {
 export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
-    const [isOpen, setIsOpen] = useState(false)
-    const [embedUrl, setEmbedUrl] = useState<string | null>(null)
-    const [embedLoading, setEmbedLoading] = useState(false)
+    const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null)
+    const [urlLoading, setUrlLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
-    const containerRef = useRef<HTMLDivElement>(null)
-
-    // Close on outside click
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false)
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [])
 
     // Fetch current track from Last.fm
     const fetchNowPlaying = useCallback(async () => {
@@ -72,12 +57,12 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                             albumArt: data.track.albumArt,
                         })
                         setLastTrackKey(newKey)
-                        setEmbedUrl(null)
+                        setSpotifyUrl(null) // Reset URL for new track
                     }
                 } else {
                     if (track !== null) {
                         setTrack(null)
-                        setEmbedUrl(null)
+                        setSpotifyUrl(null)
                     }
                 }
             }
@@ -88,27 +73,29 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
         }
     }, [lastTrackKey, track])
 
-    // Fetch Spotify embed URL
-    const fetchSpotifyEmbed = useCallback(async () => {
-        if (!track?.name || !track?.artist || embedUrl) return
+    // Fetch Spotify URL for direct link
+    const fetchSpotifyUrl = useCallback(async () => {
+        if (!track?.name || !track?.artist || spotifyUrl) return null
 
-        setEmbedLoading(true)
+        setUrlLoading(true)
         try {
             const res = await fetch(
                 `/api/music/spotify-finder?track=${encodeURIComponent(track.name)}&artist=${encodeURIComponent(track.artist)}`
             )
             if (res.ok) {
                 const data = await res.json()
-                if (data.embedUrl) {
-                    setEmbedUrl(data.embedUrl)
+                if (data.spotifyUrl) {
+                    setSpotifyUrl(data.spotifyUrl)
+                    return data.spotifyUrl
                 }
             }
         } catch (e) {
-            console.error('Failed to get Spotify embed:', e)
+            console.error('Failed to get Spotify URL:', e)
         } finally {
-            setEmbedLoading(false)
+            setUrlLoading(false)
         }
-    }, [track, embedUrl])
+        return null
+    }, [track, spotifyUrl])
 
     // Initial fetch and polling
     useEffect(() => {
@@ -117,24 +104,29 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
         return () => clearInterval(interval)
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Auto-fetch embed when track changes
+    // Pre-fetch Spotify URL when track changes
     useEffect(() => {
-        if (track && !embedUrl && !embedLoading) {
-            fetchSpotifyEmbed()
+        if (track && !spotifyUrl && !urlLoading) {
+            fetchSpotifyUrl()
         }
-    }, [track, embedUrl, embedLoading, fetchSpotifyEmbed])
+    }, [track, spotifyUrl, urlLoading, fetchSpotifyUrl])
 
-    // Handle widget click
-    const handleClick = async () => {
+    // Handle play click - open Spotify in new tab
+    const handlePlayClick = async (e: React.MouseEvent) => {
+        e.stopPropagation()
+        
         if (!track) return
 
-        if (!isOpen) {
-            if (!embedUrl && !embedLoading) {
-                await fetchSpotifyEmbed()
-            }
-            setIsOpen(true)
-        } else {
-            setIsOpen(false)
+        let url = spotifyUrl
+        
+        // If we don't have the URL yet, fetch it
+        if (!url && !urlLoading) {
+            url = await fetchSpotifyUrl()
+        }
+
+        if (url) {
+            // Open Spotify in new tab - will auto-play if user has Spotify app/web player
+            window.open(url, '_blank', 'noopener,noreferrer')
         }
     }
 
@@ -168,22 +160,16 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
 
     return (
         <motion.div
-            ref={containerRef}
             className={cn("relative", className)}
-            animate={{ x: isOpen ? 150 : 0 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
         >
-            {/* WIDGET - Compact clickable bar */}
-            <motion.button
+            {/* WIDGET - Compact bar with play button */}
+            <div
                 className={cn(
-                    "flex items-center gap-3 px-4 py-2 rounded-xl cursor-pointer",
+                    "flex items-center gap-3 px-4 py-2 rounded-xl",
                     "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
-                    "border border-green-500/20 hover:border-green-500/40",
-                    "transition-all duration-200",
-                    isOpen && "border-green-500/60"
+                    "border border-green-500/20",
+                    "transition-all duration-200"
                 )}
-                onClick={handleClick}
-                whileTap={{ scale: 0.98 }}
             >
                 {/* Equalizer Bars - Only animate when music is playing */}
                 <div className="flex items-end gap-[2px] h-4">
@@ -212,68 +198,34 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                 </div>
 
                 {/* Track Info */}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-white truncate">{track.name}</p>
                     <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
 
-                {/* Play/Close Icon */}
-                <div className={cn(
-                    "p-1.5 rounded-full flex-shrink-0",
-                    isOpen ? "bg-red-500/20 text-red-400" : "bg-green-500/20 text-green-400"
-                )}>
-                    {embedLoading ? (
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                    ) : isOpen ? (
-                        <X className="w-3 h-3" />
-                    ) : (
-                        <Play className="w-3 h-3" fill="currentColor" />
-                    )}
-                </div>
-            </motion.button>
-
-            {/* FLYOUT - Opens to the LEFT of widget */}
-            {/* 
-             * IMPORTANT: We use CSS visibility instead of conditional rendering
-             * to prevent the Spotify iframe from unmounting and stopping playback
-             * when the flyout is closed or user navigates/clicks elsewhere
-             */}
-            {embedUrl && (
-                <motion.div
-                    initial={{ opacity: 0, x: 10, scale: 0.95 }}
-                    animate={{ 
-                        opacity: isOpen ? 1 : 0, 
-                        x: isOpen ? 0 : 10, 
-                        scale: isOpen ? 1 : 0.95,
-                        pointerEvents: isOpen ? "auto" : "none"
-                    }}
-                    transition={{ duration: 0.15, ease: "easeOut" }}
+                {/* Play on Spotify Button */}
+                <motion.button
+                    onClick={handlePlayClick}
+                    disabled={urlLoading}
                     className={cn(
-                        "absolute right-full top-1/2 -translate-y-1/2 mr-2",
-                        "w-[300px]",
-                        "rounded-xl overflow-hidden",
-                        "bg-zinc-900/95 backdrop-blur-xl",
-                        "border border-green-500/30",
-                        "shadow-2xl shadow-green-500/10",
-                        "z-50",
-                        !isOpen && "invisible"
+                        "p-2 rounded-full flex-shrink-0",
+                        "bg-green-500 hover:bg-green-400",
+                        "text-black",
+                        "transition-all duration-200",
+                        "hover:scale-105 active:scale-95",
+                        "disabled:opacity-50 disabled:cursor-wait"
                     )}
-                    style={{ visibility: isOpen ? "visible" : "hidden" }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    title="Spela i Spotify"
                 >
-                    {/* Spotify Embed - stays mounted to keep playing */}
-                    <iframe
-                        key={embedUrl}
-                        src={`${embedUrl}&autoplay=1`}
-                        width="100%"
-                        height="80"
-                        frameBorder="0"
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        allowFullScreen
-                        loading="eager"
-                        className="rounded-xl"
-                    />
-                </motion.div>
-            )}
+                    {urlLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                        <ExternalLink className="w-4 h-4" />
+                    )}
+                </motion.button>
+            </div>
         </motion.div>
     )
 }

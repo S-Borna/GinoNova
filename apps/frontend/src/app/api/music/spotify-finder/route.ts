@@ -30,6 +30,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             spotifyId: cached.spotifyId,
             embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0`,
+            spotifyUrl: `https://open.spotify.com/track/${cached.spotifyId}`,
             cached: true
         })
     }
@@ -81,6 +82,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             spotifyId,
             embedUrl: `https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0`,
+            spotifyUrl: `https://open.spotify.com/track/${spotifyId}`,
             cached: false
         })
 
