@@ -171,7 +171,7 @@ async def generate_quiz(
             focus_area=request.focus_area
         )
     )
-    
+
     return JSONResponse(
         content=response_data.model_dump(),
         headers={
