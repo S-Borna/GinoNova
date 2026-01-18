@@ -23,10 +23,10 @@ router = APIRouter()
 
 
 # =============================================================================
-# ADMIN ACTIVITY LOG - In-memory activity tracking for admin notifications
+# ADMIN ACTIVITY LOG - Database-backed activity tracking (multi-worker safe)
 # =============================================================================
 
-# Thread-safe activity log (max 100 entries)
+# In-memory fallback for when DB is unavailable
 _activity_log: deque = deque(maxlen=100)
 _activity_lock = threading.Lock()
 
@@ -78,26 +78,101 @@ def add_activity_log(
     details: Optional[str] = None,
     oauth_provider: Optional[str] = None
 ):
-    """Add an activity to the admin activity log"""
+    """Add an activity to the admin activity log - saves to database for multi-worker support"""
     import uuid
-    entry = {
-        "id": str(uuid.uuid4()),
-        "timestamp": datetime.now(timezone.utc),
-        "type": activity_type,
-        "user_id": user_id,
-        "user_email": user_email,
-        "user_name": user_name,
-        "details": details,
-        "oauth_provider": oauth_provider
-    }
-    with _activity_lock:
-        _activity_log.appendleft(entry)
+    from src.db.database import SessionLocal
+    from src.db.models import ActivityLog
+    
+    entry_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc)
+    
+    # Try to save to database first (multi-worker safe)
+    try:
+        db = SessionLocal()
+        try:
+            # Convert user_id string to UUID if valid
+            user_uuid = None
+            try:
+                user_uuid = uuid.UUID(user_id)
+            except (ValueError, AttributeError):
+                pass
+            
+            activity = ActivityLog(
+                id=uuid.UUID(entry_id),
+                type=activity_type,
+                user_id=user_uuid,
+                user_email=user_email,
+                user_name=user_name,
+                details=details,
+                oauth_provider=oauth_provider,
+                created_at=now
+            )
+            db.add(activity)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            print(f"[ActivityLog] DB save failed, using memory: {e}")
+            # Fallback to in-memory
+            entry = {
+                "id": entry_id,
+                "timestamp": now,
+                "type": activity_type,
+                "user_id": user_id,
+                "user_email": user_email,
+                "user_name": user_name,
+                "details": details,
+                "oauth_provider": oauth_provider
+            }
+            with _activity_lock:
+                _activity_log.appendleft(entry)
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[ActivityLog] Session creation failed: {e}")
+        # Fallback to in-memory
+        entry = {
+            "id": entry_id,
+            "timestamp": now,
+            "type": activity_type,
+            "user_id": user_id,
+            "user_email": user_email,
+            "user_name": user_name,
+            "details": details,
+            "oauth_provider": oauth_provider
+        }
+        with _activity_lock:
+            _activity_log.appendleft(entry)
 
 
 def get_activity_log(limit: int = 50) -> List[dict]:
-    """Get the most recent activity log entries"""
-    with _activity_lock:
-        return list(_activity_log)[:limit]
+    """Get the most recent activity log entries from database"""
+    from src.db.database import SessionLocal
+    from src.db.models import ActivityLog
+    
+    try:
+        db = SessionLocal()
+        try:
+            activities = db.query(ActivityLog).order_by(ActivityLog.created_at.desc()).limit(limit).all()
+            return [
+                {
+                    "id": str(a.id),
+                    "timestamp": a.created_at,
+                    "type": a.type,
+                    "user_id": str(a.user_id) if a.user_id else None,
+                    "user_email": a.user_email,
+                    "user_name": a.user_name,
+                    "details": a.details,
+                    "oauth_provider": a.oauth_provider
+                }
+                for a in activities
+            ]
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[ActivityLog] DB read failed, using memory: {e}")
+        # Fallback to in-memory
+        with _activity_lock:
+            return list(_activity_log)[:limit]
 
 
 # =============================================================================

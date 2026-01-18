@@ -402,3 +402,21 @@ class ExamResult(Base):
         Index('ix_exam_results_completed_at', 'completed_at'),
         Index('ix_exam_results_score', 'score_percent'),
     )
+
+
+class ActivityLog(Base):
+    """Admin activity log - persistent storage for multi-worker support"""
+    __tablename__ = "activity_logs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    type = Column(String(50), nullable=False, index=True)  # login, logout, exam_completed, ai_quiz
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    user_email = Column(String(255), nullable=False)
+    user_name = Column(String(255), nullable=True)
+    details = Column(Text, nullable=True)
+    oauth_provider = Column(String(50), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+
+    __table_args__ = (
+        Index('ix_activity_logs_type_created', 'type', 'created_at'),
+    )

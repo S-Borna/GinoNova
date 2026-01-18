@@ -260,8 +260,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     )
 
     const logout = useCallback(async () => {
-        // Clear local auth
-        authLogout()
+        // Notify backend and clear local auth
+        await authLogout()
         setUser(null)
         setError(null)
 

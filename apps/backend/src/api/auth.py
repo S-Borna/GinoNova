@@ -199,6 +199,31 @@ def login(login_data: UserLogin, request: Request):
     )
 
 
+@auth_router.post("/logout")
+def logout_user(current_user: CurrentUser, request: Request):
+    """
+    Logout - logs user activity before token is cleared on client.
+    Returns success message.
+    """
+    # Get client IP
+    client_ip = get_client_ip(request)
+    
+    # Log logout activity for admin dashboard
+    try:
+        from .routes.admin_v2 import add_activity_log
+        add_activity_log(
+            activity_type="logout",
+            user_id=str(current_user.id),
+            user_email=current_user.email,
+            user_name=current_user.full_name,
+            details=f"User logged out (IP: {client_ip or 'unknown'})"
+        )
+    except Exception as e:
+        print(f"[ActivityLog] Failed to log logout: {e}")
+    
+    return {"ok": True, "message": "Logged out successfully"}
+
+
 @auth_router.get("/me", response_model=UserPublic)
 def get_current_user_info(current_user: CurrentUser):
     """

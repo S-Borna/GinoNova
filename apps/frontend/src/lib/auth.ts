@@ -197,9 +197,24 @@ export async function getMe(): Promise<UserPublic> {
 }
 
 /**
- * Logout - remove token
+ * Logout - notify backend and remove token
  */
-export function logout(): void {
+export async function logout(): Promise<void> {
+    // Notify backend before clearing token (fire and forget)
+    try {
+        const token = getToken()
+        if (token) {
+            await fetch(`${API_BASE_URL}/api/auth/logout`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }).catch(() => {}) // Ignore errors - still logout locally
+        }
+    } catch {
+        // Ignore errors - still logout locally
+    }
     removeToken()
 }
 
