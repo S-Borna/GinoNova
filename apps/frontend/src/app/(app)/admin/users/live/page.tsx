@@ -329,8 +329,8 @@ export default function LiveActivityPage() {
                         onClick={() => setShowMessages(!showMessages)}
                         className={cn(
                             "relative flex items-center gap-2 px-3 py-2 rounded-lg transition text-sm",
-                            showMessages 
-                                ? "bg-purple-500/20 text-purple-400" 
+                            showMessages
+                                ? "bg-purple-500/20 text-purple-400"
                                 : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
                         )}
                     >
@@ -406,8 +406,8 @@ export default function LiveActivityPage() {
                                     key={msg.id}
                                     className={cn(
                                         "p-3 rounded-lg border transition-all",
-                                        msg.read 
-                                            ? "bg-zinc-800/50 border-zinc-700" 
+                                        msg.read
+                                            ? "bg-zinc-800/50 border-zinc-700"
                                             : "bg-purple-500/10 border-purple-500/30"
                                     )}
                                 >

@@ -597,11 +597,11 @@ async def generate_quiz_async(
     # =========================================================================
     retry_count = 0
     max_retries = 3
-    
+
     while len(all_questions) < count and retry_count < max_retries:
         missing = count - len(all_questions)
         logger.warning(f"⚠️ Got {len(all_questions)}/{count} questions, generating {missing} more (retry {retry_count + 1})")
-        
+
         # Generate missing questions in a single batch
         unique_seed = f"{uuid.uuid4().hex[:8]}_retry_{retry_count}"
         retry_prompt = _build_user_prompt(
@@ -615,7 +615,7 @@ async def generate_quiz_async(
             batch_number=1,
             total_batches=1
         )
-        
+
         retry_result = await _generate_batch_async(
             client=client,
             system_prompt=system_prompt,
@@ -625,14 +625,14 @@ async def generate_quiz_async(
             temperature=0.9,  # Higher temp for variety
             batch_id=999  # Special batch ID for retry
         )
-        
+
         if retry_result and retry_result.get("questions"):
             all_questions.extend(retry_result["questions"])
             if retry_result.get("usage"):
                 total_prompt_tokens += retry_result["usage"].prompt_tokens
                 total_completion_tokens += retry_result["usage"].completion_tokens
             logger.info(f"✅ Retry got {len(retry_result['questions'])} questions, total now: {len(all_questions)}")
-        
+
         retry_count += 1
 
     # Trim to exact count if we got too many

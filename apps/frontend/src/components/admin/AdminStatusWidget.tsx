@@ -3,16 +3,16 @@
 /**
  * Admin Status Widget - Shows admin online/offline status
  * Users can send messages to admin when online
- * 
+ *
  * Placed in TopBar between "Locked in!" and profile dropdown
  */
 
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-    MessageCircle, 
-    Send, 
-    X, 
+import {
+    MessageCircle,
+    Send,
+    X,
     Check,
     User,
     Sparkles
@@ -93,7 +93,7 @@ export function AdminStatusWidget({ className }: AdminStatusWidgetProps) {
 
             setSent(true)
             setMessage("")
-            
+
             // Close modal after showing success
             setTimeout(() => {
                 setShowMessageModal(false)
@@ -115,7 +115,7 @@ export function AdminStatusWidget({ className }: AdminStatusWidgetProps) {
                 className={cn(
                     "hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl",
                     "border backdrop-blur-sm transition-all duration-300",
-                    isAdminOnline 
+                    isAdminOnline
                         ? "bg-gradient-to-r from-violet-500/15 to-purple-500/10 border-violet-500/30 hover:border-violet-400/50 cursor-pointer"
                         : "bg-neutral-500/10 border-neutral-500/20 cursor-default",
                     className

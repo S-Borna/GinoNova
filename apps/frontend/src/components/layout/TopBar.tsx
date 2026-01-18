@@ -586,7 +586,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     {isAuthenticated && <div className="sm:hidden"><AdminActivityFlash /></div>}
                     {/* Session Timer - Only show on larger screens */}
                     {isAuthenticated && <div className="hidden md:block"><SessionTimerDisplay /></div>}
-                    
+
                     {/* Admin Status Widget - Between timer and profile */}
                     {isAuthenticated && <AdminStatusWidget />}
 
