@@ -160,17 +160,17 @@ async def generate_quiz(
     # Log AI Quiz completion for admin dashboard
     try:
         from .admin_v2 import add_activity_log
-        
+
         # Get user display name
         user_name = getattr(current_user, 'full_name', None) or current_user.email.split('@')[0]
-        
+
         # Format difficulty nicely
         difficulty_display = {
             'easy': 'Lätt',
-            'medium': 'Medium', 
+            'medium': 'Medium',
             'hard': 'Svår'
         }.get(request.difficulty, request.difficulty)
-        
+
         add_activity_log(
             activity_type="ai_quiz",
             user_id=str(current_user.id),
@@ -243,6 +243,16 @@ async def get_available_modules(
             "slug": "linux-commands",
             "title": "💻 Linux Kommandon",
             "description": "AI-genererade frågor baserat på Linux kommandoreferens"
+        },
+        {
+            "slug": "tenta-floden",
+            "title": "🌊 Tenta Flöden",
+            "description": "AI-genererade scenario- och sekvensbaserade frågor (40 frågor som källa)"
+        },
+        {
+            "slug": "manpage-floden",
+            "title": "🌊 Manpage Flöden",
+            "description": "AI-genererade scenario- och sekvensbaserade frågor (150 frågor som källa)"
         },
     ]
 

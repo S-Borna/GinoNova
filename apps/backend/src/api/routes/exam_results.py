@@ -137,21 +137,23 @@ async def submit_exam_result(
     # Log exam completion for admin dashboard
     try:
         from .admin_v2 import add_activity_log
-        
+
         # Map source IDs to friendly names
         source_names = {
             'omtenta-2': 'Omtenta 2.0',
             'handson': 'Hands-On Labs',
             'linux-commands': 'Linux Commands',
             'linux-tenta': 'Linux Tenta',
-            'manpage-tenta': 'Manpage Tenta'
+            'manpage-tenta': 'Manpage Tenta',
+            'tenta-floden': 'Tenta Flöden',
+            'manpage-floden': 'Manpage Flöden'
         }
         sources_display = [source_names.get(s, s) for s in (data.sources or [])]
         sources_str = ", ".join(sources_display) if sources_display else "Tenta"
-        
+
         # Get user display name
         user_name = getattr(current_user, 'full_name', None) or current_user.email.split('@')[0]
-        
+
         add_activity_log(
             activity_type="exam_completed",
             user_id=str(current_user.id),

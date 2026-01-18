@@ -976,6 +976,121 @@ Examensfrågor för Linux och DevOps-kursen.
 - tar -xzvf: Extrahera .tar.gz
 - zip/unzip: ZIP-filer
 - gzip/gunzip: Komprimera
+""",
+
+        "tenta-floden": """# Tenta Flöden - Scenario & Flow Questions (40 frågor)
+Scenario-baserade och sekvensbaserade frågor från Linux Tenta.
+
+## Linux Philosophy
+- Everything in Linux is treated as a file (devices, sockets, etc.)
+- Unix philosophy: Do one thing well, combine tools with pipes
+- "Write programs that do one thing and do it well"
+
+## Block Storage & Encryption
+- Setup order: partition → LUKS encrypt → filesystem
+- LUKS (Linux Unified Key Setup) for disk encryption
+- cryptsetup for managing encrypted volumes
+- /dev/mapper for encrypted device mapping
+
+## Subnetting & Networking
+- CIDR notation: /27 = 32 addresses, 30 usable hosts
+- Network address (first) and broadcast (last) are reserved
+- 2^(32-prefix) = total addresses
+- localhost (127.0.0.1) only accessible locally by definition
+- Subnetting calculations with host bits
+
+## SSH & Remote Access
+- ssh-keygen for generating key pairs
+- ~/.ssh/authorized_keys for public keys
+- SSH config file for aliases and settings
+- Port forwarding and tunneling
+
+## User Administration
+- useradd, usermod, userdel for user management
+- /etc/passwd, /etc/shadow, /etc/group
+- UID/GID management
+- sudo and privilege escalation
+
+## Process Management
+- ps aux for process listing
+- kill, killall for process termination
+- nice/renice for priority adjustment
+- Background processes with & and nohup
+""",
+
+        "manpage-floden": """# Manpage Flöden - Scenario & Flow Questions (150 frågor)
+Scenario-baserade praktiska frågor baserat på Linux manpage-tentan.
+
+## Linux Grundläggande (30 frågor)
+- ls -a: Visa dolda filer
+- man: Visa manual sidor
+- head/tail: Visa filens början/slut
+- grep: Sök text i filer
+- wc -l: Räkna rader
+- du: Visa diskutrymme
+- touch: Skapa tomma filer
+- pwd: Visa aktuell katalog
+- clear: Rensa terminal
+- cat: Visa filinnehåll
+- date: Visa datum/tid
+- which: Hitta binärfiler
+- whoami: Visa användarnamn
+- env/printenv: Visa miljövariabler
+- hostname: Visa servernamn
+
+## Textbearbetning
+- diff: Jämför filer
+- sort: Sortera rader
+- uniq: Ta bort dubbletter
+- tail -f: Följ loggfil i realtid
+- cut -d: Extrahera kolumner med delimiter
+- awk: Avancerad textbearbetning
+- sed: Stream editor för texttransformationer
+
+## Fil & Kataloghantering (30 frågor)
+- mkdir -p: Skapa nästlade kataloger
+- rmdir: Ta bort tomma kataloger
+- rm -r: Ta bort kataloger rekursivt
+- cp -r: Kopiera rekursivt
+- mv: Flytta/byt namn
+- ln -s: Skapa symboliska länkar
+- find -name: Sök efter filnamn
+- locate: Snabbsökning via databas
+- tree: Visa katalogstruktur
+- ls -l: Visa detaljer med storlek
+- find -mtime: Sök efter ändringsdatum
+- find -size: Sök efter storlek
+- find -exec: Utför kommando på resultat
+
+## Docker (20 frågor)
+- docker ps: Lista körande containers
+- docker ps -a: Inkludera stoppade
+- docker logs: Visa container-loggar
+- docker exec -it: Interaktiv shell
+- docker images: Lista images
+- docker build: Bygg image
+- docker run -d: Detached mode
+- docker run -p: Port mapping
+- docker-compose: Multi-container apps
+- Dockerfile: FROM, RUN, COPY, CMD, ENTRYPOINT
+- docker volume: Persistent lagring
+- docker network: Container-nätverk
+
+## Permissions (10 frågor)
+- chmod: Ändra rättigheter
+- chown: Ändra ägare
+- Numerisk notation: 755, 644
+- Symbolisk: u+x, g-w, o=r
+- SUID, SGID, sticky bit
+
+## Git (10 frågor)
+- git status: Visa ändringar
+- git add: Stage ändringar
+- git commit: Spara ändringar
+- git push/pull: Synka med remote
+- git branch: Hantera branches
+- git merge: Slå ihop branches
+- git log: Visa historik
 """
     }
 

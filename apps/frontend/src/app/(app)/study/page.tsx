@@ -166,7 +166,7 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2' | 'manpage-tenta'>('omtenta-2')
+    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2' | 'manpage-tenta' | 'tenta-floden' | 'manpage-floden'>('omtenta-2')
     const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
     const [showNodeSelector, setShowNodeSelector] = useState(false)
 
@@ -538,6 +538,36 @@ export default function StudyPage() {
                                         <span className="text-[10px] font-semibold">Manpage Tenta</span>
                                         <span className="text-[9px] opacity-60">298 frågor</span>
                                     </motion.button>
+                                    <motion.button
+                                        onClick={() => setTentaSource('tenta-floden')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'tenta-floden'
+                                                ? "bg-gradient-to-br from-violet-500/40 to-purple-500/40 border border-violet-400/50 text-violet-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                        )}
+                                    >
+                                        <span className="text-lg">🌊</span>
+                                        <span className="text-[10px] font-semibold">Tenta Flöden</span>
+                                        <span className="text-[9px] opacity-60">40 scenario</span>
+                                    </motion.button>
+                                    <motion.button
+                                        onClick={() => setTentaSource('manpage-floden')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1",
+                                            tentaSource === 'manpage-floden'
+                                                ? "bg-gradient-to-br from-fuchsia-500/40 to-pink-500/40 border border-fuchsia-400/50 text-fuchsia-200"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                        )}
+                                    >
+                                        <span className="text-lg">🔄</span>
+                                        <span className="text-[10px] font-semibold">Manpage Flöden</span>
+                                        <span className="text-[9px] opacity-60">150 scenario</span>
+                                    </motion.button>
                                 </div>
                                 <p className="text-[10px] text-zinc-500 mt-2 text-center">
                                     {tentaSource === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
@@ -545,6 +575,8 @@ export default function StudyPage() {
                                     {tentaSource === 'linux' && "🐧 Terminal & DevOps kommandon"}
                                     {tentaSource === 'linux-tenta' && "📝 Original tentafrågor"}
                                     {tentaSource === 'manpage-tenta' && "📚 Omfattande Linux/Unix kommandoreferens (243 G + 55 VG)"}
+                                    {tentaSource === 'tenta-floden' && "🌊 Scenariofrågor & flödesfrågor baserade på Linux Tenta (English)"}
+                                    {tentaSource === 'manpage-floden' && "🔄 Scenariofrågor & flödesfrågor baserade på Manpage Tenta (English)"}
                                 </p>
                             </div>
 

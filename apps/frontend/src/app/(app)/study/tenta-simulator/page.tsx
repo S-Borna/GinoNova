@@ -54,6 +54,9 @@ import { ALL_LINUX_TENTA_QUESTIONS, type LinuxTentaQuestion } from "@/data/linux
 import { ALL_MANPAGE_TENTA_QUESTIONS, type ManpageTentaQuestion } from "@/data/manpage-tenta-quiz"
 // OMTENTA 2.0 - Nya frågor från Nod-filer
 import { ALL_OMTENTA_2_QUESTIONS, type Omtenta2Question, type Omtenta2Topic, OMTENTA2_TOPICS } from "@/data/omtenta-2.0-quiz"
+// FLÖDEN - Scenario & Flow questions
+import { ALL_TENTA_FLODEN_QUESTIONS, type TentaFlodenQuestion } from "@/data/tenta-floden-quiz"
+import { ALL_MANPAGE_FLODEN_QUESTIONS, type ManpageFlodenQuestion } from "@/data/manpage-floden-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
@@ -65,10 +68,11 @@ interface SimulatorQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2'
+    source: 'handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden'
     scenario?: string // Optional scenario context
     isMultiSelect: boolean
     nodeTopic?: Omtenta2Topic // For Omtenta 2.0 node filtering
+    questionType?: 'scenario' | 'flow' | 'standard' // For Flöden questions
 }
 
 interface SimulatorSettings {
@@ -78,7 +82,7 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[] // Multi-select question sources
+    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[] // Multi-select question sources
     selectedNodes: Omtenta2Topic[] // For Omtenta 2.0 node filtering
 }
 
@@ -229,6 +233,40 @@ function convertOmtenta2Question(q: Omtenta2Question): SimulatorQuestion {
     }
 }
 
+// Convert Tenta Flöden question to SimulatorQuestion
+function convertTentaFlodenQuestion(q: TentaFlodenQuestion): SimulatorQuestion {
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        category: q.category,
+        source: 'tenta-floden',
+        isMultiSelect: false,
+        questionType: q.type
+    }
+}
+
+// Convert Manpage Flöden question to SimulatorQuestion
+function convertManpageFlodenQuestion(q: ManpageFlodenQuestion): SimulatorQuestion {
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
+        explanation: q.explanation,
+        difficulty: q.difficulty,
+        category: q.category,
+        source: 'manpage-floden',
+        isMultiSelect: false,
+        questionType: q.type
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -277,6 +315,16 @@ export default function TentaSimulatorPage() {
         return ALL_OMTENTA_2_QUESTIONS.map(convertOmtenta2Question)
     }, [])
 
+    // Get Tenta Flöden questions (40 scenario/flow questions based on Linux Tenta)
+    const tentaFlodenQuestions = useMemo(() => {
+        return ALL_TENTA_FLODEN_QUESTIONS.map(convertTentaFlodenQuestion)
+    }, [])
+
+    // Get Manpage Flöden questions (150 scenario/flow questions based on Manpage Tenta)
+    const manpageFlodenQuestions = useMemo(() => {
+        return ALL_MANPAGE_FLODEN_QUESTIONS.map(convertManpageFlodenQuestion)
+    }, [])
+
     // Get filtered questions based on selected sources and nodes
     const allQuestions = useMemo(() => {
         const questions: SimulatorQuestion[] = []
@@ -299,8 +347,14 @@ export default function TentaSimulatorPage() {
             )
             questions.push(...filtered)
         }
+        if (settings.selectedSources.includes('tenta-floden')) {
+            questions.push(...tentaFlodenQuestions)
+        }
+        if (settings.selectedSources.includes('manpage-floden')) {
+            questions.push(...manpageFlodenQuestions)
+        }
         return questions
-    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, manpageTentaQuestions, omtenta2Questions, settings.selectedSources, settings.selectedNodes])
+    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, manpageTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions, settings.selectedSources, settings.selectedNodes])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -326,10 +380,10 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param
-            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[] = ['omtenta-2']
+            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[] = ['omtenta-2']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2')[]
-                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'manpage-tenta', 'omtenta-2'].includes(s))
+                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[]
+                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'manpage-tenta', 'omtenta-2', 'tenta-floden', 'manpage-floden'].includes(s))
                 if (selectedSources.length === 0) selectedSources = ['omtenta-2']
             }
 
@@ -367,6 +421,8 @@ export default function TentaSimulatorPage() {
                 )
                 sourceQuestions.push(...filtered)
             }
+            if (selectedSources.includes('tenta-floden')) sourceQuestions.push(...tentaFlodenQuestions)
+            if (selectedSources.includes('manpage-floden')) sourceQuestions.push(...manpageFlodenQuestions)
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -392,7 +448,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions])
+    }, [searchParams, hasAutoStarted, handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {

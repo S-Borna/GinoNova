@@ -3,6 +3,9 @@
  */
 import { type Omtenta2Topic } from "@/data/omtenta-2.0-quiz"
 
+// All available question sources
+export type QuestionSource = 'handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden'
+
 // Unified question type for simulator (always has G/VG difficulty)
 export interface SimulatorQuestion {
     id: string
@@ -13,10 +16,11 @@ export interface SimulatorQuestion {
     explanation: string
     difficulty: 'G' | 'VG'
     category: string
-    source: 'handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2'
+    source: QuestionSource
     scenario?: string // Optional scenario context
     isMultiSelect: boolean
     nodeTopic?: Omtenta2Topic // For Omtenta 2.0 node filtering
+    questionType?: 'scenario' | 'flow' | 'standard' // For Flöden questions
 }
 
 export interface SimulatorSettings {
@@ -26,8 +30,10 @@ export interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'omtenta-2')[] // Multi-select question sources
+    selectedSources: QuestionSource[] // Multi-select question sources
     selectedNodes: Omtenta2Topic[] // For Omtenta 2.0 node filtering
+    randomizeQuestions: boolean // Randomize question order
+    randomizeAnswers: boolean // Randomize answer order per question
 }
 
 export interface QuizResult {
@@ -50,5 +56,7 @@ export const DEFAULT_SETTINGS: SimulatorSettings = {
     showTimer: true,
     gradingMode: 'live',
     selectedSources: ['omtenta-2'], // Default to Omtenta 2.0
-    selectedNodes: [] // Will be set to OMTENTA2_TOPICS by consumer
+    selectedNodes: [], // Will be set to OMTENTA2_TOPICS by consumer
+    randomizeQuestions: true, // Randomize question order by default
+    randomizeAnswers: true // Randomize answer options by default
 }

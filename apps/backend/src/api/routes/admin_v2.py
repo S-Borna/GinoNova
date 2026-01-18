@@ -85,7 +85,7 @@ def add_activity_log(
 
     entry_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
-    
+
     print(f"[ActivityLog] Adding: type={activity_type}, user={user_email}, details={details[:50] if details else 'None'}...")
 
     # Try to save to database first (multi-worker safe)

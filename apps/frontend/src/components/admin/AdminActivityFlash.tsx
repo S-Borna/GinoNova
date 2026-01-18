@@ -3,7 +3,7 @@
 /**
  * Admin Activity Flash - Real-time notifications for user login/logout/activity
  * Only visible to admins in the TopBar
- * 
+ *
  * Shows beautiful notifications for:
  * - User logins/logouts
  * - New registrations
@@ -53,7 +53,7 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
 
             // Get events from last 60 seconds
             const sinceTime = new Date(Date.now() - 60000).toISOString()
-            
+
             const response = await fetch(
                 `${API_BASE_URL}/api/admin/v2/activity-flash?since=${sinceTime}`,
                 {
@@ -72,27 +72,27 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
             }
 
             const data = await response.json()
-            
+
             if (data.events && data.events.length > 0) {
                 // Find first event we haven't seen yet
                 for (const event of data.events) {
                     if (!seenEventsRef.current.has(event.id)) {
                         seenEventsRef.current.add(event.id)
-                        
+
                         // Limit seen events set size
                         if (seenEventsRef.current.size > 200) {
                             const arr = Array.from(seenEventsRef.current)
                             seenEventsRef.current = new Set(arr.slice(-100))
                         }
-                        
+
                         // Show this event
                         setCurrentEvent(event)
-                        
+
                         // Auto-hide after 5 seconds
                         setTimeout(() => {
                             setCurrentEvent(prev => prev?.id === event.id ? null : prev)
                         }, 5000)
-                        
+
                         break // Only show one at a time
                     }
                 }
@@ -136,15 +136,15 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
 
     const getMessage = () => {
         const name = currentEvent.user_name || currentEvent.user_email?.split("@")[0] || "User"
-        
+
         switch (currentEvent.type) {
-            case "login": 
+            case "login":
                 return <><span className="font-semibold">{name}</span> loggade in</>
-            case "logout": 
+            case "logout":
                 return <><span className="font-semibold">{name}</span> loggade ut</>
-            case "inactive": 
+            case "inactive":
                 return <><span className="font-semibold">{name}</span> blev inaktiv</>
-            case "registration": 
+            case "registration":
                 return <><span className="font-semibold">{name}</span> registrerade sig 🎉</>
             case "exam_completed":
             case "ai_quiz":
@@ -153,26 +153,26 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
                     return <span>{currentEvent.details}</span>
                 }
                 return <><span className="font-semibold">{name}</span> slutförde {currentEvent.type === 'ai_quiz' ? 'AI Quiz' : 'tenta'}</>
-            default: 
+            default:
                 return <><span className="font-semibold">{name}</span></>
         }
     }
 
     const getColors = () => {
         switch (currentEvent.type) {
-            case "login": 
+            case "login":
                 return "from-green-500/20 to-emerald-500/10 border-green-500/40 text-green-300"
-            case "logout": 
+            case "logout":
                 return "from-orange-500/20 to-amber-500/10 border-orange-500/40 text-orange-300"
-            case "inactive": 
+            case "inactive":
                 return "from-yellow-500/20 to-amber-500/10 border-yellow-500/40 text-yellow-300"
-            case "registration": 
+            case "registration":
                 return "from-pink-500/20 to-rose-500/10 border-pink-500/40 text-pink-300"
-            case "exam_completed": 
+            case "exam_completed":
                 return "from-purple-500/20 to-violet-500/10 border-purple-500/40 text-purple-300"
-            case "ai_quiz": 
+            case "ai_quiz":
                 return "from-blue-500/20 to-cyan-500/10 border-blue-500/40 text-blue-300"
-            default: 
+            default:
                 return "from-zinc-500/20 to-zinc-500/10 border-zinc-500/40 text-zinc-300"
         }
     }

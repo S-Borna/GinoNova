@@ -114,11 +114,11 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     // Handle play click - open Spotify web player in new tab
     const handlePlayClick = async (e: React.MouseEvent) => {
         e.stopPropagation()
-        
+
         if (!track) return
 
         let url = spotifyUrl
-        
+
         // If we don't have the URL yet, fetch it
         if (!url && !urlLoading) {
             const result = await fetchSpotifyUrl()
