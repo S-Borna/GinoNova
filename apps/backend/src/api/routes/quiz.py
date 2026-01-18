@@ -89,7 +89,7 @@ async def generate_quiz(
 ):
     """
     Generate AI-powered quiz questions for a module.
-    
+
     NOW ASYNC: Uses parallel batches for large counts (100 questions in ~15-20s).
     Does NOT block other requests or tabs.
 
@@ -155,13 +155,28 @@ async def generate_quiz(
             detail="Quiz generation failed. Check OpenAI API key and service availability."
         )
 
+    questions = result.get("questions", [])
+
+    # Log AI Quiz completion for admin dashboard
+    try:
+        from .admin_v2 import add_activity_log
+        add_activity_log(
+            activity_type="ai_quiz",
+            user_id=str(current_user.id),
+            user_email=current_user.email,
+            user_name=getattr(current_user, 'full_name', None),
+            details=f"AI Quiz: {len(questions)} {request.quiz_type} ({request.difficulty}) - {module_title}"
+        )
+    except Exception as e:
+        logger.debug(f"[ActivityLog] Failed to log AI quiz: {e}")
+
     return QuizResponse(
-        questions=result.get("questions", []),
+        questions=questions,
         metadata=QuizMetadata(
             module=module_title,
             quiz_type=request.quiz_type,
             difficulty=request.difficulty,
-            count=len(result.get("questions", [])),
+            count=len(questions),
             generated_at=datetime.utcnow().isoformat(),
             focus_area=request.focus_area
         )

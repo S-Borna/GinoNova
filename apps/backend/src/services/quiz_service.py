@@ -441,9 +441,9 @@ async def _generate_batch_async(
     try:
         base_tokens = 300 if quiz_type == "mcq" else 180
         max_tokens = min(batch_count * base_tokens + 500, 4096)
-        
+
         logger.info(f"🎲 Batch {batch_id}: Generating {batch_count} questions...")
-        
+
         response = await client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -453,9 +453,9 @@ async def _generate_batch_async(
             temperature=temperature,
             max_tokens=max_tokens,
         )
-        
+
         result_text = response.choices[0].message.content.strip()
-        
+
         # Clean markdown formatting
         if result_text.startswith("```"):
             result_text = result_text.split("```")[1]
@@ -463,18 +463,18 @@ async def _generate_batch_async(
                 result_text = result_text[4:]
         if result_text.endswith("```"):
             result_text = result_text[:-3]
-        
+
         result = json.loads(result_text.strip())
         questions = result.get("questions", [])
-        
+
         logger.info(f"✅ Batch {batch_id}: Got {len(questions)} questions")
-        
+
         # Return usage info for cost tracking
         return {
             "questions": questions,
             "usage": response.usage
         }
-        
+
     except Exception as e:
         logger.error(f"❌ Batch {batch_id} failed: {e}")
         return None
@@ -491,13 +491,13 @@ async def generate_quiz_async(
 ) -> Optional[dict]:
     """
     ASYNC quiz generation with parallel batches for large counts.
-    
+
     For 100 questions: Runs 5 parallel batches of 20 questions each.
     Result: ~15-20 seconds instead of 2-3 minutes.
     """
     import time
     start_time = time.time()
-    
+
     # Check cache first
     if use_cache:
         from ..db.redis_client import cache_get, cache_set
@@ -506,16 +506,16 @@ async def generate_quiz_async(
         if cached_result:
             logger.info(f"✅ Quiz cache hit for {module_title}")
             return cached_result
-    
+
     client = _get_async_client()
     if not client:
         logger.error("❌ Async OpenAI client not available")
         raise ValueError("OpenAI API key not configured")
-    
+
     # Determine batch strategy
     # For large counts, split into parallel batches
     BATCH_SIZE = 20  # Optimal for speed vs quality
-    
+
     if count <= BATCH_SIZE:
         batches = [count]
     else:
@@ -525,18 +525,18 @@ async def generate_quiz_async(
         batches = [BATCH_SIZE] * num_full_batches
         if remainder > 0:
             batches.append(remainder)
-    
+
     logger.info(f"🚀 Generating {count} questions in {len(batches)} parallel batches: {batches}")
-    
+
     # Build prompts
     temperature = 0.85 if not use_cache else 0.75
-    
+
     # System prompt (shared)
     system_prompt = _build_system_prompt()
-    
+
     # Content preview
     content_preview = content[:8000]
-    
+
     # Create batch tasks
     tasks = []
     for i, batch_count in enumerate(batches):
@@ -553,7 +553,7 @@ async def generate_quiz_async(
             batch_number=i + 1,
             total_batches=len(batches)
         )
-        
+
         task = _generate_batch_async(
             client=client,
             system_prompt=system_prompt,
@@ -564,15 +564,15 @@ async def generate_quiz_async(
             batch_id=i + 1
         )
         tasks.append(task)
-    
+
     # Run all batches in parallel
     results = await asyncio.gather(*tasks, return_exceptions=True)
-    
+
     # Combine results
     all_questions = []
     total_prompt_tokens = 0
     total_completion_tokens = 0
-    
+
     for i, result in enumerate(results):
         if isinstance(result, Exception):
             logger.error(f"Batch {i+1} raised exception: {result}")
@@ -580,32 +580,82 @@ async def generate_quiz_async(
         if result is None:
             logger.warning(f"Batch {i+1} returned None")
             continue
-        
+
         questions = result.get("questions", [])
         all_questions.extend(questions)
-        
+
         if result.get("usage"):
             total_prompt_tokens += result["usage"].prompt_tokens
             total_completion_tokens += result["usage"].completion_tokens
-    
+
     if not all_questions:
         logger.error("❌ All batches failed - no questions generated")
         return None
+
+    # =========================================================================
+    # ENSURE EXACT QUESTION COUNT - Retry for missing questions
+    # =========================================================================
+    retry_count = 0
+    max_retries = 3
     
+    while len(all_questions) < count and retry_count < max_retries:
+        missing = count - len(all_questions)
+        logger.warning(f"⚠️ Got {len(all_questions)}/{count} questions, generating {missing} more (retry {retry_count + 1})")
+        
+        # Generate missing questions in a single batch
+        unique_seed = f"{uuid.uuid4().hex[:8]}_retry_{retry_count}"
+        retry_prompt = _build_user_prompt(
+            module_title=module_title,
+            content=content_preview,
+            quiz_type=quiz_type,
+            count=missing,
+            difficulty=difficulty,
+            focus_area=focus_area,
+            unique_seed=unique_seed,
+            batch_number=1,
+            total_batches=1
+        )
+        
+        retry_result = await _generate_batch_async(
+            client=client,
+            system_prompt=system_prompt,
+            user_prompt=retry_prompt,
+            batch_count=missing,
+            quiz_type=quiz_type,
+            temperature=0.9,  # Higher temp for variety
+            batch_id=999  # Special batch ID for retry
+        )
+        
+        if retry_result and retry_result.get("questions"):
+            all_questions.extend(retry_result["questions"])
+            if retry_result.get("usage"):
+                total_prompt_tokens += retry_result["usage"].prompt_tokens
+                total_completion_tokens += retry_result["usage"].completion_tokens
+            logger.info(f"✅ Retry got {len(retry_result['questions'])} questions, total now: {len(all_questions)}")
+        
+        retry_count += 1
+
+    # Trim to exact count if we got too many
+    if len(all_questions) > count:
+        logger.info(f"📏 Trimming from {len(all_questions)} to {count} questions")
+        all_questions = all_questions[:count]
+
+    logger.info(f"📊 Final question count: {len(all_questions)}/{count}")
+
     # Randomize MCQ options
     if quiz_type == "mcq":
         all_questions = _randomize_mcq_options(all_questions)
-    
+
     # Shuffle all questions for variety
     random.shuffle(all_questions)
-    
+
     final_result = {"questions": all_questions}
-    
+
     # Log timing and cost
     elapsed = time.time() - start_time
     cost = (total_prompt_tokens / 1_000_000 * 0.15) + (total_completion_tokens / 1_000_000 * 0.60)
     logger.info(f"⚡ Generated {len(all_questions)} questions in {elapsed:.1f}s (${cost:.4f})")
-    
+
     # Log AI usage
     try:
         from ..services.ai_usage_service import log_ai_usage
@@ -618,12 +668,12 @@ async def generate_quiz_async(
         )
     except Exception as e:
         logger.debug(f"Failed to log AI usage: {e}")
-    
+
     # Cache result
     if use_cache:
         from ..db.redis_client import cache_set
         cache_set(cache_key, final_result, ttl=86400)
-    
+
     return final_result
 
 
@@ -655,7 +705,7 @@ def _build_user_prompt(
     total_batches: int = 1
 ) -> str:
     """Build the user prompt for quiz generation."""
-    
+
     if quiz_type == "flashcard":
         format_instruction = """Generera flashcards på SVENSKA i detta JSON-format:
 {
@@ -686,7 +736,7 @@ KRITISKT:
 
     difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
     focus_text = f"\nFokusera specifikt på: {focus_area}" if focus_area else ""
-    
+
     batch_instruction = ""
     if total_batches > 1:
         batch_instruction = f"""

@@ -5,10 +5,10 @@
  */
 
 import { useState, useEffect, useCallback } from "react"
-import { 
-    Megaphone, 
-    Send, 
-    Trash2, 
+import {
+    Megaphone,
+    Send,
+    Trash2,
     RefreshCw,
     Info,
     AlertTriangle,

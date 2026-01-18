@@ -77,7 +77,7 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
 
             // Remove from local state
             setMessages(prev => prev.filter(m => m.id !== messageId))
-            
+
             // Reset index if needed
             if (currentIndex >= messages.length - 1) {
                 setCurrentIndex(Math.max(0, messages.length - 2))
@@ -106,13 +106,13 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
 
     const getColors = () => {
         switch (currentMessage.type) {
-            case "info": 
+            case "info":
                 return "from-blue-500/20 to-cyan-500/10 border-blue-500/30 text-blue-400"
-            case "warning": 
+            case "warning":
                 return "from-yellow-500/20 to-amber-500/10 border-yellow-500/30 text-yellow-400"
-            case "success": 
+            case "success":
                 return "from-green-500/20 to-emerald-500/10 border-green-500/30 text-green-400"
-            case "error": 
+            case "error":
                 return "from-red-500/20 to-rose-500/10 border-red-500/30 text-red-400"
             default:
                 return "from-purple-500/20 to-pink-500/10 border-purple-500/30 text-purple-400"

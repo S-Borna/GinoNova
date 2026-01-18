@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from "react"
-import { LogIn, LogOut, Clock, X, User } from "lucide-react"
+import { LogIn, LogOut, Clock, X, User, GraduationCap, Brain } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
 
@@ -14,10 +14,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.co
 
 interface ActivityEvent {
     id: string
-    type: "login" | "logout" | "inactive"
+    type: "login" | "logout" | "inactive" | "exam_completed" | "ai_quiz"
     user_email: string
     user_name: string | null
     timestamp: Date
+    details?: string
 }
 
 interface AdminActivityFlashProps {
@@ -56,9 +57,9 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
                         ...e,
                         timestamp: new Date(e.timestamp)
                     }))
-                    
+
                     setEvents(prev => [...newEvents, ...prev].slice(0, 10))
-                    
+
                     // Show the latest event
                     if (newEvents.length > 0) {
                         setVisible(newEvents[0].id)
@@ -96,6 +97,8 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
             case "login": return <LogIn className="w-4 h-4" />
             case "logout": return <LogOut className="w-4 h-4" />
             case "inactive": return <Clock className="w-4 h-4" />
+            case "exam_completed": return <GraduationCap className="w-4 h-4" />
+            case "ai_quiz": return <Brain className="w-4 h-4" />
         }
     }
 
@@ -105,6 +108,8 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
             case "login": return `${name} logged in`
             case "logout": return `${name} logged out`
             case "inactive": return `${name} went inactive`
+            case "exam_completed": return currentEvent.details || `${name} completed an exam`
+            case "ai_quiz": return currentEvent.details || `${name} completed AI Quiz`
         }
     }
 
@@ -113,6 +118,8 @@ export function AdminActivityFlash({ className }: AdminActivityFlashProps) {
             case "login": return "from-green-500/20 to-emerald-500/10 border-green-500/30 text-green-400"
             case "logout": return "from-orange-500/20 to-amber-500/10 border-orange-500/30 text-orange-400"
             case "inactive": return "from-yellow-500/20 to-amber-500/10 border-yellow-500/30 text-yellow-400"
+            case "exam_completed": return "from-purple-500/20 to-violet-500/10 border-purple-500/30 text-purple-400"
+            case "ai_quiz": return "from-blue-500/20 to-cyan-500/10 border-blue-500/30 text-blue-400"
         }
     }
 

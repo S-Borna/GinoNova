@@ -267,7 +267,7 @@ def get_user_status(last_activity: Optional[datetime], last_login: Optional[date
     """
     Calculate user status based on last_activity_at (most recent activity)
     This tracks actual usage, not just login time
-    
+
     Stricter timing to accurately reflect real activity:
     - Online: Activity within last 2 minutes (actively using the site)
     - Away: Activity within 2-10 minutes (recently active, might return)
@@ -358,27 +358,27 @@ async def get_activity_flash(
     admin: UserPublic = Depends(require_admin)
 ):
     """
-    Get recent login/logout/inactive events for TopBar flash notifications.
-    Only returns events since the given timestamp (for polling efficiency).
+    Get recent activity events for TopBar flash notifications.
+    Includes: login, logout, inactive, registration, exam_completed, ai_quiz
     """
     entries = get_activity_log(20)  # Only recent 20
-    
-    # Filter for login/logout/inactive types
-    flash_types = {"login", "logout", "inactive", "registration"}
-    
+
+    # Filter for relevant activity types
+    flash_types = {"login", "logout", "inactive", "registration", "exam_completed", "ai_quiz"}
+
     # Filter by timestamp if provided
     if since:
         # Ensure timezone awareness
         if since.tzinfo is None:
             since = since.replace(tzinfo=timezone.utc)
         events = [
-            e for e in entries 
-            if e.get("type") in flash_types 
+            e for e in entries
+            if e.get("type") in flash_types
             and e.get("timestamp", datetime.min.replace(tzinfo=timezone.utc)) > since
         ]
     else:
         events = [e for e in entries if e.get("type") in flash_types]
-    
+
     return {
         "events": events[:5],  # Max 5 events at once
         "total": len(events)
@@ -405,10 +405,10 @@ async def send_broadcast_message(
     Message will appear in their TopBar until dismissed.
     """
     import uuid
-    
+
     now = datetime.now(timezone.utc)
     expires_at = now + timedelta(minutes=data.duration_minutes) if data.duration_minutes else None
-    
+
     message = {
         "id": str(uuid.uuid4()),
         "message": data.message,
@@ -417,10 +417,10 @@ async def send_broadcast_message(
         "expires_at": expires_at,
         "created_by": admin.email
     }
-    
+
     with _broadcast_lock:
         _broadcast_messages.appendleft(message)
-    
+
     # Log the broadcast
     add_activity_log(
         activity_type="broadcast",
@@ -429,7 +429,7 @@ async def send_broadcast_message(
         user_name=admin.full_name,
         details=f"Broadcast: {data.message[:50]}..."
     )
-    
+
     return {
         "ok": True,
         "message": "Broadcast sent successfully",
@@ -443,13 +443,13 @@ async def get_active_broadcasts(
 ):
     """Get all active broadcast messages (admin only)"""
     now = datetime.now(timezone.utc)
-    
+
     with _broadcast_lock:
         active = [
             m for m in _broadcast_messages
             if m.get("expires_at") is None or m["expires_at"] > now
         ]
-    
+
     return {
         "messages": active,
         "total": len(active)
@@ -468,7 +468,7 @@ async def delete_broadcast_message(
             if m["id"] == message_id:
                 del _broadcast_messages[i]
                 return {"ok": True, "message": "Broadcast deleted"}
-    
+
     raise HTTPException(status_code=404, detail="Broadcast not found")
 
 
@@ -483,10 +483,10 @@ async def get_user_messages(
     """
     now = datetime.now(timezone.utc)
     user_id = str(current_user.id)
-    
+
     # Get user's dismissed messages
     dismissed = _dismissed_messages.get(user_id, set())
-    
+
     with _broadcast_lock:
         messages = [
             {
@@ -499,7 +499,7 @@ async def get_user_messages(
             if m["id"] not in dismissed
             and (m.get("expires_at") is None or m["expires_at"] > now)
         ]
-    
+
     return {
         "messages": messages,
         "total": len(messages)
@@ -513,12 +513,12 @@ async def dismiss_user_message(
 ):
     """Mark a broadcast message as dismissed for this user"""
     user_id = str(current_user.id)
-    
+
     if user_id not in _dismissed_messages:
         _dismissed_messages[user_id] = set()
-    
+
     _dismissed_messages[user_id].add(message_id)
-    
+
     return {"ok": True}
 
 
@@ -533,33 +533,33 @@ async def get_live_user_activity(
     """
     now = datetime.now(timezone.utc)
     ten_minutes_ago = now - timedelta(minutes=10)
-    
+
     # Get users with recent activity
     active_users = db.query(User).filter(
         User.last_activity_at.isnot(None),
         User.last_activity_at > ten_minutes_ago,
         User.is_active == True
     ).order_by(User.last_activity_at.desc()).limit(50).all()
-    
+
     # Get activity log entries for context
     activity_log = get_activity_log(50)
-    
+
     # Build response with user activity context
     result = []
     for user in active_users:
         last_activity = user.last_activity_at
         if last_activity and last_activity.tzinfo is None:
             last_activity = last_activity.replace(tzinfo=timezone.utc)
-        
+
         # Find most recent activity for this user from log
         user_activities = [
-            a for a in activity_log 
+            a for a in activity_log
             if a.get("user_id") == str(user.id)
         ]
         last_action = user_activities[0] if user_activities else None
-        
+
         seconds_ago = (now - last_activity).total_seconds() if last_activity else 9999
-        
+
         result.append({
             "id": str(user.id),
             "email": user.email,
@@ -571,7 +571,7 @@ async def get_live_user_activity(
             "current_action": last_action.get("type") if last_action else "browsing",
             "current_page": last_action.get("details") if last_action else None,
         })
-    
+
     return {
         "users": result,
         "total": len(result),

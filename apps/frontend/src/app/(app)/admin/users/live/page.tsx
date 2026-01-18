@@ -8,11 +8,11 @@
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { 
-    Activity, 
-    Users, 
-    RefreshCw, 
-    Eye, 
+import {
+    Activity,
+    Users,
+    RefreshCw,
+    Eye,
     Clock,
     Globe,
     BookOpen,
@@ -57,7 +57,7 @@ function getActionIcon(action: string) {
 
 function getActionLabel(action: string, page: string | null) {
     if (page) return page
-    
+
     switch (action?.toLowerCase()) {
         case "login": return "Just logged in"
         case "study": return "Studying modules"
@@ -109,13 +109,13 @@ function LiveUserCard({ user }: { user: LiveUser }) {
     return (
         <div className={cn(
             "p-4 rounded-xl border transition-all",
-            user.status === "online" 
-                ? "bg-green-500/5 border-green-500/20" 
+            user.status === "online"
+                ? "bg-green-500/5 border-green-500/20"
                 : "bg-yellow-500/5 border-yellow-500/20"
         )}>
             <div className="flex items-start gap-4">
                 <UserAvatar user={user} />
-                
+
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-white truncate">
@@ -123,15 +123,15 @@ function LiveUserCard({ user }: { user: LiveUser }) {
                         </h3>
                         <span className={cn(
                             "text-xs px-2 py-0.5 rounded-full",
-                            user.status === "online" 
-                                ? "bg-green-500/20 text-green-400" 
+                            user.status === "online"
+                                ? "bg-green-500/20 text-green-400"
                                 : "bg-yellow-500/20 text-yellow-400"
                         )}>
                             {user.status === "online" ? "Active" : "Away"}
                         </span>
                     </div>
                     <p className="text-sm text-zinc-500 truncate">{user.email}</p>
-                    
+
                     {/* Current activity */}
                     <div className="mt-3 flex items-center gap-2 text-sm">
                         <div className={cn(
@@ -145,14 +145,14 @@ function LiveUserCard({ user }: { user: LiveUser }) {
                         </span>
                     </div>
                 </div>
-                
+
                 {/* Time ago */}
                 <div className="text-right shrink-0">
                     <div className="flex items-center gap-1 text-xs text-zinc-500">
                         <Clock className="w-3 h-3" />
                         {formatTimeAgo(user.seconds_ago)}
                     </div>
-                    <Link 
+                    <Link
                         href={`/admin/users/${user.id}`}
                         className="mt-2 inline-flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300"
                     >
@@ -342,7 +342,7 @@ export default function LiveActivityPage() {
 
             {/* Back to users */}
             <div className="mt-8 pt-6 border-t border-zinc-800">
-                <Link 
+                <Link
                     href="/admin/users"
                     className="text-sm text-zinc-400 hover:text-white transition"
                 >
