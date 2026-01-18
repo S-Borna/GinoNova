@@ -30,6 +30,12 @@ router = APIRouter()
 _activity_log: deque = deque(maxlen=100)
 _activity_lock = threading.Lock()
 
+# Broadcast messages from admin to users (max 10 active)
+_broadcast_messages: deque = deque(maxlen=10)
+_broadcast_lock = threading.Lock()
+# Track which users dismissed which messages
+_dismissed_messages: dict = {}  # {user_id: set(message_ids)}
+
 
 class ActivityLogEntry(BaseModel):
     id: str
@@ -40,6 +46,15 @@ class ActivityLogEntry(BaseModel):
     user_id: str
     details: Optional[str] = None
     oauth_provider: Optional[str] = None
+
+
+class BroadcastMessage(BaseModel):
+    id: str
+    message: str
+    type: str = "info"  # info, warning, success, error
+    created_at: datetime
+    expires_at: Optional[datetime] = None
+    created_by: str
 
 
 def add_activity_log(
@@ -368,6 +383,143 @@ async def get_activity_flash(
         "events": events[:5],  # Max 5 events at once
         "total": len(events)
     }
+
+
+# =============================================================================
+# BROADCAST MESSAGES - Admin can send messages to all logged-in users
+# =============================================================================
+
+class BroadcastRequest(BaseModel):
+    message: str
+    type: str = "info"  # info, warning, success, error
+    duration_minutes: Optional[int] = 60  # How long before message expires
+
+
+@router.post("/broadcast")
+async def send_broadcast_message(
+    data: BroadcastRequest,
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Send a broadcast message to all logged-in users.
+    Message will appear in their TopBar until dismissed.
+    """
+    import uuid
+    
+    now = datetime.now(timezone.utc)
+    expires_at = now + timedelta(minutes=data.duration_minutes) if data.duration_minutes else None
+    
+    message = {
+        "id": str(uuid.uuid4()),
+        "message": data.message,
+        "type": data.type,
+        "created_at": now,
+        "expires_at": expires_at,
+        "created_by": admin.email
+    }
+    
+    with _broadcast_lock:
+        _broadcast_messages.appendleft(message)
+    
+    # Log the broadcast
+    add_activity_log(
+        activity_type="broadcast",
+        user_id=str(admin.id),
+        user_email=admin.email,
+        user_name=admin.full_name,
+        details=f"Broadcast: {data.message[:50]}..."
+    )
+    
+    return {
+        "ok": True,
+        "message": "Broadcast sent successfully",
+        "broadcast_id": message["id"]
+    }
+
+
+@router.get("/broadcast/active")
+async def get_active_broadcasts(
+    admin: UserPublic = Depends(require_admin)
+):
+    """Get all active broadcast messages (admin only)"""
+    now = datetime.now(timezone.utc)
+    
+    with _broadcast_lock:
+        active = [
+            m for m in _broadcast_messages
+            if m.get("expires_at") is None or m["expires_at"] > now
+        ]
+    
+    return {
+        "messages": active,
+        "total": len(active)
+    }
+
+
+@router.delete("/broadcast/{message_id}")
+async def delete_broadcast_message(
+    message_id: str,
+    admin: UserPublic = Depends(require_admin)
+):
+    """Delete a broadcast message"""
+    with _broadcast_lock:
+        # Find and remove the message
+        for i, m in enumerate(_broadcast_messages):
+            if m["id"] == message_id:
+                del _broadcast_messages[i]
+                return {"ok": True, "message": "Broadcast deleted"}
+    
+    raise HTTPException(status_code=404, detail="Broadcast not found")
+
+
+# User-facing endpoint (no admin required)
+@router.get("/user/messages")
+async def get_user_messages(
+    current_user: UserPublic = Depends(get_current_user)
+):
+    """
+    Get broadcast messages for the current user.
+    Excludes messages the user has already dismissed.
+    """
+    now = datetime.now(timezone.utc)
+    user_id = str(current_user.id)
+    
+    # Get user's dismissed messages
+    dismissed = _dismissed_messages.get(user_id, set())
+    
+    with _broadcast_lock:
+        messages = [
+            {
+                "id": m["id"],
+                "message": m["message"],
+                "type": m["type"],
+                "created_at": m["created_at"].isoformat(),
+            }
+            for m in _broadcast_messages
+            if m["id"] not in dismissed
+            and (m.get("expires_at") is None or m["expires_at"] > now)
+        ]
+    
+    return {
+        "messages": messages,
+        "total": len(messages)
+    }
+
+
+@router.post("/user/messages/{message_id}/dismiss")
+async def dismiss_user_message(
+    message_id: str,
+    current_user: UserPublic = Depends(get_current_user)
+):
+    """Mark a broadcast message as dismissed for this user"""
+    user_id = str(current_user.id)
+    
+    if user_id not in _dismissed_messages:
+        _dismissed_messages[user_id] = set()
+    
+    _dismissed_messages[user_id].add(message_id)
+    
+    return {"ok": True}
 
 
 @router.get("/users/live-activity")

@@ -37,6 +37,7 @@ import { useSessionTimer } from "@/hooks/useSessionTimer"
 import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
 import { SpotifyTopBarWidget } from "@/components/spotify/SpotifyTopBarWidget"
 import { AdminActivityFlash } from "@/components/admin/AdminActivityFlash"
+import { UserBroadcast } from "@/components/broadcast/UserBroadcast"
 
 /* ============================================================================
    TYPES
@@ -569,14 +570,17 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     <SearchBar />
                 </div>
 
-                {/* Center - Spotify Widget + Admin Flash (hidden on mobile) */}
+                {/* Center - Spotify Widget + Broadcasts + Admin Flash (hidden on mobile) */}
                 <div className="hidden sm:flex items-center justify-center gap-3 flex-shrink-0">
                     {isAuthenticated && <SpotifyTopBarWidget />}
+                    {isAuthenticated && <UserBroadcast />}
                     {isAuthenticated && <AdminActivityFlash />}
                 </div>
 
                 {/* Right side */}
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-1 justify-end">
+                    {/* Broadcast messages - Mobile */}
+                    {isAuthenticated && <div className="sm:hidden"><UserBroadcast /></div>}
                     {/* Admin Activity Flash - Mobile (between items) */}
                     {isAuthenticated && <div className="sm:hidden"><AdminActivityFlash /></div>}
                     {/* Session Timer - Only show on larger screens */}
