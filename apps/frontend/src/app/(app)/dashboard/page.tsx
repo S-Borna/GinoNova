@@ -942,8 +942,8 @@ export default function DashboardPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9 }}
                     >
-                        <TutorialWidget 
-                            tutorials={TUTORIALS.filter(t => 
+                        <TutorialWidget
+                            tutorials={TUTORIALS.filter(t =>
                                 t.topics.some(topic => ['linux', 'docker', 'bash', 'git'].includes(topic))
                             ).slice(0, 4)}
                             title="Lär dig mer med video"

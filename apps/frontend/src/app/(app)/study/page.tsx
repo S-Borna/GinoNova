@@ -1304,7 +1304,7 @@ export default function StudyPage() {
                         const relevantTutorials = TUTORIALS.filter(t =>
                             keywords.some(kw => t.topics.some(topic => topic.includes(kw)))
                         ).slice(0, 6)
-                        
+
                         return (
                             <TutorialSection
                                 title="📺 Plugga med video"

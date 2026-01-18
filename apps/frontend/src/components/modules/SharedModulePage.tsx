@@ -677,15 +677,15 @@ export function SharedModulePage({
                     const moduleTutorials = findTutorialsByModule(slug)
                     // Also try with common keywords based on module name
                     const keywords = moduleName.toLowerCase().split(/\s+/)
-                    const keywordTutorials = TUTORIALS.filter(t => 
-                        keywords.some(kw => 
+                    const keywordTutorials = TUTORIALS.filter(t =>
+                        keywords.some(kw =>
                             t.topics.some(topic => topic.includes(kw) || kw.includes(topic))
                         )
                     )
                     const allTutorials = [...new Map([...moduleTutorials, ...keywordTutorials].map(t => [t.id, t])).values()]
-                    
+
                     if (allTutorials.length === 0) return null
-                    
+
                     return (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

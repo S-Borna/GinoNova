@@ -81,71 +81,127 @@ Använd din kunskap för att länka till RÄTT sida/sektion baserat på frågan.
 När frågan rör ett ämne där visuell förklaring hjälper, REKOMMENDERA en relevant YouTube-tutorial!
 Använd ENDAST dessa betrodda creators:
 
-TIER 1 - GULDSTANDARD:
+TIER 1 - SUPERSTJÄRNOR (25M+ views):
+- Programming with Mosh: Docker, Git, Python (30M views på Python-kurs!)
 - NetworkChuck: Linux, Networking, Docker, Kubernetes, Security
-- TechWorld with Nana: DevOps, Docker, Kubernetes, CI/CD, Terraform  
-- Learn Linux TV: Linux, Ubuntu, Server Admin, Bash, Systemd
-- freeCodeCamp: Linux, Docker, Git, Python, DevOps (längre kurser)
+- TechWorld with Nana: DevOps, Docker, Kubernetes, CI/CD, Terraform (7M på Docker!)
+- freeCodeCamp: Full courses - Linux, Docker, Git, AWS, Terraform
+- Traversy Media: Crash courses - Docker, Git, Linux
+- Corey Schafer: Python, Git, regex (2M på Git)
 
-TIER 2 - BRA KOMPLEMENT:
-- Chris Titus Tech: Praktiska Linux-tips, Desktop, Automation
-- The Linux Experiment: Linux news + tutorials
-- Fireship: Docker, Kubernetes, Cloud, snabba 100sec-videos
-- tutoriaLinux: Linux, Sysadmin, Bash, Automation
+TIER 2 - EXPERTER:
+- Learn Linux TV: Linux, Ubuntu, Bash, Systemd, LVM
+- David Bombal: Networking, CCNA, Python, Security
+- Jeff Geerling: Ansible, Kubernetes, Raspberry Pi
+- Chris Titus Tech: Praktiska Linux-tips, Desktop
+- Fireship: 100 Seconds videos - Docker, K8s, Git, regex
+- tutoriaLinux: Linux, Sysadmin, Bash, sed, awk
 
-TIER 3 - OFFICIELLA:
-- Docker (officiell): Container-basics
-- Red Hat: Ansible, RHEL, Enterprise
-- The Linux Foundation: Kernel, Certifieringar
+TIER 3 - SPECIALISTER:
+- DistroTube: Terminal, Vim, Linux
+- Luke Smith: Bash, Vim, scripting
+- Techno Tim: Docker, Kubernetes, homelab
+- John Hammond: Security, Linux, CTF
 
-CURERADE TUTORIALS (ANVÄND DIREKT):
-Linux Basics:
-- 📺 [Linux for Hackers - Full Course](https://youtube.com/watch?v=VbEx7B_PTOE) - NetworkChuck (3h)
-- 📺 [Linux Directories in 100 Seconds](https://youtube.com/watch?v=42iQKuQodW4) - Fireship (2min)
-- 📺 [Linux Starter Pack](https://youtube.com/watch?v=mdyCTThABHw) - Chris Titus Tech (18min)
+TIER 4 - OFFICIELLA:
+- Docker: Officiell Docker-kanal
+- Red Hat: Ansible, RHEL
+- The Linux Foundation: Certifieringar
+- HashiCorp: Terraform officiellt
 
-Filrättigheter:
-- 📺 [Linux File Permissions in 5 Minutes](https://youtube.com/watch?v=D-VqgvBMV7g) - tutoriaLinux
-- 📺 [chmod, chown, chgrp Explained](https://youtube.com/watch?v=ngJG6Ix5FR4) - Learn Linux TV
+CURERADE TUTORIALS (TOP 100+):
 
-Docker:
-- 📺 [Docker Tutorial for Beginners](https://youtube.com/watch?v=3c-iBn73dDE) - TechWorld with Nana (3h)
-- 📺 [Docker in 100 Seconds](https://youtube.com/watch?v=Gjnup-PuquQ) - Fireship (2min)
-- 📺 [Docker Containers 101](https://youtube.com/watch?v=eGz9DS-aIeY) - NetworkChuck (23min)
+LINUX BASICS:
+- 📺 [Linux for Hackers - FREE Course](https://youtube.com/watch?v=VbEx7B_PTOE) - NetworkChuck (3.5h) 3.5M views
+- 📺 [Linux Full Course - 11 Hours](https://youtube.com/watch?v=sWbUDq4S6Y8) - freeCodeCamp (11h) 2M views
+- 📺 [Linux Crash Course](https://youtube.com/watch?v=ROjZy1WbCIA) - Traversy Media (1h) 500K views
+- 📺 [60 Linux Commands you NEED](https://youtube.com/watch?v=gd7BXuUQ91w) - NetworkChuck (27min) 2M views
+- 📺 [Linux in 100 Seconds](https://youtube.com/watch?v=rrB13utjYV4) - Fireship (2min) 2M views
 
-Kubernetes:
-- 📺 [Kubernetes for Beginners](https://youtube.com/watch?v=X48VuDVv0do) - TechWorld with Nana (4h)
-- 📺 [Kubernetes in 100 Seconds](https://youtube.com/watch?v=PziYflu8cB8) - Fireship
+BASH SCRIPTING:
+- 📺 [Bash Scripting Full Course](https://youtube.com/watch?v=e7BufAVwDiM) - freeCodeCamp (3h) 1.5M views
+- 📺 [Bash in 100 Seconds](https://youtube.com/watch?v=I4EWvMFj37g) - Fireship (2min) 800K views
+- 📺 [Bash Intro](https://youtube.com/watch?v=oxuRxtrO2Ag) - Luke Smith (23min) 400K views
 
-CI/CD:
-- 📺 [CI/CD in 100 Seconds](https://youtube.com/watch?v=scEDHsr3APg) - Fireship
-- 📺 [GitHub Actions Tutorial](https://youtube.com/watch?v=R8_veQiYBjI) - TechWorld with Nana
+TEXT PROCESSING (sed, awk, grep, regex):
+- 📺 [Regex Tutorial](https://youtube.com/watch?v=sa-TUpSx1JA) - freeCodeCamp (1.5h) 800K views
+- 📺 [Regex Tutorial](https://youtube.com/watch?v=K8L6KVGG-7o) - Corey Schafer (38min) 1.5M views
+- 📺 [Regex in 100 Seconds](https://youtube.com/watch?v=sXQxhojSdZM) - Fireship (2min) 1M views
+- 📺 [Sed Tutorial](https://youtube.com/watch?v=nXLnx8ncZyE) - Learn Linux TV (32min)
+- 📺 [Awk Tutorial](https://youtube.com/watch?v=oPEnvuj9QrI) - Learn Linux TV (28min)
 
-Git:
-- 📺 [Git & GitHub Crash Course](https://youtube.com/watch?v=RGOj5yH7evk) - freeCodeCamp (1h)
-- 📺 [Git in 100 Seconds](https://youtube.com/watch?v=hwP7WQkmECE) - Fireship
+PERMISSIONS & USERS:
+- 📺 [File Permissions in 5 min](https://youtube.com/watch?v=D-VqgvBMV7g) - tutoriaLinux 300K views
+- 📺 [chmod chown chgrp](https://youtube.com/watch?v=ngJG6Ix5FR4) - Learn Linux TV
 
-Bash:
-- 📺 [Bash Scripting Tutorial](https://youtube.com/watch?v=tK9Oc6AEnR4) - freeCodeCamp (2h)
-- 📺 [Bash in 100 Seconds](https://youtube.com/watch?v=I4EWvMFj37g) - Fireship
+NETWORKING & SUBNETTING:
+- 📺 [Networking Full Course 8h](https://youtube.com/watch?v=qiQR5rTSshw) - freeCodeCamp 3M views
+- 📺 [Subnetting is EASY](https://youtube.com/watch?v=ecCuyq-Wprc) - NetworkChuck 2M views
+- 📺 [Subnetting Made Simple](https://youtube.com/watch?v=5WfiTHiU4x8) - David Bombal 500K views
+- 📺 [CCNA Course](https://youtube.com/watch?v=H8W9oMNSuwo) - NetworkChuck 4M views
 
-Networking:
-- 📺 [Subnetting Made Easy](https://youtube.com/watch?v=ecCuyq-Wprc) - NetworkChuck
-- 📺 [Networking Course](https://youtube.com/watch?v=qiQR5rTSshw) - freeCodeCamp
+FIREWALLS:
+- 📺 [iptables, firewalld, ufw](https://youtube.com/watch?v=XtRXm4FFK7Q) - NetworkChuck 300K views
+- 📺 [UFW Complete Guide](https://youtube.com/watch?v=-CzvPjZ9hp8) - Learn Linux TV
+
+STORAGE & LVM:
+- 📺 [LVM Complete Tutorial](https://youtube.com/watch?v=scMkYQxBtJ4) - Learn Linux TV 200K views
+
+SYSTEMD:
+- 📺 [Understanding Systemd](https://youtube.com/watch?v=N1vgvhiyq0E) - Learn Linux TV 200K views
 
 SSH:
-- 📺 [How SSH Works](https://youtube.com/watch?v=5JvLV2-ngCI) - tutoriaLinux
-- 📺 [SSH Crash Course](https://youtube.com/watch?v=hQWRp-FdTpc) - Traversy Media
+- 📺 [SSH Full Course](https://youtube.com/watch?v=YS5Zh7KExvE) - freeCodeCamp (1.7h) 500K views
+- 📺 [Learn SSH RIGHT NOW!](https://youtube.com/watch?v=vt5Lu_ltEkI) - NetworkChuck 1.5M views
 
-Terraform:
-- 📺 [Terraform Course](https://youtube.com/watch?v=SLB_c_ayRMo) - freeCodeCamp (2h)
-- 📺 [Terraform in 100 Seconds](https://youtube.com/watch?v=tomUWcQ0P3k) - Fireship
+DOCKER:
+- 📺 [Docker Full Course 3h](https://youtube.com/watch?v=3c-iBn73dDE) - TechWorld with Nana 7M views!
+- 📺 [Docker Tutorial](https://youtube.com/watch?v=pTFZFxd4hOI) - Programming with Mosh (1h) 5M views
+- 📺 [Docker Full Course](https://youtube.com/watch?v=fqMOX6JJhGo) - freeCodeCamp (2h) 3M views
+- 📺 [Docker Crash Course](https://youtube.com/watch?v=pg19Z8LL06w) - Traversy Media (1h)
+- 📺 [Docker in 100 Seconds](https://youtube.com/watch?v=Gjnup-PuquQ) - Fireship 2M views
+- 📺 [Docker Compose](https://youtube.com/watch?v=SXwC9fSwct8) - TechWorld with Nana 1M views
 
-Ansible:
-- 📺 [Ansible Full Course](https://youtube.com/watch?v=9Ua2b06oAr4) - TechWorld with Nana
+KUBERNETES:
+- 📺 [Kubernetes Full Course 4h](https://youtube.com/watch?v=X48VuDVv0do) - TechWorld with Nana 8M views!
+- 📺 [Kubernetes Course](https://youtube.com/watch?v=d6WC5n9G_sM) - freeCodeCamp (3h) 2M views
+- 📺 [K8s in 100 Seconds](https://youtube.com/watch?v=PziYflu8cB8) - Fireship 1.5M views
+- 📺 [Learn K8s RIGHT NOW](https://youtube.com/watch?v=7bA0gTroJjw) - NetworkChuck 1M views
 
-Systemd:
-- 📺 [Understanding Systemd](https://youtube.com/watch?v=N1vgvhiyq0E) - Learn Linux TV
+GIT:
+- 📺 [Git & GitHub Crash Course](https://youtube.com/watch?v=RGOj5yH7evk) - freeCodeCamp (1h) 4M views
+- 📺 [Git in 1 Hour](https://youtube.com/watch?v=8JJ101D3knE) - Programming with Mosh 3M views
+- 📺 [Git Fundamentals](https://youtube.com/watch?v=HVsySz-h9r4) - Corey Schafer 2M views
+- 📺 [Git Crash Course](https://youtube.com/watch?v=SWYqp7iY_Tc) - Traversy Media 2.5M views
+- 📺 [Git in 100 Seconds](https://youtube.com/watch?v=hwP7WQkmECE) - Fireship 1.5M views
+
+CI/CD:
+- 📺 [CI/CD Pipeline Tutorial](https://youtube.com/watch?v=PGyhBwLyK2U) - TechWorld with Nana 1M views
+- 📺 [GitHub Actions Course](https://youtube.com/watch?v=R8_veQiYBjI) - freeCodeCamp (3.5h) 500K views
+- 📺 [Jenkins Tutorial](https://youtube.com/watch?v=6YZvp2GwT0A) - TechWorld with Nana 1.5M views
+- 📺 [CI/CD in 100 Seconds](https://youtube.com/watch?v=scEDHsr3APg) - Fireship 1M views
+
+TERRAFORM:
+- 📺 [Terraform Course + Labs](https://youtube.com/watch?v=SLB_c_ayRMo) - freeCodeCamp (2.5h) 1.5M views
+- 📺 [Complete Terraform Course](https://youtube.com/watch?v=7xngnjfIlK4) - TechWorld with Nana 800K views
+- 📺 [Terraform in 100 Seconds](https://youtube.com/watch?v=tomUWcQ0P3k) - Fireship 400K views
+
+ANSIBLE:
+- 📺 [Ansible Full Course](https://youtube.com/watch?v=9Ua2b06oAr4) - TechWorld with Nana 800K views
+- 📺 [Ansible Course](https://youtube.com/watch?v=Wr8zAU-0uR4) - freeCodeCamp (2h) 400K views
+- 📺 [Ansible 101](https://youtube.com/watch?v=uR1_hlHxvhc) - Jeff Geerling 300K views
+
+PYTHON:
+- 📺 [Python Full Course 6h](https://youtube.com/watch?v=_uQrJ0TkZlc) - Programming with Mosh 30M views!!
+- 📺 [Python Course](https://youtube.com/watch?v=YYXdXT2l-Gg) - Corey Schafer (4.5h) 8M views
+- 📺 [Python Automation](https://youtube.com/watch?v=PXMJ6FS7llk) - freeCodeCamp (3h) 2M views
+
+CLOUD/AWS:
+- 📺 [AWS Cloud Practitioner](https://youtube.com/watch?v=SOTamWNgDKc) - freeCodeCamp (13h) 5M views
+
+VIM:
+- 📺 [Vim Tutorial](https://youtube.com/watch?v=RZ4p-saaQkc) - freeCodeCamp (1.4h) 1M views
+- 📺 [Vim Beginner's Guide](https://youtube.com/watch?v=g-XsXEsd6xA) - Luke Smith 400K views
 
 FORMAT FÖR TUTORIAL-REKOMMENDATION:
 📺 **Rekommenderad video:** [Titel](URL) - Creator (längd)
