@@ -274,6 +274,7 @@ export default function QuizPage() {
         headers: {
           "Content-Type": "application/json",
           ...(token && { Authorization: `Bearer ${token}` }),
+          "Connection": "close",  // Stäng connection direkt efter svar
         },
         body: JSON.stringify({
           module_slug: selectedModule,
@@ -282,7 +283,9 @@ export default function QuizPage() {
           difficulty,
           force_new: true,
         }),
-        signal: controller.signal,  // Gör request avbrytbar
+        signal: controller.signal,
+        keepalive: false,  // Håll inte connection öppen
+        cache: "no-store",  // Ingen caching
       });
 
       clearTimeout(timeoutId);  // Rensa timeout efter lyckad request
