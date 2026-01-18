@@ -171,63 +171,63 @@ def generate_quiz(
         logger.error("❌ OpenAI client not available - check OPENAI_KEY or OPENAI_API_KEY env var")
         raise ValueError("OpenAI API key not configured")
 
-    # Enhanced prompt with DevOps examples and practical scenarios - SWEDISH
+    # Enhanced prompt with DevOps examples and practical scenarios - ENGLISH
     if quiz_type == "flashcard":
-        format_instruction = """Generera flashcards på SVENSKA i detta JSON-format:
+        format_instruction = """Generate flashcards in ENGLISH in this JSON format:
 {
   "questions": [
     {
-      "front": "Fråga eller term (PÅ SVENSKA)",
-      "back": "Svar eller definition (PÅ SVENSKA)",
-      "hint": "Valfri ledtråd (PÅ SVENSKA)"
+      "front": "Question or term (IN ENGLISH)",
+      "back": "Answer or definition (IN ENGLISH)",
+      "hint": "Optional hint (IN ENGLISH)"
     }
   ]
 }
 
-Exempel på BRA flashcard:
+Example of a GOOD flashcard:
 {
-  "front": "Vad gör kommandot 'docker run -d -p 8080:80 nginx'?",
-  "back": "Kör nginx-container i bakgrunden (detached mode) och mappar värdport 8080 till containerport 80",
-  "hint": "Tänk på -d (detached) och -p (portmappning)"
+  "front": "What does the command 'docker run -d -p 8080:80 nginx' do?",
+  "back": "Runs nginx container in detached mode (background) and maps host port 8080 to container port 80",
+  "hint": "Think about -d (detached) and -p (port mapping)"
 }
 
-Exempel på DÅLIGT flashcard (för vagt):
+Example of a BAD flashcard (too vague):
 {
   "front": "Docker",
-  "back": "Containerisering"
+  "back": "Containerization"
 }
 
-VIKTIGT: Allt innehåll ska vara på SVENSKA!"""
+IMPORTANT: All content must be in ENGLISH!"""
     else:
-        format_instruction = """Generera flervalsfrågor på SVENSKA i detta JSON-format:
+        format_instruction = """Generate multiple choice questions in ENGLISH in this JSON format:
 {
   "questions": [
     {
-      "question": "Frågetexten (PÅ SVENSKA)",
-      "options": ["A) Alternativ 1", "B) Alternativ 2", "C) Alternativ 3", "D) Alternativ 4"],
+      "question": "The question text (IN ENGLISH)",
+      "options": ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"],
       "correct": "A",
-      "explanation": "Förklaring varför detta svar är rätt (PÅ SVENSKA)"
+      "explanation": "Explanation of why this answer is correct (IN ENGLISH)"
     }
   ]
 }
 
-KRITISKT FÖR SVARSFÖRDELNING:
-- Fördela det korrekta svaret JÄMNT över A, B, C, D
-- Om du genererar 20 frågor ska ca 5 ha A rätt, 5 ha B rätt, 5 ha C rätt, 5 ha D rätt
-- ALDRIG ha mer än 30% av svaren på samma bokstav
-- Variera aktivt var det korrekta svaret placeras
+CRITICAL FOR ANSWER DISTRIBUTION:
+- Distribute correct answers EVENLY across A, B, C, D
+- If generating 20 questions, approximately 5 should have A correct, 5 B, 5 C, 5 D
+- NEVER have more than 30% of answers on the same letter
+- Actively vary where the correct answer is placed
 
-⚠️ KRITISKT FÖR SVARSLÄNGD - UNDVIK ATT AVSLÖJA RÄTT SVAR:
-- ALLA fyra svarsalternativ MÅSTE vara UNGEFÄR LIKA LÅNGA (max 20% skillnad)
-- Det korrekta svaret får INTE vara mer detaljerat eller längre än de felaktiga
-- Om rätt svar är kort (t.ex. "docker ps"), gör felaktiga svar lika korta
-- Om rätt svar behöver vara långt, gör ALLA alternativ lika långa och detaljerade
-- Felaktiga svar ska vara LIKA ÖVERTYGANDE formulerade som det korrekta
-- Undvik att bara det korrekta svaret har exempel eller detaljer
+⚠️ CRITICAL FOR ANSWER LENGTH - AVOID REVEALING THE CORRECT ANSWER:
+- ALL four answer options MUST be APPROXIMATELY THE SAME LENGTH (max 20% difference)
+- The correct answer must NOT be more detailed or longer than incorrect ones
+- If the correct answer is short (e.g., "docker ps"), make incorrect answers equally short
+- If the correct answer needs to be long, make ALL options equally long and detailed
+- Incorrect answers should be EQUALLY CONVINCING as the correct one
+- Avoid having only the correct answer include examples or details
 
-Exempel på BRA flervalsfråga:
+Example of a GOOD multiple choice question:
 {
-  "question": "Du ska deploya en Python-app med dependencies. Vilken Dockerfile-lagerordning är MEST effektiv?",
+  "question": "You need to deploy a Python app with dependencies. Which Dockerfile layer order is MOST efficient?",
   "options": [
     "A) COPY . . && RUN pip install -r requirements.txt",
     "B) COPY requirements.txt . && RUN pip install -r requirements.txt && COPY . .",
@@ -235,14 +235,14 @@ Exempel på BRA flervalsfråga:
     "D) COPY requirements.txt requirements.txt && COPY . . && RUN pip install"
   ],
   "correct": "B",
-  "explanation": "Genom att kopiera requirements.txt först kan Docker cacha pip install-lagret."
+  "explanation": "By copying requirements.txt first, Docker can cache the pip install layer."
 }
 
-VIKTIGT:
-- Generera EXAKT det antal frågor som efterfrågas - inte färre!
-- Fördela korrekta svar JÄMNT (25% A, 25% B, 25% C, 25% D)
-- Gör felaktiga svar rimliga men tydligt felaktiga
-- ALLT innehåll ska vara på SVENSKA!"""
+IMPORTANT:
+- Generate EXACTLY the number of questions requested - no fewer!
+- Distribute correct answers EVENLY (25% A, 25% B, 25% C, 25% D)
+- Make incorrect answers plausible but clearly wrong
+- ALL content must be in ENGLISH!"""
 
     focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
 
@@ -256,47 +256,129 @@ VIKTIGT:
 
     variation_seed = f"""
 
-🔥 KRITISKT: Generera HELT NYA och UNIKA frågor för denna session!
+🔥 CRITICAL: Generate COMPLETELY NEW and UNIQUE questions for this session!
 
 Session Identifiers:
 - Unique ID: {unique_id}
 - Random Seed: {random_seed}
 - Timestamp: {timestamp}
+- Difficulty Level: {difficulty.upper()}
 
-Instruktioner för UNIKA frågor:
-1. UPPREPA ALDRIG frågor från tidigare sessions
-2. Välj OLIKA koncept än du normalt skulle välja
-3. Utforska OVANLIGA aspekter av innehållet
-4. Använd VARIERANDE scenarion och exempel
-5. Var KREATIV och UNDVIK uppenbara frågor
-6. Fokusera på PRAKTISKA edge cases och verkliga situationer
+⚠️ DIFFICULTY ENFORCEMENT:
+The selected difficulty is "{difficulty.upper()}". You MUST:
+- Generate questions ONLY appropriate for {difficulty.upper()} level
+- Questions for BEGINNER must be simpler than INTERMEDIATE
+- Questions for INTERMEDIATE must be simpler than ADVANCED
+- A question suitable for BEGINNER should NEVER appear in ADVANCED quiz
+- The same topic can appear across difficulties but with VERY different complexity
 
-Om du har genererat frågor för denna modul tidigare:
-- Välj HELT ANDRA topics från innehållet
-- Använd OLIKA kommandon och verktyg
-- Skapa NYA scenarion som du inte använt förut
+Instructions for UNIQUE questions:
+1. NEVER repeat questions from previous sessions
+2. Choose DIFFERENT concepts than you normally would
+3. Explore UNUSUAL aspects of the content
+4. Use VARYING scenarios and examples
+5. Be CREATIVE and AVOID obvious questions
+6. Focus on PRACTICAL edge cases and real-world situations
+7. ⚠️ NEVER have duplicate questions within the same quiz - each question MUST be different
+8. ⚠️ Ensure ALL questions match the {difficulty.upper()} difficulty level STRICTLY
 
-Skriv ALLT på SVENSKA!"""
+If you have generated questions for this module before:
+- Choose COMPLETELY DIFFERENT topics from the content
+- Use DIFFERENT commands and tools
+- Create NEW scenarios you haven't used before
 
-    # Determine difficulty-specific instructions - SWEDISH
+Write EVERYTHING in ENGLISH!"""
+
+    # Determine difficulty-specific instructions - ENGLISH
+    # These are VERY different to ensure distinct question sets per difficulty
     difficulty_instructions = {
-        "beginner": """Nybörjarnivå frågor ska:
-- Testa grundläggande koncept och definitioner
-- Använda enkelt, tydligt språk
-- Fokusera på "vad" och "när" frågor
-- Exempel: "Vilket kommando listar körande containers?" (docker ps)""",
-        "intermediate": """Mellannivå frågor ska:
-- Testa praktisk tillämpning och felsökning
-- Kräva förståelse för hur saker fungerar tillsammans
-- Fokusera på "hur" och "varför" frågor
-- Inkludera verkliga scenarion
-- Exempel: "Din Docker-container kan inte ansluta till databasen. Vad är den mest troliga orsaken?" (nätverkskonfiguration)""",
-        "advanced": """Avancerad nivå frågor ska:
-- Testa djup förståelse och specialfall
-- Kräva kunskap om best practices och avvägningar
-- Fokusera på "vad händer om" och optimeringsscenarier
-- Inkludera komplexa flerstegsproblem
-- Exempel: "Du behöver skala en stateless webbapp för att hantera 10x trafik. Vilken approach minimerar latens?" (horisontell skalning med load balancer)"""
+        "beginner": """🟢 BEGINNER LEVEL - STRICTLY FOLLOW THESE RULES:
+
+Question characteristics:
+- Test BASIC concepts, definitions, and simple facts
+- Use simple, clear, straightforward language
+- Focus on "what is" and "which command" questions
+- Single-step problems only - NO multi-step reasoning
+- Test recognition and recall, NOT analysis
+
+Topic restrictions for BEGINNER:
+- Basic command syntax (ls, cd, pwd, cat, echo)
+- Simple file operations (create, copy, move, delete)
+- Basic concepts (what is a container, what is a process)
+- Definition questions (what does X mean)
+
+⚠️ FORBIDDEN for beginner level:
+- Troubleshooting scenarios
+- "Best practice" questions
+- Performance optimization
+- Security implications
+- Multi-step procedures
+- Edge cases or exceptions
+
+Example GOOD beginner question:
+"Which command displays the current working directory?"
+A) pwd  B) cwd  C) dir  D) path
+
+Example BAD beginner question (too complex):
+"Your Docker container fails to start. What should you check first?" """,
+
+        "intermediate": """🟡 INTERMEDIATE LEVEL - STRICTLY FOLLOW THESE RULES:
+
+Question characteristics:
+- Test practical application and basic troubleshooting
+- Require understanding of how components work together
+- Focus on "how to" and "why does" questions
+- Include realistic workplace scenarios
+- Test understanding, NOT just recall
+
+Topic restrictions for INTERMEDIATE:
+- Command combinations and pipelines
+- Basic troubleshooting (why doesn't X work)
+- Configuration and setup procedures
+- Comparing similar tools/approaches
+- Understanding output and logs
+
+⚠️ FORBIDDEN for intermediate level:
+- Simple definition questions (those are beginner)
+- Complex optimization scenarios (those are advanced)
+- Multi-system architecture decisions
+- Security hardening beyond basics
+
+Example GOOD intermediate question:
+"Your colleague runs 'docker ps' but doesn't see their container. It was running yesterday. What is the most likely explanation?"
+A) Container crashed  B) Docker daemon stopped  C) Container was deleted  D) Network issue
+
+Example BAD intermediate question (too simple):
+"What command lists files?" """,
+
+        "advanced": """🔴 ADVANCED LEVEL - STRICTLY FOLLOW THESE RULES:
+
+Question characteristics:
+- Test deep understanding, edge cases, and expert knowledge
+- Require knowledge of best practices and trade-offs
+- Focus on "what if", optimization, and architecture decisions
+- Include complex multi-step problems
+- Test analysis and synthesis, NOT just understanding
+
+Topic restrictions for ADVANCED:
+- Performance tuning and optimization
+- Security hardening and best practices
+- Architecture decisions and trade-offs
+- Edge cases and failure scenarios
+- Production-grade configurations
+- Debugging complex issues
+
+⚠️ FORBIDDEN for advanced level:
+- Simple "what is" questions (those are beginner)
+- Basic troubleshooting (that's intermediate)
+- Questions answerable by reading documentation once
+
+Example GOOD advanced question:
+"You're designing a CI/CD pipeline for a microservices app with 50 services. Which strategy minimizes deployment risk while maximizing deployment frequency?"
+A) Blue-green with canary  B) Rolling updates only  C) Big-bang releases  D) Feature flags only
+
+Example BAD advanced question (too simple):
+"What does the -d flag do in docker run?" """
     }
 
     # Increase content limit from 4000 to 8000 chars for better context
@@ -304,57 +386,86 @@ Skriv ALLT på SVENSKA!"""
     if len(content) > 8000:
         content_preview += "\n\n[... content truncated for token limits ...]"
 
-    # Enhanced system prompt with DevOps expertise - SWEDISH
-    system_prompt = """Du är en expert DevOps-instruktör med 10+ års erfarenhet av att undervisa Linux, Docker, Kubernetes, CI/CD och molninfrastruktur.
+    # Enhanced system prompt with DevOps expertise - ENGLISH
+    system_prompt = """You are an expert DevOps instructor creating quiz questions.
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA. Alla frågor, svar, förklaringar och hints ska vara på svenska.
+🚨 ABSOLUTE RULE #1: BASE ALL QUESTIONS ON THE PROVIDED CONTENT ONLY!
+- You MUST generate questions EXCLUSIVELY from the module content provided below
+- NEVER invent topics, commands, or concepts not mentioned in the content
+- If the content is about Docker, ask about Docker - NOT about Kubernetes unless mentioned
+- If the content is about file permissions, ask about permissions - NOT about networking unless mentioned
+- Every question MUST be directly traceable to something in the provided content
 
-Dina quiz-frågor ska:
-1. Testa PRAKTISK förståelse, inte bara memorering
-2. Reflektera VERKLIGA scenarion som DevOps-ingenjörer möter dagligen
-3. Inkludera rimliga felaktiga svar som testar förståelse av vanliga misstag
-4. Ge tydliga, handlingsbara förklaringar som hjälper studenter lära sig
-5. Fokusera på koncept som är viktiga i produktionsmiljöer
+🚨 ABSOLUTE RULE #2: GENERATE IN ENGLISH ONLY!
+- All questions, answers, explanations must be in English
 
-Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
+Your quiz questions should:
+1. Test understanding of concepts ACTUALLY PRESENT in the provided content
+2. Use examples and scenarios that relate to the module's specific topics
+3. Include plausible incorrect answers based on common mistakes for THAT topic
+4. Provide explanations that reference the module content
 
-    # Build enhanced user prompt - SWEDISH
-    difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
+Return ONLY valid JSON, no markdown formatting, no extra text."""
+
+    # Build enhanced user prompt - ENGLISH
+    difficulty_label = {"beginner": "beginner", "intermediate": "intermediate", "advanced": "advanced"}.get(difficulty, "intermediate")
     difficulty_guide = difficulty_instructions.get(difficulty, difficulty_instructions["intermediate"])
 
-    prompt = f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
+    prompt = f"""You are creating {difficulty_label} level quiz content for the DevOps module: "{module_title}"
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA - frågor, svar, förklaringar, hints.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 CONTENT-BASED GENERATION - READ THIS CAREFULLY!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The module content below is your ONLY source of truth. You MUST:
+
+✅ REQUIRED:
+- Generate questions ONLY about topics explicitly mentioned in the content
+- Use commands, tools, and concepts that appear in the content
+- Reference scenarios and examples similar to those in the content
+- Match the technical domain of the content (if it's about SSH, ask about SSH)
+
+❌ FORBIDDEN:
+- Inventing topics not present in the content
+- Asking about tools/commands not mentioned in the content
+- Assuming the content covers general DevOps when it's specific
+- Adding your own "common knowledge" that isn't in the provided text
+
+DIFFICULTY LEVEL: {difficulty_label.upper()}
+Apply this difficulty to the content topics - don't change WHAT you ask about, 
+change HOW COMPLEX the questions are about those same topics.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 MODULE CONTENT (YOUR ONLY SOURCE):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{content_preview}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {difficulty_guide}
 
-Baserat på detta modulinnehåll:
-{content_preview}
-
-⚠️ KRITISKT: Generera EXAKT {count} frågor - inte färre, inte fler!
+⚠️ CRITICAL: Generate EXACTLY {count} questions - no fewer, no more!
+⚠️ CRITICAL: ALL questions must be about topics IN THE CONTENT ABOVE!
 
 {format_instruction}
 
-Kvalitetsriktlinjer:
-- Varje fråga ska testa ett specifikt, viktigt koncept från innehållet
-- Felaktiga svar ska vara rimliga men tydligt felaktiga (inga lurigfrågor)
-- Förklaringar ska vara pedagogiska och hjälpa studenter förstå konceptet
-- För flerval: Svarsalternativen randomiseras efteråt, fokusera på kvalitet
-- För flashcards: Framsidan ska vara specifik, baksidan ska vara heltäckande men koncis
-- Undvik frågor som kan besvaras utan att läsa innehållet
-- Prioritera frågor om praktisk tillämpning över ren memorering
-- ⚠️ ALLA svarsalternativ ska vara LIKA LÅNGA - rätt svar får INTE sticka ut genom längd/detaljer
+Quality guidelines:
+- Each question MUST test a concept that appears in the module content above
+- If a topic isn't in the content, DO NOT ask about it
+- Incorrect answers should be plausible alternatives within the content's domain
+- Explanations should ideally reference the module content
+- ⚠️ ALL answer options must be EQUAL LENGTH
 
-VIKTIGT:
-1. Generera EXAKT {count} frågor (detta är ett KRAV)
-2. ALLT innehåll på SVENSKA!
+IMPORTANT:
+1. Generate EXACTLY {count} questions (this is a REQUIREMENT)
+2. ALL content in ENGLISH!
+3. ⚠️ ONLY ask about topics from the provided module content!
 {focus_text}{variation_seed}
 
-Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text."""
+Return ONLY valid JSON, no markdown code blocks, no extra text."""
 
     try:
         # Higher temperature when not caching (force_new mode) for more variation
-        temperature = 0.85 if not use_cache else 0.75
+        temperature = 0.95 if not use_cache else 0.8
 
         # Scale max_tokens based on question count - INCREASED for more questions
         # MCQ: ~250 tokens per question, Flashcard: ~150 tokens per question
@@ -529,7 +640,7 @@ async def generate_quiz_async(
     logger.info(f"🚀 Generating {count} questions in {len(batches)} parallel batches: {batches}")
 
     # Build prompts
-    temperature = 0.85 if not use_cache else 0.75
+    temperature = 0.95 if not use_cache else 0.8
 
     # System prompt (shared)
     system_prompt = _build_system_prompt()
@@ -679,18 +790,18 @@ async def generate_quiz_async(
 
 def _build_system_prompt() -> str:
     """Build the system prompt for quiz generation."""
-    return """Du är en expert DevOps-instruktör med 10+ års erfarenhet av att undervisa Linux, Docker, Kubernetes, CI/CD och molninfrastruktur.
+    return """You are an expert DevOps instructor creating quiz questions.
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA. Alla frågor, svar, förklaringar och hints ska vara på svenska.
+🚨 ABSOLUTE RULE #1: BASE ALL QUESTIONS ON THE PROVIDED CONTENT ONLY!
+- You MUST generate questions EXCLUSIVELY from the module content provided
+- NEVER invent topics, commands, or concepts not mentioned in the content
+- If the content is about Docker, ask about Docker - NOT about Kubernetes unless mentioned
+- Every question MUST be directly traceable to something in the provided content
 
-Dina quiz-frågor ska:
-1. Testa PRAKTISK förståelse, inte bara memorering
-2. Reflektera VERKLIGA scenarion som DevOps-ingenjörer möter dagligen
-3. Inkludera rimliga felaktiga svar som testar förståelse av vanliga misstag
-4. Ge tydliga, handlingsbara förklaringar som hjälper studenter lära sig
-5. Fokusera på koncept som är viktiga i produktionsmiljöer
+🚨 ABSOLUTE RULE #2: GENERATE IN ENGLISH ONLY!
+- All questions, answers, explanations must be in English
 
-Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
+Return ONLY valid JSON, no markdown formatting, no extra text."""
 
 
 def _build_user_prompt(
@@ -707,58 +818,83 @@ def _build_user_prompt(
     """Build the user prompt for quiz generation."""
 
     if quiz_type == "flashcard":
-        format_instruction = """Generera flashcards på SVENSKA i detta JSON-format:
+        format_instruction = """Generate flashcards in ENGLISH in this JSON format:
 {
   "questions": [
     {
-      "front": "Fråga eller term (PÅ SVENSKA)",
-      "back": "Svar eller definition (PÅ SVENSKA)",
-      "hint": "Valfri ledtråd (PÅ SVENSKA)"
+      "front": "Question or term (IN ENGLISH)",
+      "back": "Answer or definition (IN ENGLISH)",
+      "hint": "Optional hint (IN ENGLISH)"
     }
   ]
 }"""
     else:
-        format_instruction = """Generera flervalsfrågor på SVENSKA i detta JSON-format:
+        format_instruction = """Generate multiple choice questions in ENGLISH in this JSON format:
 {
   "questions": [
     {
-      "question": "Frågetexten (PÅ SVENSKA)",
-      "options": ["A) Alternativ 1", "B) Alternativ 2", "C) Alternativ 3", "D) Alternativ 4"],
+      "question": "The question text (IN ENGLISH)",
+      "options": ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"],
       "correct": "A",
-      "explanation": "Förklaring varför detta svar är rätt (PÅ SVENSKA)"
+      "explanation": "Explanation of why this answer is correct (IN ENGLISH)"
     }
   ]
 }
 
-KRITISKT:
-- Fördela korrekta svar JÄMNT över A, B, C, D
-- ALLA svarsalternativ ska vara UNGEFÄR LIKA LÅNGA"""
+CRITICAL:
+- Distribute correct answers EVENLY across A, B, C, D
+- ALL answer options should be APPROXIMATELY THE SAME LENGTH"""
 
-    difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
-    focus_text = f"\nFokusera specifikt på: {focus_area}" if focus_area else ""
+    difficulty_label = {"beginner": "beginner", "intermediate": "intermediate", "advanced": "advanced"}.get(difficulty, "intermediate")
+    focus_text = f"\nFocus specifically on: {focus_area}" if focus_area else ""
 
     batch_instruction = ""
     if total_batches > 1:
         batch_instruction = f"""
 
-🔀 BATCH {batch_number} av {total_batches}
+🔀 BATCH {batch_number} of {total_batches}
 Unique seed: {unique_seed}
-Generera UNIKA frågor som INTE överlappar med andra batchar.
-Fokusera på OLIKA aspekter av innehållet för denna batch."""
+Generate UNIQUE questions that DO NOT overlap with other batches.
+Focus on DIFFERENT aspects of the content for this batch."""
 
-    return f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
+    # Add difficulty-specific instructions for async batch generation
+    difficulty_guide = ""
+    if difficulty == "beginner":
+        difficulty_guide = """
+🟢 BEGINNER LEVEL - Apply to the content topics:
+- Simple "what is" and "which command" questions about topics IN THE CONTENT
+- NO troubleshooting, NO optimization"""
+    elif difficulty == "intermediate":
+        difficulty_guide = """
+🟡 INTERMEDIATE LEVEL - Apply to the content topics:
+- Practical application and basic troubleshooting about topics IN THE CONTENT
+- "How to" and "why does" questions"""
+    else:  # advanced
+        difficulty_guide = """
+🔴 ADVANCED LEVEL - Apply to the content topics:
+- Deep understanding, edge cases, optimization about topics IN THE CONTENT
+- Architecture decisions and trade-offs"""
 
-VIKTIGT: Generera ALLT innehåll på SVENSKA.
+    return f"""You are creating {difficulty_label.upper()} level quiz content for the DevOps module: "{module_title}"
 
-Baserat på detta modulinnehåll:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 CONTENT-BASED GENERATION REQUIRED!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ ONLY ask about topics explicitly in the content below
+❌ NEVER invent topics not present in the content
+{difficulty_guide}
+
+📚 MODULE CONTENT (YOUR ONLY SOURCE):
 {content}
 
-⚠️ KRITISKT: Generera EXAKT {count} frågor - inte färre, inte fler!
+⚠️ CRITICAL: Generate EXACTLY {count} questions from THE CONTENT ABOVE!
+⚠️ Apply {difficulty_label.upper()} difficulty to these content topics!
 
 {format_instruction}
 {focus_text}{batch_instruction}
 
-Returnera ENDAST giltig JSON."""
+Return ONLY valid JSON."""
 
 
 def get_module_content_for_quiz(module_slug: str) -> Optional[str]:
