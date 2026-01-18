@@ -1,10 +1,10 @@
 "use client"
 
 /**
- * Admin v2 Layout - Sidebar navigation
+ * Admin v2 Layout - Sidebar navigation with mobile support
  */
 
-import { ReactNode } from "react"
+import { ReactNode, useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -14,7 +14,9 @@ import {
     Bot,
     Settings,
     ChevronLeft,
-    Shield
+    Shield,
+    Menu,
+    X
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/AuthProvider"
@@ -30,6 +32,21 @@ const navItems = [
 export default function AdminV2Layout({ children }: { children: ReactNode }) {
     const pathname = usePathname()
     const { user, loading } = useAuth()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
+
+    // Close sidebar when route changes (mobile)
+    useEffect(() => {
+        setSidebarOpen(false)
+    }, [pathname])
+
+    // Close sidebar on escape key
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setSidebarOpen(false)
+        }
+        document.addEventListener("keydown", handleEscape)
+        return () => document.removeEventListener("keydown", handleEscape)
+    }, [])
 
     // Show loading state while checking auth
     if (loading) {
@@ -62,11 +79,52 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-white flex">
-            {/* Sidebar */}
-            <aside className="w-64 bg-zinc-900/50 border-r border-zinc-800 flex flex-col">
+        <div className="min-h-screen bg-zinc-950 text-white flex flex-col md:flex-row">
+            {/* Mobile Header */}
+            <header className="md:hidden flex items-center justify-between p-4 bg-zinc-900/80 border-b border-zinc-800 sticky top-0 z-40">
+                <div className="flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-purple-500" />
+                    <span className="font-bold">Admin</span>
+                </div>
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="p-2 rounded-lg hover:bg-zinc-800 transition-colors"
+                    aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+                >
+                    {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+            </header>
+
+            {/* Mobile Overlay */}
+            {sidebarOpen && (
+                <div
+                    className="md:hidden fixed inset-0 bg-black/60 z-40"
+                    onClick={() => setSidebarOpen(false)}
+                    aria-hidden="true"
+                />
+            )}
+
+            {/* Sidebar - Hidden on mobile, slide-in when open */}
+            <aside className={cn(
+                "bg-zinc-900/95 md:bg-zinc-900/50 border-r border-zinc-800 flex flex-col",
+                // Desktop: always visible, fixed width
+                "md:w-64 md:relative md:translate-x-0",
+                // Mobile: fixed overlay, slide in/out
+                "fixed inset-y-0 left-0 w-72 z-50 transform transition-transform duration-300 ease-in-out",
+                sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            )}>
                 {/* Header */}
                 <div className="p-4 border-b border-zinc-800">
+                    {/* Mobile close button */}
+                    <div className="md:hidden flex justify-end mb-2">
+                        <button
+                            onClick={() => setSidebarOpen(false)}
+                            className="p-1 rounded hover:bg-zinc-800"
+                            aria-label="Close sidebar"
+                        >
+                            <X className="w-5 h-5 text-zinc-400" />
+                        </button>
+                    </div>
                     <Link href="/dashboard" className="flex items-center gap-2 text-zinc-400 hover:text-white text-sm mb-3">
                         <ChevronLeft className="w-4 h-4" />
                         Back to App
@@ -78,7 +136,7 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="flex-1 p-3">
+                <nav className="flex-1 p-3 overflow-y-auto">
                     <ul className="space-y-1">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href ||
@@ -89,11 +147,12 @@ export default function AdminV2Layout({ children }: { children: ReactNode }) {
                                     <Link
                                         href={item.href}
                                         className={cn(
-                                            "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+                                            "flex items-center gap-3 px-3 py-3 md:py-2 rounded-lg transition-colors",
                                             isActive
                                                 ? "bg-purple-600 text-white"
                                                 : "text-zinc-400 hover:text-white hover:bg-zinc-800"
                                         )}
+                                        onClick={() => setSidebarOpen(false)}
                                     >
                                         <item.icon className="w-5 h-5" />
                                         {item.label}
