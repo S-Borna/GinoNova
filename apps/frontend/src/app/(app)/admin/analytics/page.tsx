@@ -261,7 +261,7 @@ export default function AdminV2Analytics() {
         setError(null)
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin/analytics?range=${timeRange}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/analytics?range=${timeRange}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 

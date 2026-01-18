@@ -223,7 +223,7 @@ export default function AdminExamStatsPage() {
 
         try {
             const res = await fetch(
-                `${API_BASE_URL}/api/admin/exam-stats?range=${timeRange}`,
+                `${API_BASE_URL}/api/admin/v2/exam-stats?range=${timeRange}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             )
 
@@ -251,7 +251,7 @@ export default function AdminExamStatsPage() {
         setDeleting(userId)
         try {
             const res = await fetch(
-                `${API_BASE_URL}/api/admin/exam-stats/user/${userId}`,
+                `${API_BASE_URL}/api/admin/v2/exam-stats/user/${userId}`,
                 {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` }

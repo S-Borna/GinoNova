@@ -410,7 +410,7 @@ export default function AdminV2Users() {
             if (statusFilter !== "all") params.set("status", statusFilter)
             if (roleFilter !== "all") params.set("role", roleFilter)
 
-            const res = await fetch(`${API_BASE_URL}/api/admin/users?${params}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/users?${params}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 
@@ -499,7 +499,7 @@ export default function AdminV2Users() {
                     description: user.is_admin
                         ? `Remove admin privileges from ${user.email}?`
                         : `Grant admin privileges to ${user.email}?`,
-                    action: () => executeAction(action, `/api/admin/users/${user.id}/toggle-admin`),
+                    action: () => executeAction(action, `/api/admin/v2/users/${user.id}/toggle-admin`),
                     confirmLabel: user.is_admin ? "Remove Admin" : "Make Admin",
                     confirmColor: user.is_admin ? "red" : "purple"
                 })
@@ -512,7 +512,7 @@ export default function AdminV2Users() {
                     description: user.is_active
                         ? `Deactivate ${user.email}? They will not be able to access the platform.`
                         : `Activate ${user.email}? They will regain access to the platform.`,
-                    action: () => executeAction(action, `/api/admin/users/${user.id}`, "PUT", { is_active: !user.is_active }),
+                    action: () => executeAction(action, `/api/admin/v2/users/${user.id}`, "PUT", { is_active: !user.is_active }),
                     confirmLabel: user.is_active ? "Deactivate" : "Activate",
                     confirmColor: user.is_active ? "red" : "green"
                 })
@@ -523,7 +523,7 @@ export default function AdminV2Users() {
                     isOpen: true,
                     title: "Force Logout",
                     description: `Force logout ${user.email}?\n\nThey will need to log in again.`,
-                    action: () => executeAction(action, `/api/admin/users/${user.id}/force-logout`),
+                    action: () => executeAction(action, `/api/admin/v2/users/${user.id}/force-logout`),
                     confirmLabel: "Force Logout",
                     confirmColor: "red"
                 })
@@ -535,7 +535,7 @@ export default function AdminV2Users() {
                         isOpen: true,
                         title: "Unban User",
                         description: `Unban ${user.email}? They will be able to access the platform again.`,
-                        action: () => executeAction(action, `/api/admin/users/${user.id}/unban`, "POST", {}),
+                        action: () => executeAction(action, `/api/admin/v2/users/${user.id}/unban`, "POST", {}),
                         confirmLabel: "Unban User",
                         confirmColor: "green"
                     })
@@ -544,7 +544,7 @@ export default function AdminV2Users() {
                         isOpen: true,
                         title: "🚫 Ban User",
                         description: `Ban ${user.email}?\n\nThis will immediately log them out and prevent future logins.`,
-                        action: () => executeAction(action, `/api/admin/users/${user.id}/ban`, "POST", {}),
+                        action: () => executeAction(action, `/api/admin/v2/users/${user.id}/ban`, "POST", {}),
                         confirmLabel: "Ban User",
                         confirmColor: "red"
                     })
@@ -556,7 +556,7 @@ export default function AdminV2Users() {
                     isOpen: true,
                     title: "⚠️ Delete User Permanently",
                     description: `DELETE ${user.email} PERMANENTLY?\n\nThis action cannot be undone. All user data will be lost.`,
-                    action: () => executeAction(action, `/api/admin/users/${user.id}`, "DELETE", {}),
+                    action: () => executeAction(action, `/api/admin/v2/users/${user.id}`, "DELETE", {}),
                     confirmLabel: "Delete Forever",
                     confirmColor: "red"
                 })

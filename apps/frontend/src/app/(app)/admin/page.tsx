@@ -324,10 +324,10 @@ export default function AdminV2Dashboard() {
             const fetchOptions = { headers: { Authorization: `Bearer ${token}` } }
 
             const [statsRes, activityRes, healthRes, activityLogRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/api/admin/stats/overview`, fetchOptions),
-                fetch(`${API_BASE_URL}/api/admin/stats/activity?days=7`, fetchOptions),
-                fetch(`${API_BASE_URL}/api/admin/stats/system-health`, fetchOptions),
-                fetch(`${API_BASE_URL}/api/admin/activity-log?limit=20`, fetchOptions)
+                fetch(`${API_BASE_URL}/api/admin/v2/stats/overview`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/v2/stats/activity?days=7`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/v2/stats/system-health`, fetchOptions),
+                fetch(`${API_BASE_URL}/api/admin/v2/activity-log?limit=20`, fetchOptions)
             ])
 
             if (statsRes.ok) {

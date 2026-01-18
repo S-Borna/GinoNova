@@ -115,7 +115,7 @@ function OverviewTab({ user, onUpdate }: { user: UserDetail, onUpdate: () => voi
 
         setLoading(true)
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin/users/${user.id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${user.id}`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -279,7 +279,7 @@ function ActivityTab({ userId }: { userId: string }) {
             if (!token) return
 
             try {
-                const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/activity`, {
+                const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${userId}/activity`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
 
@@ -361,7 +361,7 @@ function LearningTab({ userId }: { userId: string }) {
             if (!token) return
 
             try {
-                const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/learning`, {
+                const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${userId}/learning`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
 
@@ -475,7 +475,7 @@ function AIUsageTab({ userId }: { userId: string }) {
             if (!token) return
 
             try {
-                const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/ai-usage`, {
+                const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${userId}/ai-usage`, {
                     headers: { Authorization: `Bearer ${token}` }
                 })
 
@@ -587,7 +587,7 @@ export default function AdminV2UserDetail() {
         if (!token) return
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
 
@@ -612,7 +612,7 @@ export default function AdminV2UserDetail() {
         setActionLoading(true)
 
         try {
-            const res = await fetch(`${API_BASE_URL}/api/admin/users/${userId}/${action}`, {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/users/${userId}/${action}`, {
                 method,
                 headers: { Authorization: `Bearer ${token}` }
             })
