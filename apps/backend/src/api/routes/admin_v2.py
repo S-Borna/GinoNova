@@ -36,6 +36,15 @@ _broadcast_lock = threading.Lock()
 # Track which users dismissed which messages
 _dismissed_messages: dict = {}  # {user_id: set(message_ids)}
 
+# Admin online status tracking
+_admin_last_heartbeat: datetime = None
+_admin_heartbeat_lock = threading.Lock()
+ADMIN_ONLINE_THRESHOLD_SECONDS = 60  # Admin considered online if heartbeat within 60s
+
+# User→Admin messages (max 50 messages)
+_user_messages: deque = deque(maxlen=50)
+_user_messages_lock = threading.Lock()
+
 
 class ActivityLogEntry(BaseModel):
     id: str
@@ -520,6 +529,154 @@ async def dismiss_user_message(
     _dismissed_messages[user_id].add(message_id)
 
     return {"ok": True}
+
+
+# =============================================================================
+# ADMIN ONLINE STATUS & USER→ADMIN MESSAGING
+# =============================================================================
+
+class UserMessageRequest(BaseModel):
+    message: str
+    subject: str = "General"
+
+
+class UserMessage(BaseModel):
+    id: str
+    user_id: str
+    user_email: str
+    user_name: Optional[str]
+    subject: str
+    message: str
+    timestamp: datetime
+    read: bool = False
+
+
+@router.get("/status/online")
+async def get_admin_online_status():
+    """
+    Check if admin is online (public endpoint for all authenticated users).
+    Returns True if admin sent a heartbeat within the last 60 seconds.
+    """
+    global _admin_last_heartbeat
+
+    with _admin_heartbeat_lock:
+        if _admin_last_heartbeat is None:
+            return {"online": False, "message": "Admin is currently offline"}
+
+        now = datetime.now(timezone.utc)
+        if _admin_last_heartbeat.tzinfo is None:
+            _admin_last_heartbeat = _admin_last_heartbeat.replace(tzinfo=timezone.utc)
+
+        seconds_since_heartbeat = (now - _admin_last_heartbeat).total_seconds()
+
+        is_online = seconds_since_heartbeat < ADMIN_ONLINE_THRESHOLD_SECONDS
+
+        return {
+            "online": is_online,
+            "message": "Admin is online" if is_online else "Admin is currently offline"
+        }
+
+
+@router.post("/status/heartbeat")
+async def admin_heartbeat(
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Admin heartbeat - call this periodically to indicate admin is online.
+    Should be called every ~30 seconds from admin dashboard.
+    """
+    global _admin_last_heartbeat
+
+    with _admin_heartbeat_lock:
+        _admin_last_heartbeat = datetime.now(timezone.utc)
+
+    return {"ok": True, "timestamp": _admin_last_heartbeat.isoformat()}
+
+
+@router.post("/contact/message")
+async def send_message_to_admin(
+    request: UserMessageRequest,
+    current_user: UserPublic = Depends(get_current_user)
+):
+    """
+    Send a message to admin (from any authenticated user).
+    Messages are stored in-memory and shown in admin dashboard.
+    """
+    import uuid
+
+    message = {
+        "id": str(uuid.uuid4()),
+        "user_id": str(current_user.id),
+        "user_email": current_user.email,
+        "user_name": getattr(current_user, 'full_name', None),
+        "subject": request.subject,
+        "message": request.message,
+        "timestamp": datetime.now(timezone.utc),
+        "read": False
+    }
+
+    with _user_messages_lock:
+        _user_messages.appendleft(message)
+
+    # Also add to activity log for admin notification
+    add_activity_log(
+        activity_type="user_message",
+        user_id=str(current_user.id),
+        user_email=current_user.email,
+        user_name=getattr(current_user, 'full_name', None),
+        details=f"New message: {request.subject}"
+    )
+
+    return {"ok": True, "message_id": message["id"]}
+
+
+@router.get("/contact/messages")
+async def get_user_messages(
+    unread_only: bool = Query(False, description="Only return unread messages"),
+    admin: UserPublic = Depends(require_admin)
+):
+    """Get all user messages (admin only)"""
+    with _user_messages_lock:
+        messages = list(_user_messages)
+
+    if unread_only:
+        messages = [m for m in messages if not m.get("read", False)]
+
+    return {
+        "messages": messages,
+        "total": len(messages),
+        "unread": len([m for m in messages if not m.get("read", False)])
+    }
+
+
+@router.post("/contact/messages/{message_id}/read")
+async def mark_message_read(
+    message_id: str,
+    admin: UserPublic = Depends(require_admin)
+):
+    """Mark a user message as read (admin only)"""
+    with _user_messages_lock:
+        for msg in _user_messages:
+            if msg["id"] == message_id:
+                msg["read"] = True
+                return {"ok": True}
+
+    raise HTTPException(status_code=404, detail="Message not found")
+
+
+@router.delete("/contact/messages/{message_id}")
+async def delete_user_message(
+    message_id: str,
+    admin: UserPublic = Depends(require_admin)
+):
+    """Delete a user message (admin only)"""
+    with _user_messages_lock:
+        for i, msg in enumerate(_user_messages):
+            if msg["id"] == message_id:
+                del _user_messages[i]
+                return {"ok": True}
+
+    raise HTTPException(status_code=404, detail="Message not found")
 
 
 @router.get("/users/live-activity")

@@ -37,6 +37,7 @@ import { useSessionTimer } from "@/hooks/useSessionTimer"
 import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
 import { SpotifyTopBarWidget } from "@/components/spotify/SpotifyTopBarWidget"
 import { AdminActivityFlash } from "@/components/admin/AdminActivityFlash"
+import { AdminStatusWidget } from "@/components/admin/AdminStatusWidget"
 import { UserBroadcast } from "@/components/broadcast/UserBroadcast"
 
 /* ============================================================================
@@ -585,6 +586,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     {isAuthenticated && <div className="sm:hidden"><AdminActivityFlash /></div>}
                     {/* Session Timer - Only show on larger screens */}
                     {isAuthenticated && <div className="hidden md:block"><SessionTimerDisplay /></div>}
+                    
+                    {/* Admin Status Widget - Between timer and profile */}
+                    {isAuthenticated && <AdminStatusWidget />}
 
                     {/* User dropdown */}
                     {isAuthenticated && <UserDropdown />}

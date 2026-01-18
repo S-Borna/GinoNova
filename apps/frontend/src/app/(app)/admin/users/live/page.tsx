@@ -3,6 +3,8 @@
 /**
  * Admin Live Activity - Real-time user activity monitoring
  * Shows what users are doing right now on the platform
+ * + Admin heartbeat to show online status to users
+ * + User messages inbox
  */
 
 import { useEffect, useState, useCallback } from "react"
@@ -19,7 +21,12 @@ import {
     GraduationCap,
     Bot,
     MessageSquare,
-    Home
+    Home,
+    Inbox,
+    Check,
+    Trash2,
+    Mail,
+    MailOpen
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -42,6 +49,17 @@ interface LiveActivityResponse {
     users: LiveUser[]
     total: number
     timestamp: string
+}
+
+interface UserMessage {
+    id: string
+    user_id: string
+    user_email: string
+    user_name: string | null
+    subject: string
+    message: string
+    timestamp: string
+    read: boolean
 }
 
 function getActionIcon(action: string) {
@@ -170,6 +188,76 @@ export default function LiveActivityPage() {
     const [loading, setLoading] = useState(true)
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
     const [autoRefresh, setAutoRefresh] = useState(true)
+    const [messages, setMessages] = useState<UserMessage[]>([])
+    const [showMessages, setShowMessages] = useState(false)
+    const [unreadCount, setUnreadCount] = useState(0)
+
+    // Send admin heartbeat to indicate online status
+    const sendHeartbeat = useCallback(async () => {
+        const token = getToken()
+        if (!token) return
+
+        try {
+            await fetch(`${API_BASE_URL}/api/admin/v2/status/heartbeat`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+        } catch {
+            // Silent fail
+        }
+    }, [])
+
+    // Fetch user messages
+    const fetchMessages = useCallback(async () => {
+        const token = getToken()
+        if (!token) return
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/contact/messages`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (res.ok) {
+                const data = await res.json()
+                setMessages(data.messages || [])
+                setUnreadCount(data.unread || 0)
+            }
+        } catch {
+            // Silent fail
+        }
+    }, [])
+
+    // Mark message as read
+    const markAsRead = async (messageId: string) => {
+        const token = getToken()
+        if (!token) return
+
+        try {
+            await fetch(`${API_BASE_URL}/api/admin/v2/contact/messages/${messageId}/read`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            fetchMessages()
+        } catch {
+            // Silent fail
+        }
+    }
+
+    // Delete message
+    const deleteMessage = async (messageId: string) => {
+        const token = getToken()
+        if (!token) return
+
+        try {
+            await fetch(`${API_BASE_URL}/api/admin/v2/contact/messages/${messageId}`, {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            fetchMessages()
+        } catch {
+            // Silent fail
+        }
+    }
 
     const fetchLiveActivity = useCallback(async () => {
         const token = getToken()
@@ -194,7 +282,9 @@ export default function LiveActivityPage() {
 
     useEffect(() => {
         fetchLiveActivity()
-    }, [fetchLiveActivity])
+        fetchMessages()
+        sendHeartbeat()
+    }, [fetchLiveActivity, fetchMessages, sendHeartbeat])
 
     // Auto-refresh every 5 seconds when enabled
     useEffect(() => {
@@ -202,6 +292,15 @@ export default function LiveActivityPage() {
         const interval = setInterval(fetchLiveActivity, 5000)
         return () => clearInterval(interval)
     }, [autoRefresh, fetchLiveActivity])
+
+    // Send heartbeat every 30 seconds and refresh messages
+    useEffect(() => {
+        const heartbeatInterval = setInterval(() => {
+            sendHeartbeat()
+            fetchMessages()
+        }, 30000)
+        return () => clearInterval(heartbeatInterval)
+    }, [sendHeartbeat, fetchMessages])
 
     const onlineUsers = users.filter(u => u.status === "online")
     const awayUsers = users.filter(u => u.status === "away")
@@ -225,6 +324,25 @@ export default function LiveActivityPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {/* Messages inbox button */}
+                    <button
+                        onClick={() => setShowMessages(!showMessages)}
+                        className={cn(
+                            "relative flex items-center gap-2 px-3 py-2 rounded-lg transition text-sm",
+                            showMessages 
+                                ? "bg-purple-500/20 text-purple-400" 
+                                : "bg-zinc-800 hover:bg-zinc-700 text-zinc-300"
+                        )}
+                    >
+                        <Inbox className="w-4 h-4" />
+                        Messages
+                        {unreadCount > 0 && (
+                            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-medium">
+                                {unreadCount}
+                            </span>
+                        )}
+                    </button>
+
                     {/* Auto-refresh toggle */}
                     <label className="flex items-center gap-2 text-sm text-zinc-400">
                         <input
@@ -253,6 +371,91 @@ export default function LiveActivityPage() {
                 <p className="text-xs text-zinc-500 mb-4">
                     Last updated: {lastUpdate.toLocaleTimeString()}
                 </p>
+            )}
+
+            {/* Messages Inbox Panel */}
+            {showMessages && (
+                <div className="mb-6 p-4 bg-zinc-900/50 border border-purple-500/20 rounded-xl">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold flex items-center gap-2">
+                            <Inbox className="w-5 h-5 text-purple-400" />
+                            User Messages
+                            {unreadCount > 0 && (
+                                <span className="px-2 py-0.5 text-xs bg-red-500/20 text-red-400 rounded-full">
+                                    {unreadCount} unread
+                                </span>
+                            )}
+                        </h2>
+                        <button
+                            onClick={() => setShowMessages(false)}
+                            className="text-zinc-500 hover:text-white"
+                        >
+                            ✕
+                        </button>
+                    </div>
+
+                    {messages.length === 0 ? (
+                        <div className="text-center py-8 text-zinc-500">
+                            <Mail className="w-10 h-10 mx-auto mb-2 opacity-50" />
+                            <p>No messages yet</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {messages.map((msg) => (
+                                <div
+                                    key={msg.id}
+                                    className={cn(
+                                        "p-3 rounded-lg border transition-all",
+                                        msg.read 
+                                            ? "bg-zinc-800/50 border-zinc-700" 
+                                            : "bg-purple-500/10 border-purple-500/30"
+                                    )}
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                {msg.read ? (
+                                                    <MailOpen className="w-4 h-4 text-zinc-500" />
+                                                ) : (
+                                                    <Mail className="w-4 h-4 text-purple-400" />
+                                                )}
+                                                <span className="font-medium text-sm text-white">
+                                                    {msg.user_name || msg.user_email.split("@")[0]}
+                                                </span>
+                                                <span className="text-xs px-2 py-0.5 bg-zinc-700 rounded text-zinc-300">
+                                                    {msg.subject}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-zinc-500 mb-2">{msg.user_email}</p>
+                                            <p className="text-sm text-zinc-300">{msg.message}</p>
+                                            <p className="text-xs text-zinc-600 mt-2">
+                                                {new Date(msg.timestamp).toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-1 shrink-0">
+                                            {!msg.read && (
+                                                <button
+                                                    onClick={() => markAsRead(msg.id)}
+                                                    className="p-1.5 rounded hover:bg-green-500/20 text-green-400 transition"
+                                                    title="Mark as read"
+                                                >
+                                                    <Check className="w-4 h-4" />
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={() => deleteMessage(msg.id)}
+                                                className="p-1.5 rounded hover:bg-red-500/20 text-red-400 transition"
+                                                title="Delete"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             )}
 
             {/* Stats cards */}
