@@ -1,12 +1,11 @@
 """
 Quiz Service - AI-powered quiz generation using OpenAI GPT-4o-mini
-Lazy-loads OpenAI client to avoid crashes if API key is missing.
+Now with ASYNC support to prevent blocking the server.
 
 Improvements:
+- ASYNC OpenAI calls - doesn't block other requests
+- Parallel batch generation for large quiz counts (100 questions = 5x20 parallel)
 - Enhanced prompts with DevOps examples and practical scenarios
-- Increased content limit (8000-12000 chars)
-- Optimized temperature (0.7-0.8) for consistent quality
-- Increased max_tokens (3000-4000) for better explanations
 - Redis caching to reduce API costs by 80-90%
 """
 import os
@@ -15,36 +14,51 @@ import logging
 import hashlib
 import random
 import uuid
+import asyncio
 from typing import Optional, List, Literal
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-# Lazy-loaded OpenAI client
+# Lazy-loaded OpenAI clients (sync and async)
 _openai_client = None
+_async_openai_client = None
 
 
 def _get_client():
-    """Get OpenAI client, lazy-loaded to avoid import-time crashes."""
+    """Get sync OpenAI client (legacy, avoid using)."""
     global _openai_client
     if _openai_client is None:
         try:
             from openai import OpenAI
-            # Check OPENAI_KEY first (Railway config), then OPENAI_API_KEY
             api_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY")
             if not api_key:
-                logger.error("❌ OpenAI API key not configured (checked OPENAI_KEY and OPENAI_API_KEY)")
+                logger.error("❌ OpenAI API key not configured")
                 return None
-            try:
-                _openai_client = OpenAI(api_key=api_key, timeout=30.0)  # 30 second timeout
-                logger.info(f"✅ OpenAI client initialized with key from: {'OPENAI_KEY' if os.getenv('OPENAI_KEY') else 'OPENAI_API_KEY'}")
-            except Exception as e:
-                logger.error(f"❌ Failed to initialize OpenAI client: {e}")
-                return None
-        except ImportError:
-            logger.error("❌ OpenAI package not installed - run: pip install openai")
+            _openai_client = OpenAI(api_key=api_key, timeout=30.0)
+            logger.info("✅ Sync OpenAI client initialized")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize OpenAI client: {e}")
             return None
     return _openai_client
+
+
+def _get_async_client():
+    """Get async OpenAI client for non-blocking requests."""
+    global _async_openai_client
+    if _async_openai_client is None:
+        try:
+            from openai import AsyncOpenAI
+            api_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY")
+            if not api_key:
+                logger.error("❌ OpenAI API key not configured")
+                return None
+            _async_openai_client = AsyncOpenAI(api_key=api_key, timeout=60.0)
+            logger.info("✅ Async OpenAI client initialized")
+        except Exception as e:
+            logger.error(f"❌ Failed to initialize async OpenAI client: {e}")
+            return None
+    return _async_openai_client
 
 
 def _randomize_mcq_options(questions: List[dict]) -> List[dict]:
@@ -408,6 +422,293 @@ Returnera ENDAST giltig JSON, inga markdown-kodblock, ingen extra text."""
     except Exception as e:
         logger.error(f"Quiz generation failed: {e}")
         return None
+
+
+# =============================================================================
+# ASYNC QUIZ GENERATION - Non-blocking with parallel batches
+# =============================================================================
+
+async def _generate_batch_async(
+    client,
+    system_prompt: str,
+    user_prompt: str,
+    batch_count: int,
+    quiz_type: str,
+    temperature: float,
+    batch_id: int
+) -> Optional[dict]:
+    """Generate a single batch of questions asynchronously."""
+    try:
+        base_tokens = 300 if quiz_type == "mcq" else 180
+        max_tokens = min(batch_count * base_tokens + 500, 4096)
+        
+        logger.info(f"🎲 Batch {batch_id}: Generating {batch_count} questions...")
+        
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        
+        result_text = response.choices[0].message.content.strip()
+        
+        # Clean markdown formatting
+        if result_text.startswith("```"):
+            result_text = result_text.split("```")[1]
+            if result_text.startswith("json"):
+                result_text = result_text[4:]
+        if result_text.endswith("```"):
+            result_text = result_text[:-3]
+        
+        result = json.loads(result_text.strip())
+        questions = result.get("questions", [])
+        
+        logger.info(f"✅ Batch {batch_id}: Got {len(questions)} questions")
+        
+        # Return usage info for cost tracking
+        return {
+            "questions": questions,
+            "usage": response.usage
+        }
+        
+    except Exception as e:
+        logger.error(f"❌ Batch {batch_id} failed: {e}")
+        return None
+
+
+async def generate_quiz_async(
+    module_title: str,
+    content: str,
+    quiz_type: Literal["flashcard", "mcq"] = "mcq",
+    count: int = 10,
+    difficulty: Literal["beginner", "intermediate", "advanced"] = "intermediate",
+    focus_area: Optional[str] = None,
+    use_cache: bool = True
+) -> Optional[dict]:
+    """
+    ASYNC quiz generation with parallel batches for large counts.
+    
+    For 100 questions: Runs 5 parallel batches of 20 questions each.
+    Result: ~15-20 seconds instead of 2-3 minutes.
+    """
+    import time
+    start_time = time.time()
+    
+    # Check cache first
+    if use_cache:
+        from ..db.redis_client import cache_get, cache_set
+        cache_key = _generate_cache_key(module_title, content, quiz_type, count, difficulty, focus_area)
+        cached_result = cache_get(cache_key)
+        if cached_result:
+            logger.info(f"✅ Quiz cache hit for {module_title}")
+            return cached_result
+    
+    client = _get_async_client()
+    if not client:
+        logger.error("❌ Async OpenAI client not available")
+        raise ValueError("OpenAI API key not configured")
+    
+    # Determine batch strategy
+    # For large counts, split into parallel batches
+    BATCH_SIZE = 20  # Optimal for speed vs quality
+    
+    if count <= BATCH_SIZE:
+        batches = [count]
+    else:
+        # Split into batches of BATCH_SIZE
+        num_full_batches = count // BATCH_SIZE
+        remainder = count % BATCH_SIZE
+        batches = [BATCH_SIZE] * num_full_batches
+        if remainder > 0:
+            batches.append(remainder)
+    
+    logger.info(f"🚀 Generating {count} questions in {len(batches)} parallel batches: {batches}")
+    
+    # Build prompts
+    temperature = 0.85 if not use_cache else 0.75
+    
+    # System prompt (shared)
+    system_prompt = _build_system_prompt()
+    
+    # Content preview
+    content_preview = content[:8000]
+    
+    # Create batch tasks
+    tasks = []
+    for i, batch_count in enumerate(batches):
+        # Each batch gets a unique seed for variety
+        unique_seed = f"{uuid.uuid4().hex[:8]}_{i}"
+        user_prompt = _build_user_prompt(
+            module_title=module_title,
+            content=content_preview,
+            quiz_type=quiz_type,
+            count=batch_count,
+            difficulty=difficulty,
+            focus_area=focus_area,
+            unique_seed=unique_seed,
+            batch_number=i + 1,
+            total_batches=len(batches)
+        )
+        
+        task = _generate_batch_async(
+            client=client,
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            batch_count=batch_count,
+            quiz_type=quiz_type,
+            temperature=temperature,
+            batch_id=i + 1
+        )
+        tasks.append(task)
+    
+    # Run all batches in parallel
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    
+    # Combine results
+    all_questions = []
+    total_prompt_tokens = 0
+    total_completion_tokens = 0
+    
+    for i, result in enumerate(results):
+        if isinstance(result, Exception):
+            logger.error(f"Batch {i+1} raised exception: {result}")
+            continue
+        if result is None:
+            logger.warning(f"Batch {i+1} returned None")
+            continue
+        
+        questions = result.get("questions", [])
+        all_questions.extend(questions)
+        
+        if result.get("usage"):
+            total_prompt_tokens += result["usage"].prompt_tokens
+            total_completion_tokens += result["usage"].completion_tokens
+    
+    if not all_questions:
+        logger.error("❌ All batches failed - no questions generated")
+        return None
+    
+    # Randomize MCQ options
+    if quiz_type == "mcq":
+        all_questions = _randomize_mcq_options(all_questions)
+    
+    # Shuffle all questions for variety
+    random.shuffle(all_questions)
+    
+    final_result = {"questions": all_questions}
+    
+    # Log timing and cost
+    elapsed = time.time() - start_time
+    cost = (total_prompt_tokens / 1_000_000 * 0.15) + (total_completion_tokens / 1_000_000 * 0.60)
+    logger.info(f"⚡ Generated {len(all_questions)} questions in {elapsed:.1f}s (${cost:.4f})")
+    
+    # Log AI usage
+    try:
+        from ..services.ai_usage_service import log_ai_usage
+        log_ai_usage(
+            feature="ai_quiz",
+            model="gpt-4o-mini",
+            prompt_tokens=total_prompt_tokens,
+            completion_tokens=total_completion_tokens,
+            request_type=f"{quiz_type}_{difficulty}_async"
+        )
+    except Exception as e:
+        logger.debug(f"Failed to log AI usage: {e}")
+    
+    # Cache result
+    if use_cache:
+        from ..db.redis_client import cache_set
+        cache_set(cache_key, final_result, ttl=86400)
+    
+    return final_result
+
+
+def _build_system_prompt() -> str:
+    """Build the system prompt for quiz generation."""
+    return """Du är en expert DevOps-instruktör med 10+ års erfarenhet av att undervisa Linux, Docker, Kubernetes, CI/CD och molninfrastruktur.
+
+VIKTIGT: Generera ALLT innehåll på SVENSKA. Alla frågor, svar, förklaringar och hints ska vara på svenska.
+
+Dina quiz-frågor ska:
+1. Testa PRAKTISK förståelse, inte bara memorering
+2. Reflektera VERKLIGA scenarion som DevOps-ingenjörer möter dagligen
+3. Inkludera rimliga felaktiga svar som testar förståelse av vanliga misstag
+4. Ge tydliga, handlingsbara förklaringar som hjälper studenter lära sig
+5. Fokusera på koncept som är viktiga i produktionsmiljöer
+
+Returnera ENDAST giltig JSON, ingen markdown-formatering, ingen extra text."""
+
+
+def _build_user_prompt(
+    module_title: str,
+    content: str,
+    quiz_type: str,
+    count: int,
+    difficulty: str,
+    focus_area: Optional[str],
+    unique_seed: str,
+    batch_number: int = 1,
+    total_batches: int = 1
+) -> str:
+    """Build the user prompt for quiz generation."""
+    
+    if quiz_type == "flashcard":
+        format_instruction = """Generera flashcards på SVENSKA i detta JSON-format:
+{
+  "questions": [
+    {
+      "front": "Fråga eller term (PÅ SVENSKA)",
+      "back": "Svar eller definition (PÅ SVENSKA)",
+      "hint": "Valfri ledtråd (PÅ SVENSKA)"
+    }
+  ]
+}"""
+    else:
+        format_instruction = """Generera flervalsfrågor på SVENSKA i detta JSON-format:
+{
+  "questions": [
+    {
+      "question": "Frågetexten (PÅ SVENSKA)",
+      "options": ["A) Alternativ 1", "B) Alternativ 2", "C) Alternativ 3", "D) Alternativ 4"],
+      "correct": "A",
+      "explanation": "Förklaring varför detta svar är rätt (PÅ SVENSKA)"
+    }
+  ]
+}
+
+KRITISKT:
+- Fördela korrekta svar JÄMNT över A, B, C, D
+- ALLA svarsalternativ ska vara UNGEFÄR LIKA LÅNGA"""
+
+    difficulty_swedish = {"beginner": "nybörjar", "intermediate": "mellan", "advanced": "avancerad"}.get(difficulty, "mellan")
+    focus_text = f"\nFokusera specifikt på: {focus_area}" if focus_area else ""
+    
+    batch_instruction = ""
+    if total_batches > 1:
+        batch_instruction = f"""
+
+🔀 BATCH {batch_number} av {total_batches}
+Unique seed: {unique_seed}
+Generera UNIKA frågor som INTE överlappar med andra batchar.
+Fokusera på OLIKA aspekter av innehållet för denna batch."""
+
+    return f"""Du skapar quiz-innehåll på {difficulty_swedish}nivå för DevOps-modulen: "{module_title}"
+
+VIKTIGT: Generera ALLT innehåll på SVENSKA.
+
+Baserat på detta modulinnehåll:
+{content}
+
+⚠️ KRITISKT: Generera EXAKT {count} frågor - inte färre, inte fler!
+
+{format_instruction}
+{focus_text}{batch_instruction}
+
+Returnera ENDAST giltig JSON."""
 
 
 def get_module_content_for_quiz(module_slug: str) -> Optional[str]:

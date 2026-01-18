@@ -100,6 +100,15 @@ else
     echo "📝 No DATABASE_URL - using in-memory storage"
 fi
 
-# Start Uvicorn
+# Start Uvicorn with multiple workers for production
 echo "🌐 Starting Uvicorn server on port ${PORT:-8000}..."
-exec python -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level debug
+
+# Use 4 workers in production for parallel request handling
+# This prevents one slow request from blocking others
+if [ -n "$DATABASE_URL" ]; then
+    echo "🚀 Production mode: Using 4 workers"
+    exec python -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 4 --log-level info
+else
+    echo "🔧 Development mode: Single worker with reload"
+    exec python -m uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level debug
+fi

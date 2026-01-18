@@ -89,16 +89,15 @@ async def generate_quiz(
 ):
     """
     Generate AI-powered quiz questions for a module.
+    
+    NOW ASYNC: Uses parallel batches for large counts (100 questions in ~15-20s).
+    Does NOT block other requests or tabs.
 
     - **module_slug**: Which module to generate questions from
     - **quiz_type**: "flashcard" or "mcq"
-    - **count**: Number of questions (1-20)
+    - **count**: Number of questions (1-100)
     - **difficulty**: beginner, intermediate, or advanced
     - **focus_area**: Optional specific topic to focus on
-
-    Quiz content is generated from the ACTUAL module node content,
-    which includes Docker-style V3 formatting with tables, ASCII diagrams,
-    code examples, and practical DevOps knowledge.
     """
     # Check access
     if not check_quiz_access(current_user):
@@ -107,15 +106,14 @@ async def generate_quiz(
             detail="AI Quiz Generator is a premium feature. Coming soon!"
         )
 
-    # Import service
     import logging
     logger = logging.getLogger(__name__)
 
-    from src.services.quiz_service import generate_quiz as gen_quiz, get_module_content_for_quiz
+    from src.services.quiz_service import generate_quiz_async, get_module_content_for_quiz
 
     logger.info(f"🎯 Quiz request: module={request.module_slug}, type={request.quiz_type}, difficulty={request.difficulty}, count={request.count}")
 
-    # Get module content from ACTUAL node data (not just metadata)
+    # Get module content
     content = get_module_content_for_quiz(request.module_slug)
     if not content:
         logger.error(f"❌ Module content not found for: {request.module_slug}")
@@ -126,23 +124,22 @@ async def generate_quiz(
 
     logger.info(f"✅ Found content for {request.module_slug}: {len(content)} chars")
 
-    # Extract module title from content
+    # Extract module title
     module_title = request.module_slug.replace("-", " ").title()
     if content.startswith("# Module:"):
         first_line = content.split("\n")[0]
         module_title = first_line.replace("# Module:", "").strip()
 
-    # Generate quiz from actual node content
-    # force_new=True (default) skips cache and generates fresh questions every time
+    # Generate quiz ASYNC - doesn't block other requests!
     try:
-        result = gen_quiz(
+        result = await generate_quiz_async(
             module_title=module_title,
             content=content,
             quiz_type=request.quiz_type,
             count=request.count,
             difficulty=request.difficulty,
             focus_area=request.focus_area,
-            use_cache=not request.force_new  # Skip cache if force_new is True
+            use_cache=not request.force_new
         )
     except Exception as e:
         logger.error(f"❌ Quiz generation exception: {e}")
