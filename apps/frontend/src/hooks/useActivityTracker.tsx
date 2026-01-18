@@ -79,9 +79,15 @@ export function useActivityTracker() {
     const lastSentRef = useRef<string>("")
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
     const sendingRef = useRef(false)
+    
+    // Skip tracking for admin users on admin pages (they have their own heartbeat in live/page.tsx)
+    const isAdmin = user?.is_admin || user?.email?.toLowerCase() === "said.ebadi@hotmail.com"
+    const isAdminPage = pathname?.startsWith("/admin")
+    const shouldSkip = isAdmin && isAdminPage
 
     const sendActivity = useCallback(async (currentPath: string, force: boolean = false) => {
         if (!user) return
+        if (shouldSkip) return // Admin on admin pages uses their own heartbeat
         if (sendingRef.current) return // Prevent concurrent requests
         
         // Don't send if same as last sent (unless force heartbeat)
@@ -121,6 +127,7 @@ export function useActivityTracker() {
     // Send activity on page change
     useEffect(() => {
         if (!pathname || !user) return
+        if (shouldSkip) return // Admin on admin pages - skip
         
         // Send immediately on page change
         sendActivity(pathname)
@@ -128,14 +135,14 @@ export function useActivityTracker() {
         // Also send heartbeat every 30 seconds to keep "online" status
         intervalRef.current = setInterval(() => {
             sendActivity(pathname, true) // Force send for heartbeat
-        }, 10000)
+        }, 15000) // 15 second heartbeat
         
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current)
             }
         }
-    }, [pathname, user, sendActivity])
+    }, [pathname, user, sendActivity, shouldSkip])
 
     return { pathname, pageName: getPageName(pathname || "") }
 }

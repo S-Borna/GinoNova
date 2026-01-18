@@ -23,11 +23,41 @@ interface UserBroadcastProps {
     className?: string
 }
 
+// Get dismissed message IDs from localStorage
+const getDismissedIds = (): Set<string> => {
+    if (typeof window === "undefined") return new Set()
+    try {
+        const stored = localStorage.getItem("dismissed_broadcasts")
+        if (stored) {
+            const parsed = JSON.parse(stored)
+            // Clean up old entries (older than 24 hours)
+            const now = Date.now()
+            const valid = Object.entries(parsed)
+                .filter(([_, timestamp]) => now - (timestamp as number) < 24 * 60 * 60 * 1000)
+            localStorage.setItem("dismissed_broadcasts", JSON.stringify(Object.fromEntries(valid)))
+            return new Set(valid.map(([id]) => id))
+        }
+    } catch {}
+    return new Set()
+}
+
+// Save dismissed message ID to localStorage
+const saveDismissedId = (id: string) => {
+    if (typeof window === "undefined") return
+    try {
+        const stored = localStorage.getItem("dismissed_broadcasts")
+        const parsed = stored ? JSON.parse(stored) : {}
+        parsed[id] = Date.now()
+        localStorage.setItem("dismissed_broadcasts", JSON.stringify(parsed))
+    } catch {}
+}
+
 export function UserBroadcast({ className }: UserBroadcastProps) {
     const { user } = useAuth()
     const [messages, setMessages] = useState<BroadcastMessage[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
     const fetchingRef = React.useRef(false)
+    const dismissedIdsRef = React.useRef<Set<string>>(getDismissedIds())
 
     // Fetch messages - with deduplication to prevent "glapping"
     const fetchMessages = useCallback(async () => {
@@ -49,7 +79,12 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
 
             if (response.ok) {
                 const data = await response.json()
-                const newMessages = data.messages || []
+                const allMessages = data.messages || []
+                
+                // Filter out locally dismissed messages
+                const newMessages = allMessages.filter(
+                    (m: BroadcastMessage) => !dismissedIdsRef.current.has(m.id)
+                )
                 
                 // Only update if message IDs changed (prevents flashing)
                 setMessages(prev => {
@@ -75,8 +110,21 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
         return () => clearInterval(interval)
     }, [user, fetchMessages])
 
-    // Dismiss a message
+    // Dismiss a message - persist locally AND to backend
     const dismissMessage = async (messageId: string) => {
+        // Immediately save to localStorage so it won't come back
+        saveDismissedId(messageId)
+        dismissedIdsRef.current.add(messageId)
+        
+        // Remove from local state immediately
+        setMessages(prev => prev.filter(m => m.id !== messageId))
+        
+        // Reset index if needed
+        if (currentIndex >= messages.length - 1) {
+            setCurrentIndex(Math.max(0, messages.length - 2))
+        }
+        
+        // Also notify backend (fire and forget)
         try {
             const token = localStorage.getItem("auth_token")
             if (!token) return
@@ -88,17 +136,8 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
                     "Content-Type": "application/json"
                 }
             })
-
-            // Remove from local state
-            setMessages(prev => prev.filter(m => m.id !== messageId))
-
-            // Reset index if needed
-            if (currentIndex >= messages.length - 1) {
-                setCurrentIndex(Math.max(0, messages.length - 2))
-            }
         } catch (error) {
-            // Still remove locally even if API fails
-            setMessages(prev => prev.filter(m => m.id !== messageId))
+            // Already saved locally, so ignore backend errors
         }
     }
 
