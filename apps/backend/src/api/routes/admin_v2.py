@@ -402,6 +402,7 @@ class BroadcastRequest(BaseModel):
     message: str
     type: str = "info"  # info, warning, success, error
     duration_minutes: Optional[int] = 60  # How long before message expires
+    target_users: Optional[List[str]] = None  # List of user IDs to target (None = all users)
 
 
 @router.post("/broadcast")
@@ -410,7 +411,7 @@ async def send_broadcast_message(
     admin: UserPublic = Depends(require_admin)
 ):
     """
-    Send a broadcast message to all logged-in users.
+    Send a broadcast message to all logged-in users or specific users.
     Message will appear in their TopBar until dismissed.
     """
     import uuid
@@ -424,19 +425,21 @@ async def send_broadcast_message(
         "type": data.type,
         "created_at": now,
         "expires_at": expires_at,
-        "created_by": admin.email
+        "created_by": admin.email,
+        "target_users": data.target_users  # None means all users
     }
 
     with _broadcast_lock:
         _broadcast_messages.appendleft(message)
 
     # Log the broadcast
+    target_desc = f"to {len(data.target_users)} users" if data.target_users else "to all users"
     add_activity_log(
         activity_type="broadcast",
         user_id=str(admin.id),
         user_email=admin.email,
         user_name=admin.full_name,
-        details=f"Broadcast: {data.message[:50]}..."
+        details=f"Broadcast {target_desc}: {data.message[:50]}..."
     )
 
     return {
@@ -465,6 +468,47 @@ async def get_active_broadcasts(
     }
 
 
+@router.get("/broadcast/online-users")
+async def get_online_users_for_broadcast(
+    db: Session = Depends(get_db),
+    admin: UserPublic = Depends(require_admin)
+):
+    """
+    Get list of online/recently active users for targeted broadcasts.
+    Returns users active in the last 10 minutes.
+    """
+    now = datetime.now(timezone.utc)
+    ten_minutes_ago = now - timedelta(minutes=10)
+
+    # Get users with recent activity
+    active_users = db.query(User).filter(
+        User.last_activity_at.isnot(None),
+        User.last_activity_at > ten_minutes_ago,
+        User.is_active == True
+    ).order_by(User.last_activity_at.desc()).limit(50).all()
+
+    result = []
+    for user in active_users:
+        last_activity = user.last_activity_at
+        if last_activity and last_activity.tzinfo is None:
+            last_activity = last_activity.replace(tzinfo=timezone.utc)
+
+        seconds_ago = (now - last_activity).total_seconds() if last_activity else 9999
+
+        result.append({
+            "id": str(user.id),
+            "email": user.email,
+            "full_name": user.full_name,
+            "status": "online" if seconds_ago < 120 else "away",
+            "seconds_ago": int(seconds_ago)
+        })
+
+    return {
+        "users": result,
+        "total": len(result)
+    }
+
+
 @router.delete("/broadcast/{message_id}")
 async def delete_broadcast_message(
     message_id: str,
@@ -489,6 +533,7 @@ async def get_user_messages(
     """
     Get broadcast messages for the current user.
     Excludes messages the user has already dismissed.
+    Filters by target_users if specified.
     """
     now = datetime.now(timezone.utc)
     user_id = str(current_user.id)
@@ -507,6 +552,7 @@ async def get_user_messages(
             for m in _broadcast_messages
             if m["id"] not in dismissed
             and (m.get("expires_at") is None or m["expires_at"] > now)
+            and (m.get("target_users") is None or user_id in m.get("target_users", []))
         ]
 
     return {

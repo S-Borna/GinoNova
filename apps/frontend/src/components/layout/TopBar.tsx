@@ -38,6 +38,7 @@ import { NowPlayingWidget } from "@/components/tickers/SpotifyEmbed"
 import { SpotifyTopBarWidget } from "@/components/spotify/SpotifyTopBarWidget"
 import { AdminActivityFlash } from "@/components/admin/AdminActivityFlash"
 import { AdminStatusWidget } from "@/components/admin/AdminStatusWidget"
+import { AdminInboxWidget } from "@/components/admin/AdminInboxWidget"
 import { UserBroadcast } from "@/components/broadcast/UserBroadcast"
 
 /* ============================================================================
@@ -587,7 +588,10 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     {/* Session Timer - Only show on larger screens */}
                     {isAuthenticated && <div className="hidden md:block"><SessionTimerDisplay /></div>}
 
-                    {/* Admin Status Widget - Between timer and profile */}
+                    {/* Admin Inbox - Shows unread user messages (admin only) */}
+                    {isAuthenticated && <AdminInboxWidget />}
+
+                    {/* Admin Status Widget - For non-admin users to see if admin is online */}
                     {isAuthenticated && <AdminStatusWidget />}
 
                     {/* User dropdown */}

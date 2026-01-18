@@ -1,7 +1,7 @@
 "use client"
 
 /**
- * Admin Broadcast - Send messages to all logged-in users
+ * Admin Broadcast - Send messages to all or specific users
  */
 
 import { useState, useEffect, useCallback } from "react"
@@ -14,7 +14,10 @@ import {
     AlertTriangle,
     CheckCircle,
     AlertCircle,
-    Clock
+    Clock,
+    Users,
+    User,
+    Check
 } from "lucide-react"
 import { getToken } from "@/lib/auth"
 import { cn } from "@/lib/utils"
@@ -28,6 +31,15 @@ interface BroadcastMessage {
     created_at: string
     expires_at: string | null
     created_by: string
+    target_users?: string[] | null
+}
+
+interface OnlineUser {
+    id: string
+    email: string
+    full_name: string | null
+    status: "online" | "away"
+    seconds_ago: number
 }
 
 const messageTypes = [
@@ -46,6 +58,44 @@ export default function BroadcastPage() {
     const [loading, setLoading] = useState(true)
     const [success, setSuccess] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
+    
+    // User targeting
+    const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
+    const [targetMode, setTargetMode] = useState<"all" | "selected">("all")
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+
+    // Fetch online users for targeting
+    const fetchOnlineUsers = useCallback(async () => {
+        const token = getToken()
+        if (!token) return
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/admin/v2/broadcast/online-users`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            if (res.ok) {
+                const data = await res.json()
+                setOnlineUsers(data.users || [])
+            }
+        } catch (err) {
+            console.error("Failed to fetch online users:", err)
+        }
+    }, [])
+
+    // Toggle user selection
+    const toggleUserSelection = (userId: string) => {
+        setSelectedUsers(prev => 
+            prev.includes(userId) 
+                ? prev.filter(id => id !== userId)
+                : [...prev, userId]
+        )
+    }
+
+    // Select all online users
+    const selectAllOnline = () => {
+        setSelectedUsers(onlineUsers.filter(u => u.status === "online").map(u => u.id))
+    }
 
     // Fetch active broadcasts
     const fetchBroadcasts = useCallback(async () => {
@@ -70,12 +120,22 @@ export default function BroadcastPage() {
 
     useEffect(() => {
         fetchBroadcasts()
-    }, [fetchBroadcasts])
+        fetchOnlineUsers()
+        
+        // Refresh online users every 30 seconds
+        const interval = setInterval(fetchOnlineUsers, 30000)
+        return () => clearInterval(interval)
+    }, [fetchBroadcasts, fetchOnlineUsers])
 
     // Send broadcast
     const sendBroadcast = async () => {
         if (!message.trim()) {
             setError("Please enter a message")
+            return
+        }
+
+        if (targetMode === "selected" && selectedUsers.length === 0) {
+            setError("Please select at least one user")
             return
         }
 
@@ -96,13 +156,18 @@ export default function BroadcastPage() {
                 body: JSON.stringify({
                     message: message.trim(),
                     type,
-                    duration_minutes: duration
+                    duration_minutes: duration,
+                    target_users: targetMode === "selected" ? selectedUsers : null
                 })
             })
 
             if (res.ok) {
-                setSuccess("Broadcast sent successfully!")
+                const targetText = targetMode === "selected" 
+                    ? `to ${selectedUsers.length} user(s)` 
+                    : "to all users"
+                setSuccess(`Broadcast sent ${targetText}!`)
                 setMessage("")
+                setSelectedUsers([])
                 fetchBroadcasts()
                 setTimeout(() => setSuccess(null), 3000)
             } else {
@@ -147,7 +212,7 @@ export default function BroadcastPage() {
                 <div>
                     <h1 className="text-2xl font-bold">Broadcast Message</h1>
                     <p className="text-sm text-zinc-400">
-                        Send messages to all logged-in users
+                        Send messages to all or specific users
                     </p>
                 </div>
             </div>
@@ -155,6 +220,103 @@ export default function BroadcastPage() {
             {/* Compose Section */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-6 mb-8">
                 <h2 className="text-lg font-semibold mb-4">Compose Message</h2>
+
+                {/* Target Selection */}
+                <div className="mb-4">
+                    <label className="block text-sm text-zinc-400 mb-2">Send To</label>
+                    <div className="flex gap-3 mb-3">
+                        <button
+                            onClick={() => setTargetMode("all")}
+                            className={cn(
+                                "flex items-center gap-2 px-4 py-2 rounded-lg border transition",
+                                targetMode === "all"
+                                    ? "bg-purple-500/20 border-purple-500 text-purple-400"
+                                    : "border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                            )}
+                        >
+                            <Users className="w-4 h-4" />
+                            All Users
+                        </button>
+                        <button
+                            onClick={() => setTargetMode("selected")}
+                            className={cn(
+                                "flex items-center gap-2 px-4 py-2 rounded-lg border transition",
+                                targetMode === "selected"
+                                    ? "bg-purple-500/20 border-purple-500 text-purple-400"
+                                    : "border-zinc-700 text-zinc-400 hover:border-zinc-600"
+                            )}
+                        >
+                            <User className="w-4 h-4" />
+                            Select Users
+                            {selectedUsers.length > 0 && (
+                                <span className="ml-1 px-1.5 py-0.5 text-xs bg-purple-500 text-white rounded">
+                                    {selectedUsers.length}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* User Selection List */}
+                    {targetMode === "selected" && (
+                        <div className="bg-zinc-800/50 rounded-lg p-3 max-h-48 overflow-y-auto">
+                            {onlineUsers.length === 0 ? (
+                                <p className="text-sm text-zinc-500 text-center py-4">
+                                    No users online right now
+                                </p>
+                            ) : (
+                                <>
+                                    <div className="flex justify-between items-center mb-2 pb-2 border-b border-zinc-700">
+                                        <span className="text-xs text-zinc-400">
+                                            {onlineUsers.filter(u => u.status === "online").length} online,{" "}
+                                            {onlineUsers.filter(u => u.status === "away").length} away
+                                        </span>
+                                        <button
+                                            onClick={selectAllOnline}
+                                            className="text-xs text-purple-400 hover:text-purple-300"
+                                        >
+                                            Select all online
+                                        </button>
+                                    </div>
+                                    <div className="space-y-1">
+                                        {onlineUsers.map((user) => (
+                                            <button
+                                                key={user.id}
+                                                onClick={() => toggleUserSelection(user.id)}
+                                                className={cn(
+                                                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg transition",
+                                                    selectedUsers.includes(user.id)
+                                                        ? "bg-purple-500/20 border border-purple-500/50"
+                                                        : "hover:bg-zinc-700/50"
+                                                )}
+                                            >
+                                                <div className={cn(
+                                                    "w-4 h-4 rounded border flex items-center justify-center",
+                                                    selectedUsers.includes(user.id)
+                                                        ? "bg-purple-500 border-purple-500"
+                                                        : "border-zinc-600"
+                                                )}>
+                                                    {selectedUsers.includes(user.id) && (
+                                                        <Check className="w-3 h-3 text-white" />
+                                                    )}
+                                                </div>
+                                                <span className={cn(
+                                                    "w-2 h-2 rounded-full",
+                                                    user.status === "online" ? "bg-green-500" : "bg-yellow-500"
+                                                )} />
+                                                <span className="text-sm text-white flex-1 text-left truncate">
+                                                    {user.full_name || user.email.split("@")[0]}
+                                                </span>
+                                                <span className="text-xs text-zinc-500">
+                                                    {user.status}
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 {/* Message Type */}
                 <div className="mb-4">
@@ -184,7 +346,7 @@ export default function BroadcastPage() {
                     <textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Enter your message to all users..."
+                        placeholder={targetMode === "all" ? "Enter your message to all users..." : "Enter your message to selected users..."}
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-purple-500 resize-none"
                         rows={3}
                         maxLength={500}

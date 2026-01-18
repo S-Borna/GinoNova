@@ -645,4 +645,4 @@ app.include_router(api_router, prefix="/api")
 
 # Admin routes (v2)
 from .api.routes.admin_v2 import router as admin_router
-app.include_router(admin_router, prefix="/api/admin", tags=["admin"])
+app.include_router(admin_router, prefix="/api/admin/v2", tags=["admin-v2"])
