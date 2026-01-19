@@ -1,7 +1,7 @@
 /**
  * MANPAGE FLÖDEN - Scenario & Flow questions based on Manpage Tenta (298 original questions)
  * All questions in English with varied correct answer positions
- * 
+ *
  * Created: 2026-01-18
  * Source: Mirrors manpage-tenta-quiz.ts with scenario/flow format
  * Content: ~150 scenario questions covering all major categories
