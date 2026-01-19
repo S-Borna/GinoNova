@@ -2,10 +2,10 @@
 
 /**
  * Now Playing Widget - Pure Last.fm
- * 
+ *
  * Shows currently playing music using Last.fm scrobbles.
  * No Spotify API needed! Beautiful custom design.
- * 
+ *
  * Features:
  * - Auto-refresh every 15 seconds
  * - Smooth animations
@@ -39,7 +39,7 @@ interface NowPlayingWidgetProps {
 
 function timeAgo(timestamp: number): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000)
-  
+
   if (seconds < 60) return 'just nu'
   if (seconds < 120) return '1 min sedan'
   if (seconds < 3600) return `${Math.floor(seconds / 60)} min sedan`
@@ -128,14 +128,14 @@ function EmptyState({ variant }: { variant: NowPlayingWidgetProps['variant'] }) 
    SPINNING VINYL (for album art)
    ============================================================================ */
 
-function SpinningVinyl({ 
-  albumArt, 
+function SpinningVinyl({
+  albumArt,
   isPlaying,
-  size = 64 
-}: { 
+  size = 64
+}: {
   albumArt: string | null
   isPlaying: boolean
-  size?: number 
+  size?: number
 }) {
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -143,10 +143,10 @@ function SpinningVinyl({
       <motion.div
         className="absolute inset-0 rounded-full bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700"
         animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-        transition={isPlaying ? { 
-          duration: 3, 
-          repeat: Infinity, 
-          ease: "linear" 
+        transition={isPlaying ? {
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear"
         } : { duration: 0.3 }}
       >
         {/* Vinyl grooves */}
@@ -154,17 +154,17 @@ function SpinningVinyl({
         <div className="absolute inset-4 rounded-full border border-zinc-600/20" />
         <div className="absolute inset-6 rounded-full border border-zinc-600/10" />
       </motion.div>
-      
+
       {/* Album art center */}
-      <div 
+      <div
         className="absolute rounded-full overflow-hidden shadow-lg"
-        style={{ 
+        style={{
           inset: size * 0.15,
         }}
       >
         {albumArt ? (
-          <img 
-            src={albumArt} 
+          <img
+            src={albumArt}
             alt="Album art"
             className="w-full h-full object-cover"
           />
@@ -174,9 +174,9 @@ function SpinningVinyl({
           </div>
         )}
       </div>
-      
+
       {/* Center hole */}
-      <div 
+      <div
         className="absolute rounded-full bg-zinc-900 border border-zinc-700"
         style={{
           width: size * 0.12,
@@ -224,15 +224,15 @@ function EqualizerBars({ isPlaying, size = 'default' }: { isPlaying: boolean; si
    MINI VARIANT (for TopBar)
    ============================================================================ */
 
-function MiniWidget({ 
-  data, 
-  className 
-}: { 
+function MiniWidget({
+  data,
+  className
+}: {
   data: NowPlayingResponse
-  className?: string 
+  className?: string
 }) {
   const track = data.track
-  
+
   if (!track) {
     return <EmptyState variant="mini" />
   }
@@ -258,8 +258,8 @@ function MiniWidget({
 
       {/* Album art */}
       {track.albumArt ? (
-        <img 
-          src={track.albumArt} 
+        <img
+          src={track.albumArt}
           alt={track.album}
           className="w-10 h-10 rounded-lg object-cover shadow-md"
         />
@@ -291,15 +291,15 @@ function MiniWidget({
    COMPACT VARIANT (for widgets/sidebar)
    ============================================================================ */
 
-function CompactWidget({ 
+function CompactWidget({
   data,
-  className 
-}: { 
+  className
+}: {
   data: NowPlayingResponse
-  className?: string 
+  className?: string
 }) {
   const track = data.track
-  
+
   if (!track) {
     return <EmptyState variant="compact" />
   }
@@ -336,18 +336,18 @@ function CompactWidget({
             </>
           )}
         </div>
-        
+
         <ExternalLink className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
       </div>
 
       {/* Track content */}
       <div className="p-4 flex items-center gap-4">
-        <SpinningVinyl 
-          albumArt={track.albumArt} 
-          isPlaying={data.isPlaying} 
+        <SpinningVinyl
+          albumArt={track.albumArt}
+          isPlaying={data.isPlaying}
           size={72}
         />
-        
+
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
             {track.name}
@@ -368,15 +368,15 @@ function CompactWidget({
    FULL VARIANT (for dedicated sections)
    ============================================================================ */
 
-function FullWidget({ 
+function FullWidget({
   data,
-  className 
-}: { 
+  className
+}: {
   data: NowPlayingResponse
-  className?: string 
+  className?: string
 }) {
   const track = data.track
-  
+
   if (!track) {
     return <EmptyState variant="full" />
   }
@@ -414,7 +414,7 @@ function FullWidget({
             </span>
           )}
         </div>
-        
+
         <div className="flex items-center gap-2 text-xs text-zinc-500 group-hover:text-white transition-colors">
           <span>Öppna i Last.fm</span>
           <ExternalLink className="w-3.5 h-3.5" />
@@ -423,12 +423,12 @@ function FullWidget({
 
       {/* Content */}
       <div className="p-6 flex flex-col items-center text-center">
-        <SpinningVinyl 
-          albumArt={track.albumArt} 
-          isPlaying={data.isPlaying} 
+        <SpinningVinyl
+          albumArt={track.albumArt}
+          isPlaying={data.isPlaying}
           size={160}
         />
-        
+
         <div className="mt-5 w-full max-w-xs">
           <h3 className="text-xl font-bold text-white truncate group-hover:text-emerald-400 transition-colors">
             {track.name}
@@ -440,7 +440,7 @@ function FullWidget({
             {track.album}
           </p>
         </div>
-        
+
         {data.isPlaying && (
           <div className="mt-4 flex justify-center">
             <EqualizerBars isPlaying={true} />
@@ -468,7 +468,7 @@ export function NowPlayingWidget({
   const fetchData = React.useCallback(async () => {
     try {
       const response = await fetch('/api/music/now-playing')
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch')
       }

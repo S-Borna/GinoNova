@@ -285,7 +285,7 @@ function SearchBar() {
             >
                 {/* Subtle glow on hover */}
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
+
                 <Search className="relative h-3.5 w-3.5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
                 <span className="relative text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Search...</span>
                 <kbd className="relative hidden sm:inline-flex h-4 items-center rounded border border-zinc-700 bg-zinc-800/80 px-1 font-mono text-[9px] text-zinc-500 group-hover:border-purple-500/30 group-hover:text-purple-400 transition-colors">
@@ -587,7 +587,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                         {/* Glow layers */}
                         <div className="absolute inset-0 blur-xl bg-gradient-to-r from-purple-500/40 via-pink-500/30 to-cyan-500/40 rounded-full" />
                         <div className="absolute inset-0 blur-md bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-cyan-400/20 rounded-full" />
-                        
+
                         {/* Main text */}
                         <motion.p
                             className="relative text-lg xl:text-xl font-medium italic tracking-wide whitespace-nowrap"
