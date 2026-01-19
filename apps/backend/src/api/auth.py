@@ -110,10 +110,10 @@ def register(user_data: UserCreate, request: Request):
             from src.services.email_service import generate_verification_code, get_code_expiry, send_verification_email
             from src.db.database import SessionLocal
             from src.db.models import User as UserModel
-            
+
             code = generate_verification_code()
             expires_at = get_code_expiry()
-            
+
             # Update user with verification code
             db = SessionLocal()
             try:
@@ -123,7 +123,7 @@ def register(user_data: UserCreate, request: Request):
                     db_user.verification_code_expires_at = expires_at
                     db_user.is_verified = False
                     db.commit()
-                    
+
                     # Send verification email
                     send_verification_email(user.email, code, user.full_name)
                     print(f"[Register] Verification code sent to {user.email}")
@@ -241,7 +241,7 @@ def logout_user(current_user: CurrentUser, request: Request):
     """
     # Get client IP
     client_ip = get_client_ip(request)
-    
+
     # Log logout activity for admin dashboard
     try:
         from .routes.admin_v2 import add_activity_log
@@ -254,7 +254,7 @@ def logout_user(current_user: CurrentUser, request: Request):
         )
     except Exception as e:
         print(f"[ActivityLog] Failed to log logout: {e}")
-    
+
     return {"ok": True, "message": "Logged out successfully"}
 
 

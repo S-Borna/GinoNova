@@ -32,7 +32,7 @@ def upgrade():
         print("✅ Added verification_code column")
     else:
         print("⏭️  verification_code column already exists")
-    
+
     # Add verification_code_expires_at column if it doesn't exist
     if not column_exists('users', 'verification_code_expires_at'):
         op.add_column('users', sa.Column('verification_code_expires_at', sa.DateTime(), nullable=True))
@@ -47,5 +47,5 @@ def downgrade():
         op.drop_column('users', 'verification_code_expires_at')
     if column_exists('users', 'verification_code'):
         op.drop_column('users', 'verification_code')
-    
+
     print("✅ Removed email verification columns from users table")

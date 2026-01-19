@@ -5,26 +5,47 @@
  * User enters 6-digit code sent to their email
  */
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
-import { Mail, RefreshCw, CheckCircle, AlertCircle, ArrowLeft } from "lucide-react"
-import { getToken } from "@/lib/auth"
+import { Mail, RefreshCw, CheckCircle, AlertCircle, ArrowLeft, Loader2 } from "lucide-react"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 
+// Loading fallback component
+function VerifyEmailLoading() {
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 flex items-center justify-center p-4">
+            <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin text-purple-500 mx-auto mb-4" />
+                <p className="text-zinc-400">Laddar...</p>
+            </div>
+        </div>
+    )
+}
+
+// Main page component with Suspense wrapper
 export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={<VerifyEmailLoading />}>
+            <VerifyEmailContent />
+        </Suspense>
+    )
+}
+
+// Inner component that uses useSearchParams
+function VerifyEmailContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const email = searchParams.get("email") || ""
-    
+
     const [code, setCode] = useState(["", "", "", "", "", ""])
     const [loading, setLoading] = useState(false)
     const [resending, setResending] = useState(false)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState(false)
     const [countdown, setCountdown] = useState(0)
-    
+
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
     // Countdown timer for resend
@@ -99,7 +120,7 @@ export default function VerifyEmailPage() {
             }
 
             setSuccess(true)
-            
+
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {
                 router.push("/dashboard")

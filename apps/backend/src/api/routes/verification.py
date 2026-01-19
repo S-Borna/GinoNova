@@ -49,13 +49,13 @@ def verify_email(
     user = db.query(User).filter(
         User.email == data.email.lower().strip()
     ).first()
-    
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Användare hittades inte"
         )
-    
+
     # Already verified?
     if user.is_verified:
         return VerificationResponse(
@@ -63,46 +63,46 @@ def verify_email(
             message="E-post redan verifierad",
             is_verified=True
         )
-    
+
     # Check if code exists
     if not user.verification_code:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Ingen verifieringskod skickad. Begär en ny kod."
         )
-    
+
     # Check if code expired
     if user.verification_code_expires_at:
         expires_at = user.verification_code_expires_at
         if expires_at.tzinfo is None:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
-        
+
         if datetime.now(timezone.utc) > expires_at:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Verifieringskoden har gått ut. Begär en ny kod."
             )
-    
+
     # Check code
     if user.verification_code != data.code.strip():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Felaktig verifieringskod"
         )
-    
+
     # Success! Mark as verified
     user.is_verified = True
     user.verification_code = None
     user.verification_code_expires_at = None
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    
+
     # Send welcome email (async/background would be better)
     try:
         send_welcome_email(user.email, user.full_name)
     except Exception as e:
         print(f"[Verify] Failed to send welcome email: {e}")
-    
+
     # Log verification
     try:
         from src.api.routes.admin_v2 import add_activity_log
@@ -115,7 +115,7 @@ def verify_email(
         )
     except Exception:
         pass
-    
+
     return VerificationResponse(
         ok=True,
         message="E-post verifierad! Välkommen till GinoNova!",
@@ -136,14 +136,14 @@ def resend_verification_code(
     user = db.query(User).filter(
         User.email == data.email.lower().strip()
     ).first()
-    
+
     if not user:
         # Don't reveal if email exists or not
         return VerificationResponse(
             ok=True,
             message="Om kontot finns skickas en ny kod till din e-post"
         )
-    
+
     # Already verified?
     if user.is_verified:
         return VerificationResponse(
@@ -151,13 +151,13 @@ def resend_verification_code(
             message="E-post redan verifierad",
             is_verified=True
         )
-    
+
     # Rate limit: Check if code was sent recently (within 1 minute)
     if user.verification_code_expires_at:
         expires_at = user.verification_code_expires_at
         if expires_at.tzinfo is None:
             expires_at = expires_at.replace(tzinfo=timezone.utc)
-        
+
         # Code expires in 15 min, so if more than 14 min left, it was just sent
         from datetime import timedelta
         time_until_expiry = expires_at - datetime.now(timezone.utc)
@@ -166,23 +166,23 @@ def resend_verification_code(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail="Vänta en minut innan du begär en ny kod"
             )
-    
+
     # Generate new code
     code = generate_verification_code()
     user.verification_code = code
     user.verification_code_expires_at = get_code_expiry()
     user.updated_at = datetime.now(timezone.utc)
     db.commit()
-    
+
     # Send email
     success = send_verification_email(user.email, code, user.full_name)
-    
+
     if not success:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Kunde inte skicka verifieringsmail. Försök igen senare."
         )
-    
+
     return VerificationResponse(
         ok=True,
         message="En ny verifieringskod har skickats till din e-post"
