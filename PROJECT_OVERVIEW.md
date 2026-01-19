@@ -1,7 +1,7 @@
 # GinoNova - Komplett Projektöversikt
 
 > **Senast uppdaterad:** 2026-01-19
-> **Version:** v2.6.0
+> **Version:** v2.7.0
 > **Status:** Production
 > **URL:** <https://ginonova.com> | <https://api.ginonova.com>
 
@@ -37,6 +37,7 @@
 - **SkillsMaps** - Visuella kunskapskartor med lärandevägar
 - **FastTrack** - Snabbkurser för specifika verktyg (Docker, Git, etc.)
 - **Admin Dashboard** - Realtidsövervakning av användare, broadcast, analytics
+- **Email Verification** - 6-siffrig verifieringskod via Resend (v2.7.0)
 
 ### Layout & Design (v2.6.0)
 
@@ -69,6 +70,7 @@ Language:      Python 3.11
 Database:      PostgreSQL (SQLAlchemy 2.0)
 Migrations:    Alembic
 Auth:          JWT (python-jose + bcrypt)
+Email:         Resend API (3000 gratis/månad)
 AI:            OpenAI API (GPT-4o-mini)
 Workers:       4 Uvicorn workers på Railway
 ```
@@ -96,6 +98,7 @@ saas-project/
 │   │   │   │   ├── routes/
 │   │   │   │   │   ├── admin_v2.py   # 🔥 Admin dashboard (80KB - huvudfil)
 │   │   │   │   │   ├── quiz.py       # AI Quiz generation
+│   │   │   │   │   ├── verification.py # Email verification endpoints
 │   │   │   │   │   ├── study.py      # Study endpoints
 │   │   │   │   │   ├── dallas.py     # Dallas AI assistant
 │   │   │   │   │   ├── exam_results.py
@@ -105,8 +108,9 @@ saas-project/
 │   │   │   │   ├── database.py       # DB connection
 │   │   │   │   └── seeds/            # Content seeding
 │   │   │   └── services/
+│   │   │       ├── email_service.py  # 📧 Resend email (verification, welcome)
 │   │   │       └── quiz_service.py   # AI quiz generation logic
-│   │   └── alembic/versions/         # DB migrations (001-011)
+│   │   └── alembic/versions/         # DB migrations (001-012)
 │   │
 │   ├── frontend/              # Next.js frontend
 │   │   ├── src/
@@ -116,7 +120,7 @@ saas-project/
 │   │   │   │   │   ├── study/        # Study pages
 │   │   │   │   │   ├── dashboard/
 │   │   │   │   │   └── ...
-│   │   │   │   └── (auth)/           # Login/Register
+│   │   │   │   └── (auth)/           # Login/Register/Verify-email
 │   │   │   ├── components/
 │   │   │   │   ├── admin/            # Admin components
 │   │   │   │   ├── study/            # Study components
@@ -338,7 +342,7 @@ const sources = {
 
 | Tabell | Beskrivning |
 |--------|-------------|
-| `users` | Användardata, auth, permissions |
+| `users` | Användardata, auth, permissions, verification_code, verification_code_expires_at |
 | `tracks` | Utbildningsspår (DevOps, Linux) |
 | `modules` | Moduler inom spår |
 | `tasks` | Uppgifter inom moduler |
@@ -367,11 +371,19 @@ alembic revision -m "name"    # Skapa ny migration
 ### Auth (`/api/auth/`)
 
 ```
-POST /register     - Registrera ny användare
+POST /register     - Registrera ny användare (skickar verifieringskod)
 POST /login        - Logga in (email/password)
 POST /logout       - Logga ut (loggar aktivitet)
 GET  /me           - Hämta nuvarande användare
 POST /oauth        - OAuth login (Google/GitHub/Discord)
+```
+
+### Verification (`/api/verify/`)
+
+```
+POST /verify       - Verifiera email med 6-siffrig kod
+POST /resend       - Skicka ny verifieringskod (60s cooldown)
+GET  /status       - Kolla verifieringsstatus för email
 ```
 
 ### Study (`/api/study/`)
@@ -498,12 +510,12 @@ curl https://api.ginonova.com/api/auth/status
 ## 📊 Statistik
 
 - **Frontend pages:** 40+
-- **Backend routes:** 80+
+- **Backend routes:** 85+
 - **Quiz frågor:** 770+
 - **Datafiler:** 84
 - **DB tabeller:** 13
-- **Migrations:** 11
-- **Total kodrader:** ~50,000+
+- **Migrations:** 12
+- **Total kodrader:** ~51,000+
 
 ---
 
@@ -513,6 +525,7 @@ curl https://api.ginonova.com/api/auth/status
 |-----|-------|
 | `apps/backend/src/api/routes/admin_v2.py` | Hela admin-systemet (80KB) |
 | `apps/backend/src/api/auth.py` | Autentisering |
+| `apps/backend/src/services/email_service.py` | Email via Resend (verification, welcome) |
 | `apps/backend/src/db/models.py` | Alla DB-modeller |
 | `apps/frontend/src/components/layout/TopBar.tsx` | Fixed TopBar med logo, Spotify, quote |
 | `apps/frontend/src/components/layout/Sidebar.tsx` | Sidebar (börjar under TopBar) |
@@ -530,4 +543,4 @@ Email: `said.ebadi@hotmail.com` (hårdkodad som admin i flera ställen)
 
 ---
 
-*Dokumentation uppdaterad 2026-01-19*
+*Dokumentation uppdaterad 2026-01-19 (v2.7.0 - Email Verification)*
