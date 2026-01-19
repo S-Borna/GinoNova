@@ -1,7 +1,7 @@
 """Add email verification columns
 
-Revision ID: 012_add_email_verification
-Revises: 011_add_activity_logs
+Revision ID: 012
+Revises: 011
 Create Date: 2026-01-19
 """
 from alembic import op
@@ -10,8 +10,8 @@ from sqlalchemy import inspect
 
 
 # revision identifiers
-revision = '012_add_email_verification'
-down_revision = '011_add_activity_logs'
+revision = '012'
+down_revision = '011'
 branch_labels = None
 depends_on = None
 
