@@ -31,6 +31,7 @@ from .routes.quiz import router as quiz_router
 from .routes.study import router as study_router
 from .routes.dallas import router as dallas_router
 from .routes.exam_results import router as exam_results_router
+from .routes.verification import router as verification_router
 
 # Phase 22-28: Final production-ready routes
 from .routes.observability import observability_router
@@ -75,6 +76,7 @@ api_router.include_router(quiz_router, tags=["quiz"])
 api_router.include_router(study_router, tags=["study"])
 api_router.include_router(dallas_router, tags=["dallas"])
 api_router.include_router(exam_results_router, prefix="/exam", tags=["exam"])
+api_router.include_router(verification_router, prefix="/verify", tags=["verification"])
 
 # Phase 22-28: Final production-ready routes
 api_router.include_router(observability_router, tags=["observability"])

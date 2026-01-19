@@ -85,6 +85,7 @@ class UserService:
 
         Raises:
             InvalidCredentialsError: If credentials are invalid
+            AccountBannedError: If user account is deactivated/banned
         """
         # Normalize email before lookup (schema also normalizes, but be safe)
         normalized_email = login_data.email.lower().strip()
@@ -99,6 +100,11 @@ class UserService:
 
         if not verify_password(login_data.password, user.password_hash):
             raise InvalidCredentialsError("Invalid email or password")
+
+        # Check if user is banned/deactivated
+        if not user.is_active:
+            from ..core.exceptions import AccountBannedError
+            raise AccountBannedError("Your account has been suspended")
 
         return user
 

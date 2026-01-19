@@ -15,8 +15,10 @@ from ..core.deps import CurrentUser
 from ..core.exceptions import (
     raise_conflict,
     raise_unauthorized,
+    raise_forbidden,
     UserAlreadyExistsError,
     InvalidCredentialsError,
+    AccountBannedError,
 )
 from ..db import user_repository
 
@@ -82,6 +84,7 @@ def register(user_data: UserCreate, request: Request):
     - **full_name**: Optional full name (max 100 chars)
 
     Returns JWT access token on successful registration.
+    User must verify email before full access is granted.
 
     Raises:
         409 Conflict: If email already exists
@@ -102,6 +105,34 @@ def register(user_data: UserCreate, request: Request):
         if client_ip:
             user_repository.update_user(user.id, registration_ip=client_ip, last_login_ip=client_ip)
 
+        # Generate and send verification code
+        try:
+            from src.services.email_service import generate_verification_code, get_code_expiry, send_verification_email
+            from src.db.database import SessionLocal
+            from src.db.models import User as UserModel
+            
+            code = generate_verification_code()
+            expires_at = get_code_expiry()
+            
+            # Update user with verification code
+            db = SessionLocal()
+            try:
+                db_user = db.query(UserModel).filter(UserModel.id == user.id).first()
+                if db_user:
+                    db_user.verification_code = code
+                    db_user.verification_code_expires_at = expires_at
+                    db_user.is_verified = False
+                    db.commit()
+                    
+                    # Send verification email
+                    send_verification_email(user.email, code, user.full_name)
+                    print(f"[Register] Verification code sent to {user.email}")
+            finally:
+                db.close()
+        except Exception as e:
+            print(f"[Register] Failed to send verification email: {e}")
+            # Continue anyway - user can request new code
+
         # Log registration activity for admin dashboard
         try:
             from .routes.admin_v2 import add_activity_log
@@ -110,7 +141,7 @@ def register(user_data: UserCreate, request: Request):
                 user_id=str(user.id),
                 user_email=user.email,
                 user_name=user.full_name,
-                details=f"New user via email/password registration (IP: {client_ip or 'unknown'})"
+                details=f"New user via email/password registration (IP: {client_ip or 'unknown'}) - awaiting verification"
             )
         except Exception as e:
             print(f"[ActivityLog] Failed to log registration: {e}")
@@ -148,6 +179,7 @@ def login(login_data: UserLogin, request: Request):
 
     Raises:
         401 Unauthorized: If email/password is incorrect
+        403 Forbidden: If user account is banned/suspended
         503 Service Unavailable: If lockdown mode is enabled
     """
     # Check lockdown mode - block logins except allowed emails
@@ -161,6 +193,8 @@ def login(login_data: UserLogin, request: Request):
         user = user_service.authenticate_user(login_data)
     except InvalidCredentialsError:
         raise_unauthorized("Incorrect email or password")
+    except AccountBannedError:
+        raise_forbidden("Your account has been suspended. Contact support for assistance.")
 
     if not user:
         raise_unauthorized("Incorrect email or password")
@@ -333,6 +367,13 @@ def oauth_login(oauth_data: OAuthRequest, request: Request):
         existing_user = user_repository.get_user_by_email(oauth_data.email)
 
         if existing_user:
+            # Check if user is banned/deactivated
+            if not existing_user.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Your account has been suspended. Contact support for assistance."
+                )
+
             # User exists - update OAuth info and last_activity_at
             if is_db_configured():
                 from ..db.models import User as UserModel

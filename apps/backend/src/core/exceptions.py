@@ -59,3 +59,8 @@ class InvalidCredentialsError(Exception):
 class UserNotActiveError(Exception):
     """Raised when user account is deactivated"""
     pass
+
+
+class AccountBannedError(Exception):
+    """Raised when user account is banned/suspended"""
+    pass

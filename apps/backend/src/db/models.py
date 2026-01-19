@@ -42,6 +42,10 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     is_verified = Column(Boolean, default=False)
 
+    # Email verification
+    verification_code = Column(String(6), nullable=True)
+    verification_code_expires_at = Column(DateTime, nullable=True)
+
     # Permissions (feature access) - DISABLED until migration 005 runs
     # permissions = Column(JSON, nullable=True, default=lambda: {
     #     "ai_quiz": True,

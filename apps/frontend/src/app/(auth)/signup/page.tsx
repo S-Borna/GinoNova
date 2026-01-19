@@ -113,7 +113,8 @@ export default function SignupPage() {
 
         try {
             await register(normalizeEmail(email), password, fullName)
-            router.push("/dashboard")
+            // Redirect to email verification page
+            router.push(`/verify-email?email=${encodeURIComponent(normalizeEmail(email))}`)
         } catch (err) {
             setError(err instanceof Error ? err.message : "Registration failed. Please try again.")
         } finally {
@@ -167,6 +168,16 @@ export default function SignupPage() {
                 <p className="mt-2 text-neutral-600 dark:text-neutral-400">
                     Start your DevOps journey today
                 </p>
+                <div className="mt-3 p-3 bg-purple-500/10 border border-purple-500/20 rounded-lg">
+                    <p className="text-xs text-purple-300 flex items-start gap-2">
+                        <span className="text-base">📧</span>
+                        <span>
+                            Du får en verifieringskod via e-post efter registrering.
+                            <br />
+                            <span className="text-purple-400/70">Tips: Kolla skräpposten om mailet inte dyker upp!</span>
+                        </span>
+                    </p>
+                </div>
             </div>
 
             {/* Social login */}
