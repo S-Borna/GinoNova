@@ -43,12 +43,12 @@ export interface ValidationResult {
  */
 export function parseApiError(errorData: unknown, fallback: string = "An error occurred"): string {
     if (!errorData) return fallback
-    
+
     // String response
     if (typeof errorData === "string") {
         return errorData
     }
-    
+
     // Pydantic validation errors (array format)
     if (Array.isArray(errorData)) {
         const messages = errorData.map(err => {
@@ -60,11 +60,11 @@ export function parseApiError(errorData: unknown, fallback: string = "An error o
         })
         return messages.join(", ")
     }
-    
+
     // Object with detail field
     if (typeof errorData === "object" && errorData !== null) {
         const data = errorData as Record<string, unknown>
-        
+
         // FastAPI HTTPException format: { detail: "message" }
         if ("detail" in data) {
             // detail can be string, array, or object
@@ -74,18 +74,18 @@ export function parseApiError(errorData: unknown, fallback: string = "An error o
             // Recursive call for nested detail (Pydantic validation)
             return parseApiError(data.detail, fallback)
         }
-        
+
         // Generic message field
         if ("message" in data && typeof data.message === "string") {
             return data.message
         }
-        
+
         // Generic error field
         if ("error" in data && typeof data.error === "string") {
             return data.error
         }
     }
-    
+
     return fallback
 }
 
@@ -263,7 +263,7 @@ export async function logout(): Promise<void> {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-            }).catch(() => {}) // Ignore errors - still logout locally
+            }).catch(() => { }) // Ignore errors - still logout locally
         }
     } catch {
         // Ignore errors - still logout locally
