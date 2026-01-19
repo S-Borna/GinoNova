@@ -1,7 +1,7 @@
 # GinoNova - Komplett Projektöversikt
 
-> **Senast uppdaterad:** 2026-01-18
-> **Version:** v2.5.0
+> **Senast uppdaterad:** 2026-01-19
+> **Version:** v2.6.0
 > **Status:** Production
 > **URL:** <https://ginonova.com> | <https://api.ginonova.com>
 
@@ -37,6 +37,13 @@
 - **SkillsMaps** - Visuella kunskapskartor med lärandevägar
 - **FastTrack** - Snabbkurser för specifika verktyg (Docker, Git, etc.)
 - **Admin Dashboard** - Realtidsövervakning av användare, broadcast, analytics
+
+### Layout & Design (v2.6.0)
+
+- **TopBar** - Fixed full-width header med GinoNova logo, "Skapad med ❤️" quote, Spotify widget, session timer
+- **Sidebar** - Börjar under TopBar vid NAVIGATION-nivå (logo flyttad till TopBar)
+- **Logo** - Stor glödande logo (80px) med animerade drop-shadow effekter
+- **Spotify Widget** - Centrerad i TopBar med Play-knapp, visar nu spelande låt via Last.fm
 
 ---
 
@@ -507,6 +514,9 @@ curl https://api.ginonova.com/api/auth/status
 | `apps/backend/src/api/routes/admin_v2.py` | Hela admin-systemet (80KB) |
 | `apps/backend/src/api/auth.py` | Autentisering |
 | `apps/backend/src/db/models.py` | Alla DB-modeller |
+| `apps/frontend/src/components/layout/TopBar.tsx` | Fixed TopBar med logo, Spotify, quote |
+| `apps/frontend/src/components/layout/Sidebar.tsx` | Sidebar (börjar under TopBar) |
+| `apps/frontend/src/components/spotify/SpotifyTopBarWidget.tsx` | Spotify widget med Play-knapp |
 | `apps/frontend/src/components/auth/AuthProvider.tsx` | Auth context |
 | `apps/frontend/src/hooks/useActivityTracker.tsx` | Realtidsspårning |
 | `apps/frontend/src/components/broadcast/UserBroadcast.tsx` | Broadcast UI |
@@ -520,4 +530,4 @@ Email: `said.ebadi@hotmail.com` (hårdkodad som admin i flera ställen)
 
 ---
 
-*Dokumentation uppdaterad 2026-01-18*
+*Dokumentation uppdaterad 2026-01-19*
