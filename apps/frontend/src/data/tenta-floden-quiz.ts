@@ -1,7 +1,7 @@
 /**
  * TENTA FLÖDEN - Scenario & Flow questions based on Linux Tenta (20 original questions)
  * All questions in English with varied correct answer positions
- * 
+ *
  * Created: 2026-01-18
  * Source: Mirrors linux-tenta-quiz.ts with scenario/flow format
  * Content: 20 scenario questions + 20 flow questions = 40 total
