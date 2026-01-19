@@ -2,7 +2,7 @@
  * Linux Exam 510 Quiz - Comprehensive Coverage (G-Level Only)
  * Complete exam preparation covering all 20 course objectives
  * Filtered to include only basic/intermediate questions (G-level)
- * 
+ *
  * Topics:
  * - Mål 1: Troubleshooting
  * - Mål 2: Storage/FHS/LVM
@@ -19,7 +19,7 @@
 // TOPIC DEFINITIONS - För att välja specifika delar
 // ============================================================================
 
-export type LinuxExam510Topic = 
+export type LinuxExam510Topic =
     | 'troubleshooting'    // Mål 1
     | 'storage-fhs-lvm'    // Mål 2
     | 'permissions'        // Mål 3

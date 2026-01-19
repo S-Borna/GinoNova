@@ -7,12 +7,12 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-    Inbox, 
-    X, 
-    Check, 
-    Trash2, 
-    Mail, 
+import {
+    Inbox,
+    X,
+    Check,
+    Trash2,
+    Mail,
     MailOpen,
     MessageSquare,
     ChevronDown
@@ -56,17 +56,17 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
             const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
             const oscillator = audioContext.createOscillator()
             const gainNode = audioContext.createGain()
-            
+
             oscillator.connect(gainNode)
             gainNode.connect(audioContext.destination)
-            
+
             // Two-tone notification (ding-dong effect)
             oscillator.frequency.setValueAtTime(880, audioContext.currentTime) // A5
             oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.15) // E5
-            
+
             gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
-            
+
             oscillator.start(audioContext.currentTime)
             oscillator.stop(audioContext.currentTime + 0.3)
         } catch {
@@ -78,7 +78,7 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
     const fetchMessages = useCallback(async () => {
         if (!isAdmin) return
         if (fetchingRef.current) return // Prevent concurrent fetches
-        
+
         fetchingRef.current = true
 
         try {
@@ -96,13 +96,13 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
                 const data = await response.json()
                 const newMessages = data.messages || []
                 const newUnread = data.unread || 0
-                
+
                 // 🔔 Play sound if unread count increased (new message!)
                 if (newUnread > prevUnreadCountRef.current && prevUnreadCountRef.current !== 0) {
                     playNotificationSound()
                 }
                 prevUnreadCountRef.current = newUnread
-                
+
                 // Only update messages if IDs changed (prevents flashing)
                 setMessages(prev => {
                     const prevIds = prev.map(m => m.id).sort().join(",")

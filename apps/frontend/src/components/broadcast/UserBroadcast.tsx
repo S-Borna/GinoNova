@@ -66,18 +66,18 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
             const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
             const oscillator = audioContext.createOscillator()
             const gainNode = audioContext.createGain()
-            
+
             oscillator.connect(gainNode)
             gainNode.connect(audioContext.destination)
-            
+
             // Three-tone attention sound (ascending) 🎵
             oscillator.frequency.setValueAtTime(523, audioContext.currentTime)      // C5
             oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1) // E5
             oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2) // G5
-            
+
             gainNode.gain.setValueAtTime(0.25, audioContext.currentTime)
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4)
-            
+
             oscillator.start(audioContext.currentTime)
             oscillator.stop(audioContext.currentTime + 0.4)
         } catch {
@@ -114,7 +114,7 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
 
                 // Check if there are NEW messages (for sound notification)
                 const newIds = newMessages.map((m: BroadcastMessage) => m.id).sort().join(",")
-                
+
                 // 🔔 Play sound if new messages appeared (and we had previous data)
                 if (newIds !== prevMessageIdsRef.current && prevMessageIdsRef.current !== "" && newMessages.length > 0) {
                     // Check if there's actually a NEW message (not just removed)
