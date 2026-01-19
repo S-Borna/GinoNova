@@ -52,6 +52,29 @@ with engine.connect() as conn:
         conn.commit()
         print('✅ parent_task_id column added')
 
+    # Check users table columns for email verification
+    user_columns = [c['name'] for c in inspector.get_columns('users')]
+
+    # Add verification_code if missing
+    if 'verification_code' not in user_columns:
+        print('⚠️  Adding missing verification_code column...')
+        conn.execute(text(\"\"\"
+            ALTER TABLE users
+            ADD COLUMN verification_code VARCHAR(6)
+        \"\"\"))
+        conn.commit()
+        print('✅ verification_code column added')
+
+    # Add verification_code_expires_at if missing
+    if 'verification_code_expires_at' not in user_columns:
+        print('⚠️  Adding missing verification_code_expires_at column...')
+        conn.execute(text(\"\"\"
+            ALTER TABLE users
+            ADD COLUMN verification_code_expires_at TIMESTAMP
+        \"\"\"))
+        conn.commit()
+        print('✅ verification_code_expires_at column added')
+
 print('✅ Schema pre-check complete')
 " || echo "⚠️  Pre-migration check skipped"
 
