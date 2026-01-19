@@ -221,7 +221,7 @@ function EqualizerBars({ isPlaying, size = 'default' }: { isPlaying: boolean; si
 }
 
 /* ============================================================================
-   MINI VARIANT (for TopBar)
+   MINI VARIANT (for TopBar) - STRETCHED & LARGE
    ============================================================================ */
 
 function MiniWidget({
@@ -243,45 +243,46 @@ function MiniWidget({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "flex items-center gap-3 px-4 py-2.5 rounded-2xl",
+        "flex items-center gap-4 px-5 py-3 rounded-2xl",
         "bg-zinc-900/90 hover:bg-zinc-800/95",
         "border border-zinc-700/60 hover:border-emerald-500/50",
         "transition-all duration-300 group cursor-pointer",
-        "shadow-lg shadow-black/20",
+        "shadow-xl shadow-black/30",
+        "min-w-[280px]",
         className
       )}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {/* Dancing bars - left side */}
+      {/* Dancing bars - left side - LARGE */}
       {data.isPlaying && <EqualizerBars isPlaying={true} size="large" />}
 
-      {/* Album art */}
+      {/* Album art - LARGER */}
       {track.albumArt ? (
         <img
           src={track.albumArt}
           alt={track.album}
-          className="w-10 h-10 rounded-lg object-cover shadow-md"
+          className="w-12 h-12 rounded-xl object-cover shadow-lg"
         />
       ) : (
-        <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
-          <Music2 className="w-5 h-5 text-zinc-500" />
+        <div className="w-12 h-12 rounded-xl bg-zinc-800 flex items-center justify-center">
+          <Music2 className="w-6 h-6 text-zinc-500" />
         </div>
       )}
 
-      {/* Track info */}
-      <div className="flex flex-col min-w-0 max-w-[140px]">
-        <span className="text-sm font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
+      {/* Track info - LARGER TEXT */}
+      <div className="flex flex-col min-w-0 flex-1">
+        <span className="text-base font-bold text-white truncate group-hover:text-emerald-400 transition-colors">
           {track.name}
         </span>
-        <span className="text-xs text-zinc-400 truncate">
+        <span className="text-sm text-zinc-400 truncate">
           {track.artist}
         </span>
       </div>
 
-      {/* Play button icon */}
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30 group-hover:bg-emerald-400 group-hover:scale-110 transition-all">
-        <Play className="w-4 h-4 text-black fill-black ml-0.5" />
+      {/* Play button icon - LARGER */}
+      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/40 group-hover:bg-emerald-400 group-hover:scale-110 transition-all">
+        <Play className="w-5 h-5 text-black fill-black ml-0.5" />
       </div>
     </motion.a>
   )

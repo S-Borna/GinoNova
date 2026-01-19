@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
 import {
     Music,
     Loader2,
-    ExternalLink
+    Play
 } from "lucide-react"
 
 interface Track {
@@ -170,33 +170,35 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
         <motion.div
             className={cn("relative", className)}
         >
-            {/* WIDGET - Compact bar with play button */}
+            {/* WIDGET - LARGE stretched bar with play button */}
             <div
                 className={cn(
                     "flex items-center gap-3 px-4 py-2 rounded-xl",
-                    "bg-gradient-to-r from-green-500/10 to-emerald-500/10",
-                    "border border-green-500/20",
-                    "transition-all duration-200"
+                    "bg-gradient-to-r from-green-500/15 to-emerald-500/15",
+                    "border border-green-500/30",
+                    "transition-all duration-200",
+                    "min-w-[240px]",
+                    "shadow-lg shadow-black/20"
                 )}
             >
-                {/* Equalizer Bars - Only animate when music is playing */}
-                <div className="flex items-end gap-[2px] h-4">
-                    {[0, 1, 2, 3].map((i) => (
+                {/* Equalizer Bars - LARGE - Only animate when music is playing */}
+                <div className="flex items-end gap-0.5 h-5">
+                    {[0, 1, 2, 3, 4].map((i) => (
                         <motion.div
                             key={i}
                             className={cn(
-                                "w-[3px] rounded-full",
+                                "w-1 rounded-full",
                                 track.isPlaying ? "bg-green-500" : "bg-green-500/50"
                             )}
                             animate={track.isPlaying ? {
-                                height: ["40%", "100%", "60%", "80%", "40%"],
+                                height: ["4px", "20px", "10px", "16px", "4px"],
                             } : {
-                                height: ["30%", "50%", "40%", "60%"][i] + "%"
+                                height: ["4px", "8px", "6px", "10px", "7px"][i]
                             }}
                             transition={track.isPlaying ? {
                                 duration: 0.8,
                                 repeat: Infinity,
-                                delay: i * 0.15,
+                                delay: i * 0.12,
                                 ease: "easeInOut",
                             } : {
                                 duration: 0.3
@@ -205,32 +207,32 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                     ))}
                 </div>
 
-                {/* Track Info */}
+                {/* Track Info - LARGER TEXT */}
                 <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-white truncate">{track.name}</p>
+                    <p className="text-sm font-bold text-white truncate">{track.name}</p>
                     <p className="text-xs text-zinc-400 truncate">{track.artist}</p>
                 </div>
 
-                {/* Play on Spotify Button */}
+                {/* Play on Spotify Button - LARGER with Play icon */}
                 <motion.button
                     onClick={handlePlayClick}
                     disabled={urlLoading}
                     className={cn(
-                        "p-2 rounded-full flex-shrink-0",
+                        "w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center",
                         "bg-green-500 hover:bg-green-400",
                         "text-black",
                         "transition-all duration-200",
-                        "hover:scale-105 active:scale-95",
+                        "shadow-md shadow-green-500/40",
                         "disabled:opacity-50 disabled:cursor-wait"
                     )}
-                    whileHover={{ scale: 1.05 }}
+                    whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     title="Spela i Spotify"
                 >
                     {urlLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (
-                        <ExternalLink className="w-4 h-4" />
+                        <Play className="w-4 h-4 fill-black ml-0.5" />
                     )}
                 </motion.button>
             </div>

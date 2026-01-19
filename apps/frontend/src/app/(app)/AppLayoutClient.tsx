@@ -157,6 +157,7 @@ function AppLayoutInner({ children }: { children: React.ReactNode }) {
             <div
                 className={cn(
                     "min-h-screen transition-all duration-300",
+                    "pt-14 sm:pt-16 lg:pt-[72px]", // Space for fixed TopBar
                     isTablet && (effectiveCollapsed ? "pl-[72px]" : "pl-[240px]"),
                     showRightSidebar && "pr-[280px]", // Space for right sidebar only on task pages
                     isMobile && "pb-20" // Space for mobile nav

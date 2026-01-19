@@ -16,6 +16,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -485,9 +486,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
     return (
         <header className={cn(
-            "sticky top-0 z-30",
-            "h-16 sm:h-20 lg:h-24", // Responsive height
-            "bg-[#0a0a12]/90 backdrop-blur-xl",
+            "fixed top-0 left-0 right-0 z-50",
+            "h-14 sm:h-16 lg:h-[72px]",
+            "bg-[#0a0a12]/95 backdrop-blur-xl",
             "border-b border-purple-500/10",
             className
         )}>
@@ -572,9 +573,51 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                         </button>
                     )}
 
-                    {/* Tattooed Quote - Left side, under logo area */}
+                    {/* GinoNova Logo - Now part of TopBar, overflow visible for larger logo */}
+                    <Link href="/dashboard" className="hidden lg:block shrink-0 overflow-visible">
+                        <motion.div
+                            className="relative overflow-visible"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            {/* Logo glow - MEGA INTENSIFIED */}
+                            <motion.div
+                                className="absolute -inset-10 rounded-3xl"
+                                style={{
+                                    background: "radial-gradient(circle, rgba(139,92,246,0.8), rgba(236,72,153,0.5), transparent)",
+                                    filter: "blur(30px)",
+                                }}
+                                animate={{
+                                    opacity: [0.6, 1, 0.6],
+                                    scale: [1, 1.2, 1],
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                            <motion.div
+                                animate={{
+                                    filter: [
+                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))",
+                                        "drop-shadow(0 0 50px rgba(139,92,246,1))",
+                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))"
+                                    ]
+                                }}
+                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                                <Image
+                                    src="/ginonova-logo-horizontal.svg"
+                                    alt="GinoNova"
+                                    width={400}
+                                    height={100}
+                                    className="h-20 w-auto"
+                                    priority
+                                />
+                            </motion.div>
+                        </motion.div>
+                    </Link>
+
+                    {/* Tattooed Quote - Left side, after logo */}
                     <motion.div
-                        className="hidden md:block relative select-none ml-2"
+                        className="hidden md:block relative select-none -ml-2"
                         animate={{
                             scale: [1, 1.02, 1],
                         }}
@@ -616,7 +659,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Center - Spotify Widget + Broadcasts + Admin Flash (hidden on mobile) */}
-                <div className="hidden sm:flex items-center justify-center gap-4 flex-shrink-0">
+                <div className="hidden sm:flex items-center justify-center gap-4 flex-1">
                     {isAuthenticated && <SpotifyTopBarWidget />}
                     {/* Broadcast in center - with margin to separate from Spotify */}
                     {isAuthenticated && <div className="mx-2"><UserBroadcast /></div>}
@@ -624,7 +667,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                 </div>
 
                 {/* Right side */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0 flex-1 justify-end">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0 justify-end">
                     {/* Broadcast messages - Mobile */}
                     {isAuthenticated && <div className="sm:hidden"><UserBroadcast /></div>}
                     {/* Admin Activity Flash - Mobile (between items) */}
