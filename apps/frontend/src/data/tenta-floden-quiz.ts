@@ -267,12 +267,12 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
         question: 'Axel claims a container can access the hosts localhost directly. Is this statement true or false?',
         options: [
             'True, containers share localhost',
-            'False, requires special configuration',
+            'False, not possible at all',
             'Only works on Windows platform',
-            'Only with specific Docker version'
+            'True, requires however a special configuration'
         ],
-        correctIndex: 1,
-        explanation: 'A container CANNOT access the hosts localhost (127.0.0.1) without special configuration (e.g., host network mode).',
+        correctIndex: 3,
+        explanation: 'A container CAN access the hosts localhost (127.0.0.1) with a special configuration. By using --network=host flag, the container shares the hosts network namespace and can access localhost directly. Alternatively, on Docker Desktop, host.docker.internal can be used to reach the host.',
         difficulty: 'G',
         category: 'Docker Network',
         type: 'scenario'
