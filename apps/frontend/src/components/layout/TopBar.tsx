@@ -615,9 +615,9 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                         </motion.div>
                     </Link>
 
-                    {/* Tattooed Quote - Left side, after logo */}
+                    {/* Tattooed Quote - Left side, after logo (tablet+) */}
                     <motion.div
-                        className="hidden md:block relative select-none -ml-2"
+                        className="hidden sm:block relative select-none -ml-2"
                         animate={{
                             scale: [1, 1.02, 1],
                         }}
@@ -633,7 +633,7 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 
                         {/* Main text */}
                         <motion.p
-                            className="relative text-lg xl:text-xl font-medium italic tracking-wide whitespace-nowrap"
+                            className="relative text-base md:text-lg xl:text-xl font-medium italic tracking-wide whitespace-nowrap"
                             style={{
                                 fontFamily: "'Georgia', 'Times New Roman', serif",
                                 background: "linear-gradient(135deg, #c084fc 0%, #f472b6 35%, #22d3ee 70%, #c084fc 100%)",
@@ -658,7 +658,33 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     </motion.div>
                 </div>
 
-                {/* Center - Spotify Widget + Broadcasts + Admin Flash (hidden on mobile) */}
+                {/* Center - Quote on mobile, Spotify + more on larger screens */}
+                <div className="sm:hidden flex-1 flex items-center justify-center">
+                    <motion.div
+                        className="relative select-none"
+                        animate={{ scale: [1, 1.02, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                        <div className="absolute inset-0 blur-lg bg-gradient-to-r from-purple-500/30 via-pink-500/20 to-cyan-500/30 rounded-full" />
+                        <motion.p
+                            className="relative text-sm font-medium italic tracking-wide whitespace-nowrap"
+                            style={{
+                                fontFamily: "'Georgia', 'Times New Roman', serif",
+                                background: "linear-gradient(135deg, #c084fc 0%, #f472b6 35%, #22d3ee 70%, #c084fc 100%)",
+                                backgroundSize: "200% 200%",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                backgroundClip: "text",
+                            }}
+                            animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                        >
+                            <span className="not-italic">❤️</span> DevOps
+                        </motion.p>
+                    </motion.div>
+                </div>
+
+                {/* Center - Spotify Widget + Broadcasts + Admin Flash (tablet+) */}
                 <div className="hidden sm:flex items-center justify-center gap-4 flex-1">
                     {isAuthenticated && <SpotifyTopBarWidget />}
                     {/* Broadcast in center - with margin to separate from Spotify */}
