@@ -7,8 +7,8 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.ginonova.com"
 const TOKEN_KEY = "auth_token"
 
-// Validation constants - User friendly
-export const PASSWORD_MIN_LENGTH = 6
+// Validation constants - MUST match backend (src/schemas/user.py)
+export const PASSWORD_MIN_LENGTH = 8
 export const PASSWORD_MAX_LENGTH = 128
 
 // Types matching backend schemas
@@ -28,12 +28,65 @@ export interface TokenResponse {
 }
 
 export interface AuthError {
-    detail: string
+    detail?: string
+    message?: string
 }
 
 export interface ValidationResult {
     valid: boolean
     error?: string
+}
+
+/**
+ * Parse API error responses into user-friendly messages
+ * Handles FastAPI/Pydantic validation errors and standard errors
+ */
+export function parseApiError(errorData: unknown, fallback: string = "An error occurred"): string {
+    if (!errorData) return fallback
+    
+    // String response
+    if (typeof errorData === "string") {
+        return errorData
+    }
+    
+    // Pydantic validation errors (array format)
+    if (Array.isArray(errorData)) {
+        const messages = errorData.map(err => {
+            if (typeof err === "object" && err !== null && "msg" in err) {
+                const field = err.loc?.slice(-1)[0] || "field"
+                return `${field}: ${err.msg}`
+            }
+            return String(err)
+        })
+        return messages.join(", ")
+    }
+    
+    // Object with detail field
+    if (typeof errorData === "object" && errorData !== null) {
+        const data = errorData as Record<string, unknown>
+        
+        // FastAPI HTTPException format: { detail: "message" }
+        if ("detail" in data) {
+            // detail can be string, array, or object
+            if (typeof data.detail === "string") {
+                return data.detail
+            }
+            // Recursive call for nested detail (Pydantic validation)
+            return parseApiError(data.detail, fallback)
+        }
+        
+        // Generic message field
+        if ("message" in data && typeof data.message === "string") {
+            return data.message
+        }
+        
+        // Generic error field
+        if ("error" in data && typeof data.error === "string") {
+            return data.error
+        }
+    }
+    
+    return fallback
 }
 
 /**
@@ -132,18 +185,7 @@ export async function register(
 
     if (!res.ok) {
         const errorData = await res.json().catch(() => ({}))
-        // Handle different error response formats
-        let errorMessage = "Registration failed"
-        if (typeof errorData === "string") {
-            errorMessage = errorData
-        } else if (errorData?.detail) {
-            errorMessage = typeof errorData.detail === "string" 
-                ? errorData.detail 
-                : JSON.stringify(errorData.detail)
-        } else if (errorData?.message) {
-            errorMessage = errorData.message
-        }
-        throw new Error(errorMessage)
+        throw new Error(parseApiError(errorData, "Registration failed"))
     }
 
     const data: TokenResponse = await res.json()
@@ -170,8 +212,8 @@ export async function login(
     })
 
     if (!res.ok) {
-        const error: AuthError = await res.json()
-        throw new Error(error.detail || "Login failed")
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(parseApiError(errorData, "Login failed"))
     }
 
     const data: TokenResponse = await res.json()
