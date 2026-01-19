@@ -580,25 +580,25 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            {/* Logo glow - MEGA INTENSIFIED */}
+                            {/* Logo glow - Subtle */}
                             <motion.div
-                                className="absolute -inset-10 rounded-3xl"
+                                className="absolute -inset-6 rounded-2xl"
                                 style={{
-                                    background: "radial-gradient(circle, rgba(139,92,246,0.8), rgba(236,72,153,0.5), transparent)",
-                                    filter: "blur(30px)",
+                                    background: "radial-gradient(circle, rgba(139,92,246,0.4), rgba(236,72,153,0.2), transparent)",
+                                    filter: "blur(20px)",
                                 }}
                                 animate={{
-                                    opacity: [0.6, 1, 0.6],
-                                    scale: [1, 1.2, 1],
+                                    opacity: [0.3, 0.5, 0.3],
+                                    scale: [1, 1.1, 1],
                                 }}
                                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                             />
                             <motion.div
                                 animate={{
                                     filter: [
-                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))",
-                                        "drop-shadow(0 0 50px rgba(139,92,246,1))",
-                                        "drop-shadow(0 0 20px rgba(139,92,246,0.7))"
+                                        "drop-shadow(0 0 8px rgba(139,92,246,0.4))",
+                                        "drop-shadow(0 0 16px rgba(139,92,246,0.6))",
+                                        "drop-shadow(0 0 8px rgba(139,92,246,0.4))"
                                     ]
                                 }}
                                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
