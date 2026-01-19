@@ -16,7 +16,7 @@
 
 import * as React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Music2, ExternalLink, WifiOff, Radio, Disc3 } from 'lucide-react'
+import { Music2, ExternalLink, WifiOff, Radio, Disc3, Play } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { NowPlayingResponse } from '@/app/api/music/now-playing/route'
 
@@ -194,16 +194,20 @@ function SpinningVinyl({
    EQUALIZER BARS (animated)
    ============================================================================ */
 
-function EqualizerBars({ isPlaying }: { isPlaying: boolean }) {
+function EqualizerBars({ isPlaying, size = 'default' }: { isPlaying: boolean; size?: 'default' | 'large' }) {
+  const isLarge = size === 'large'
   return (
-    <div className="flex items-end gap-0.5 h-4">
+    <div className={cn("flex items-end", isLarge ? "gap-1 h-7" : "gap-0.5 h-4")}>
       {[0, 0.2, 0.1, 0.3, 0.15].map((delay, i) => (
         <motion.div
           key={i}
-          className="w-1 bg-emerald-500 rounded-full"
+          className={cn(
+            "bg-emerald-500 rounded-full",
+            isLarge ? "w-1.5" : "w-1"
+          )}
           animate={isPlaying ? {
-            height: ['4px', '16px', '8px', '14px', '4px'],
-          } : { height: '4px' }}
+            height: isLarge ? ['6px', '28px', '14px', '24px', '6px'] : ['4px', '16px', '8px', '14px', '4px'],
+          } : { height: isLarge ? '6px' : '4px' }}
           transition={isPlaying ? {
             duration: 0.8,
             repeat: Infinity,
@@ -239,40 +243,46 @@ function MiniWidget({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "flex items-center gap-2 px-3 py-1.5 rounded-xl",
-        "bg-zinc-900/80 hover:bg-zinc-800/90",
-        "border border-zinc-800/50 hover:border-emerald-500/30",
+        "flex items-center gap-3 px-4 py-2.5 rounded-2xl",
+        "bg-zinc-900/90 hover:bg-zinc-800/95",
+        "border border-zinc-700/60 hover:border-emerald-500/50",
         "transition-all duration-300 group cursor-pointer",
+        "shadow-lg shadow-black/20",
         className
       )}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
+      {/* Dancing bars - left side */}
+      {data.isPlaying && <EqualizerBars isPlaying={true} size="large" />}
+
       {/* Album art */}
       {track.albumArt ? (
         <img 
           src={track.albumArt} 
           alt={track.album}
-          className="w-8 h-8 rounded object-cover"
+          className="w-10 h-10 rounded-lg object-cover shadow-md"
         />
       ) : (
-        <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center">
-          <Music2 className="w-4 h-4 text-zinc-500" />
+        <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center">
+          <Music2 className="w-5 h-5 text-zinc-500" />
         </div>
       )}
 
       {/* Track info */}
-      <div className="flex flex-col min-w-0 max-w-[120px]">
-        <span className="text-xs font-medium text-white truncate">
+      <div className="flex flex-col min-w-0 max-w-[140px]">
+        <span className="text-sm font-semibold text-white truncate group-hover:text-emerald-400 transition-colors">
           {track.name}
         </span>
-        <span className="text-[10px] text-zinc-400 truncate">
+        <span className="text-xs text-zinc-400 truncate">
           {track.artist}
         </span>
       </div>
 
-      {/* Now playing indicator */}
-      {data.isPlaying && <EqualizerBars isPlaying={true} />}
+      {/* Play button icon */}
+      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30 group-hover:bg-emerald-400 group-hover:scale-110 transition-all">
+        <Play className="w-4 h-4 text-black fill-black ml-0.5" />
+      </div>
     </motion.a>
   )
 }

@@ -46,6 +46,7 @@ import {
     Youtube,
     type LucideIcon
 } from "lucide-react"
+import { SearchBar } from "@/components/layout/TopBar"
 
 /* ============================================================================
    CONSTANTS
@@ -500,17 +501,18 @@ export function Sidebar({ collapsed = false, onToggleCollapse, className }: Side
                 </Link>
             </div>
 
-            {/* Navigation Section Label */}
+            {/* Navigation Section Label with Search */}
             {!collapsed && (
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="relative px-5 pt-6 pb-2"
+                    className="relative px-3 pt-4 pb-2 flex items-center gap-3"
                 >
-                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">
                         Navigation
                     </span>
+                    <SearchBar />
                 </motion.div>
             )}
 

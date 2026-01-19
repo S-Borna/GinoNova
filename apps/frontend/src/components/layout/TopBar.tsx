@@ -265,29 +265,33 @@ function SearchBar() {
 
     return (
         <>
-            {/* Search trigger button */}
-            <button
+            {/* Search trigger button - Compact for sidebar */}
+            <motion.button
                 onClick={() => {
                     setIsOpen(true)
                     setTimeout(() => inputRef.current?.focus(), 100)
                 }}
                 className={cn(
-                    "flex items-center gap-2 px-3 py-2",
-                    "ml-2 sm:ml-8", // Less margin on mobile
-                    "bg-neutral-100 dark:bg-neutral-800/50",
-                    "rounded-xl border border-transparent",
-                    "hover:border-neutral-300 dark:hover:border-neutral-600",
-                    "transition-all duration-200",
-                    "cursor-pointer",
-                    "min-h-[44px]" // Touch target
+                    "relative flex items-center gap-2 px-2.5 py-1.5",
+                    "bg-zinc-900/60 backdrop-blur-sm",
+                    "rounded-lg border border-zinc-700/50",
+                    "hover:border-purple-500/40 hover:bg-zinc-800/70",
+                    "transition-all duration-300",
+                    "cursor-pointer group",
+                    "shadow-md shadow-black/20"
                 )}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
             >
-                <Search className="h-4 w-4 text-neutral-400" />
-                <span className="hidden sm:block text-sm text-neutral-400 w-24 md:w-32">Search...</span>
-                <kbd className="hidden xl:inline-flex h-5 items-center gap-1 rounded border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-1.5 font-mono text-[10px] text-neutral-500">
+                {/* Subtle glow on hover */}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
+                <Search className="relative h-3.5 w-3.5 text-zinc-500 group-hover:text-purple-400 transition-colors" />
+                <span className="relative text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">Search...</span>
+                <kbd className="relative hidden sm:inline-flex h-4 items-center rounded border border-zinc-700 bg-zinc-800/80 px-1 font-mono text-[9px] text-zinc-500 group-hover:border-purple-500/30 group-hover:text-purple-400 transition-colors">
                     ⌘K
                 </kbd>
-            </button>
+            </motion.button>
 
             {/* Search modal */}
             {isOpen && (
@@ -568,8 +572,47 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                         </button>
                     )}
 
-                    {/* Search */}
-                    <SearchBar />
+                    {/* Tattooed Quote - Left side, under logo area */}
+                    <motion.div
+                        className="hidden md:block relative select-none ml-2"
+                        animate={{
+                            scale: [1, 1.02, 1],
+                        }}
+                        transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    >
+                        {/* Glow layers */}
+                        <div className="absolute inset-0 blur-xl bg-gradient-to-r from-purple-500/40 via-pink-500/30 to-cyan-500/40 rounded-full" />
+                        <div className="absolute inset-0 blur-md bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-cyan-400/20 rounded-full" />
+                        
+                        {/* Main text */}
+                        <motion.p
+                            className="relative text-lg xl:text-xl font-medium italic tracking-wide whitespace-nowrap"
+                            style={{
+                                fontFamily: "'Georgia', 'Times New Roman', serif",
+                                background: "linear-gradient(135deg, #c084fc 0%, #f472b6 35%, #22d3ee 70%, #c084fc 100%)",
+                                backgroundSize: "200% 200%",
+                                WebkitBackgroundClip: "text",
+                                WebkitTextFillColor: "transparent",
+                                backgroundClip: "text",
+                                textShadow: "0 0 40px rgba(192,132,252,0.5), 0 0 80px rgba(244,114,182,0.3)",
+                                filter: "drop-shadow(0 0 12px rgba(192,132,252,0.4))",
+                            }}
+                            animate={{
+                                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                            }}
+                            transition={{
+                                duration: 5,
+                                repeat: Infinity,
+                                ease: "linear"
+                            }}
+                        >
+                            Skapad med <span className="not-italic">❤️</span> för DevOps ingenjörer
+                        </motion.p>
+                    </motion.div>
                 </div>
 
                 {/* Center - Spotify Widget + Broadcasts + Admin Flash (hidden on mobile) */}
@@ -604,3 +647,4 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
 }
 
 export default TopBar
+export { SearchBar }
