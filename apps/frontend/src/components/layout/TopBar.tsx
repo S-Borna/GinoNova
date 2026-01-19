@@ -684,8 +684,8 @@ export function TopBar({ onMenuClick, showMenuButton = false, className }: TopBa
                     </motion.div>
                 </div>
 
-                {/* Center - Spotify Widget + Broadcasts + Admin Flash (tablet+) */}
-                <div className="hidden sm:flex items-center justify-center gap-4 flex-1">
+                {/* Center - Spotify Widget + Broadcasts + Admin Flash (tablet+) - ABSOLUTE CENTER */}
+                <div className="hidden sm:flex items-center justify-center gap-4 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                     {isAuthenticated && <SpotifyTopBarWidget />}
                     {/* Broadcast in center - with margin to separate from Spotify */}
                     {isAuthenticated && <div className="mx-2"><UserBroadcast /></div>}

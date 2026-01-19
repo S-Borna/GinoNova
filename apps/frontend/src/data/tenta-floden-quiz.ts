@@ -54,7 +54,7 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
     },
     {
         id: 'tentaflod-s3',
-        question: 'Axel needs to calculate usable hosts for a /27 network. She asks you how many hosts can actually be assigned IP addresses.',
+        question: 'Axel needs to calculate usable hosts for a /27 network. He asks you how many hosts can actually be assigned IP addresses.',
         options: [
             'Exactly 32 hosts can be assigned',
             '30 hosts after network and broadcast',
@@ -69,7 +69,7 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
     },
     {
         id: 'tentaflod-s4',
-        question: 'Levie wants to connect to another servers localhost for debugging. She asks if this is possible using network configuration.',
+        question: 'Levie wants to connect to another servers localhost for debugging. He asks if this is possible using network configuration.',
         options: [
             'Add entry in the /etc/hosts file',
             'Modify files in /etc/netplan folder',
@@ -84,7 +84,7 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
     },
     {
         id: 'tentaflod-s5',
-        question: 'Said asks what DNS actually does. She thinks it converts IP addresses to hostnames. What is the correct explanation?',
+        question: 'Said asks what DNS actually does. He thinks it converts IP addresses to hostnames. What is the correct explanation?',
         options: [
             'Protocol for secure file transfers',
             'Firewall configuration service type',
@@ -219,7 +219,7 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
     },
     {
         id: 'tentaflod-s14',
-        question: 'Said asks what file descriptor 0 represents. She guesses it might be standard error. What is the correct answer?',
+        question: 'Said asks what file descriptor 0 represents. He guesses it might be standard error. What is the correct answer?',
         options: [
             'File descriptor 0 is standard log',
             'File descriptor 0 is standard error',
@@ -294,7 +294,7 @@ export const TENTA_FLODEN_QUESTIONS: TentaFlodenQuestion[] = [
     },
     {
         id: 'tentaflod-s19',
-        question: 'Levie needs to send a signal to terminate a process. She asks which command is used for sending signals.',
+        question: 'Levie needs to send a signal to terminate a process. He asks which command is used for sending signals.',
         options: [
             'Use send-signal command for this',
             'Use signal command for process',

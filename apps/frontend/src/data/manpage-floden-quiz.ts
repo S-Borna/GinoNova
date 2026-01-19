@@ -24,7 +24,7 @@ export const MANPAGE_FLODEN_QUESTIONS: ManpageFlodenQuestion[] = [
     // ============================================
     {
         id: 'mpflod-s1',
-        question: 'Mika asks how to list all files including hidden ones in the current directory. What flag does she need?',
+        question: 'Mika asks how to list all files including hidden ones in the current directory. What flag does he need?',
         options: [
             'Use ls -h for hidden files only',
             'Use ls -a to show all files',
@@ -39,7 +39,7 @@ export const MANPAGE_FLODEN_QUESTIONS: ManpageFlodenQuestion[] = [
     },
     {
         id: 'mpflod-s2',
-        question: 'Chrille wants to display manual pages for the grep command. Which command should she use?',
+        question: 'Chrille wants to display manual pages for the grep command. Which command should he use?',
         options: [
             'Run help grep for manual page',
             'Run info grep for manual page',
@@ -159,7 +159,7 @@ export const MANPAGE_FLODEN_QUESTIONS: ManpageFlodenQuestion[] = [
     },
     {
         id: 'mpflod-s10',
-        question: 'Axel needs to clear the terminal screen. What command should she use?',
+        question: 'Axel needs to clear the terminal screen. What command should he use?',
         options: [
             'Use reset to clear screen now',
             'Use clean to clear the screen',
@@ -660,13 +660,13 @@ export const MANPAGE_FLODEN_QUESTIONS: ManpageFlodenQuestion[] = [
         id: 'mpflod-s43',
         question: 'Axel needs to change to the home directory. What is the shortest command?',
         options: [
+            'Use cd with no args goes home',
             'Use cd ~ to go to home dir',
             'Use cd /home to go there',
-            'Use home to change to home',
-            'Use cd with no args goes home'
+            'Both A and B are correct'
         ],
         correctIndex: 3,
-        explanation: 'cd with no arguments changes to home directory. cd ~ also works.',
+        explanation: 'cd with no arguments changes to home directory. cd ~ also works. Both are equally short ways to go home.',
         difficulty: 'G',
         category: 'Filer & Kataloger',
         type: 'scenario'
