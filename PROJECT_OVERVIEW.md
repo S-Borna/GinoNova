@@ -1,7 +1,7 @@
 # GinoNova - Komplett Projektöversikt
 
 > **Senast uppdaterad:** 2026-01-19
-> **Version:** v2.7.0
+> **Version:** v2.8.0
 > **Status:** Production
 > **URL:** <https://ginonova.com> | <https://api.ginonova.com>
 
@@ -31,6 +31,7 @@
 
 - **Camp DevOps** - Strukturerade utbildningsmoduler med uppgifter och labs
 - **Tenta Simulator** - Realistisk tentaövning med 770+ frågor från DOE25, Omtenta 2.0, Manpage-tenta
+- **🚀 Sista Rushen Tenta!** - 430+ G-nivå frågor från 510-tentan med topic-filtrering (v2.8.0)
 - **AI Quiz** - Dynamiskt genererade frågor via OpenAI baserat på modulinnehåll
 - **Flashcards** - Interaktiva flashcards för alla moduler
 - **Dallas AI** - AI-assistent som svarar på DevOps-frågor
@@ -193,8 +194,9 @@ saas-project/
 1. **Activity Flash** - Toast-notifikationer för login/logout/exam/quiz
 2. **Live Activity Monitor** - Se var varje användare är just nu
 3. **Admin Online Status** - Visa om admin är online (grön prick)
-4. **Broadcast System** - Skicka meddelanden som visas för alla
-5. **User Messages** - Ta emot meddelanden från användare
+4. **Broadcast System** - Skicka meddelanden som visas för alla (🔔 ljudnotifikation för användare)
+5. **User Messages** - Ta emot meddelanden från användare (🔔 ljudnotifikation för admin)
+6. **Sound Notifications** - Web Audio API ding-dong för nya meddelanden (v2.8.0)
 
 ### Endpoints i `admin_v2.py`
 
@@ -231,7 +233,8 @@ POST /api/admin/v2/status/heartbeat        - Admin heartbeat
 | Manpage-tenta | ~100 | MCQ | `manpage-tenta-quiz.ts` |
 | Linux Commands | ~100 | MCQ | `linux-commands-*.ts` |
 | Hands-on Labs | ~70 | MCQ | `handson-*.ts` |
-| **Totalt** | **~770** | | |
+| **🚀 Sista Rushen Tenta!** | **~430** | MCQ (G-nivå) | `linux-exam-510-quiz.ts` |
+| **Totalt** | **~1200** | | |
 
 ### Tenta Simulator (`/study/tenta-simulator`)
 
@@ -511,11 +514,11 @@ curl https://api.ginonova.com/api/auth/status
 
 - **Frontend pages:** 40+
 - **Backend routes:** 85+
-- **Quiz frågor:** 770+
-- **Datafiler:** 84
+- **Quiz frågor:** 1200+ (inkl. Sista Rushen Tenta 430 G-nivå)
+- **Datafiler:** 85
 - **DB tabeller:** 13
 - **Migrations:** 12
-- **Total kodrader:** ~51,000+
+- **Total kodrader:** ~52,000+
 
 ---
 
@@ -532,8 +535,10 @@ curl https://api.ginonova.com/api/auth/status
 | `apps/frontend/src/components/spotify/SpotifyTopBarWidget.tsx` | Spotify widget med Play-knapp |
 | `apps/frontend/src/components/auth/AuthProvider.tsx` | Auth context |
 | `apps/frontend/src/hooks/useActivityTracker.tsx` | Realtidsspårning |
-| `apps/frontend/src/components/broadcast/UserBroadcast.tsx` | Broadcast UI |
-| `apps/frontend/src/app/(app)/study/tenta-simulator/page.tsx` | Tenta |
+| `apps/frontend/src/components/broadcast/UserBroadcast.tsx` | Broadcast UI (🔔 ljudnotifikation) |
+| `apps/frontend/src/app/(app)/study/tenta-simulator/page.tsx` | Tenta Simulator |
+| `apps/frontend/src/data/linux-exam-510-quiz.ts` | 🚀 Sista Rushen Tenta (430 G-nivå frågor) |
+| `apps/frontend/src/components/admin/AdminInboxWidget.tsx` | Admin inbox (🔔 ljudnotifikation) |
 
 ---
 
@@ -543,4 +548,4 @@ Email: `said.ebadi@hotmail.com` (hårdkodad som admin i flera ställen)
 
 ---
 
-*Dokumentation uppdaterad 2026-01-19 (v2.7.0 - Email Verification)*
+*Dokumentation uppdaterad 2026-01-19 (v2.8.0 - Sista Rushen Tenta + Sound Notifications)*
