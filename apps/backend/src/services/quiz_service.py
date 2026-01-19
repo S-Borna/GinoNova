@@ -53,8 +53,8 @@ def _get_async_client():
             if not api_key:
                 logger.error("❌ OpenAI API key not configured")
                 return None
-            _async_openai_client = AsyncOpenAI(api_key=api_key, timeout=60.0)
-            logger.info("✅ Async OpenAI client initialized")
+            _async_openai_client = AsyncOpenAI(api_key=api_key, timeout=120.0)
+            logger.info("✅ Async OpenAI client initialized (120s timeout)")
         except Exception as e:
             logger.error(f"❌ Failed to initialize async OpenAI client: {e}")
             return None
@@ -550,8 +550,9 @@ async def _generate_batch_async(
 ) -> Optional[dict]:
     """Generate a single batch of questions asynchronously."""
     try:
-        base_tokens = 300 if quiz_type == "mcq" else 180
-        max_tokens = min(batch_count * base_tokens + 500, 4096)
+        # OPTIMIZED token calculation - slightly reduced for speed
+        base_tokens = 280 if quiz_type == "mcq" else 160
+        max_tokens = min(batch_count * base_tokens + 400, 4096)
 
         logger.info(f"🎲 Batch {batch_id}: Generating {batch_count} questions...")
 
@@ -563,6 +564,7 @@ async def _generate_batch_async(
             ],
             temperature=temperature,
             max_tokens=max_tokens,
+            timeout=90.0,  # Per-batch timeout of 90 seconds
         )
 
         result_text = response.choices[0].message.content.strip()
@@ -625,7 +627,8 @@ async def generate_quiz_async(
 
     # Determine batch strategy
     # For large counts, split into parallel batches
-    BATCH_SIZE = 20  # Optimal for speed vs quality
+    # OPTIMIZED: Larger batches = fewer API calls = faster overall
+    BATCH_SIZE = 25  # Increased from 20 for fewer API calls
 
     if count <= BATCH_SIZE:
         batches = [count]

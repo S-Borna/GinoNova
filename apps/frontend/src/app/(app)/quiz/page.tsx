@@ -274,7 +274,8 @@ export default function QuizPage() {
 
     // AbortController för att kunna avbryta och inte blockera
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
+    // 180s timeout - large quizzes (50+ questions) need more time
+    const timeoutId = setTimeout(() => controller.abort(), 180000);
 
     try {
       const token = getToken();
@@ -362,7 +363,7 @@ export default function QuizPage() {
       clearTimeout(timeoutId);  // Rensa timeout vid fel också
       console.error("Quiz generation error:", err);
       if (err instanceof Error && err.name === 'AbortError') {
-        setError("Generering tog för lång tid. Försök igen.");
+        setError("Generering tog för lång tid (>3 min). Prova med färre frågor eller försök igen.");
       } else {
         setError(err instanceof Error ? err.message : "Ett fel uppstod vid generering av quiz");
       }
