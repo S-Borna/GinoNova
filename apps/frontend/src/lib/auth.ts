@@ -131,8 +131,19 @@ export async function register(
     })
 
     if (!res.ok) {
-        const error: AuthError = await res.json()
-        throw new Error(error.detail || "Registration failed")
+        const errorData = await res.json().catch(() => ({}))
+        // Handle different error response formats
+        let errorMessage = "Registration failed"
+        if (typeof errorData === "string") {
+            errorMessage = errorData
+        } else if (errorData?.detail) {
+            errorMessage = typeof errorData.detail === "string" 
+                ? errorData.detail 
+                : JSON.stringify(errorData.detail)
+        } else if (errorData?.message) {
+            errorMessage = errorData.message
+        }
+        throw new Error(errorMessage)
     }
 
     const data: TokenResponse = await res.json()
