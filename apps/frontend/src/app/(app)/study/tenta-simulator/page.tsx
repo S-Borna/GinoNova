@@ -279,7 +279,7 @@ function convertLinuxExam510Question(q: LinuxExam510Question): SimulatorQuestion
         id: q.id,
         question: q.question,
         options: q.options,
-        correctIndex: q.correctIndex,
+        correctIndex: q.correctIndex as 0 | 1 | 2 | 3,
         correctIndices: [q.correctIndex],
         explanation: q.explanation,
         difficulty: 'G', // All are G-level
