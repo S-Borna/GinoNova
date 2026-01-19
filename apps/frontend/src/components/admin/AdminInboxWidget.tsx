@@ -44,9 +44,35 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
     const [showDropdown, setShowDropdown] = useState(false)
     const [loading, setLoading] = useState(false)
     const fetchingRef = useRef(false)
+    const prevUnreadCountRef = useRef(0)
 
     // Only show for admin
     const isAdmin = user?.is_admin || user?.email?.toLowerCase() === "said.ebadi@hotmail.com"
+
+    // 🔔 Play notification sound when new message arrives
+    const playNotificationSound = useCallback(() => {
+        try {
+            // Create audio context and play a pleasant notification tone
+            const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+            const oscillator = audioContext.createOscillator()
+            const gainNode = audioContext.createGain()
+            
+            oscillator.connect(gainNode)
+            gainNode.connect(audioContext.destination)
+            
+            // Two-tone notification (ding-dong effect)
+            oscillator.frequency.setValueAtTime(880, audioContext.currentTime) // A5
+            oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.15) // E5
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+            
+            oscillator.start(audioContext.currentTime)
+            oscillator.stop(audioContext.currentTime + 0.3)
+        } catch {
+            // Audio not available
+        }
+    }, [])
 
     // Fetch messages - with deduplication to prevent flashing
     const fetchMessages = useCallback(async () => {
@@ -71,6 +97,12 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
                 const newMessages = data.messages || []
                 const newUnread = data.unread || 0
                 
+                // 🔔 Play sound if unread count increased (new message!)
+                if (newUnread > prevUnreadCountRef.current && prevUnreadCountRef.current !== 0) {
+                    playNotificationSound()
+                }
+                prevUnreadCountRef.current = newUnread
+                
                 // Only update messages if IDs changed (prevents flashing)
                 setMessages(prev => {
                     const prevIds = prev.map(m => m.id).sort().join(",")
@@ -85,7 +117,7 @@ export function AdminInboxWidget({ className }: AdminInboxWidgetProps) {
         } finally {
             fetchingRef.current = false
         }
-    }, [isAdmin])
+    }, [isAdmin, playNotificationSound])
 
     // Mark as read
     const markAsRead = async (messageId: string) => {

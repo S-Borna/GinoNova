@@ -53,6 +53,8 @@ import { HANDSON_TASK_FLASHCARDS } from "@/data/handson-task-flashcards"
 // OMTENTA 2.0 - Nytt innehåll från Nod-filer
 import { OMTENTA2_TOPICS, OMTENTA2_TOPIC_INFO, ALL_OMTENTA_2_QUESTIONS } from "@/data/omtenta-2.0-quiz"
 import { ALL_OMTENTA_2_FLASHCARDS } from "@/data/omtenta-2.0-flashcards"
+// Linux Exam 510 - G-nivå frågor
+import { LINUX_EXAM_510_TOPICS, LINUX_EXAM_510_TOPIC_INFO, type LinuxExam510Topic } from "@/data/linux-exam-510-quiz"
 // YouTube Tutorials
 import { TutorialSection } from "@/components/tutorials"
 import { getTutorialsForQuery, TUTORIALS } from "@/data/tutorials"
@@ -166,9 +168,11 @@ export default function StudyPage() {
     const [tentaCount, setTentaCount] = useState<number>(200)
     const [tentaGradingMode, setTentaGradingMode] = useState<'live' | 'end'>('live')
     const [tentaDifficulty, setTentaDifficulty] = useState<'G' | 'VG' | 'both'>('both')
-    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2' | 'manpage-tenta' | 'tenta-floden' | 'manpage-floden'>('omtenta-2')
+    const [tentaSource, setTentaSource] = useState<'handson' | 'linux' | 'linux-tenta' | 'omtenta-2' | 'manpage-tenta' | 'tenta-floden' | 'manpage-floden' | 'linux-exam-510'>('omtenta-2')
     const [omtenta2SelectedNodes, setOmtenta2SelectedNodes] = useState<string[]>(OMTENTA2_TOPICS)
+    const [exam510SelectedTopics, setExam510SelectedTopics] = useState<LinuxExam510Topic[]>(LINUX_EXAM_510_TOPICS)
     const [showNodeSelector, setShowNodeSelector] = useState(false)
+    const [showExam510TopicSelector, setShowExam510TopicSelector] = useState(false)
 
     // Get current module
     const currentModule = useMemo(() =>
@@ -568,6 +572,21 @@ export default function StudyPage() {
                                         <span className="text-[10px] font-semibold">Manpage Flöden</span>
                                         <span className="text-[9px] opacity-60">150 scenario</span>
                                     </motion.button>
+                                    <motion.button
+                                        onClick={() => setTentaSource('linux-exam-510')}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className={cn(
+                                            "py-3 rounded-xl transition-all flex flex-col items-center gap-1 col-span-2",
+                                            tentaSource === 'linux-exam-510'
+                                                ? "bg-gradient-to-br from-yellow-500/40 to-orange-500/40 border border-yellow-400/50 text-yellow-200 animate-pulse"
+                                                : "bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 hover:border-zinc-600"
+                                        )}
+                                    >
+                                        <span className="text-lg">🚀</span>
+                                        <span className="text-[10px] font-semibold">Sista Rushen Tenta!</span>
+                                        <span className="text-[9px] opacity-60">~430 G-frågor • Alla Mål</span>
+                                    </motion.button>
                                 </div>
                                 <p className="text-[10px] text-zinc-500 mt-2 text-center">
                                     {tentaSource === 'omtenta-2' && "🎯 Rekommenderat - 10 Nod-moduler med quiz & scenarios"}
@@ -577,6 +596,7 @@ export default function StudyPage() {
                                     {tentaSource === 'manpage-tenta' && "📚 Omfattande Linux/Unix kommandoreferens (243 G + 55 VG)"}
                                     {tentaSource === 'tenta-floden' && "🌊 Scenariofrågor & flödesfrågor baserade på Linux Tenta (English)"}
                                     {tentaSource === 'manpage-floden' && "🔄 Scenariofrågor & flödesfrågor baserade på Manpage Tenta (English)"}
+                                    {tentaSource === 'linux-exam-510' && "🚀 SISTA RUSHEN! Alla G-frågor för din tenta - lycka till!"}
                                 </p>
                             </div>
 
@@ -643,18 +663,84 @@ export default function StudyPage() {
                                 </div>
                             )}
 
+                            {/* Linux Exam 510 Topic Selection */}
+                            {tentaSource === 'linux-exam-510' && (
+                                <div className="bg-zinc-800/30 rounded-2xl p-4 border border-zinc-700/30 mb-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <div className="flex items-center gap-2">
+                                            <Layers className="w-4 h-4 text-lime-400" />
+                                            <span className="text-sm font-semibold text-white">Välj ämnesområden</span>
+                                            <span className="text-xs text-zinc-500">({exam510SelectedTopics.length}/{LINUX_EXAM_510_TOPICS.length})</span>
+                                        </div>
+                                        <button
+                                            onClick={() => setShowExam510TopicSelector(!showExam510TopicSelector)}
+                                            className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400"
+                                        >
+                                            {showExam510TopicSelector ? 'Dölj' : 'Visa'}
+                                            <ChevronDown className={cn("w-3 h-3 transition-transform", showExam510TopicSelector && "rotate-180")} />
+                                        </button>
+                                    </div>
+
+                                    <div className="flex gap-2 mb-2">
+                                        <button onClick={() => setExam510SelectedTopics([...LINUX_EXAM_510_TOPICS])} className="px-3 py-1.5 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400">Alla</button>
+                                        <button onClick={() => setExam510SelectedTopics([])} className="px-3 py-1.5 rounded-lg text-xs bg-zinc-800/50 border border-zinc-700/50 hover:bg-zinc-800 text-zinc-400">Inga</button>
+                                        {exam510SelectedTopics.length > 0 && (
+                                            <span className="ml-auto flex items-center gap-1 px-2 py-1 rounded-lg text-xs bg-lime-500/20 text-lime-300 border border-lime-500/30">
+                                                <Brain className="w-3 h-3" />
+                                                {exam510SelectedTopics.reduce((sum, topic) => sum + LINUX_EXAM_510_TOPIC_INFO[topic].count, 0)} frågor
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <AnimatePresence>
+                                        {showExam510TopicSelector && (
+                                            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                                                <div className="bg-zinc-900/50 rounded-xl p-2 max-h-64 overflow-y-auto">
+                                                    <div className="grid grid-cols-1 gap-1">
+                                                        {LINUX_EXAM_510_TOPICS.map((topic) => {
+                                                            const info = LINUX_EXAM_510_TOPIC_INFO[topic]
+                                                            const isSelected = exam510SelectedTopics.includes(topic)
+                                                            return (
+                                                                <button
+                                                                    key={topic}
+                                                                    onClick={() => setExam510SelectedTopics(prev => isSelected ? prev.filter(t => t !== topic) : [...prev, topic])}
+                                                                    className={cn(
+                                                                        "flex items-center gap-3 py-2.5 px-3 rounded-lg text-xs transition-all text-left",
+                                                                        isSelected ? "bg-lime-500/20 text-lime-200 border border-lime-500/40" : "bg-zinc-800/30 text-zinc-400 hover:bg-zinc-800/50 border border-transparent"
+                                                                    )}
+                                                                >
+                                                                    <div className={cn("w-4 h-4 rounded flex items-center justify-center shrink-0", isSelected ? "bg-lime-500" : "bg-zinc-700")}>
+                                                                        {isSelected && <Check className="w-3 h-3 text-white" />}
+                                                                    </div>
+                                                                    <span className="text-base">{info.icon}</span>
+                                                                    <div className="flex-1 min-w-0">
+                                                                        <div className="font-medium text-sm">{info.name.replace(info.icon + ' ', '')}</div>
+                                                                        <div className="text-[10px] text-zinc-500">{info.mal} • {info.count} frågor</div>
+                                                                    </div>
+                                                                </button>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                    {exam510SelectedTopics.length === 0 && <p className="text-[10px] text-orange-400 mt-2 text-center">⚠️ Välj minst ett ämnesområde</p>}
+                                </div>
+                            )}
+
                             {/* Start button */}
-                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}` : ''}`}>
+                            <Link href={`/study/tenta-simulator?time=${tentaTime}&count=${tentaCount}&grading=${tentaGradingMode}&difficulty=${tentaDifficulty}&source=${tentaSource}${tentaSource === 'omtenta-2' ? `&nodes=${omtenta2SelectedNodes.join(',')}` : ''}${tentaSource === 'linux-exam-510' ? `&exam510topics=${exam510SelectedTopics.join(',')}` : ''}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.02, y: -2 }}
                                     whileTap={{ scale: 0.98 }}
-                                    disabled={tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0}
+                                    disabled={(tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0) || (tentaSource === 'linux-exam-510' && exam510SelectedTopics.length === 0)}
                                     className={cn(
                                         "w-full py-4 rounded-2xl font-bold text-base relative overflow-hidden group",
                                         "bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white",
                                         "shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all",
                                         "flex items-center justify-center gap-2",
-                                        tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0 && "opacity-50 cursor-not-allowed"
+                                        ((tentaSource === 'omtenta-2' && omtenta2SelectedNodes.length === 0) || (tentaSource === 'linux-exam-510' && exam510SelectedTopics.length === 0)) && "opacity-50 cursor-not-allowed"
                                     )}
                                 >
                                     <motion.div

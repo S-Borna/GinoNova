@@ -58,6 +58,32 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
     const [currentIndex, setCurrentIndex] = useState(0)
     const fetchingRef = React.useRef(false)
     const dismissedIdsRef = React.useRef<Set<string>>(getDismissedIds())
+    const prevMessageIdsRef = React.useRef<string>("")
+
+    // 🔔 Play notification sound when new broadcast arrives
+    const playBroadcastSound = useCallback(() => {
+        try {
+            const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
+            const oscillator = audioContext.createOscillator()
+            const gainNode = audioContext.createGain()
+            
+            oscillator.connect(gainNode)
+            gainNode.connect(audioContext.destination)
+            
+            // Three-tone attention sound (ascending) 🎵
+            oscillator.frequency.setValueAtTime(523, audioContext.currentTime)      // C5
+            oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1) // E5
+            oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2) // G5
+            
+            gainNode.gain.setValueAtTime(0.25, audioContext.currentTime)
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4)
+            
+            oscillator.start(audioContext.currentTime)
+            oscillator.stop(audioContext.currentTime + 0.4)
+        } catch {
+            // Audio not available
+        }
+    }, [])
 
     // Fetch messages - with deduplication to prevent "glapping"
     const fetchMessages = useCallback(async () => {
@@ -86,10 +112,23 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
                     (m: BroadcastMessage) => !dismissedIdsRef.current.has(m.id)
                 )
 
+                // Check if there are NEW messages (for sound notification)
+                const newIds = newMessages.map((m: BroadcastMessage) => m.id).sort().join(",")
+                
+                // 🔔 Play sound if new messages appeared (and we had previous data)
+                if (newIds !== prevMessageIdsRef.current && prevMessageIdsRef.current !== "" && newMessages.length > 0) {
+                    // Check if there's actually a NEW message (not just removed)
+                    const prevIdSet = new Set(prevMessageIdsRef.current.split(","))
+                    const hasNewMessage = newMessages.some((m: BroadcastMessage) => !prevIdSet.has(m.id))
+                    if (hasNewMessage) {
+                        playBroadcastSound()
+                    }
+                }
+                prevMessageIdsRef.current = newIds
+
                 // Only update if message IDs changed (prevents flashing)
                 setMessages(prev => {
                     const prevIds = prev.map(m => m.id).sort().join(",")
-                    const newIds = newMessages.map((m: BroadcastMessage) => m.id).sort().join(",")
                     if (prevIds === newIds) return prev
                     return newMessages
                 })
@@ -99,7 +138,7 @@ export function UserBroadcast({ className }: UserBroadcastProps) {
         } finally {
             fetchingRef.current = false
         }
-    }, [user])
+    }, [user, playBroadcastSound])
 
     // Poll for messages every 30 seconds
     useEffect(() => {

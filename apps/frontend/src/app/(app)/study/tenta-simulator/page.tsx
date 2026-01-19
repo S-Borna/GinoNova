@@ -57,6 +57,8 @@ import { ALL_OMTENTA_2_QUESTIONS, type Omtenta2Question, type Omtenta2Topic, OMT
 // FLÖDEN - Scenario & Flow questions
 import { ALL_TENTA_FLODEN_QUESTIONS, type TentaFlodenQuestion } from "@/data/tenta-floden-quiz"
 import { ALL_MANPAGE_FLODEN_QUESTIONS, type ManpageFlodenQuestion } from "@/data/manpage-floden-quiz"
+// Linux Exam 510 - G-nivå frågor för tentaförberedelse
+import { ALL_LINUX_EXAM_510_QUESTIONS, type LinuxExam510Question, type LinuxExam510Topic, LINUX_EXAM_510_TOPICS } from "@/data/linux-exam-510-quiz"
 
 // Unified question type for simulator (always has G/VG difficulty)
 interface SimulatorQuestion {
@@ -72,6 +74,7 @@ interface SimulatorQuestion {
     scenario?: string // Optional scenario context
     isMultiSelect: boolean
     nodeTopic?: Omtenta2Topic // For Omtenta 2.0 node filtering
+    exam510Topic?: LinuxExam510Topic // For Linux Exam 510 topic filtering
     questionType?: 'scenario' | 'flow' | 'standard' // For Flöden questions
 }
 
@@ -82,8 +85,9 @@ interface SimulatorSettings {
     includeVG: boolean
     showTimer: boolean
     gradingMode: 'live' | 'end' // live = immediate feedback, end = feedback after completion
-    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[] // Multi-select question sources
+    selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden' | 'linux-exam-510')[] // Multi-select question sources
     selectedNodes: Omtenta2Topic[] // For Omtenta 2.0 node filtering
+    selectedExam510Topics: LinuxExam510Topic[] // For Linux Exam 510 topic filtering
 }
 
 interface QuizResult {
@@ -106,7 +110,8 @@ const DEFAULT_SETTINGS: SimulatorSettings = {
     showTimer: true,
     gradingMode: 'live',
     selectedSources: ['omtenta-2'], // Default to Omtenta 2.0
-    selectedNodes: OMTENTA2_TOPICS // All nodes by default
+    selectedNodes: OMTENTA2_TOPICS, // All nodes by default
+    selectedExam510Topics: LINUX_EXAM_510_TOPICS // All topics by default
 }
 
 // Shuffle array helper
@@ -267,6 +272,24 @@ function convertManpageFlodenQuestion(q: ManpageFlodenQuestion): SimulatorQuesti
     }
 }
 
+// Convert Linux Exam 510 question to SimulatorQuestion
+function convertLinuxExam510Question(q: LinuxExam510Question): SimulatorQuestion {
+    // All 510 questions are G-level (VG filtered out during creation)
+    return {
+        id: q.id,
+        question: q.question,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        correctIndices: [q.correctIndex],
+        explanation: q.explanation,
+        difficulty: 'G', // All are G-level
+        category: q.category,
+        source: 'linux-tenta', // Compatible source for UI
+        isMultiSelect: false,
+        exam510Topic: q.topic // For topic filtering
+    }
+}
+
 export default function TentaSimulatorPage() {
     // URL params
     const searchParams = useSearchParams()
@@ -325,6 +348,11 @@ export default function TentaSimulatorPage() {
         return ALL_MANPAGE_FLODEN_QUESTIONS.map(convertManpageFlodenQuestion)
     }, [])
 
+    // Get Linux Exam 510 questions (~430 G-level questions covering all Mål 1-20)
+    const linuxExam510Questions = useMemo(() => {
+        return ALL_LINUX_EXAM_510_QUESTIONS.map(convertLinuxExam510Question)
+    }, [])
+
     // Get filtered questions based on selected sources and nodes
     const allQuestions = useMemo(() => {
         const questions: SimulatorQuestion[] = []
@@ -353,8 +381,15 @@ export default function TentaSimulatorPage() {
         if (settings.selectedSources.includes('manpage-floden')) {
             questions.push(...manpageFlodenQuestions)
         }
+        if (settings.selectedSources.includes('linux-exam-510')) {
+            // Filter by selected topics
+            const filtered = linuxExam510Questions.filter(q =>
+                !q.exam510Topic || settings.selectedExam510Topics.includes(q.exam510Topic)
+            )
+            questions.push(...filtered)
+        }
         return questions
-    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, manpageTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions, settings.selectedSources, settings.selectedNodes])
+    }, [handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, manpageTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions, linuxExam510Questions, settings.selectedSources, settings.selectedNodes, settings.selectedExam510Topics])
 
     // Parse URL params and auto-start if params provided
     useEffect(() => {
@@ -366,6 +401,7 @@ export default function TentaSimulatorPage() {
         const difficultyParam = searchParams?.get('difficulty')
         const sourceParam = searchParams?.get('source')
         const nodesParam = searchParams?.get('nodes')
+        const exam510TopicsParam = searchParams?.get('exam510topics')
 
         if (timeParam || countParam || gradingParam || difficultyParam || sourceParam) {
             // Parse difficulty param: 'G', 'VG', or 'both'
@@ -380,10 +416,10 @@ export default function TentaSimulatorPage() {
             }
 
             // Parse source param
-            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[] = ['omtenta-2']
+            let selectedSources: ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden' | 'linux-exam-510')[] = ['omtenta-2']
             if (sourceParam) {
-                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden')[]
-                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'manpage-tenta', 'omtenta-2', 'tenta-floden', 'manpage-floden'].includes(s))
+                const sources = sourceParam.split(',') as ('handson' | 'linux-commands' | 'linux-tenta' | 'manpage-tenta' | 'omtenta-2' | 'tenta-floden' | 'manpage-floden' | 'linux-exam-510')[]
+                selectedSources = sources.filter(s => ['handson', 'linux-commands', 'linux-tenta', 'manpage-tenta', 'omtenta-2', 'tenta-floden', 'manpage-floden', 'linux-exam-510'].includes(s))
                 if (selectedSources.length === 0) selectedSources = ['omtenta-2']
             }
 
@@ -395,6 +431,14 @@ export default function TentaSimulatorPage() {
                 if (selectedNodes.length === 0) selectedNodes = OMTENTA2_TOPICS
             }
 
+            // Parse topics param for Linux Exam 510
+            let selectedExam510Topics: LinuxExam510Topic[] = LINUX_EXAM_510_TOPICS
+            if (exam510TopicsParam) {
+                const topics = exam510TopicsParam.split(',') as LinuxExam510Topic[]
+                selectedExam510Topics = topics.filter(t => LINUX_EXAM_510_TOPICS.includes(t))
+                if (selectedExam510Topics.length === 0) selectedExam510Topics = LINUX_EXAM_510_TOPICS
+            }
+
             const newSettings: SimulatorSettings = {
                 ...DEFAULT_SETTINGS,
                 duration: timeParam ? parseInt(timeParam) : DEFAULT_SETTINGS.duration,
@@ -403,7 +447,8 @@ export default function TentaSimulatorPage() {
                 includeG,
                 includeVG,
                 selectedSources,
-                selectedNodes
+                selectedNodes,
+                selectedExam510Topics
             }
             setSettings(newSettings)
             setHasAutoStarted(true)
@@ -423,6 +468,13 @@ export default function TentaSimulatorPage() {
             }
             if (selectedSources.includes('tenta-floden')) sourceQuestions.push(...tentaFlodenQuestions)
             if (selectedSources.includes('manpage-floden')) sourceQuestions.push(...manpageFlodenQuestions)
+            if (selectedSources.includes('linux-exam-510')) {
+                // Filter by selected topics
+                const filtered = linuxExam510Questions.filter(q =>
+                    !q.exam510Topic || selectedExam510Topics.includes(q.exam510Topic)
+                )
+                sourceQuestions.push(...filtered)
+            }
 
             // Auto-start the quiz
             setTimeout(() => {
@@ -448,7 +500,7 @@ export default function TentaSimulatorPage() {
                 setPhase('quiz')
             }, 100)
         }
-    }, [searchParams, hasAutoStarted, handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions])
+    }, [searchParams, hasAutoStarted, handsonQuestions, linuxCommandsQuestions, linuxTentaQuestions, omtenta2Questions, tentaFlodenQuestions, manpageFlodenQuestions, linuxExam510Questions])
 
     // Filter and prepare questions based on settings
     const prepareQuestions = useCallback(() => {
