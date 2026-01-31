@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Providers';
+import { Shield } from '@/components/Shield';
 
 // Primary font: Inter — Clean, modern, highly legible
 const inter = Inter({
@@ -123,6 +124,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
             <body className="font-sans antialiased">
+                <Shield />
                 <Providers>{children}</Providers>
             </body>
         </html>
