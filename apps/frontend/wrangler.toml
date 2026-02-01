@@ -3,7 +3,7 @@ name = "saas-project"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
-# OpenNext output directory for Pages
+# OpenNext output directory for Pages (relative to this wrangler.toml)
 pages_build_output_dir = ".open-next"
 
 [vars]
