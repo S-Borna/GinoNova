@@ -7,15 +7,10 @@
 .next/
 out/
 
-# Dependencies
-node_modules/
+# OpenNext / Cloudflare build output
+.open-next/
+.cloudflare-pages/
 
-# Debug logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Vercel
 .vercel
 
 # TypeScript

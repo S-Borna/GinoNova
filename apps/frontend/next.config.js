@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     reactStrictMode: true,
-    // Output configuration for Netlify
-    output: 'standalone',
+    
+    // Cloudflare Pages deployment (requires @cloudflare/next-on-pages with Next.js 15)
+    // output: 'export', // Disabled - we need API routes for NextAuth
 
     // Next.js 16: Explicit webpack mode (Turbopack is default in 16)
     // Keep webpack for production builds with custom optimization
