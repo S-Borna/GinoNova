@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
     reactStrictMode: true,
-    
+
     // Cloudflare Pages deployment (requires @cloudflare/next-on-pages with Next.js 15)
     // output: 'export', // Disabled - we need API routes for NextAuth
 

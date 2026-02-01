@@ -1,0 +1,36 @@
+name: Deploy Frontend to Cloudflare
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - "apps/frontend/**"
+            - "packages/**"
+    workflow_dispatch: # Manuell trigger från GitHub UI
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        name: Deploy to Cloudflare Workers
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build & Deploy to Cloudflare
+              working-directory: apps/frontend
+              run: |
+                  npm run build:cloudflare
+                  npx wrangler deploy -c ./wrangler.jsonc
+              env:
+                  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
