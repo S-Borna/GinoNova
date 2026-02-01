@@ -3,14 +3,17 @@ import { NextResponse } from 'next/server'
 /**
  * Spotify Track Finder API
  *
- * Uses Deezer + Songlink to find Spotify track ID.
+ * Uses iTunes Search + Songlink to find Spotify track ID.
+ * iTunes is more reliable from Cloudflare Workers than Deezer.
+ * Falls back to Spotify Search URI if lookup fails.
  * NO SPOTIFY API KEYS NEEDED!
  *
- * Flow: Track name → Deezer → Songlink → Spotify embed URL
+ * Flow: Track name → iTunes → Songlink → Spotify URI
+ * Fallback: Spotify Search URI (always works)
  */
 
 // Cache for track lookups (1 hour)
-const trackCache = new Map<string, { spotifyId: string; timestamp: number }>()
+const trackCache = new Map<string, { spotifyId: string | null; timestamp: number }>()
 const CACHE_DURATION = 60 * 60 * 1000
 
 export async function GET(request: Request) {
@@ -27,38 +30,54 @@ export async function GET(request: Request) {
     // Check cache
     const cached = trackCache.get(cacheKey)
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-        return NextResponse.json({
-            spotifyId: cached.spotifyId,
-            embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0`,
-            spotifyUrl: `https://open.spotify.com/track/${cached.spotifyId}`,
-            spotifyUri: `spotify:track:${cached.spotifyId}`,
-            cached: true
-        })
+        if (cached.spotifyId) {
+            return NextResponse.json({
+                spotifyId: cached.spotifyId,
+                embedUrl: `https://open.spotify.com/embed/track/${cached.spotifyId}?utm_source=generator&theme=0`,
+                spotifyUrl: `https://open.spotify.com/track/${cached.spotifyId}`,
+                spotifyUri: `spotify:track:${cached.spotifyId}`,
+                cached: true
+            })
+        }
     }
 
     try {
-        // Step 1: Search Deezer for track ID
+        // Step 1: Search iTunes for track
         const query = encodeURIComponent(`${track} ${artist}`)
-        const deezerRes = await fetch(`https://api.deezer.com/search?q=${query}&limit=1`)
+        console.log('[Spotify Finder] Searching iTunes for:', track, artist)
+        
+        const itunesRes = await fetch(
+            `https://itunes.apple.com/search?term=${query}&media=music&limit=1`,
+            { 
+                headers: { 'Accept': 'application/json' }
+            }
+        )
 
-        if (!deezerRes.ok) {
-            throw new Error('Deezer search failed')
+        if (!itunesRes.ok) {
+            console.error('[Spotify Finder] iTunes failed:', itunesRes.status)
+            return createSearchFallback(track, artist)
         }
 
-        const deezerData = await deezerRes.json()
+        const itunesData = await itunesRes.json()
 
-        if (!deezerData.data || deezerData.data.length === 0) {
-            return NextResponse.json({ error: 'Track not found on Deezer' }, { status: 404 })
+        if (!itunesData.results || itunesData.results.length === 0) {
+            console.warn('[Spotify Finder] Track not found on iTunes')
+            return createSearchFallback(track, artist)
         }
 
-        const deezerId = deezerData.data[0].id
+        const itunesTrackId = itunesData.results[0].trackId
+        console.log('[Spotify Finder] Found iTunes ID:', itunesTrackId)
 
         // Step 2: Use Songlink to get Spotify ID
-        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=https%3A%2F%2Fdeezer.com%2Ftrack%2F${deezerId}`
-        const songlinkRes = await fetch(songlinkUrl)
+        // Using song.link/i/ format which works better
+        const songlinkUrl = `https://api.song.link/v1-alpha.1/links?url=https%3A%2F%2Fsong.link%2Fi%2F${itunesTrackId}`
+        const songlinkRes = await fetch(songlinkUrl, {
+            headers: { 'Accept': 'application/json' }
+        })
 
         if (!songlinkRes.ok) {
-            throw new Error('Songlink lookup failed')
+            console.error('[Spotify Finder] Songlink failed:', songlinkRes.status)
+            return createSearchFallback(track, artist)
         }
 
         const songlinkData = await songlinkRes.json()
@@ -66,33 +85,58 @@ export async function GET(request: Request) {
         // Extract Spotify ID
         const spotifyEntity = songlinkData.linksByPlatform?.spotify
         if (!spotifyEntity) {
-            return NextResponse.json({ error: 'Track not found on Spotify' }, { status: 404 })
+            console.warn('[Spotify Finder] No Spotify link in Songlink response')
+            return createSearchFallback(track, artist)
         }
 
-        // Extract ID from entityUniqueId like "SPOTIFY_SONG::47EiUVwUp4C9fGccaPuUCS"
-        const spotifyUniqueId = spotifyEntity.entityUniqueId
-        const spotifyId = spotifyUniqueId?.split('::')[1] || spotifyEntity.url?.split('/track/')[1]
+        // Get the native URI directly from Songlink response
+        const spotifyUri = spotifyEntity.nativeAppUriDesktop
+        const spotifyUrl = spotifyEntity.url
+        
+        // Extract ID from entityUniqueId or URI
+        const spotifyId = spotifyEntity.entityUniqueId?.split('::')[1] || 
+                          spotifyUri?.replace('spotify:track:', '') ||
+                          spotifyUrl?.split('/track/')[1]
 
         if (!spotifyId) {
-            return NextResponse.json({ error: 'Could not extract Spotify ID' }, { status: 404 })
+            return createSearchFallback(track, artist)
         }
 
         // Cache result
         trackCache.set(cacheKey, { spotifyId, timestamp: Date.now() })
 
+        console.log('[Spotify Finder] SUCCESS! Spotify ID:', spotifyId)
+
         return NextResponse.json({
             spotifyId,
             embedUrl: `https://open.spotify.com/embed/track/${spotifyId}?utm_source=generator&theme=0`,
-            spotifyUrl: `https://open.spotify.com/track/${spotifyId}`,
-            spotifyUri: `spotify:track:${spotifyId}`,
-            cached: false
+            spotifyUrl: spotifyUrl || `https://open.spotify.com/track/${spotifyId}`,
+            spotifyUri: spotifyUri || `spotify:track:${spotifyId}`,
+            cached: false,
+            method: 'itunes-songlink'
         })
 
     } catch (error) {
         console.error('[Spotify Finder] Error:', error)
-        return NextResponse.json({
-            error: 'Failed to find track',
-            details: error instanceof Error ? error.message : 'Unknown'
-        }, { status: 500 })
+        return createSearchFallback(track, artist)
     }
+}
+
+/**
+ * Fallback: Create a Spotify search embed URL
+ * This always works - opens Spotify search for the track
+ */
+function createSearchFallback(track: string, artist: string) {
+    const searchQuery = encodeURIComponent(`${track} ${artist}`)
+    
+    return NextResponse.json({
+        spotifyId: null,
+        // Spotify search embed - always works!
+        embedUrl: `https://open.spotify.com/embed/search/${searchQuery}?utm_source=generator&theme=0`,
+        spotifyUrl: `https://open.spotify.com/search/${searchQuery}`,
+        // Search URI opens Spotify app with search query - will show search results
+        spotifyUri: `spotify:search:${track} ${artist}`,
+        cached: false,
+        method: 'search-fallback'
+    })
 }

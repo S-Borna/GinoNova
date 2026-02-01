@@ -97,9 +97,16 @@ export function SpotifyLivePlayer({ className }: SpotifyLivePlayerProps) {
                 if (data.embedUrl) {
                     setEmbedUrl(data.embedUrl)
                 }
+            } else {
+                // Fallback: create search embed directly
+                const searchQuery = encodeURIComponent(`${track.name} ${track.artist}`)
+                setEmbedUrl(`https://open.spotify.com/embed/search/${searchQuery}?utm_source=generator&theme=0`)
             }
         } catch (e) {
             console.error('Failed to get Spotify embed:', e)
+            // Fallback on error too
+            const searchQuery = encodeURIComponent(`${track.name} ${track.artist}`)
+            setEmbedUrl(`https://open.spotify.com/embed/search/${searchQuery}?utm_source=generator&theme=0`)
         } finally {
             setEmbedLoading(false)
         }

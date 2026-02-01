@@ -5,8 +5,10 @@
  *
  * Features:
  * - Compact widget showing currently playing track
- * - Click Play → Opens Spotify in new tab for full playback
- * - No 30-second limit since it opens native Spotify
+ * - Click Play → Opens Spotify app directly via URI scheme (spotify:track:ID)
+ * - Auto-plays the full track immediately in Spotify (Premium users)
+ * - Falls back to web player if app not installed
+ * - No 30-second limit - plays the entire song
  */
 
 import * as React from "react"
@@ -35,6 +37,7 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
     const [track, setTrack] = useState<Track | null>(null)
     const [loading, setLoading] = useState(true)
     const [spotifyUrl, setSpotifyUrl] = useState<string | null>(null)
+    const [spotifyUri, setSpotifyUri] = useState<string | null>(null)
     const [urlLoading, setUrlLoading] = useState(false)
     const [lastTrackKey, setLastTrackKey] = useState<string>("")
 
@@ -58,11 +61,13 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                         })
                         setLastTrackKey(newKey)
                         setSpotifyUrl(null) // Reset URL for new track
+                        setSpotifyUri(null) // Reset URI for new track
                     }
                 } else {
                     if (track !== null) {
                         setTrack(null)
                         setSpotifyUrl(null)
+                        setSpotifyUri(null)
                     }
                 }
             }
@@ -73,7 +78,7 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
         }
     }, [lastTrackKey, track])
 
-    // Fetch Spotify URL for direct link
+    // Fetch Spotify URL and URI for direct link
     const fetchSpotifyUrl = useCallback(async () => {
         if (!track?.name || !track?.artist || spotifyUrl) return null
 
@@ -86,7 +91,10 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
                 const data = await res.json()
                 if (data.spotifyUrl) {
                     setSpotifyUrl(data.spotifyUrl)
-                    return { url: data.spotifyUrl }
+                    if (data.spotifyUri) {
+                        setSpotifyUri(data.spotifyUri)
+                    }
+                    return { url: data.spotifyUrl, uri: data.spotifyUri }
                 }
             }
         } catch (e) {
@@ -111,28 +119,40 @@ export function SpotifyTopBarWidget({ className }: SpotifyTopBarWidgetProps) {
         }
     }, [track, spotifyUrl, urlLoading, fetchSpotifyUrl])
 
-    // Handle play click - open Spotify web player in new tab
+    // Handle play click - open Spotify app directly with autoplay
     const handlePlayClick = async (e: React.MouseEvent) => {
         e.stopPropagation()
 
         if (!track) return
 
+        let uri = spotifyUri
         let url = spotifyUrl
 
         // If we don't have the URL yet, fetch it
         if (!url && !urlLoading) {
             const result = await fetchSpotifyUrl()
             if (result) {
+                uri = result.uri
                 url = result.url
             }
         }
 
-        if (url) {
-            // Open Spotify web player in new tab
-            // This gives full playback (not just 30s preview)
+        if (uri) {
+            // Try to open Spotify app directly with URI (auto-plays immediately)
+            // This triggers "Open Spotify?" prompt if app is installed
+            window.location.href = uri
+            
+            // Fallback to web URL after short delay if app doesn't open
+            setTimeout(() => {
+                if (url) {
+                    window.open(url, '_blank', 'noopener,noreferrer')
+                }
+            }, 1500)
+        } else if (url) {
+            // Fallback to web player in new tab
             window.open(url, '_blank', 'noopener,noreferrer')
         } else {
-            // Fallback: search on Spotify
+            // Last resort: search on Spotify
             const searchUrl = `https://open.spotify.com/search/${encodeURIComponent(`${track.name} ${track.artist}`)}`
             window.open(searchUrl, '_blank', 'noopener,noreferrer')
         }

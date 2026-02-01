@@ -27,6 +27,13 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Create production env file
+              working-directory: apps/frontend
+              run: |
+                  echo "NEXT_PUBLIC_API_URL=https://api.ginonova.com" > .env.production
+                  echo "LASTFM_API_KEY=${{ secrets.LASTFM_API_KEY }}" >> .env.production
+                  echo "LASTFM_USERNAME=${{ secrets.LASTFM_USERNAME }}" >> .env.production
+
             - name: Build & Deploy to Cloudflare
               working-directory: apps/frontend
               run: |
