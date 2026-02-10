@@ -9,18 +9,6 @@ module.exports = {
     // Keep webpack for production builds with custom optimization
     turbopack: {},
 
-    // 🛡️ SECURITY: Disable source maps in production
-    productionBrowserSourceMaps: false,
-
-    // 🛡️ SECURITY: Minimize exposure - hide all internal structure
-    poweredByHeader: false,
-
-    // 🛡️ SECURITY: Remove ALL console output in production
-    compiler: {
-        removeConsole: process.env.NODE_ENV === 'production',
-    },
-
-    // 🛡️ SECURITY: Disable prefetching - stops DevTools from revealing routes
     experimental: {
         optimizePackageImports: [
             'lucide-react',
@@ -84,21 +72,7 @@ module.exports = {
                 name: 'runtime'
             };
 
-            // 🛡️ SECURITY: Mangle/obfuscate function and variable names
-            if (config.optimization.minimizer) {
-                config.optimization.minimizer.forEach((minimizer) => {
-                    if (minimizer.constructor.name === 'TerserPlugin') {
-                        minimizer.options.terserOptions = {
-                            ...minimizer.options.terserOptions,
-                            mangle: true,
-                            compress: {
-                                drop_console: true,
-                                drop_debugger: true,
-                            },
-                        };
-                    }
-                });
-            }
+
         }
         return config;
     },

@@ -2,20 +2,20 @@
 import { useEffect } from "react";
 export function Shield() {
   useEffect(() => {
-    const block = (e: Event) => { e.preventDefault(); return false; };
-    document.addEventListener("contextmenu", block, true);
-    document.addEventListener("selectstart", block, true);
-    document.addEventListener("copy", block, true);
+    // Block right-click context menu
+    document.addEventListener("contextmenu", (e) => { e.preventDefault(); }, true);
+    // Block DevTools keyboard shortcuts
     const handleKey = (e: KeyboardEvent) => {
       const k = e.key.toLowerCase();
       const c = e.ctrlKey || e.metaKey;
       const s = e.shiftKey;
-      if (k === "f12" || (c && s && ["i","j","c"].includes(k)) || (c && ["u","s"].includes(k))) e.preventDefault();
+      const a = e.altKey;
+      if (k === "f12") { e.preventDefault(); return; }
+      if (c && s && (k === "i" || k === "j" || k === "c" || k === "k")) { e.preventDefault(); return; }
+      if (c && k === "u") { e.preventDefault(); return; }
+      if (c && a && (k === "i" || k === "j" || k === "u")) { e.preventDefault(); return; }
     };
     document.addEventListener("keydown", handleKey, true);
-    const style = document.createElement("style");
-    style.textContent = "*{-webkit-user-select:none!important;user-select:none!important;}";
-    document.head.appendChild(style);
   }, []);
   return null;
 }
