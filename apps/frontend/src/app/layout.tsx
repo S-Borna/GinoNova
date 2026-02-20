@@ -126,6 +126,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <body className="font-sans antialiased">
                 <Shield />
                 <Providers>{children}</Providers>
+                <div className="fixed bottom-3 right-3 z-50 opacity-80 hover:opacity-100 transition-opacity">
+                    <a href="https://globaldex.ai/domain/ginonova.com" target="_blank" rel="noopener noreferrer">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="https://globaldex.ai/api/v1/badge?domain=ginonova.com" alt="GlobalDex Score" height={32} width={210} className="h-[28px] w-auto" />
+                    </a>
+                </div>
             </body>
         </html>
     );
