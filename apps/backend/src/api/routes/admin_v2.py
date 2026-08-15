@@ -86,7 +86,6 @@ def add_activity_log(
     entry_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
 
-    print(f"[ActivityLog] Adding: type={activity_type}, user={user_email}, details={details[:50] if details else 'None'}...")
 
     # Try to save to database first (multi-worker safe)
     try:
@@ -111,7 +110,6 @@ def add_activity_log(
             )
             db.add(activity)
             db.commit()
-            print(f"[ActivityLog] ✓ Saved to DB: {activity_type} for {user_email}")
         except Exception as e:
             db.rollback()
             print(f"[ActivityLog] DB save failed ({e}), using memory fallback")
@@ -170,7 +168,6 @@ def get_activity_log(limit: int = 50) -> List[dict]:
                 }
                 for a in activities
             ]
-            print(f"[ActivityLog] Retrieved {len(result)} entries from DB")
             return result
         finally:
             db.close()

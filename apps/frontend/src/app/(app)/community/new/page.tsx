@@ -23,7 +23,6 @@ export default function NewThreadPage() {
         categoryId: string
         tags: string[]
     }) => {
-        console.log("Creating thread:", data)
         // In a real app, this would make an API call to create the thread
         // For now, we'll just redirect back to the community page
         // router.push("/community")

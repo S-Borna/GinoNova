@@ -44,7 +44,6 @@ export async function GET(request: Request) {
     try {
         // Step 1: Search iTunes for track
         const query = encodeURIComponent(`${track} ${artist}`)
-        console.log('[Spotify Finder] Searching iTunes for:', track, artist)
         
         const itunesRes = await fetch(
             `https://itunes.apple.com/search?term=${query}&media=music&limit=1`,
@@ -66,7 +65,6 @@ export async function GET(request: Request) {
         }
 
         const itunesTrackId = itunesData.results[0].trackId
-        console.log('[Spotify Finder] Found iTunes ID:', itunesTrackId)
 
         // Step 2: Use Songlink to get Spotify ID
         // Using song.link/i/ format which works better
@@ -105,7 +103,6 @@ export async function GET(request: Request) {
         // Cache result
         trackCache.set(cacheKey, { spotifyId, timestamp: Date.now() })
 
-        console.log('[Spotify Finder] SUCCESS! Spotify ID:', spotifyId)
 
         return NextResponse.json({
             spotifyId,

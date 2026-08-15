@@ -429,7 +429,6 @@ export default function HandsOnTaskPage() {
                 setIsCompleted(parsed.includes(taskId))
             }
         } catch (e) {
-            console.log("Could not load progress from localStorage")
         }
     }, [taskId])
 

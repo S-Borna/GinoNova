@@ -934,7 +934,6 @@ export function SkillpathBoard() {
                 totalTasks: mod.total_tasks || 10,
                 color: getModuleColor(mod.slug),
             }))
-            console.log(`✅ SkillpathBoard: Loaded ${modulesData.length} LIVE modules from API`)
         } else {
             // Fallback to tracks from progress data
             moduleProgress = (progress.tracks || []).map(track => ({

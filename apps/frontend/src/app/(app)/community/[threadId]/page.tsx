@@ -182,7 +182,6 @@ export default function ThreadPage({ params }: { params: { threadId: string } })
     const replies = MOCK_REPLIES
 
     const handleReply = (replyId: string, content: string) => {
-        console.log("Reply to:", replyId, "Content:", content)
     }
 
     const handleVote = (
@@ -190,15 +189,12 @@ export default function ThreadPage({ params }: { params: { threadId: string } })
         targetId: string,
         voteType: "up" | "down"
     ) => {
-        console.log("Vote:", targetType, targetId, voteType)
     }
 
     const handleAcceptAnswer = (replyId: string) => {
-        console.log("Accept answer:", replyId)
     }
 
     const handleDelete = (targetType: "thread" | "reply", targetId: string) => {
-        console.log("Delete:", targetType, targetId)
     }
 
     return (

@@ -13,8 +13,6 @@ export async function POST(request: NextRequest) {
         const { message, context, session_id, user_name } = body
 
         // Debug logging for production
-        console.log("[AI Chat Route] BACKEND_URL:", BACKEND_URL)
-        console.log("[AI Chat Route] Has Authorization:", !!request.headers.get("Authorization"))
 
         // Forward to backend Dallas AI service
         const response = await fetch(`${BACKEND_URL}/api/dallas/chat`, {
@@ -33,7 +31,6 @@ export async function POST(request: NextRequest) {
             }),
         })
 
-        console.log("[AI Chat Route] Backend response status:", response.status)
 
         if (!response.ok) {
             // Log the actual error from backend
@@ -48,7 +45,6 @@ export async function POST(request: NextRequest) {
         }
 
         const data = await response.json()
-        console.log("[AI Chat Route] Backend response OK, tokens:", data.tokens_used)
         return NextResponse.json(data)
     } catch (error) {
         console.error("AI chat error:", error)

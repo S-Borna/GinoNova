@@ -95,7 +95,6 @@ const authOptions: NextAuthOptions = {
             const TWELVE_HOURS = 12 * 60 * 60 * 1000
 
             if (token.backendUser && tokenAge > TWELVE_HOURS) {
-                console.log("[NextAuth] Refreshing backend token for:", (token.backendUser as any)?.email)
                 try {
                     const response = await fetch(`${API_BASE_URL}/api/auth/oauth`, {
                         method: "POST",
@@ -116,7 +115,6 @@ const authOptions: NextAuthOptions = {
                         token.accessToken = data.access_token
                         token.backendUser = data.user
                         token.tokenIssuedAt = Date.now()
-                        console.log("[NextAuth] Backend token refreshed successfully")
                     }
                 } catch (error) {
                     console.error("[NextAuth] Failed to refresh backend token:", error)

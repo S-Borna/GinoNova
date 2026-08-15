@@ -484,7 +484,6 @@ export default function TentaSimulatorPage() {
                     return false
                 })
                 const shuffled = shuffleArray(filtered)
-                console.log('🎲 Shuffled questions:', shuffled.length, 'First 5 IDs:', shuffled.slice(0, 5).map(q => q.id))
                 const sliced = shuffled.slice(0, newSettings.questionCount)
                 // Shuffle options within each question for randomized answer positions
                 const prepared = sliced.map(q => shuffleQuestionOptions(q))
@@ -577,7 +576,6 @@ export default function TentaSimulatorPage() {
                 completed: true
             }
 
-            console.log('[ExamResult] Submitting result...', { questionCount: payload.question_count, score: payload.score_percent })
 
             const response = await fetch(`${API_BASE_URL}/api/exam/submit`, {
                 method: 'POST',
@@ -604,7 +602,6 @@ export default function TentaSimulatorPage() {
             }
 
             const result = await response.json()
-            console.log('[ExamResult] ✓ Saved successfully! ID:', result.id)
         } catch (err) {
             // Network error - allow retry
             hasSubmittedResult.current = false
@@ -707,7 +704,6 @@ export default function TentaSimulatorPage() {
 
         if (isLastQuestion) {
             // LAST QUESTION: Auto-save with complete results and go to results phase
-            console.log('[AutoSave] Last question answered - saving exam result automatically')
             saveExamResult(newResults, questions, examStartTime)
 
             // Show feedback briefly for live mode, then go to results

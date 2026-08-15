@@ -250,7 +250,6 @@ export default function HandsOnLabPage() {
                 setCompletedTasks(JSON.parse(saved))
             }
         } catch (e) {
-            console.log("Could not load progress")
         }
     }, [])
 

@@ -577,7 +577,6 @@ export default function TaskDetailPage() {
                     setRelatedTasks(relatedData)
                 }
             } catch (e) {
-                console.log("Related tasks fetch skipped:", e)
             }
 
             // Fetch progress if token available
@@ -594,7 +593,6 @@ export default function TaskDetailPage() {
                         }
                     }
                 } catch (e) {
-                    console.log("Progress fetch skipped:", e)
                 }
             }
         } catch (err) {

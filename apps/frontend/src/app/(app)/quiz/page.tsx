@@ -159,10 +159,8 @@ export default function QuizPage() {
     const init = async () => {
       const token = getToken();
       const devBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
-      console.log("Quiz init - token:", token ? "EXISTS" : "NULL", "devBypass:", devBypass);
 
       if (!token && !devBypass) {
-        console.log("No token and no dev bypass, skipping API calls");
         setHasAccess(false);
         setAccessMessage("Vänligen logga in för att använda AI Quiz");
         return;
@@ -170,7 +168,6 @@ export default function QuizPage() {
 
       // Dev bypass - allow access without token
       if (devBypass && !token) {
-        console.log("Dev bypass enabled - granting access");
         setHasAccess(true);
         setAccessMessage("");
         setModules([
@@ -203,13 +200,10 @@ export default function QuizPage() {
           }),
         ]);
 
-        console.log("Access status:", accessRes?.status);
-        console.log("Modules status:", modulesRes?.status);
 
         // Handle access check
         if (accessRes && accessRes.ok) {
           const accessData = await accessRes.json();
-          console.log("Access data:", accessData);
           setHasAccess(accessData.has_access);
           setAccessMessage(accessData.message);
         } else if (accessRes && accessRes.status === 401) {
@@ -224,11 +218,9 @@ export default function QuizPage() {
         // Handle modules - use quiz-specific modules endpoint
         if (modulesRes && modulesRes.ok) {
           const modulesData = await modulesRes.json();
-          console.log("Modules data:", modulesData);
           setModules(modulesData.modules || []);
         } else {
           // Fallback to hardcoded list (avoid expensive /api/modules/full call)
-          console.log("Using fallback modules");
           setModules([
             { slug: "linux-247", title: "Linux 24/7", description: "Komplett Linux för DevOps" },
             { slug: "linux-tentaplugg", title: "Linux Tentaplugg", description: "10 djupgående noder" },
@@ -285,7 +277,6 @@ export default function QuizPage() {
         throw new Error("Du måste vara inloggad för att generera quiz");
       }
 
-      console.log("Generating quiz:", { selectedModule, quizType, questionCount, difficulty });
 
       const res = await fetch(`${API_BASE_URL}/api/quiz/generate`, {
         method: "POST",
@@ -308,13 +299,11 @@ export default function QuizPage() {
 
       clearTimeout(timeoutId);  // Rensa timeout efter lyckad request
 
-      console.log("Generate response status:", res.status);
 
       if (!res.ok) {
         let errorMessage = "Kunde inte generera quiz";
         try {
           const errData = await res.json();
-          console.log("Error response data:", errData);
           // Handle different error formats from backend
           if (typeof errData.detail === 'string') {
             errorMessage = errData.detail;
@@ -326,10 +315,8 @@ export default function QuizPage() {
             errorMessage = errData;
           }
         } catch (parseErr) {
-          console.log("Could not parse error response as JSON:", parseErr);
         }
 
-        console.log("Final error message:", errorMessage, "Status:", res.status);
 
         if (res.status === 401) {
           errorMessage = "Session har gått ut. Logga in igen.";
@@ -345,7 +332,6 @@ export default function QuizPage() {
       }
 
       const data = await res.json();
-      console.log("Quiz generated:", data.questions?.length, "questions");
 
       if (!data.questions || data.questions.length === 0) {
         throw new Error("Inga frågor genererades. Försök igen.");

@@ -452,7 +452,6 @@ export default function AdminV2Users() {
         setActionLoading(true)
 
         try {
-            console.log(`[Admin] Executing ${method} ${API_BASE_URL}${endpoint}`, body)
 
             const res = await fetch(`${API_BASE_URL}${endpoint}`, {
                 method,
@@ -463,7 +462,6 @@ export default function AdminV2Users() {
                 body: JSON.stringify(body || {})
             })
 
-            console.log(`[Admin] Response status: ${res.status}`)
 
             if (!res.ok) {
                 const data = await res.json().catch(() => null)
@@ -473,7 +471,6 @@ export default function AdminV2Users() {
             }
 
             const result = await res.json().catch(() => ({}))
-            console.log(`[Admin] Success:`, result)
             setToast({ message: result.message || `Action completed successfully`, type: "success" })
             fetchUsers() // Refresh
         } catch (err) {

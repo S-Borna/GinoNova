@@ -168,7 +168,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 token = session.accessToken
                 // Also store it in localStorage for other API calls
                 storeToken(token)
-                console.log('[Heartbeat] Using NextAuth session token')
             }
 
             if (!token) {
@@ -187,7 +186,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     console.warn('[Heartbeat] Failed:', response.status)
                     // If 401, token is expired - try to refresh from session
                     if (response.status === 401 && session?.accessToken) {
-                        console.log('[Heartbeat] Token expired, refreshing from session')
                         storeToken(session.accessToken)
                     }
                 }
@@ -197,7 +195,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
 
         // Send heartbeat immediately on mount
-        console.log('[Heartbeat] Starting for user:', user.email)
         heartbeat()
 
         // Then every 1 minute for accurate online status

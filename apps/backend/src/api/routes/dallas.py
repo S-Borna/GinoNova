@@ -249,8 +249,6 @@ async def chat_with_dallas(request: ChatRequest):
     openai_key = os.getenv("OPENAI_KEY") or os.getenv("OPENAI_API_KEY") or os.getenv("OPEN_AI_KEY")
 
     # Debug: Log which key was found
-    print(f"Dallas: OPENAI_KEY={'set' if os.getenv('OPENAI_KEY') else 'not set'}")
-    print(f"Dallas: openai_key={'found' if openai_key else 'NOT FOUND'}")
 
     if openai_key:
         try:
