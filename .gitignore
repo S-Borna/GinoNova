@@ -45,6 +45,7 @@ htmlcov/
 
 # Private AI instructions (not for public repo)
 CLAUDE.md
+Claude/
 
 # Testing
 coverage/
