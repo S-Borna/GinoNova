@@ -1,8 +1,8 @@
-# 🚀 DevOpsHub - World-Class DevOps Learning Platform
+# 🚀 GinoNova - World-Class DevOps Learning Platform
 
 > **Transform from zero to DevOps expert with AI-powered learning, interactive labs, and a thriving community.**
 
-DevOpsHub is a comprehensive, free DevOps learning platform built for Swedish developers who want to master the entire DevOps ecosystem. It offers 31+ comprehensive modules, AI-powered personalization, interactive code playgrounds, and gamification features.
+GinoNova is a comprehensive, free DevOps learning platform built for Swedish developers who want to master the entire DevOps ecosystem. It offers 31+ comprehensive modules, AI-powered personalization, interactive code playgrounds, and gamification features.
 
 ---
 
@@ -253,7 +253,7 @@ NEXT_PUBLIC_LASTFM_API_KEY=your_lastfm_api_key
 
 **Backend (.env)**
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/devopshub
+DATABASE_URL=postgresql://user:password@localhost:5432/ginonova
 REDIS_URL=redis://localhost:6379
 SECRET_KEY=your_secret_key_here
 ENVIRONMENT=development
@@ -475,7 +475,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## 💡 About the Project
 
-DevOpsHub was built with the goal of making solid DevOps education accessible, especially for Swedish developers. Each module aims to be comprehensive and job-focused.
+GinoNova was built with the goal of making solid DevOps education accessible, especially for Swedish developers. Each module aims to be comprehensive and job-focused.
 
 **Key Principles:**
 - 🎯 **Quality over Quantity**: Every module is comprehensive and job-focused
@@ -494,7 +494,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Claude Code**: For making this incredible development experience possible
 - **Vercel**: For Next.js and hosting infrastructure
 - **FastAPI**: For the blazing-fast Python backend
 - **The DevOps Community**: For inspiration and feedback
