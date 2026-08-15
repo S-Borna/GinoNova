@@ -7,8 +7,16 @@
  *   npm run notion:push    # Push command_center.md → Notion (future)
  */
 
-const NOTION_API_KEY = process.env.NOTION_API_KEY || '***REDACTED-NOTION-TOKEN***';
-const PAGE_ID = '2b13f977a4d08067b6ddd6c2a80b4da5';
+const NOTION_API_KEY = process.env.NOTION_API_KEY;
+if (!NOTION_API_KEY) {
+    throw new Error('NOTION_API_KEY environment variable is required. Set it before running this script.');
+}
+
+const PAGE_ID = process.env.NOTION_PAGE_ID;
+if (!PAGE_ID) {
+    throw new Error('NOTION_PAGE_ID environment variable is required. Set it before running this script.');
+}
+
 const OUTPUT_FILE = 'docs/command_center.md';
 
 async function fetchAllBlocks(blockId) {
