@@ -1,5 +1,7 @@
 # 🚀 GinoNova - World-Class DevOps Learning Platform
 
+**Live:** [ginonova.com](https://ginonova.com)
+
 > **Transform from zero to DevOps expert with AI-powered learning, interactive labs, and a thriving community.**
 
 GinoNova is a comprehensive, free DevOps learning platform built for Swedish developers who want to master the entire DevOps ecosystem. It offers 31+ comprehensive modules, AI-powered personalization, interactive code playgrounds, and gamification features.
