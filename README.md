@@ -2,7 +2,7 @@
 
 > **Transform from zero to DevOps expert with AI-powered learning, interactive labs, and a thriving community.**
 
-DevOpsHub is a comprehensive, free DevOps learning platform built for Swedish developers who want to master the entire DevOps ecosystem. With 31+ comprehensive modules, AI-powered personalization, interactive code playgrounds, and gamification features, DevOpsHub rivals and exceeds platforms like Udemy, Coursera, and Pluralsight.
+DevOpsHub is a comprehensive, free DevOps learning platform built for Swedish developers who want to master the entire DevOps ecosystem. It offers 31+ comprehensive modules, AI-powered personalization, interactive code playgrounds, and gamification features.
 
 ---
 
@@ -169,7 +169,7 @@ Each module includes:
 ### **Project Structure**
 
 ```
-saas-project/
+GinoNova/
 ├── apps/
 │   ├── frontend/              # Next.js frontend
 │   │   ├── src/
@@ -220,8 +220,8 @@ saas-project/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/S-Ebadi/saas-project.git
-cd saas-project
+git clone https://github.com/S-Borna/GinoNova.git
+cd GinoNova
 ```
 
 2. **Install dependencies**
@@ -463,26 +463,19 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ---
 
-## 🏆 Why DevOpsHub?
+## 🏆 Highlights
 
-| Feature | DevOpsHub | Udemy | Coursera | Pluralsight |
-|---------|-----------|-------|----------|-------------|
-| **Price** | 🆓 Free | ❌ $10-200/course | ❌ $49-79/month | ❌ $299-499/year |
-| **AI-Powered** | ✅ Dallas Assistant | ❌ No | ❌ No | ❌ No |
-| **Interactive Labs** | ✅ Built-in playground | ⚠️ Limited | ⚠️ Some courses | ✅ Hands-on labs |
-| **Community** | ✅ Built-in forums | ⚠️ Q&A only | ⚠️ Discussion forums | ⚠️ Limited |
-| **Swedish Content** | ✅ Native Swedish | ❌ English only | ❌ English only | ❌ English only |
-| **Career Focus** | ✅ Job-ready content | ⚠️ Varies | ⚠️ Academic focus | ✅ Practical |
-| **Certificates** | ✅ Yes | ⚠️ Paid only | ✅ Yes | ✅ Yes |
-| **Real-time Help** | ✅ AI 24/7 | ❌ Instructor Q&A | ❌ Limited | ❌ No |
-| **Code Playground** | ✅ 5 environments | ❌ No | ❌ No | ⚠️ Limited |
-| **Analytics** | ✅ Advanced | ⚠️ Basic | ⚠️ Basic | ✅ Good |
+- Free to use, no paywalled tiers
+- AI assistant ("Dallas") embedded on every page
+- Built-in code playground with 5 environments
+- Community forums and job-ready module content
+- Native Swedish content alongside English
 
 ---
 
-## 💡 Built With Love
+## 💡 About the Project
 
-DevOpsHub was created with the vision of making world-class DevOps education accessible to everyone, especially Swedish developers. Every line of code, every module, and every feature was designed to provide the best possible learning experience.
+DevOpsHub was built with the goal of making solid DevOps education accessible, especially for Swedish developers. Each module aims to be comprehensive and job-focused.
 
 **Key Principles:**
 - 🎯 **Quality over Quantity**: Every module is comprehensive and job-focused
@@ -508,22 +501,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Contact & Support
+## 📞 Contact
 
-- **Website**: [devopshub.se](https://devopshub.se)
-- **Email**: support@devopshub.se
-- **GitHub**: [@S-Ebadi/saas-project](https://github.com/S-Ebadi/saas-project)
-- **Community**: Join our forums at `/community`
+- **GitHub**: [@S-Borna/GinoNova](https://github.com/S-Borna/GinoNova)
+- **Community**: Join the forums at `/community`
 - **Dallas AI**: Chat with Dallas right in the app!
 
 ---
 
 <div align="center">
 
-**Made with 💜 by DevOpsHub Team**
+**Built by the GinoNova team**
 
-*Empowering the next generation of DevOps engineers*
+*A DevOps learning platform project*
 
-[Get Started](https://devopshub.se) • [Documentation](./docs) • [Community](https://devopshub.se/community) • [Roadmap](https://github.com/S-Ebadi/saas-project/projects)
+[Repository](https://github.com/S-Borna/GinoNova) • [Documentation](./docs) • [Roadmap](https://github.com/S-Borna/GinoNova/projects)
 
 </div>
