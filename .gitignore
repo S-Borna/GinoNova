@@ -28,10 +28,22 @@ htmlcov/
 
 # Logs
 *.log
-# Keep session logs tracked
-!logs/
-!logs/opus/
-!logs/gpt/
+logs/
+
+# Internal AI-agent planning artifacts, not portfolio-relevant
+/Omtenta/
+/ManpageTentan.md
+/OMTENTA_2_FRAGOR_GRANSKNING.md
+/Endgame/
+/docs/blueprints/
+/docs/prompts/
+/docs/manifest/
+/content-source/
+/PLATFORM_UPGRADE_MASTER_PLAN.md
+/docs/OPUS_SYSTEM_v2.0.md
+/docs/ALL_PROMPTS_FOR_OPUS.md
+/docs/command_center.md
+/docs/MANUAL_LIFE_WITHOUT_OPUS.md
 
 # IDE/Editor
 .idea/

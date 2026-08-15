@@ -67,7 +67,7 @@ export function Benchmarking({ analytics }: BenchmarkingProps) {
           </motion.div>
           <div>
             <h2 className="text-xl font-bold text-white">Benchmarking</h2>
-            <p className="text-xs text-zinc-500">Compare with 10,000+ learners</p>
+            <p className="text-xs text-zinc-500">Compare with other learners</p>
           </div>
         </div>
         <motion.div
