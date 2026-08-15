@@ -65,3 +65,15 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
+# Internal AI-agent working files and QA artifacts, not portfolio-relevant
+/OPUS_ADMIN_PROMPT.md
+/PROMPT_CONTENT_REVIEW.md
+/PROMPT_PARAPHRASE_CONTENT.md
+/EXAMPLE_CONTENT_IMPROVEMENTS.md
+/EXAMPLE_IMPROVED_MODULE_CICD.md
+/STUDY_FILES_ANALYSIS.md
+/TRANSFORMATION_PROGRESS_SUMMARY.md
+/quiz_audit.json
+/LAUNCH_CHECKLIST.md
+/DEPLOY_CHECKLIST.md
